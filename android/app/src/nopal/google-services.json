@@ -1,0 +1,295 @@
+{
+  "project_info": {
+    "project_number": "612168165472",
+    "project_id": "cafescale-16",
+    "storage_bucket": "cafescale-16.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:9b31ce57dcbc520e827b05",
+        "android_client_info": {
+          "package_name": "com.bamhealthy.fasttech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:f9b22ed025e0dfa1827b05",
+        "android_client_info": {
+          "package_name": "com.banhmiboy.fasttech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:f91508ae10075d8c827b05",
+        "android_client_info": {
+          "package_name": "com.bengaltiger.fasttech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:f2ea9625361c8cfd827b05",
+        "android_client_info": {
+          "package_name": "com.bobsburger.fasttech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:e543161ddb5dcab9827b05",
+        "android_client_info": {
+          "package_name": "com.darbarschicken.fasttech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:421a21c57f503a63827b05",
+        "android_client_info": {
+          "package_name": "com.irvingpizza.fasttech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:e5d773a5a8c19a69827b05",
+        "android_client_info": {
+          "package_name": "com.koodanbury.fasttech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:876671df5cc0aec7827b05",
+        "android_client_info": {
+          "package_name": "com.kumarsindiafood.fasttech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:5427832e79315c09827b05",
+        "android_client_info": {
+          "package_name": "com.nopal.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:518b0fbcebda51f7827b05",
+        "android_client_info": {
+          "package_name": "com.nostrapizza.fasttech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:0bd0f1f7ed37e0f4827b05",
+        "android_client_info": {
+          "package_name": "com.polloloungegrill.fasttech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:030112111352bd5f827b05",
+        "android_client_info": {
+          "package_name": "com.rumorscafe.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:00675201ad26ec3c827b05",
+        "android_client_info": {
+          "package_name": "com.thehiveeatery.fasttech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:0e1a64dc4311b77f827b05",
+        "android_client_info": {
+          "package_name": "com.themintexotic.fasttech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612168165472:android:01e2ba10ce0a76b6827b05",
+        "android_client_info": {
+          "package_name": "com.tsaocaaflorida.fasttech"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHJMXfbmBoaaAib1dyAzxtlq_bvtwc8k0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

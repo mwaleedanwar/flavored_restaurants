@@ -1,0 +1,21 @@
+import 'package:flutter/material.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/marque_text.dart';
+
+class AnnouncementView extends StatelessWidget {
+  final String announcement;
+  AnnouncementView({Key key, this.announcement}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        padding: const EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
+        alignment: Alignment.center,
+        color: Theme.of(context).primaryColor.withOpacity(0.9),
+        child: MarqueeWidget(
+          direction: Axis.horizontal,
+          child: Text(announcement,
+              style: TextStyle(color: Theme.of(context).cardColor), maxLines: 2, textAlign: TextAlign.center),
+        ));
+  }
+}
