@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "201708548486",
+    "project_id": "cafescale-17",
+    "storage_bucket": "cafescale-17.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201708548486:android:b2d02b2c0f1b83ff4afc07",
+        "android_client_info": {
+          "package_name": "com.fasttech.cafesantorini"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUwrlKB5mhGRPkEXTtoVvlYgFPC1p3Fa4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201708548486:android:f35c6a4a98a305754afc07",
+        "android_client_info": {
+          "package_name": "com.fasttech.eatatanfgyros"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUwrlKB5mhGRPkEXTtoVvlYgFPC1p3Fa4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

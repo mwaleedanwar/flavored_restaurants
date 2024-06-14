@@ -3,24 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/theme/dark_theme.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/theme/light_theme.dart';
 
-enum Flavor {
-  nopalDos,
-  maaKitchen,
-}
+enum Flavor { nopalDos, maaKitchen, cafeSantorini }
 
 class F {
   static Flavor appFlavor;
-
-  static String get name {
-    switch (appFlavor) {
-      case Flavor.nopalDos:
-        return 'Nopal Dos';
-      case Flavor.maaKitchen:
-        return 'Maa Kitchen';
-      default:
-        return 'Nopal Dos';
-    }
-  }
 
   static String get BASE_URL {
     switch (appFlavor) {
@@ -28,6 +14,8 @@ class F {
         return 'https://nopaldos.cafescale.app';
       case Flavor.maaKitchen:
         return 'https://maakitchen.cafescale.app';
+      case Flavor.cafeSantorini:
+        return 'https://santorini.cafescale.app';
       default:
         return 'https://nopaldos.cafescale.app';
     }
@@ -39,6 +27,8 @@ class F {
         return 47;
       case Flavor.maaKitchen:
         return 14;
+      case Flavor.cafeSantorini:
+        return 3;
       default:
         return 47;
     }
@@ -57,6 +47,16 @@ class F {
           measurementId: "G-1TMNY6FWDK",
         );
       case Flavor.maaKitchen:
+        return const FirebaseOptions(
+          apiKey: "AIzaSyDYJJpId7vKLxxfxOSQC9rGbwbh16EGzac",
+          authDomain: "scalecafe-e41d3.firebaseapp.com",
+          projectId: "scalecafe-e41d3",
+          storageBucket: "scalecafe-e41d3.appspot.com",
+          messagingSenderId: "321185419116",
+          appId: "1:321185419116:web:fc43476afcc03630dded49",
+          measurementId: "G-1TMNY6FWDK",
+        );
+      case Flavor.cafeSantorini:
         return const FirebaseOptions(
           apiKey: "AIzaSyDYJJpId7vKLxxfxOSQC9rGbwbh16EGzac",
           authDomain: "scalecafe-e41d3.firebaseapp.com",
@@ -85,6 +85,9 @@ class F {
         return light_nopal_dos;
       case Flavor.maaKitchen:
         return light_maa_kitchen;
+      case Flavor.cafeSantorini:
+        return light_cafe_santorini;
+
       default:
         return light_nopal_dos;
     }
@@ -96,6 +99,8 @@ class F {
         return dark_nopal_dos;
       case Flavor.maaKitchen:
         return dark_maa_kitchen;
+      case Flavor.cafeSantorini:
+        return dark_cafe_santorini;
       default:
         return dark_nopal_dos;
     }
@@ -107,6 +112,8 @@ class F {
         return const Color(0xFF697b18);
       case Flavor.maaKitchen:
         return const Color(0xFFBF1E2E);
+      case Flavor.cafeSantorini:
+        return const Color(0xFF8B288C);
       default:
         return const Color(0xFF697b18);
     }
@@ -118,6 +125,8 @@ class F {
         return 'Nopal Dos';
       case Flavor.maaKitchen:
         return 'Maa Kitchen';
+      case Flavor.cafeSantorini:
+        return 'Cafe Santorini';
       default:
         return 'Nopal Dos';
     }
@@ -129,6 +138,8 @@ class F {
         return 'assets/image/logo_nopal.png';
       case Flavor.maaKitchen:
         return 'assets/image/logo_maa.png';
+      case Flavor.cafeSantorini:
+        return 'assets/image/logo_santo.png';
       default:
         return 'assets/image/logo_nopal.png';
     }

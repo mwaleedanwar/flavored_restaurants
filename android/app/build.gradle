@@ -40,6 +40,11 @@ android {
             applicationId "com.fasttech.maakitchen"
             resValue "string", "app_name", "Maa Kitchen"
         }
+        santo {
+            dimension "flavor-type"
+            applicationId "com.fasttech.cafesantorini"
+            resValue "string", "app_name", "Cafe Santorini"
+        }
     }
 
     compileSdkVersion 34

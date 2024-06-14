@@ -32,6 +32,12 @@
       "request": "launch",
       "type": "dart",
       "args": ["--flavor", "maa", "-t", "lib/main_maa_kitchen.dart"]
+    },
+    {
+      "name": "Cafe Santorini",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--flavor", "santo", "-t", "lib/main_santo.dart"]
     }
   ]
 }
