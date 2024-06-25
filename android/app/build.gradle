@@ -60,6 +60,11 @@ android {
             applicationId "com.willybsteakhouse.fasttech"
             resValue "string", "app_name", "Steakhouse"
         }
+        chaatHouse {
+            dimension "flavor-type"
+            applicationId "com.chaathouse.app"
+            resValue "string", "app_name", "Chaat House"
+        }
     }
 
     compileSdkVersion 34

@@ -10,10 +10,32 @@ enum Flavor {
   halalChinaBox,
   apnaaBazaar,
   willybSteakHouse,
+  chaatHouse,
 }
 
 class F {
   static Flavor appFlavor;
+
+  static String get appName {
+    switch (appFlavor) {
+      case Flavor.nopalDos:
+        return 'Nopal Dos';
+      case Flavor.maaKitchen:
+        return 'Maa Kitchen';
+      case Flavor.cafeSantorini:
+        return 'Cafe Santorini';
+      case Flavor.halalChinaBox:
+        return 'Halal China Box';
+      case Flavor.apnaaBazaar:
+        return 'Apnaa Bazar';
+      case Flavor.willybSteakHouse:
+        return 'willybsteakhouse';
+      case Flavor.chaatHouse:
+        return 'Chaat House';
+      default:
+        return 'Nopal Dos';
+    }
+  }
 
   static String get BASE_URL {
     switch (appFlavor) {
@@ -29,6 +51,8 @@ class F {
         return 'https://apnaa.cafescale.app';
       case Flavor.willybSteakHouse:
         return 'https://willybsteakhouse.cafescale.app';
+      case Flavor.chaatHouse:
+        return 'https://chaathouse.cafescale.app';
       default:
         return 'https://nopaldos.cafescale.app';
     }
@@ -48,6 +72,8 @@ class F {
         return 16;
       case Flavor.willybSteakHouse:
         return 26;
+      case Flavor.chaatHouse:
+        return 22;
       default:
         return 47;
     }
@@ -115,6 +141,16 @@ class F {
           appId: "1:321185419116:web:fc43476afcc03630dded49",
           measurementId: "G-1TMNY6FWDK",
         );
+      case Flavor.chaatHouse:
+        return const FirebaseOptions(
+          apiKey: "AIzaSyDYJJpId7vKLxxfxOSQC9rGbwbh16EGzac",
+          authDomain: "scalecafe-e41d3.firebaseapp.com",
+          projectId: "scalecafe-e41d3",
+          storageBucket: "scalecafe-e41d3.appspot.com",
+          messagingSenderId: "321185419116",
+          appId: "1:321185419116:web:fc43476afcc03630dded49",
+          measurementId: "G-1TMNY6FWDK",
+        );
       default:
         return const FirebaseOptions(
           apiKey: "AIzaSyDYJJpId7vKLxxfxOSQC9rGbwbh16EGzac",
@@ -142,6 +178,8 @@ class F {
         return light_apnaa_bazaar;
       case Flavor.willybSteakHouse:
         return light_willy_b_steak_house;
+      case Flavor.chaatHouse:
+        return light_chaat_house;
       default:
         return light_nopal_dos;
     }
@@ -161,6 +199,8 @@ class F {
         return dark_apnaa_bazaar;
       case Flavor.willybSteakHouse:
         return dark_willy_b_steak_house;
+      case Flavor.chaatHouse:
+        return dark_chaat_house;
       default:
         return dark_nopal_dos;
     }
@@ -180,27 +220,10 @@ class F {
         return const Color(0xFFC42127);
       case Flavor.willybSteakHouse:
         return const Color(0xFF8F000A);
+      case Flavor.chaatHouse:
+        return const Color(0xFFF9333E);
       default:
         return const Color(0xFF697b18);
-    }
-  }
-
-  static String get appName {
-    switch (appFlavor) {
-      case Flavor.nopalDos:
-        return 'Nopal Dos';
-      case Flavor.maaKitchen:
-        return 'Maa Kitchen';
-      case Flavor.cafeSantorini:
-        return 'Cafe Santorini';
-      case Flavor.halalChinaBox:
-        return 'Halal China Box';
-      case Flavor.apnaaBazaar:
-        return 'Apnaa Bazar';
-      case Flavor.willybSteakHouse:
-        return 'willybsteakhouse';
-      default:
-        return 'Nopal Dos';
     }
   }
 
@@ -218,6 +241,8 @@ class F {
         return 'assets/image/logo_apnaa_bazaar.png';
       case Flavor.willybSteakHouse:
         return 'assets/image/logo_willyb.png';
+      case Flavor.chaatHouse:
+        return 'assets/image/logo_chaat_house.png';
       default:
         return 'assets/image/logo_nopal.png';
     }

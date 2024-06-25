@@ -56,6 +56,12 @@
       "request": "launch",
       "type": "dart",
       "args": ["--flavor", "willyb", "-t", "lib/main_willy_b.dart"]
+    },
+    {
+      "name": "Chaat House",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--flavor", "chaatHouse", "-t", "lib/main_chaat_house.dart"]
     }
   ]
 }
