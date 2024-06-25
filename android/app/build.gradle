@@ -80,6 +80,11 @@ android {
             applicationId "com.alladingrill.app"
             resValue "string", "app_name", "Aladdin Grill"
         }
+        jaxspice {
+            dimension "flavor-type"
+            applicationId "com.jaxspice.com"
+            resValue "string", "app_name", "jaxSpice"
+        }
     }
 
     compileSdkVersion 34

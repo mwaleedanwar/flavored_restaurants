@@ -80,6 +80,12 @@
       "request": "launch",
       "type": "dart",
       "args": ["--flavor", "alladinGrill", "-t", "lib/main_alladin_grill.dart"]
+    },
+    {
+      "name": "jaxSpice",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--flavor", "jaxspice", "-t", "lib/main_jax_spice.dart"]
     }
   ]
 }
