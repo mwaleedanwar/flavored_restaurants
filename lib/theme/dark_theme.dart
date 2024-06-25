@@ -47,3 +47,5 @@ final dark_apnaa_bazaar = baseDarkTheme.copyWith(primaryColor: const Color(0xFFC
 final dark_willy_b_steak_house = baseDarkTheme.copyWith(primaryColor: const Color(0xFF8b0211));
 
 final dark_chaat_house = baseDarkTheme.copyWith(primaryColor: const Color(0xFFF9333E));
+
+final dark_kabsah_theme = baseDarkTheme.copyWith(primaryColor: const Color(0xFFDD9933));

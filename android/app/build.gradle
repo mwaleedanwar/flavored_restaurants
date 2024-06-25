@@ -65,6 +65,11 @@ android {
             applicationId "com.chaathouse.app"
             resValue "string", "app_name", "Chaat House"
         }
+        kabsah {
+            dimension "flavor-type"
+            applicationId "com.scalecafe.app"
+            resValue "string", "app_name", "kabsah"
+        }
     }
 
     compileSdkVersion 34

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "321185419116",
+    "project_id": "scalecafe-e41d3",
+    "storage_bucket": "scalecafe-e41d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:babdd79fa26f8f2fdded49",
+        "android_client_info": {
+          "package_name": "com.scalecafe.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

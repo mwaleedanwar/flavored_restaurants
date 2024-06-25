@@ -46,3 +46,5 @@ final light_apnaa_bazaar = baseLightTheme.copyWith(primaryColor: const Color(0xF
 final light_willy_b_steak_house = baseLightTheme.copyWith(primaryColor: const Color(0xFF8b0211));
 
 final light_chaat_house = baseLightTheme.copyWith(primaryColor: const Color(0xFFF9333E));
+
+final light_kabsah_theme = baseLightTheme.copyWith(primaryColor: const Color(0xFFDD9933));

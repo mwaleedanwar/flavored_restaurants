@@ -62,6 +62,12 @@
       "request": "launch",
       "type": "dart",
       "args": ["--flavor", "chaatHouse", "-t", "lib/main_chaat_house.dart"]
+    },
+    {
+      "name": "Kabsah",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--flavor", "kabsah", "-t", "lib/main_kabsah.dart"]
     }
   ]
 }

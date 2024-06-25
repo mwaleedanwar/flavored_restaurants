@@ -11,6 +11,7 @@ enum Flavor {
   apnaaBazaar,
   willybSteakHouse,
   chaatHouse,
+  kabsah,
 }
 
 class F {
@@ -32,6 +33,8 @@ class F {
         return 'willybsteakhouse';
       case Flavor.chaatHouse:
         return 'Chaat House';
+      case Flavor.kabsah:
+        return 'Kabsah';
       default:
         return 'Nopal Dos';
     }
@@ -53,6 +56,8 @@ class F {
         return 'https://willybsteakhouse.cafescale.app';
       case Flavor.chaatHouse:
         return 'https://chaathouse.cafescale.app';
+      case Flavor.kabsah:
+        return 'https://kabsah.cafescale.app';
       default:
         return 'https://nopaldos.cafescale.app';
     }
@@ -74,6 +79,8 @@ class F {
         return 26;
       case Flavor.chaatHouse:
         return 22;
+      case Flavor.kabsah:
+        return 8;
       default:
         return 47;
     }
@@ -151,6 +158,16 @@ class F {
           appId: "1:321185419116:web:fc43476afcc03630dded49",
           measurementId: "G-1TMNY6FWDK",
         );
+      case Flavor.kabsah:
+        return const FirebaseOptions(
+          apiKey: "AIzaSyDYJJpId7vKLxxfxOSQC9rGbwbh16EGzac",
+          authDomain: "scalecafe-e41d3.firebaseapp.com",
+          projectId: "scalecafe-e41d3",
+          storageBucket: "scalecafe-e41d3.appspot.com",
+          messagingSenderId: "321185419116",
+          appId: "1:321185419116:web:fc43476afcc03630dded49",
+          measurementId: "G-1TMNY6FWDK",
+        );
       default:
         return const FirebaseOptions(
           apiKey: "AIzaSyDYJJpId7vKLxxfxOSQC9rGbwbh16EGzac",
@@ -180,6 +197,8 @@ class F {
         return light_willy_b_steak_house;
       case Flavor.chaatHouse:
         return light_chaat_house;
+      case Flavor.kabsah:
+        return light_kabsah_theme;
       default:
         return light_nopal_dos;
     }
@@ -201,6 +220,8 @@ class F {
         return dark_willy_b_steak_house;
       case Flavor.chaatHouse:
         return dark_chaat_house;
+      case Flavor.kabsah:
+        return dark_kabsah_theme;
       default:
         return dark_nopal_dos;
     }
@@ -222,6 +243,8 @@ class F {
         return const Color(0xFF8F000A);
       case Flavor.chaatHouse:
         return const Color(0xFFF9333E);
+      case Flavor.kabsah:
+        return const Color(0xFFDD9933);
       default:
         return const Color(0xFF697b18);
     }
