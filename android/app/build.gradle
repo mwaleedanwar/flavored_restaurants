@@ -55,6 +55,11 @@ android {
             applicationId "com.fasttechapnabazar.app"
             resValue "string", "app_name", "Apnaa Bazar"
         }
+        willyb {
+            dimension "flavor-type"
+            applicationId "com.willybsteakhouse.fasttech"
+            resValue "string", "app_name", "Steakhouse"
+        }
     }
 
     compileSdkVersion 34

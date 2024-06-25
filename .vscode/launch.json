@@ -50,6 +50,12 @@
       "request": "launch",
       "type": "dart",
       "args": ["--flavor", "apnaa", "-t", "lib/main_apnaa_bazaar.dart"]
+    },
+    {
+      "name": "WillyB Steak House",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--flavor", "willyb", "-t", "lib/main_willy_b.dart"]
     }
   ]
 }
