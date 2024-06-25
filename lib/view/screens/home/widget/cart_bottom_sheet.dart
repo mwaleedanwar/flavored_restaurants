@@ -181,7 +181,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
       return Stack(
         children: [
           Container(
-            width: 600,
+            width: MediaQuery.of(context).size.width,
             constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height * 0.8,
             ),
