@@ -38,6 +38,18 @@
       "request": "launch",
       "type": "dart",
       "args": ["--flavor", "santo", "-t", "lib/main_santo.dart"]
+    },
+    {
+      "name": "Halal China Box",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--flavor", "hcb", "-t", "lib/main_halal_china_box.dart"]
+    },
+    {
+      "name": "Apnaa Bazaar",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--flavor", "apnaa", "-t", "lib/main_apnaa_bazaar.dart"]
     }
   ]
 }

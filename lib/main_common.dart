@@ -36,7 +36,7 @@ Future<void> mainCommon() async {
   Stripe.publishableKey = AppConstants.public_stripe_key;
   Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
   Stripe.urlScheme = 'flutterstripe';
-  // await Stripe.instance.applySettings();
+  await Stripe.instance.applySettings();
 
   if (!kIsWeb) {
     await Firebase.initializeApp();

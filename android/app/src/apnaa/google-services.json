@@ -1,0 +1,558 @@
+{
+  "project_info": {
+    "project_number": "321185419116",
+    "project_id": "scalecafe-e41d3",
+    "storage_bucket": "scalecafe-e41d3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:94a79902121b6072dded49",
+        "android_client_info": {
+          "package_name": "com.alladingrill.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-vq7s71ns1qenmlt9ku7pvmv2n06p6gjj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alladingrill.app",
+            "certificate_hash": "4eef68e3f42dd0bf88d32d01ff972542f8b17e4a"
+          }
+        },
+        {
+          "client_id": "321185419116-jve1o4ierap1dfhfjful13ub54iojbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321185419116-1c2hr8fb7m8kpu6an40irgp3iptgjmv4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaxspice.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:0d28977703ad0626dded49",
+        "android_client_info": {
+          "package_name": "com.apnabazar.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-2o7dkvqqc8kchns3g79ktftr7fvbgcdf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.apnabazar.app",
+            "certificate_hash": "4eef68e3f42dd0bf88d32d01ff972542f8b17e4a"
+          }
+        },
+        {
+          "client_id": "321185419116-jve1o4ierap1dfhfjful13ub54iojbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321185419116-1c2hr8fb7m8kpu6an40irgp3iptgjmv4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaxspice.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:71bc318352075f03dded49",
+        "android_client_info": {
+          "package_name": "com.cafescale.delivery.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-jve1o4ierap1dfhfjful13ub54iojbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321185419116-1c2hr8fb7m8kpu6an40irgp3iptgjmv4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaxspice.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:b6eb1683277a76c5dded49",
+        "android_client_info": {
+          "package_name": "com.chaathouse.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-51cav182tp552fmcn59v3vcqr6lb7i34.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.chaathouse.app",
+            "certificate_hash": "4eef68e3f42dd0bf88d32d01ff972542f8b17e4a"
+          }
+        },
+        {
+          "client_id": "321185419116-jve1o4ierap1dfhfjful13ub54iojbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321185419116-1c2hr8fb7m8kpu6an40irgp3iptgjmv4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaxspice.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:08277b7bde1792f3dded49",
+        "android_client_info": {
+          "package_name": "com.element5th.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-hpaag5iu9r3podumq6ccb385plamcjvl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.element5th.app",
+            "certificate_hash": "4eef68e3f42dd0bf88d32d01ff972542f8b17e4a"
+          }
+        },
+        {
+          "client_id": "321185419116-jve1o4ierap1dfhfjful13ub54iojbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321185419116-1c2hr8fb7m8kpu6an40irgp3iptgjmv4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaxspice.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:370c0e043d1e91cddded49",
+        "android_client_info": {
+          "package_name": "com.fasttech.maakitchen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-i3311rskt4lphatcggcbudpegsgqrp47.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.fasttech.maakitchen",
+            "certificate_hash": "4eef68e3f42dd0bf88d32d01ff972542f8b17e4a"
+          }
+        },
+        {
+          "client_id": "321185419116-jve1o4ierap1dfhfjful13ub54iojbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321185419116-1c2hr8fb7m8kpu6an40irgp3iptgjmv4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaxspice.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:27df7d28071c85dfdded49",
+        "android_client_info": {
+          "package_name": "com.fasttechapnabazar.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-jve1o4ierap1dfhfjful13ub54iojbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321185419116-1c2hr8fb7m8kpu6an40irgp3iptgjmv4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaxspice.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:8b31e4a3ea4330efdded49",
+        "android_client_info": {
+          "package_name": "com.halalchinabox.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-p759eopto61n3egf0p2kpouataet12cp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.halalchinabox.app",
+            "certificate_hash": "4eef68e3f42dd0bf88d32d01ff972542f8b17e4a"
+          }
+        },
+        {
+          "client_id": "321185419116-jve1o4ierap1dfhfjful13ub54iojbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321185419116-1c2hr8fb7m8kpu6an40irgp3iptgjmv4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaxspice.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:722fcfe3ed6f98cbdded49",
+        "android_client_info": {
+          "package_name": "com.innout.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-jve1o4ierap1dfhfjful13ub54iojbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321185419116-1c2hr8fb7m8kpu6an40irgp3iptgjmv4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaxspice.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:430edf8620f92d8edded49",
+        "android_client_info": {
+          "package_name": "com.jaxspice.com"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-jle6o5r8pqdp0us2i5bkbfoijtcdr58q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.jaxspice.com",
+            "certificate_hash": "4eef68e3f42dd0bf88d32d01ff972542f8b17e4a"
+          }
+        },
+        {
+          "client_id": "321185419116-jve1o4ierap1dfhfjful13ub54iojbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321185419116-1c2hr8fb7m8kpu6an40irgp3iptgjmv4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaxspice.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:7f8c6d98cc679785dded49",
+        "android_client_info": {
+          "package_name": "com.minerva.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-8nd2vks9k8ps9vkge404fnbtnocs79sd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.minerva.app",
+            "certificate_hash": "4eef68e3f42dd0bf88d32d01ff972542f8b17e4a"
+          }
+        },
+        {
+          "client_id": "321185419116-jve1o4ierap1dfhfjful13ub54iojbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321185419116-1c2hr8fb7m8kpu6an40irgp3iptgjmv4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaxspice.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:babdd79fa26f8f2fdded49",
+        "android_client_info": {
+          "package_name": "com.scalecafe.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-ggnk72i2ja4jqv3gam5ah7tsbv0aefju.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.scalecafe.app",
+            "certificate_hash": "4eef68e3f42dd0bf88d32d01ff972542f8b17e4a"
+          }
+        },
+        {
+          "client_id": "321185419116-jve1o4ierap1dfhfjful13ub54iojbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321185419116-1c2hr8fb7m8kpu6an40irgp3iptgjmv4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaxspice.com"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321185419116:android:ca9d4cfa9236ce10dded49",
+        "android_client_info": {
+          "package_name": "com.talkintacos.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321185419116-5ef3b0vb6ns0ldoubckpakubofee5aau.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.talkintacos.app",
+            "certificate_hash": "4eef68e3f42dd0bf88d32d01ff972542f8b17e4a"
+          }
+        },
+        {
+          "client_id": "321185419116-jve1o4ierap1dfhfjful13ub54iojbnj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5gwU7SiyfNjjtjKzAARRBf5F3E1VoHJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321185419116-0l6415m67h0327mt87nrbkigqkmc62ao.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "321185419116-1c2hr8fb7m8kpu6an40irgp3iptgjmv4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.jaxspice.com"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

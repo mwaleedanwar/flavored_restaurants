@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/theme/dark_theme.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/theme/light_theme.dart';
 
-enum Flavor { nopalDos, maaKitchen, cafeSantorini }
+enum Flavor { nopalDos, maaKitchen, cafeSantorini, halalChinaBox, apnaaBazaar }
 
 class F {
   static Flavor appFlavor;
@@ -16,6 +16,10 @@ class F {
         return 'https://maakitchen.cafescale.app';
       case Flavor.cafeSantorini:
         return 'https://santorini.cafescale.app';
+      case Flavor.halalChinaBox:
+        return 'https://halalchinabox.cafescale.app';
+      case Flavor.apnaaBazaar:
+        return 'https://apnaa.cafescale.app';
       default:
         return 'https://nopaldos.cafescale.app';
     }
@@ -29,6 +33,10 @@ class F {
         return 14;
       case Flavor.cafeSantorini:
         return 3;
+      case Flavor.halalChinaBox:
+        return 21;
+      case Flavor.apnaaBazaar:
+        return 16;
       default:
         return 47;
     }
@@ -66,6 +74,26 @@ class F {
           appId: "1:321185419116:web:fc43476afcc03630dded49",
           measurementId: "G-1TMNY6FWDK",
         );
+      case Flavor.halalChinaBox:
+        return const FirebaseOptions(
+          apiKey: "AIzaSyDYJJpId7vKLxxfxOSQC9rGbwbh16EGzac",
+          authDomain: "scalecafe-e41d3.firebaseapp.com",
+          projectId: "scalecafe-e41d3",
+          storageBucket: "scalecafe-e41d3.appspot.com",
+          messagingSenderId: "321185419116",
+          appId: "1:321185419116:web:fc43476afcc03630dded49",
+          measurementId: "G-1TMNY6FWDK",
+        );
+      case Flavor.apnaaBazaar:
+        return const FirebaseOptions(
+          apiKey: "AIzaSyDYJJpId7vKLxxfxOSQC9rGbwbh16EGzac",
+          authDomain: "scalecafe-e41d3.firebaseapp.com",
+          projectId: "scalecafe-e41d3",
+          storageBucket: "scalecafe-e41d3.appspot.com",
+          messagingSenderId: "321185419116",
+          appId: "1:321185419116:web:fc43476afcc03630dded49",
+          measurementId: "G-1TMNY6FWDK",
+        );
       default:
         return const FirebaseOptions(
           apiKey: "AIzaSyDYJJpId7vKLxxfxOSQC9rGbwbh16EGzac",
@@ -87,7 +115,10 @@ class F {
         return light_maa_kitchen;
       case Flavor.cafeSantorini:
         return light_cafe_santorini;
-
+      case Flavor.halalChinaBox:
+        return light_halal_china_box;
+      case Flavor.apnaaBazaar:
+        return light_apnaa_bazaar;
       default:
         return light_nopal_dos;
     }
@@ -101,6 +132,10 @@ class F {
         return dark_maa_kitchen;
       case Flavor.cafeSantorini:
         return dark_cafe_santorini;
+      case Flavor.halalChinaBox:
+        return dark_halal_china_box;
+      case Flavor.apnaaBazaar:
+        return dark_apnaa_bazaar;
       default:
         return dark_nopal_dos;
     }
@@ -114,6 +149,10 @@ class F {
         return const Color(0xFFBF1E2E);
       case Flavor.cafeSantorini:
         return const Color(0xFF8B288C);
+      case Flavor.halalChinaBox:
+        return const Color(0xFFa60f0f);
+      case Flavor.apnaaBazaar:
+        return const Color(0xFFC42127);
       default:
         return const Color(0xFF697b18);
     }
@@ -127,6 +166,10 @@ class F {
         return 'Maa Kitchen';
       case Flavor.cafeSantorini:
         return 'Cafe Santorini';
+      case Flavor.halalChinaBox:
+        return 'Halal China Box';
+      case Flavor.apnaaBazaar:
+        return 'Apnaa Bazar';
       default:
         return 'Nopal Dos';
     }
@@ -140,6 +183,10 @@ class F {
         return 'assets/image/logo_maa.png';
       case Flavor.cafeSantorini:
         return 'assets/image/logo_santo.png';
+      case Flavor.halalChinaBox:
+        return 'assets/image/logo_halal_china_box.png';
+      case Flavor.apnaaBazaar:
+        return 'assets/image/logo_apnaa_bazaar.png';
       default:
         return 'assets/image/logo_nopal.png';
     }
