@@ -1107,7 +1107,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                   style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
                 ),
               ),
-              if (!ResponsiveHelper.isMobile(context)) WishButton(product: widget.product),
+              // if (!ResponsiveHelper.isMobile(context)) WishButton(product: widget.product),
             ],
           ),
           // SizedBox(height: 10),
@@ -1182,7 +1182,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                     : SizedBox(),
               ]),
             ),
-            if (ResponsiveHelper.isMobile(context)) WishButton(product: widget.product),
+            // if (ResponsiveHelper.isMobile(context)) WishButton(product: widget.product),
           ]),
           if (!ResponsiveHelper.isMobile(context)) _quantityView(context, cartModel)
         ]),
