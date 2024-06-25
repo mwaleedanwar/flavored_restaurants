@@ -50,3 +50,5 @@ final light_chaat_house = baseLightTheme.copyWith(primaryColor: const Color(0xFF
 final light_kabsah_theme = baseLightTheme.copyWith(primaryColor: const Color(0xFFDD9933));
 
 final light_5th_element = baseLightTheme.copyWith(primaryColor: const Color(0xFFf88218));
+
+final light_alladin_grill = baseLightTheme.copyWith(primaryColor: const Color(0xFF950103));

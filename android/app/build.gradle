@@ -75,6 +75,11 @@ android {
             applicationId "com.element5th.app"
             resValue "string", "app_name", "5th Element"
         }
+        alladinGrill {
+            dimension "flavor-type"
+            applicationId "com.alladingrill.app"
+            resValue "string", "app_name", "Aladdin Grill"
+        }
     }
 
     compileSdkVersion 34

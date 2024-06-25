@@ -13,6 +13,7 @@ enum Flavor {
   chaatHouse,
   kabsah,
   fifthElement,
+  alladinGrill
 }
 
 class F {
@@ -38,6 +39,8 @@ class F {
         return 'Kabsah';
       case Flavor.fifthElement:
         return '5th Element';
+      case Flavor.alladinGrill:
+        return 'Aladdin Grill';
       default:
         return 'Nopal Dos';
     }
@@ -63,6 +66,8 @@ class F {
         return 'https://kabsah.cafescale.app';
       case Flavor.fifthElement:
         return 'https://5thelement.cafescale.app';
+      case Flavor.alladinGrill:
+        return 'https://aladdin.cafescale.app';
       default:
         return 'https://nopaldos.cafescale.app';
     }
@@ -88,6 +93,8 @@ class F {
         return 8;
       case Flavor.fifthElement:
         return 20;
+      case Flavor.alladinGrill:
+        return 15;
       default:
         return 47;
     }
@@ -185,6 +192,16 @@ class F {
           appId: "1:321185419116:web:fc43476afcc03630dded49",
           measurementId: "G-1TMNY6FWDK",
         );
+      case Flavor.alladinGrill:
+        return const FirebaseOptions(
+          apiKey: "AIzaSyDYJJpId7vKLxxfxOSQC9rGbwbh16EGzac",
+          authDomain: "scalecafe-e41d3.firebaseapp.com",
+          projectId: "scalecafe-e41d3",
+          storageBucket: "scalecafe-e41d3.appspot.com",
+          messagingSenderId: "321185419116",
+          appId: "1:321185419116:web:fc43476afcc03630dded49",
+          measurementId: "G-1TMNY6FWDK",
+        );
       default:
         return const FirebaseOptions(
           apiKey: "AIzaSyDYJJpId7vKLxxfxOSQC9rGbwbh16EGzac",
@@ -218,6 +235,8 @@ class F {
         return light_kabsah_theme;
       case Flavor.fifthElement:
         return light_5th_element;
+      case Flavor.alladinGrill:
+        return light_alladin_grill;
       default:
         return light_nopal_dos;
     }
@@ -243,6 +262,8 @@ class F {
         return dark_kabsah_theme;
       case Flavor.fifthElement:
         return dark_5th_element;
+      case Flavor.alladinGrill:
+        return dark_alladin_grill;
       default:
         return dark_nopal_dos;
     }
@@ -268,6 +289,8 @@ class F {
         return const Color(0xFFDD9933);
       case Flavor.fifthElement:
         return const Color(0xFFf88218);
+      case Flavor.alladinGrill:
+        return const Color(0xFF950103);
       default:
         return const Color(0xFF697b18);
     }
@@ -291,6 +314,8 @@ class F {
         return 'assets/image/logo_chaat_house.png';
       case Flavor.fifthElement:
         return 'assets/image/logo_5th_element.png';
+      case Flavor.alladinGrill:
+        return 'assets/image/logo_alladin_grill.png';
       default:
         return 'assets/image/logo_nopal.png';
     }

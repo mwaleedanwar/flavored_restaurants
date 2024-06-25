@@ -74,6 +74,12 @@
       "request": "launch",
       "type": "dart",
       "args": ["--flavor", "fifthE", "-t", "lib/main_5th_element.dart"]
+    },
+    {
+      "name": "Alladin Grill",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--flavor", "alladinGrill", "-t", "lib/main_alladin_grill.dart"]
     }
   ]
 }
