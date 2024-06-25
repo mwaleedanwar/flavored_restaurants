@@ -68,6 +68,12 @@
       "request": "launch",
       "type": "dart",
       "args": ["--flavor", "kabsah", "-t", "lib/main_kabsah.dart"]
+    },
+    {
+      "name": "5th Element",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--flavor", "fifthE", "-t", "lib/main_5th_element.dart"]
     }
   ]
 }

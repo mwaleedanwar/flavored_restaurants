@@ -49,3 +49,5 @@ final dark_willy_b_steak_house = baseDarkTheme.copyWith(primaryColor: const Colo
 final dark_chaat_house = baseDarkTheme.copyWith(primaryColor: const Color(0xFFF9333E));
 
 final dark_kabsah_theme = baseDarkTheme.copyWith(primaryColor: const Color(0xFFDD9933));
+
+final dark_5th_element = baseDarkTheme.copyWith(primaryColor: const Color(0xFFf88218));

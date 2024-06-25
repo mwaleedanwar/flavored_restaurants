@@ -48,3 +48,5 @@ final light_willy_b_steak_house = baseLightTheme.copyWith(primaryColor: const Co
 final light_chaat_house = baseLightTheme.copyWith(primaryColor: const Color(0xFFF9333E));
 
 final light_kabsah_theme = baseLightTheme.copyWith(primaryColor: const Color(0xFFDD9933));
+
+final light_5th_element = baseLightTheme.copyWith(primaryColor: const Color(0xFFf88218));
