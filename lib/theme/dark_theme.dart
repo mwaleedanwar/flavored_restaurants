@@ -55,3 +55,5 @@ final dark_5th_element = baseDarkTheme.copyWith(primaryColor: const Color(0xFFf8
 final dark_alladin_grill = baseDarkTheme.copyWith(primaryColor: const Color(0xFF950103));
 
 final dark_jax_spice = baseDarkTheme.copyWith(primaryColor: const Color(0xFFf8ac6a));
+
+final dark_af_grills = baseDarkTheme.copyWith(primaryColor: const Color(0xFFED6067));

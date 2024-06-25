@@ -86,6 +86,12 @@
       "request": "launch",
       "type": "dart",
       "args": ["--flavor", "jaxspice", "-t", "lib/main_jax_spice.dart"]
+    },
+    {
+      "name": "AF Grill",
+      "request": "launch",
+      "type": "dart",
+      "args": ["--flavor", "afgrill", "-t", "lib/main_af_grill.dart"]
     }
   ]
 }

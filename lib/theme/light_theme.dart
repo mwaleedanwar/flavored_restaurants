@@ -54,3 +54,5 @@ final light_5th_element = baseLightTheme.copyWith(primaryColor: const Color(0xFF
 final light_alladin_grill = baseLightTheme.copyWith(primaryColor: const Color(0xFF950103));
 
 final light_jax_spice = baseLightTheme.copyWith(primaryColor: const Color(0xFFf8ac6a));
+
+final light_af_grills = baseLightTheme.copyWith(primaryColor: const Color(0xFFED6067));

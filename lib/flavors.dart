@@ -15,6 +15,7 @@ enum Flavor {
   fifthElement,
   alladinGrill,
   jaxSpice,
+  afGrill,
 }
 
 class F {
@@ -44,6 +45,8 @@ class F {
         return 'Aladdin Grill';
       case Flavor.jaxSpice:
         return 'JaxSpice';
+      case Flavor.afGrill:
+        return 'ANF Gyros & Grill';
       default:
         return 'Nopal Dos';
     }
@@ -73,6 +76,8 @@ class F {
         return 'https://aladdin.cafescale.app';
       case Flavor.jaxSpice:
         return 'https://jaxspice.cafescale.app';
+      case Flavor.afGrill:
+        return 'https://anf-gyros.cafescale.app';
       default:
         return 'https://nopaldos.cafescale.app';
     }
@@ -102,6 +107,8 @@ class F {
         return 15;
       case Flavor.jaxSpice:
         return 23;
+      case Flavor.afGrill:
+        return 2;
       default:
         return 47;
     }
@@ -219,6 +226,16 @@ class F {
           appId: "1:321185419116:web:fc43476afcc03630dded49",
           measurementId: "G-1TMNY6FWDK",
         );
+      case Flavor.afGrill:
+        return const FirebaseOptions(
+          apiKey: "AIzaSyDYJJpId7vKLxxfxOSQC9rGbwbh16EGzac",
+          authDomain: "scalecafe-e41d3.firebaseapp.com",
+          projectId: "scalecafe-e41d3",
+          storageBucket: "scalecafe-e41d3.appspot.com",
+          messagingSenderId: "321185419116",
+          appId: "1:321185419116:web:fc43476afcc03630dded49",
+          measurementId: "G-1TMNY6FWDK",
+        );
       default:
         return const FirebaseOptions(
           apiKey: "AIzaSyDYJJpId7vKLxxfxOSQC9rGbwbh16EGzac",
@@ -256,6 +273,8 @@ class F {
         return light_alladin_grill;
       case Flavor.jaxSpice:
         return light_jax_spice;
+      case Flavor.afGrill:
+        return light_af_grills;
       default:
         return light_nopal_dos;
     }
@@ -285,6 +304,8 @@ class F {
         return dark_alladin_grill;
       case Flavor.jaxSpice:
         return dark_jax_spice;
+      case Flavor.afGrill:
+        return dark_af_grills;
       default:
         return dark_nopal_dos;
     }
@@ -314,6 +335,8 @@ class F {
         return const Color(0xFF950103);
       case Flavor.jaxSpice:
         return const Color(0xFFf8ac6a);
+      case Flavor.afGrill:
+        return const Color(0xFFED6067);
       default:
         return const Color(0xFF697b18);
     }
@@ -341,6 +364,8 @@ class F {
         return 'assets/image/logo_alladin_grill.png';
       case Flavor.jaxSpice:
         return 'assets/image/logo_jax_spice.png';
+      case Flavor.afGrill:
+        return 'assets/image/logo_af_grill.png';
       default:
         return 'assets/image/logo_nopal.png';
     }

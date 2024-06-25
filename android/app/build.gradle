@@ -85,6 +85,11 @@ android {
             applicationId "com.jaxspice.com"
             resValue "string", "app_name", "jaxSpice"
         }
+        afgrill {
+            dimension "flavor-type"
+            applicationId "com.fasttech.eatatanfgyros"
+            resValue "string", "app_name", "ANF Gyros Grill"
+        }
     }
 
     compileSdkVersion 34
