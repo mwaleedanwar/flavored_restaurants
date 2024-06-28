@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -7,7 +6,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
@@ -101,7 +99,7 @@ class MyApp extends StatefulWidget {
   final int orderId;
   final bool isWeb;
 
-  const MyApp({Key key, @required this.orderId, @required this.isWeb}) : super(key: key);
+  const MyApp({super.key, required this.orderId, required this.isWeb});
 
   @override
   MyAppState createState() => MyAppState();
@@ -169,9 +167,6 @@ class MyAppState extends State<MyApp> {
                 locale: Provider.of<LocalizationProvider>(context).locale,
                 localizationsDelegates: [
                   AppLocalization.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
                 ],
                 supportedLocales: locals,
                 scrollBehavior: MaterialScrollBehavior().copyWith(dragDevices: {
@@ -195,7 +190,7 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 class Get {
-  static BuildContext get context => navigatorKey.currentContext;
+  static BuildContext get context => navigatorKey.currentContext!;
 
-  static NavigatorState get navigator => navigatorKey.currentState;
+  static NavigatorState get navigator => navigatorKey.currentState!;
 }

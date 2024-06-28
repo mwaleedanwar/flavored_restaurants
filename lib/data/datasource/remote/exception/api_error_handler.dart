@@ -34,12 +34,15 @@ class ApiErrorHandler {
                   ErrorResponse errorResponse;
                   try {
                     errorResponse = ErrorResponse.fromJson(error.response.data);
-                  } catch (e) {}
-                  if (errorResponse != null && errorResponse.errors != null && errorResponse.errors.length > 0) {
-                    print('error----------------== ${errorResponse.toJson()}');
+                  } catch (e) {
+                    debugPrint('Unknown error parsing error json: $e');
+                  }
+                  if (errorResponse != null && errorResponse.errors != null && errorResponse.errors.isNotEmpty) {
+                    debugPrint('error----------------== ${errorResponse.toJson()}');
                     errorDescription = errorResponse;
-                  } else
+                  } else {
                     errorDescription = "Failed to load data - status code: ${error.response.statusCode}";
+                  }
               }
               break;
             case DioErrorType.sendTimeout:

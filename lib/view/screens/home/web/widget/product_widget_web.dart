@@ -195,19 +195,20 @@ class ProductWidgetWeb extends StatelessWidget {
                   bool _isAvailable = _currentTime.isAfter(_startTime) && _currentTime.isBefore(_endTime);
                   print('===price $price');
                   CartModel _cartModel = CartModel(
-                      price,
-                      0.0,
-                      priceWithDiscount,
-                      [_variation],
-                      (price -
-                          PriceConverter.convertWithDiscount(context, price, product.discount, product.discountType)),
-                      1,
-                      '',
-                      price - PriceConverter.convertWithDiscount(context, price, product.tax, product.taxType),
-                      _addOnIdList,
-                      product,
-                      false,
-                      isFromLoyaltyPoints);
+                    price: price,
+                    points: 0.0,
+                    discountedPrice: priceWithDiscount,
+                    variation: [_variation],
+                    discountAmount: (price -
+                        PriceConverter.convertWithDiscount(context, price, product.discount, product.discountType)),
+                    quantity: 1,
+                    specialInstruction: '',
+                    taxAmount: price - PriceConverter.convertWithDiscount(context, price, product.tax, product.taxType),
+                    addOnIds: _addOnIdList,
+                    product: product,
+                    isGift: false,
+                    isFree: isFromLoyaltyPoints,
+                  );
 
                   _cartProvider.addToCart(_cartModel, _cartIndex);
                 } else {
@@ -404,24 +405,24 @@ class ProductWidgetWeb extends StatelessWidget {
                                                             _currentTime.isBefore(_endTime);
 
                                                         CartModel _cartModel = CartModel(
-                                                            price,
-                                                            priceWithDiscount,
-                                                            isFromLoyaltyPoints
+                                                            price: price,
+                                                            points: isFromLoyaltyPoints
                                                                 ? double.parse(product.loyaltyPoints)
                                                                 : 0.0,
-                                                            [_variation],
-                                                            (price -
+                                                            discountedPrice: priceWithDiscount,
+                                                            variation: [_variation],
+                                                            discountAmount: (price -
                                                                 PriceConverter.convertWithDiscount(context, price,
                                                                     product.discount, product.discountType)),
-                                                            1,
-                                                            '',
-                                                            price -
+                                                            quantity: 1,
+                                                            specialInstruction: '',
+                                                            taxAmount: price -
                                                                 PriceConverter.convertWithDiscount(
                                                                     context, price, product.tax, product.taxType),
-                                                            _addOnIdList,
-                                                            product,
-                                                            false,
-                                                            isFromLoyaltyPoints);
+                                                            addOnIds: _addOnIdList,
+                                                            product: product,
+                                                            isGift: false,
+                                                            isFree: isFromLoyaltyPoints);
 
                                                         _cartProvider.addToCart(_cartModel, _cartIndex);
                                                       } else {

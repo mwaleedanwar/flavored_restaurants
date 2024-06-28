@@ -135,19 +135,19 @@ class OrderItem extends StatelessWidget {
                                   }
 
                                   _cartList.add(CartModel(
-                                      orderDetail.price,
-                                      0.0,
-                                      PriceConverter.convertWithDiscount(context, orderDetail.price,
+                                      price: orderDetail.price,
+                                      points: 0.0,
+                                      discountedPrice: PriceConverter.convertWithDiscount(context, orderDetail.price,
                                           double.parse(orderDetail.discountOnProduct.toString()), 'amount'),
-                                      _variationList,
-                                      double.parse(orderDetail.discountOnProduct.toString()),
-                                      orderDetail.quantity,
-                                      '',
-                                      double.parse(orderDetail.taxAmount.toString()),
-                                      _addOnList,
-                                      orderDetail.productDetails,
-                                      false,
-                                      false));
+                                      variation: _variationList,
+                                      discountAmount: double.parse(orderDetail.discountOnProduct.toString()),
+                                      quantity: orderDetail.quantity,
+                                      specialInstruction: '',
+                                      taxAmount: double.parse(orderDetail.taxAmount.toString()),
+                                      addOnIds: _addOnList,
+                                      product: orderDetail.productDetails,
+                                      isGift: false,
+                                      isFree: false));
                                 });
                                 if (_availableList.contains(false)) {
                                   showCustomSnackBar(

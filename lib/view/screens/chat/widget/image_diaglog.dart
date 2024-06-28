@@ -9,7 +9,7 @@ class ImageDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -17,12 +17,12 @@ class ImageDialog extends StatelessWidget {
             Align(
               alignment: Alignment.centerRight,
               child: IconButton(
-                icon: Icon(Icons.close),
+                icon: const Icon(Icons.close),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
             Container(
-              margin: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+              margin: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10), color: Theme.of(context).primaryColor.withOpacity(0.20)),
               child: ClipRRect(
@@ -40,7 +40,7 @@ class ImageDialog extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
           ],
         ),
       ),

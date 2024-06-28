@@ -232,13 +232,15 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                         onTap: () {
                           if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
                             DealCartModel dealModle = DealCartModel(
-                                double.parse(widget.dealsDataModel.totalDiscountAmount),
-                                0.0,
-                                0.0,
-                                1,
-                                widget.dealsDataModel);
+                                price: double.parse(widget.dealsDataModel.totalDiscountAmount),
+                                discountedPrice: 0.0,
+                                discountAmount: 0.0,
+                                quantity: 1,
+                                dealsDataModel: widget.dealsDataModel);
 
-                            if (!_cartProvider.dealsList.map((e) => e.deal.id).contains(widget.dealsDataModel.id)) {
+                            if (!_cartProvider.dealsList
+                                .map((e) => e.dealsDataModel.id)
+                                .contains(widget.dealsDataModel.id)) {
                               _cartProvider.addDealToCart(dealModle, _cartIndex);
                               Navigator.pop(context);
 
@@ -251,14 +253,14 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                                   isCart: false,
                                   isDeal: true,
                                   dealCartModel: _cartProvider.dealsList
-                                      .where((element) => element.deal.id == widget.dealsDataModel.id)
+                                      .where((element) => element.dealsDataModel.id == widget.dealsDataModel.id)
                                       .toList()[0],
                                   productIndex: null);
                               Navigator.pop(context);
 
                               appToast(
                                   text:
-                                      'Deal added ${_cartProvider.dealsList.where((element) => element.deal.id == widget.dealsDataModel.id).toList()[0].quantity.toString()} times',
+                                      'Deal added ${_cartProvider.dealsList.where((element) => element.dealsDataModel.id == widget.dealsDataModel.id).toList()[0].quantity.toString()} times',
                                   toastColor: Colors.green);
 
                               //appToast(text: 'Item added ${ _cartProvider.cartList.where((element) => element.product.id==product.id).toList()[0].quantity.toString()} times!',toastColor: Colors.green);

@@ -253,26 +253,26 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                 print('--from poinst:${widget.fromPoints}');
 
                 CartModel _cartModel = CartModel(
-                    widget.fromPoints == false ? price : 0.0,
-                    widget.fromPoints ? double.parse(widget.product.loyaltyPoints) : 0.0,
-                    priceWithDiscount,
-                    List.from(selectedVariations),
-                    widget.fromPoints == false
+                    price: widget.fromPoints == false ? price : 0.0,
+                    points: widget.fromPoints ? double.parse(widget.product.loyaltyPoints) : 0.0,
+                    discountedPrice: priceWithDiscount,
+                    variation: List.from(selectedVariations),
+                    discountAmount: widget.fromPoints == false
                         ? (price -
                             PriceConverter.convertWithDiscount(
                                 context, price, widget.product.discount, widget.product.discountType))
                         : 0,
-                    productProvider.quantity,
-                    _specilInstructionController.text ?? '',
-                    widget.fromPoints == false
+                    quantity: productProvider.quantity,
+                    specialInstruction: _specilInstructionController.text ?? '',
+                    taxAmount: widget.fromPoints == false
                         ? price -
                             PriceConverter.convertWithDiscount(
                                 context, price, widget.product.tax, widget.product.taxType)
                         : 0,
-                    _addOnIdList,
-                    widget.product,
-                    false,
-                    widget.fromPoints);
+                    addOnIds: _addOnIdList,
+                    product: widget.product,
+                    isGift: false,
+                    isFree: widget.fromPoints);
 
                 _cartIndex = _cartProvider.isExistInCart(widget.product.id, [...selectedVariations]);
                 print('is exit : $_cartIndex');

@@ -19,19 +19,19 @@ class HttpClient {
   final SharedPreferences sharedPreferences;
 
   Dio dio;
-  String token;
+  String? token;
 
   HttpClient(
     this.baseUrl,
     Dio dioC, {
-    this.loggingInterceptor,
-    this.sharedPreferences,
+    required this.loggingInterceptor,
+    required this.sharedPreferences,
   }) {
     token = sharedPreferences.getString(AppConstants.TOKEN);
     //print(token);
   }
 
-  Future<void> updateHeader({String getToken}) async {
+  Future<void> updateHeader({required String getToken}) async {
     dio = sl() ?? Dio();
     dio
       ..options.baseUrl = baseUrl
@@ -58,7 +58,7 @@ class HttpClient {
     try {
       var url = Uri.parse(F.BASE_URL + uri);
       debugPrint('=====$uri :$url');
-      print('====toke:$token');
+      debugPrint('====token: $token');
 
       var response = await http.get(url,
 
@@ -75,9 +75,10 @@ class HttpClient {
     } on SocketException catch (e) {
       throw SocketException(e.toString());
     } on FormatException catch (_) {
-      throw FormatException("Unable to process the data");
+      throw const FormatException("Unable to process the data");
     } catch (e) {
-      throw e;
+      debugPrint('Unknown Error: $e');
+      rethrow;
     }
   }
 
@@ -105,11 +106,10 @@ class HttpClient {
       debugPrint('=====$uri response :${response.statusCode}');
       return response;
     } on FormatException catch (_) {
-      throw FormatException("Unable to process the data");
+      throw const FormatException("Unable to process the data");
     } catch (e) {
-      debugPrint('error here :$e');
-
-      throw e;
+      debugPrint('Unknown error :$e');
+      rethrow;
     }
   }
 
@@ -133,9 +133,10 @@ class HttpClient {
       );
       return response;
     } on FormatException catch (_) {
-      throw FormatException("Unable to process the data");
+      throw const FormatException("Unable to process the data");
     } catch (e) {
-      throw e;
+      debugPrint('Unknown error :$e');
+      rethrow;
     }
   }
 
@@ -160,9 +161,10 @@ class HttpClient {
       );
       return response;
     } on FormatException catch (_) {
-      throw FormatException("Unable to process the data");
+      throw const FormatException("Unable to process the data");
     } catch (e) {
-      throw e;
+      debugPrint('Unknown error :$e');
+      rethrow;
     }
   }
 }
@@ -214,9 +216,10 @@ class DioClient {
     } on SocketException catch (e) {
       throw SocketException(e.toString());
     } on FormatException catch (_) {
-      throw FormatException("Unable to process the data");
+      throw const FormatException("Unable to process the data");
     } catch (e) {
-      throw e;
+      debugPrint('Unknown error :$e');
+      rethrow;
     }
   }
 
@@ -241,9 +244,10 @@ class DioClient {
       );
       return response;
     } on FormatException catch (_) {
-      throw FormatException("Unable to process the data");
+      throw const FormatException("Unable to process the data");
     } catch (e) {
-      throw e;
+      debugPrint('Unknown error :$e');
+      rethrow;
     }
   }
 
@@ -268,9 +272,10 @@ class DioClient {
       );
       return response;
     } on FormatException catch (_) {
-      throw FormatException("Unable to process the data");
+      throw const FormatException("Unable to process the data");
     } catch (e) {
-      throw e;
+      debugPrint('Unknown error :$e');
+      rethrow;
     }
   }
 
@@ -291,9 +296,10 @@ class DioClient {
       );
       return response;
     } on FormatException catch (_) {
-      throw FormatException("Unable to process the data");
+      throw const FormatException("Unable to process the data");
     } catch (e) {
-      throw e;
+      debugPrint('Unknown error :$e');
+      rethrow;
     }
   }
 }

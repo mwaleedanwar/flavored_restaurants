@@ -64,8 +64,13 @@ class _SpecialOfferProductCardState extends State<SpecialOfferProductCard> {
         onTap: () {
           if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
             if (widget.isCatering) {
-              CateringCartModel cartModel =
-                  CateringCartModel(_total, 0.0, double.parse(_subtotal), 1, widget.specialOfferModel);
+              CateringCartModel cartModel = CateringCartModel(
+                price: _total,
+                discountedPrice: 0.0,
+                discountAmount: double.parse(_subtotal),
+                quantity: 1,
+                catering: widget.specialOfferModel,
+              );
 
               if (!_cartProvider.cateringList.map((e) => e.catering.id).contains(widget.specialOfferModel.id)) {
                 _cartProvider.addCateringToCart(cartModel, _cartIndex);
@@ -98,8 +103,12 @@ class _SpecialOfferProductCardState extends State<SpecialOfferProductCard> {
               }
               bool _isAvailable = _currentTime.isAfter(_startTime) && _currentTime.isBefore(_endTime);
               if (_isAvailable) {
-                HappyHoursCartModel _happyHoursModel = HappyHoursCartModel(double.parse(widget.offerProduct.itemPrice),
-                    double.parse(widget.offerProduct.itemDiscountPrice), 1, widget.offerProduct);
+                HappyHoursCartModel _happyHoursModel = HappyHoursCartModel(
+                  price: double.parse(widget.offerProduct.itemPrice),
+                  discountAmount: double.parse(widget.offerProduct.itemDiscountPrice),
+                  quantity: 1,
+                  happyHours: widget.offerProduct,
+                );
 
                 if (!_cartProvider.happyHoursList.map((e) => e.happyHours.id).contains(widget.offerProduct.id)) {
                   _cartProvider.addHappyHoursToCart(_happyHoursModel, _cartIndex);

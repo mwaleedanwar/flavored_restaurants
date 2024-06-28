@@ -4,377 +4,270 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_mo
 import '../response/offer_model.dart';
 
 class PlaceOrderBody {
-  List<Cart> _cart;
-  List<SpecialOfferModel> _catering;
-  List<OfferProduct> _happyHours;
-  double _couponDiscountAmount;
-  String _couponDiscountTitle;
-  double _orderAmount;
-  String _orderType;
-  int _restaurantId;
-  String _paymentMethod;
-  String _userId;
-  String _paymentId;
-  String _chargeId;
-  String _tipChargeId;
-  String _orderNote;
-  String _couponCode;
-  String _deliveryTime;
-  String _deliveryDate;
-  int _branchId;
-  double _distance;
-  double _orderTip;
-  double _taxFee;
-  String _transactionReference;
-  String _platform;
-  String _address;
-  String _floor;
+  List<Cart> cart;
+  List<SpecialOfferModel> catering;
+  List<OfferProduct> happyHours;
+  double couponDiscountAmount;
+  String couponDiscountTitle;
+  double orderAmount;
+  String orderType;
+  int restaurantId;
+  String paymentMethod;
+  String userId;
+  String paymentId;
+  String chargeId;
+  String tipChargeId;
+  String orderNote;
+  String couponCode;
+  String deliveryTime;
+  String deliveryDate;
+  int branchId;
+  double distance;
+  double orderTip;
+  double taxFee;
+  String transactionReference;
+  String platform;
+  String address;
+  String floor;
 
-  String _cardNo;
-  String _firstName;
-  String _expiryMonth;
-  String _lastName;
-  String _email;
-  String _expYear;
-  String _phone;
-  String _latitude;
-  String _longitude;
-  String _ccv;
-  String _cardHolder;
-  String _contactName;
-  String _contactPhone;
-  String _addressType;
+  String cardNo;
+  String firstName;
+  String expiryMonth;
+  String lastName;
+  String email;
+  String expYear;
+  String phone;
+  String latitude;
+  String longitude;
+  String ccv;
+  String cardHolder;
+  String contactName;
+  String contactPhone;
+  String addressType;
   PlaceOrderBody copyWith({String paymentMethod, String transactionReference}) {
-    _paymentMethod = paymentMethod;
-    _transactionReference = transactionReference;
+    paymentMethod = paymentMethod;
+    transactionReference = transactionReference;
     return this;
   }
 
   PlaceOrderBody(
-      {@required List<Cart> cart,
-      @required List<SpecialOfferModel> catering,
-      @required List<OfferProduct> happyHours,
-      @required double couponDiscountAmount,
-      @required String couponDiscountTitle,
-      @required String couponCode,
-      @required double orderAmount,
-      @required int restaurantId,
-      @required String orderType,
-      @required String paymentMethod,
-      @required int branchId,
-      @required String deliveryTime,
-      @required String deliveryDate,
-      @required String orderNote,
-      @required double distance,
-      double orderTip,
-      double taxFee,
-      @required String userId,
-      @required String paymentId,
-      @required String chargeId,
-      @required String tipChargeId,
-      String transactionReference,
-      String platform,
-      String address,
-      String cardNo,
-      String expiryMonth,
-      String firstName,
-      String lastName,
-      String email,
-      String expYear,
-      String phone,
-      String floor,
-      String latitude,
-      String longitude,
-      String ccv,
-      String cardHolder,
-      String contactName,
-      String contactPhone,
-      String addressType}) {
-    this._cart = cart;
-    this._couponDiscountAmount = couponDiscountAmount;
-    this._couponDiscountTitle = couponDiscountTitle;
-    this._orderAmount = orderAmount;
-    this._orderType = orderType;
-    this._restaurantId = restaurantId;
-    this._paymentMethod = paymentMethod;
-    this._orderNote = orderNote;
-    this._couponCode = couponCode;
-    this._deliveryTime = deliveryTime;
-    this._deliveryDate = deliveryDate;
-    this._branchId = branchId;
-    this._distance = distance;
-    this._orderTip = orderTip;
-    this._taxFee = taxFee;
-    this._userId = userId;
-    this._chargeId = chargeId;
-    this._tipChargeId = tipChargeId;
-    this._paymentId = paymentId;
-    this._catering = catering;
-    this._happyHours = happyHours;
-
-    this._transactionReference = transactionReference;
-    this._platform = platform;
-    this._address = address;
-    this._floor = _floor;
-    this._cardNo = cardNo;
-    this._expiryMonth = expiryMonth;
-    this._firstName = firstName;
-    this._lastName = lastName;
-    this._email = email;
-    this._expYear = expYear;
-    this._phone = phone;
-    this._latitude = latitude;
-    this._longitude = longitude;
-    this._ccv = ccv;
-    this._cardHolder = cardHolder;
-    this._contactName = contactName;
-    this._contactPhone = contactPhone;
-    this._addressType = addressType;
-  }
-
-  List<Cart> get cart => _cart;
-  List<OfferProduct> get happyOffers => _happyHours;
-  List<SpecialOfferModel> get catering => _catering;
-  double get couponDiscountAmount => _couponDiscountAmount;
-  String get couponDiscountTitle => _couponDiscountTitle;
-  double get orderAmount => _orderAmount;
-  String get orderType => _orderType;
-  int get restaurantId => _restaurantId;
-  String get paymentMethod => _paymentMethod;
-  String get userId => _userId;
-  String get chargeId => _chargeId;
-  String get tipChargeId => _tipChargeId;
-  String get paymentId => _paymentId;
-  String get orderNote => _orderNote;
-  String get couponCode => _couponCode;
-  String get deliveryTime => _deliveryTime;
-  String get deliveryDate => _deliveryDate;
-  int get branchId => _branchId;
-  double get distance => _distance;
-  double get orderTip => _orderTip;
-  double get taxFee => _taxFee;
-  String get transactionReference => _transactionReference;
-  String get platform => _platform;
-  String get address => _address;
-  String get cardNo => _cardNo;
-  String get expiryMonth => _expiryMonth;
-  String get firstName => _firstName;
-  String get lastName => _lastName;
-  String get email => _email;
-  String get expYear => _expYear;
-  String get phone => _phone;
-  String get floor => _floor;
-  String get latitude => _latitude;
-  String get longitude => _longitude;
-  String get ccv => _ccv;
-  String get cardHolder => _cardHolder;
-  String get contactName => _contactName;
-  String get contactPhone => _contactName;
-  String get addressType => _addressType;
+      {@required this.cart,
+      @required this.catering,
+      @required this.couponDiscountAmount,
+      @required this.couponDiscountTitle,
+      @required this.couponCode,
+      @required this.orderAmount,
+      @required this.restaurantId,
+      @required this.orderType,
+      @required this.paymentMethod,
+      @required this.branchId,
+      @required this.deliveryTime,
+      @required this.deliveryDate,
+      @required this.orderNote,
+      @required this.distance,
+      @required this.userId,
+      @required this.paymentId,
+      @required this.chargeId,
+      @required this.tipChargeId,
+      @required this.happyHours,
+      this.orderTip,
+      this.taxFee,
+      this.transactionReference,
+      this.platform,
+      this.address,
+      this.cardNo,
+      this.expiryMonth,
+      this.firstName,
+      this.lastName,
+      this.email,
+      this.expYear,
+      this.phone,
+      this.floor,
+      this.latitude,
+      this.longitude,
+      this.ccv,
+      this.cardHolder,
+      this.contactName,
+      this.contactPhone,
+      this.addressType});
 
   PlaceOrderBody.fromJson(Map<String, dynamic> json) {
     if (json['cart'] != null) {
-      _cart = [];
+      cart = [];
       json['cart'].forEach((v) {
-        _cart.add(new Cart.fromJson(v));
+        cart.add(Cart.fromJson(v));
       });
     }
     if (json['catering'] != null) {
-      _cart = [];
+      cart = [];
       json['catering'].forEach((v) {
-        _catering.add(new SpecialOfferModel.fromJson(v));
+        catering.add(SpecialOfferModel.fromJson(v));
       });
     }
     if (json['happy_hours'] != null) {
-      _cart = [];
+      cart = [];
       json['happy_hours'].forEach((v) {
-        _catering.add(new SpecialOfferModel.fromJson(v));
+        catering.add(SpecialOfferModel.fromJson(v));
       });
     }
-    _couponDiscountAmount = json['coupon_discount_amount'];
-    _couponDiscountTitle = json['coupon_discount_title'];
-    _orderAmount = json['order_amount'];
-    _orderType = json['order_type'];
-    _restaurantId = json['delivery_address_id'];
-    _paymentMethod = json['payment_method'];
-    _userId = json['user_id'];
-    _chargeId = json['charge_id'];
-    _tipChargeId = json['tip_charge_id '];
-    _paymentId = json['payment_id'];
-    _orderNote = json['order_note'];
-    _couponCode = json['coupon_code'];
-    _deliveryTime = json['delivery_time'];
-    _deliveryDate = json['delivery_date'];
-    _branchId = json['branch_id'];
-    _distance = json['distance'];
-    _orderTip = json['order_tip_amount'];
-    _taxFee = json['total_tax_amount'];
-    _platform = json['platform '];
-    _address = json['address'];
-    _cardNo = json['card_no'];
-    _expiryMonth = json['exp_month'];
-    _firstName = json['f_name'];
-    _lastName = json['l_name'];
-    _email = json['email'];
-    _expYear = json['exp_year'];
-    _phone = json['phone'];
-    _floor = json['floor'];
-    _latitude = json['latitude'];
-    _longitude = json['longitude'];
-    _ccv = json['cvc'];
-    _cardHolder = json['card_holder_name'];
-    _contactName = json['contact_person_name'];
-    _contactPhone = json['contact_person_number'];
-    _addressType = json['address_type'];
+    couponDiscountAmount = json['coupon_discount_amount'];
+    couponDiscountTitle = json['coupon_discount_title'];
+    orderAmount = json['order_amount'];
+    orderType = json['order_type'];
+    restaurantId = json['delivery_address_id'];
+    paymentMethod = json['payment_method'];
+    userId = json['user_id'];
+    chargeId = json['charge_id'];
+    tipChargeId = json['tip_charge_id '];
+    paymentId = json['payment_id'];
+    orderNote = json['order_note'];
+    couponCode = json['coupon_code'];
+    deliveryTime = json['delivery_time'];
+    deliveryDate = json['delivery_date'];
+    branchId = json['branch_id'];
+    distance = json['distance'];
+    orderTip = json['order_tip_amount'];
+    taxFee = json['total_tax_amount'];
+    platform = json['platform '];
+    address = json['address'];
+    cardNo = json['card_no'];
+    expiryMonth = json['exp_month'];
+    firstName = json['f_name'];
+    lastName = json['l_name'];
+    email = json['email'];
+    expYear = json['exp_year'];
+    phone = json['phone'];
+    floor = json['floor'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
+    ccv = json['cvc'];
+    cardHolder = json['card_holder_name'];
+    contactName = json['contact_person_name'];
+    contactPhone = json['contact_person_number'];
+    addressType = json['address_type'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this._catering != null) {
-      data['catering'] = this._catering.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (catering != null) {
+      data['catering'] = catering.map((v) => v.toJson()).toList();
     }
-    if (this._happyHours != null) {
-      data['happy_hours'] = this._happyHours.map((v) => v.toJson()).toList();
+    if (happyHours != null) {
+      data['happy_hours'] = happyHours.map((v) => v.toJson()).toList();
     }
-    if (this._cart != null) {
-      data['cart'] = this._cart.map((v) => v.toJson()).toList();
+    if (cart != null) {
+      data['cart'] = cart.map((v) => v.toJson()).toList();
     }
-    data['coupon_discount_amount'] = this._couponDiscountAmount;
-    data['coupon_discount_title'] = this._couponDiscountTitle;
-    data['order_amount'] = this._orderAmount;
-    data['order_type'] = this._orderType;
-    data['restaurant_id'] = this._restaurantId;
-    data['payment_method'] = this._paymentMethod;
-    data['user_id'] = this._userId;
-    data['charge_id'] = this._chargeId;
-    data['tip_charge_id '] = this._tipChargeId;
-    data['payment_id'] = this._paymentId;
-    data['order_note'] = this._orderNote;
-    data['coupon_code'] = this._couponCode;
-    data['delivery_time'] = this._deliveryTime;
-    data['delivery_date'] = this._deliveryDate;
-    data['branch_id'] = this._branchId;
-    data['distance'] = this._distance;
-    data['order_tip_amount'] = this._orderTip;
-    data['total_tax_amount'] = this._taxFee;
-    data['address'] = this._address;
-    data['card_no'] = this._cardNo;
-    data['exp_month'] = this._expiryMonth;
-    data['f_name'] = this._firstName;
-    data['l_name'] = this._lastName;
-    data['email'] = this._email;
-    data['exp_year'] = this._expYear;
-    data['phone'] = this._phone;
-    data['floor'] = this._floor;
-    data['latitude'] = this._latitude;
-    data['longitude'] = this._longitude;
-    data['cvc'] = this._ccv;
-    data['card_holder_name'] = this._cardHolder;
-    data['contact_person_name'] = this._contactName;
-    data['contact_person_number'] = this._contactPhone;
-    data['address_type'] = this._addressType;
+    data['coupon_discount_amount'] = couponDiscountAmount;
+    data['coupon_discount_title'] = couponDiscountTitle;
+    data['order_amount'] = orderAmount;
+    data['order_type'] = orderType;
+    data['restaurant_id'] = restaurantId;
+    data['payment_method'] = paymentMethod;
+    data['user_id'] = userId;
+    data['charge_id'] = chargeId;
+    data['tip_charge_id '] = tipChargeId;
+    data['payment_id'] = paymentId;
+    data['order_note'] = orderNote;
+    data['coupon_code'] = couponCode;
+    data['delivery_time'] = deliveryTime;
+    data['delivery_date'] = deliveryDate;
+    data['branch_id'] = branchId;
+    data['distance'] = distance;
+    data['order_tip_amount'] = orderTip;
+    data['total_tax_amount'] = taxFee;
+    data['address'] = address;
+    data['card_no'] = cardNo;
+    data['exp_month'] = expiryMonth;
+    data['f_name'] = firstName;
+    data['l_name'] = lastName;
+    data['email'] = email;
+    data['exp_year'] = expYear;
+    data['phone'] = phone;
+    data['floor'] = floor;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
+    data['cvc'] = ccv;
+    data['card_holder_name'] = cardHolder;
+    data['contact_person_name'] = contactName;
+    data['contact_person_number'] = contactPhone;
+    data['address_type'] = addressType;
 
-    if (_transactionReference != null) {
-      data['transaction_reference'] = this._transactionReference;
+    if (transactionReference != null) {
+      data['transaction_reference'] = transactionReference;
     }
     if (platform != null) {
-      data['platform'] = this._platform;
+      data['platform'] = platform;
     }
     return data;
   }
 }
 
 class Cart {
-  String _productId;
-  String _cateringId;
-  String _happyHoursId;
-  String _dealId;
-  String _price;
-  String _variant;
-  List<Variation> _variation;
-  double _discountAmount;
-  int _quantity;
-  double _taxAmount;
-  List<int> _addOnIds;
-  List<int> _addOnQtys;
+  String productId;
+  String cateringId;
+  String happyHoursId;
+  String dealId;
+  String price;
+  String variant;
+  double discountAmount;
+  int quantity;
+  double taxAmount;
+  List<Variation> variation;
+  List<int> addOnIds;
+  List<int> addOnQtys;
 
   Cart(
-      String productId,
-      String price,
-      String cateringId,
-      String happyHoursId,
-      String dealId,
-      String variant,
-      List<Variation> variation,
-      double discountAmount,
-      int quantity,
-      double taxAmount,
-      List<int> addOnIds,
-      List<int> addOnQtys) {
-    this._productId = productId;
-    this._price = price;
-    this._variant = variant;
-    this._variation = variation;
-    this._discountAmount = discountAmount;
-    this._quantity = quantity;
-    this._dealId = dealId;
-    this._taxAmount = taxAmount;
-    this._addOnIds = addOnIds;
-    this._addOnQtys = addOnQtys;
-    this._cateringId = cateringId;
-    this._happyHoursId = happyHoursId;
-  }
-
-  String get productId => _productId;
-  String get cateringId => _cateringId;
-  String get happyHoursId => _happyHoursId;
-  String get dealId => _dealId;
-  String get price => _price;
-  String get variant => _variant;
-  List<Variation> get variation => _variation;
-  double get discountAmount => _discountAmount;
-  int get quantity => _quantity;
-  double get taxAmount => _taxAmount;
-  List<int> get addOnIds => _addOnIds;
-  List<int> get addOnQtys => _addOnQtys;
+    this.productId,
+    this.price,
+    this.cateringId,
+    this.happyHoursId,
+    this.dealId,
+    this.variant,
+    this.variation,
+    this.discountAmount,
+    this.quantity,
+    this.taxAmount,
+    this.addOnIds,
+    this.addOnQtys,
+  );
 
   Cart.fromJson(Map<String, dynamic> json) {
-    _productId = json['product_id'];
-    _cateringId = json['catering_id'];
-    _happyHoursId = json['happy_hour_id'];
-    _dealId = json['deal_id'];
-
-    _price = json['price'];
-    _variant = json['variant'];
+    productId = json['product_id'];
+    cateringId = json['catering_id'];
+    happyHoursId = json['happy_hour_id'];
+    dealId = json['deal_id'];
+    price = json['price'];
+    variant = json['variant'];
     if (json['variation'] != null) {
-      _variation = [];
+      variation = [];
       json['variation'].forEach((v) {
-        _variation.add(new Variation.fromJson(v));
+        variation.add(Variation.fromJson(v));
       });
     }
-    _discountAmount = json['discount_amount'];
-    _quantity = json['quantity'];
-    _taxAmount = json['tax_amount'];
-    _addOnIds = json['add_on_ids'].cast<int>();
-    _addOnQtys = json['add_on_qtys'].cast<int>();
+    discountAmount = json['discount_amount'];
+    quantity = json['quantity'];
+    taxAmount = json['tax_amount'];
+    addOnIds = json['add_on_ids'].cast<int>();
+    addOnQtys = json['add_on_qtys'].cast<int>();
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['product_id'] = this._productId;
-    data['catering_id'] = this._cateringId;
-    data['happy_hour_id'] = this._happyHoursId;
-    data['deal_id'] = this._dealId;
-    data['price'] = this._price;
-    data['variant'] = this._variant;
-    if (this._variation != null) {
-      data['variation'] = this._variation.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['product_id'] = productId;
+    data['catering_id'] = cateringId;
+    data['happy_hour_id'] = happyHoursId;
+    data['deal_id'] = dealId;
+    data['price'] = price;
+    data['variant'] = variant;
+    if (variation != null) {
+      data['variation'] = variation.map((v) => v.toJson()).toList();
     }
-    data['discount_amount'] = this._discountAmount;
-    data['quantity'] = this._quantity;
-    data['tax_amount'] = this._taxAmount;
-    data['add_on_ids'] = this._addOnIds;
-    data['add_on_qtys'] = this._addOnQtys;
+    data['discount_amount'] = discountAmount;
+    data['quantity'] = quantity;
+    data['tax_amount'] = taxAmount;
+    data['add_on_ids'] = addOnIds;
+    data['add_on_qtys'] = addOnQtys;
     return data;
   }
 }

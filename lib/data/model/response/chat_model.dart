@@ -13,18 +13,18 @@ class ChatModel {
     if (json['messages'] != null) {
       messages = <Messages>[];
       json['messages'].forEach((v) {
-        messages.add(new Messages.fromJson(v));
+        messages.add(Messages.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['total_size'] = this.totalSize;
-    data['limit'] = this.limit;
-    data['offset'] = this.offset;
-    if (this.messages != null) {
-      data['messages'] = this.messages.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['total_size'] = totalSize;
+    data['limit'] = limit;
+    data['offset'] = offset;
+    if (messages != null) {
+      data['messages'] = messages.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -43,69 +43,58 @@ class Messages {
   String createdAt;
   String updatedAt;
 
-  Messages(
-      {this.id,
-        this.conversationId,
-        this.customerId,
-        this.deliverymanId,
-        this.message,
-        this.reply,
-        this.attachment,
-        this.image,
-        this.isReply,
-        this.createdAt,
-        this.updatedAt});
+  Messages({
+    this.id,
+    this.conversationId,
+    this.customerId,
+    this.deliverymanId,
+    this.message,
+    this.reply,
+    this.attachment,
+    this.image,
+    this.isReply,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   Messages.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    try{
-      conversationId = json['conversation_id'];
-    }catch(e) {
-      conversationId = int.parse(json['conversation_id']);
+    conversationId = int.tryParse(json['conversation_id']);
+    if (json['customer_id'] != null) {
+      customerId = CustomerId.fromJson(json['customer_id']);
     }
-    if(json['customer_id']!=null){
-      customerId = json['customer_id'] != null
-          ? new CustomerId.fromJson(json['customer_id'])
-          : null;
-    }
-
-    if(json['deliveryman_id']!= null){
-      deliverymanId = json['deliveryman_id'] != null
-          ? new DeliverymanId.fromJson(json['deliveryman_id'])
-          : null;
+    if (json['deliveryman_id'] != null) {
+      deliverymanId = DeliverymanId.fromJson(json['deliveryman_id']);
     }
     message = json['message'];
     reply = json['reply'];
-    if(json['attachment']!=null && json['attachment']!=[]){
+    if (json['attachment'] != null && json['attachment'].isNotEmpty) {
       attachment = json['attachment'].cast<String>();
     }
-    if(json['image']!=null){
+    if (json['image'] != null) {
       image = json['image'].cast<String>();
     }
-
     isReply = json['is_reply'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['conversation_id'] = this.conversationId;
-    if (this.customerId != null) {
-      data['customer_id'] = this.customerId.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['conversation_id'] = conversationId;
+    data['message'] = message;
+    data['reply'] = reply;
+    data['attachment'] = attachment;
+    data['image'] = image;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    if (customerId != null) {
+      data['customer_id'] = customerId.toJson();
     }
-    if (this.deliverymanId != null) {
-      data['deliveryman_id'] = this.deliverymanId.toJson();
+    if (deliverymanId != null) {
+      data['deliveryman_id'] = deliverymanId.toJson();
     }
-    data['message'] = this.message;
-    data['reply'] = this.reply;
-    data['attachment'] = this.attachment;
-    data['image'] = this.image;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-
-
     return data;
   }
 }
@@ -122,12 +111,13 @@ class CustomerId {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['image'] = this.image;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['image'] = image;
     return data;
   }
 }
+
 class DeliverymanId {
   String name;
   String image;
@@ -140,9 +130,9 @@ class DeliverymanId {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['image'] = this.image;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['image'] = image;
     return data;
   }
 }

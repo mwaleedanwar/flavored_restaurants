@@ -13,7 +13,6 @@ import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart
 import 'package:fwfh_selectable_text/fwfh_selectable_text.dart';
 import 'package:provider/provider.dart';
 import 'package:universal_html/html.dart' as html;
-import 'package:universal_ui/universal_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HtmlViewerScreen extends StatelessWidget {
@@ -62,7 +61,7 @@ class HtmlViewerScreen extends StatelessWidget {
     String _viewID = htmlType.toString();
     if (ResponsiveHelper.isWeb()) {
       try {
-        ui.platformViewRegistry.registerViewFactory(_viewID, (int viewId) {
+        platformViewRegistry.registerViewFactory(_viewID, (int viewId) {
           html.IFrameElement _ife = html.IFrameElement();
           _ife.width = '1170';
           _ife.height = MediaQuery.of(context).size.height.toString();
@@ -76,7 +75,7 @@ class HtmlViewerScreen extends StatelessWidget {
     }
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? WebAppBar()
           : CustomAppBar(
               title: getTranslated(_appBarText, context),
               context: context,
@@ -119,7 +118,7 @@ class HtmlViewerScreen extends StatelessWidget {
                         padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                         physics: BouncingScrollPhysics(),
                         child: HtmlWidget(
-                          _data ?? '',
+                          _data,
                           key: Key(htmlType.toString()),
                           onTapUrl: (String url) {
                             return launchUrl(Uri.parse(url));

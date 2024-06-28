@@ -282,7 +282,7 @@ class CartProvider extends ChangeNotifier {
 
   int getCarDealIndex(DealsDataModel dataModel) {
     for (int index = 0; index < _dealsList.length; index++) {
-      if (_dealsList[index].deal.id == dataModel.id) {
+      if (_dealsList[index].dealsDataModel.id == dataModel.id) {
         return index;
       }
     }

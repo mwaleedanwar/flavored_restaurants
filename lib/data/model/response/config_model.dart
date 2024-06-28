@@ -1,286 +1,179 @@
 import 'package:flutter/cupertino.dart';
 
 class ConfigModel {
-  String _restaurantName;
-  String _restaurantLogo;
-  String _restaurantAddress;
-  String _restaurantPhone;
-  String _restaurantEmail;
-  BaseUrls _baseUrls;
-  String _currencySymbol;
-  double _deliveryCharge;
-  double _taxFee;
-  String _cashOnDelivery;
-  String _digitalPayment;
-  String _termsAndConditions;
-  String _privacyPolicy;
-  String _aboutUs;
-  bool _emailVerification;
-  bool _phoneVerification;
-  String _currencySymbolPosition;
-  bool _maintenanceMode;
-  String _countryCode;
-  bool _selfPickup;
-  bool _homeDelivery;
-  RestaurantLocationCoverage _restaurantLocationCoverage;
-  double _minimumOrderValue;
-  List<Branches> _branches;
-   List<BannerForRestaurantWebApp> _bannerForRestaurantWebApp;
+  String restaurantName;
+  String restaurantLogo;
+  String restaurantAddress;
+  String restaurantPhone;
+  String restaurantEmail;
+  BaseUrls baseUrls;
+  String currencySymbol;
+  double deliveryCharge;
+  double taxFee;
+  String cashOnDelivery;
+  String digitalPayment;
+  String termsAndConditions;
+  String privacyPolicy;
+  String aboutUs;
+  bool emailVerification;
+  bool phoneVerification;
+  String currencySymbolPosition;
+  bool maintenanceMode;
+  String countryCode;
+  bool selfPickup;
+  bool homeDelivery;
+  RestaurantLocationCoverage restaurantLocationCoverage;
+  double minimumOrderValue;
+  DeliveryManagement deliveryManagement;
+  PlayStoreConfig playStoreConfig;
+  AppStoreConfig appStoreConfig;
+  String softwareVersion;
+  String footerCopyright;
+  String timeZone;
+  int decimalPointSettings;
+  int scheduleOrderSlotDuration;
+  String timeFormat;
+  SocialStatus socialLoginStatus;
+  List<Branches> branches;
+  List<BannerForRestaurantWebApp> bannerForRestaurantWebApp;
+  List<SocialMediaLink> socialMediaLink;
+  List<RestaurantScheduleTime> restaurantScheduleTime;
 
-  DeliveryManagement _deliveryManagement;
-  PlayStoreConfig _playStoreConfig;
-  AppStoreConfig _appStoreConfig;
-  List<SocialMediaLink> _socialMediaLink;
-  String _softwareVersion;
-  String _footerCopyright;
-  String _timeZone;
-  int _decimalPointSettings;
-  List<RestaurantScheduleTime> _restaurantScheduleTime;
-  int _scheduleOrderSlotDuration;
-  String _timeFormat;
-  SocialStatus _socialLoginStatus;
-
-
-  ConfigModel(
-      {String restaurantName,
-        String restaurantLogo,
-        String restaurantAddress,
-        String restaurantPhone,
-        String restaurantEmail,
-        BaseUrls baseUrls,
-        String currencySymbol,
-        double deliveryCharge,
-        double texFee,
-        String cashOnDelivery,
-        String digitalPayment,
-        String termsAndConditions,
-        String privacyPolicy,
-        String aboutUs,
-        bool emailVerification,
-        bool phoneVerification,
-        String currencySymbolPosition,
-        bool maintenanceMode,
-        String countryCode,
-        RestaurantLocationCoverage restaurantLocationCoverage,
-        double minimumOrderValue,
-        List<Branches> branches,
-        List<BannerForRestaurantWebApp> bannerForRestaurantWebApp,
-
-        bool selfPickup,
-        bool homeDelivery,
-        DeliveryManagement deliveryManagement,
-        PlayStoreConfig playStoreConfig,
-        AppStoreConfig appStoreConfig,
-        List<SocialMediaLink> socialMediaLink,
-        String softwareVersion,
-        String footerCopyright,
-        String timeZone,
-        int decimalPointSettings,
-        List<RestaurantScheduleTime> restaurantScheduleTime,
-        int scheduleOrderSlotDuration,
-        String timeFormat,
-        SocialStatus socialLoginStatus,
-      }) {
-    this._restaurantName = restaurantName;
-    this._restaurantLogo = restaurantLogo;
-    this._restaurantAddress = restaurantAddress;
-    this._restaurantPhone = restaurantPhone;
-    this._restaurantEmail = restaurantEmail;
-    this._baseUrls = baseUrls;
-    this._currencySymbol = currencySymbol;
-    this._deliveryCharge = deliveryCharge;
-    this._cashOnDelivery = cashOnDelivery;
-    this._digitalPayment = digitalPayment;
-    this._termsAndConditions = termsAndConditions;
-    this._aboutUs = aboutUs;
-    this._privacyPolicy = privacyPolicy;
-    this._restaurantLocationCoverage = restaurantLocationCoverage;
-    this._minimumOrderValue = minimumOrderValue;
-    this._branches = branches;
-    this._emailVerification = emailVerification;
-    this._phoneVerification = phoneVerification;
-    this._currencySymbolPosition = currencySymbolPosition;
-    this._maintenanceMode = maintenanceMode;
-    this._countryCode = countryCode;
-    this._taxFee=texFee;
-    this._selfPickup = selfPickup;
-    this._homeDelivery = homeDelivery;
-    this._deliveryManagement = deliveryManagement;
-    if (playStoreConfig != null) {
-      this._playStoreConfig = playStoreConfig;
-    }
-    if (appStoreConfig != null) {
-      this._appStoreConfig = appStoreConfig;
-    }
-    if (socialMediaLink != null) {
-      this._socialMediaLink = socialMediaLink;
-    }
-    this._bannerForRestaurantWebApp=bannerForRestaurantWebApp;
-
-    this._softwareVersion = softwareVersion ?? '';
-    this._footerCopyright = footerCopyright ?? '';
-    this._timeZone = timeZone ?? '';
-    this._decimalPointSettings = decimalPointSettings ?? 1;
-    this._restaurantScheduleTime = restaurantScheduleTime;
-    this._scheduleOrderSlotDuration = scheduleOrderSlotDuration;
-    this._timeFormat = timeFormat;
-  }
-
-  String get restaurantName => _restaurantName;
-  String get restaurantLogo => _restaurantLogo;
-  String get restaurantAddress => _restaurantAddress;
-  String get restaurantPhone => _restaurantPhone;
-  String get restaurantEmail => _restaurantEmail;
-  BaseUrls get baseUrls => _baseUrls;
-  String get currencySymbol => _currencySymbol;
-  double get deliveryCharge => _deliveryCharge;
-  double get texFee => _taxFee;
-  String get cashOnDelivery => _cashOnDelivery;
-  String get digitalPayment => _digitalPayment;
-  String get termsAndConditions => _termsAndConditions;
-  String get aboutUs=> _aboutUs;
-  String get privacyPolicy=> _privacyPolicy;
-  RestaurantLocationCoverage get restaurantLocationCoverage => _restaurantLocationCoverage;
-  double get minimumOrderValue => _minimumOrderValue;
-  List<Branches> get branches => _branches;
-  List<BannerForRestaurantWebApp> get bannerForRestaurantWebApp => _bannerForRestaurantWebApp;
-
-  bool get emailVerification => _emailVerification;
-  bool get phoneVerification => _phoneVerification;
-  String get currencySymbolPosition => _currencySymbolPosition;
-  bool get maintenanceMode => _maintenanceMode;
-  String get countryCode => _countryCode;
-  bool get selfPickup => _selfPickup;
-  bool get homeDelivery => _homeDelivery;
-  DeliveryManagement get deliveryManagement => _deliveryManagement;
-  PlayStoreConfig get playStoreConfig => _playStoreConfig;
-  AppStoreConfig get appStoreConfig => _appStoreConfig;
-  List<SocialMediaLink> get socialMediaLink => _socialMediaLink;
-  String get softwareVersion => _softwareVersion;
-  String get footerCopyright => _footerCopyright;
-  String get timeZone  => _timeZone;
-  int get decimalPointSettings => _decimalPointSettings;
-  List<RestaurantScheduleTime> get restaurantScheduleTime => _restaurantScheduleTime;
-  int get scheduleOrderSlotDuration => _scheduleOrderSlotDuration;
-  String get timeFormat => _timeFormat;
-  SocialStatus get socialLoginStatus => _socialLoginStatus;
-
+  ConfigModel({
+    this.restaurantName,
+    this.restaurantLogo,
+    this.restaurantAddress,
+    this.restaurantPhone,
+    this.restaurantEmail,
+    this.baseUrls,
+    this.currencySymbol,
+    this.deliveryCharge,
+    this.taxFee,
+    this.cashOnDelivery,
+    this.digitalPayment,
+    this.termsAndConditions,
+    this.privacyPolicy,
+    this.aboutUs,
+    this.emailVerification,
+    this.phoneVerification,
+    this.currencySymbolPosition,
+    this.maintenanceMode,
+    this.countryCode,
+    this.restaurantLocationCoverage,
+    this.minimumOrderValue,
+    this.selfPickup,
+    this.homeDelivery,
+    this.deliveryManagement,
+    this.playStoreConfig,
+    this.appStoreConfig,
+    this.softwareVersion = '',
+    this.footerCopyright = '',
+    this.timeZone = '',
+    this.decimalPointSettings = 1,
+    this.scheduleOrderSlotDuration,
+    this.timeFormat,
+    this.socialLoginStatus,
+    this.branches,
+    this.bannerForRestaurantWebApp,
+    this.socialMediaLink,
+    this.restaurantScheduleTime,
+  });
 
   ConfigModel.fromJson(Map<String, dynamic> json) {
-    _restaurantName = json['restaurant_name'];
-    _restaurantLogo = json['restaurant_logo'];
-    _restaurantAddress = json['restaurant_address'];
-    _restaurantPhone = json['restaurant_phone'];
-    _restaurantEmail = json['restaurant_email'];
-    _baseUrls = json['base_urls'] != null
-        ? new BaseUrls.fromJson(json['base_urls'])
+    restaurantName = json['restaurant_name'];
+    restaurantLogo = json['restaurant_logo'];
+    restaurantAddress = json['restaurant_address'];
+    restaurantPhone = json['restaurant_phone'];
+    restaurantEmail = json['restaurant_email'];
+    baseUrls = json['base_urls'] != null ? BaseUrls.fromJson(json['base_urls']) : null;
+    currencySymbol = json['currency_symbol'];
+    deliveryCharge = json['delivery_charge'].toDouble();
+    cashOnDelivery = json['cash_on_delivery'];
+    digitalPayment = json['digital_payment'];
+    termsAndConditions = json['terms_and_conditions'];
+    privacyPolicy = json['privacy_policy'];
+    aboutUs = json['about_us'];
+    emailVerification = json['email_verification'];
+    phoneVerification = json['phone_verification'];
+    taxFee = json['service_fee_estimated_tax'];
+    currencySymbolPosition = json['currency_symbol_position'];
+    maintenanceMode = json['maintenance_mode'];
+    countryCode = json['country'];
+    selfPickup = json['self_pickup'];
+    homeDelivery = json['delivery'];
+    restaurantLocationCoverage = json['restaurant_location_coverage'] != null
+        ? RestaurantLocationCoverage.fromJson(json['restaurant_location_coverage'])
         : null;
-    _currencySymbol = json['currency_symbol'];
-    _deliveryCharge = json['delivery_charge'].toDouble();
-    _cashOnDelivery = json['cash_on_delivery'];
-    _digitalPayment = json['digital_payment'];
-    _termsAndConditions = json['terms_and_conditions'];
-    _privacyPolicy = json['privacy_policy'];
-    _aboutUs = json['about_us'];
-    _emailVerification = json['email_verification'];
-    _phoneVerification = json['phone_verification'];
-    _taxFee = json['service_fee_estimated_tax'];
-    _currencySymbolPosition = json['currency_symbol_position'];
-    _maintenanceMode = json['maintenance_mode'];
-    _countryCode = json['country'];
-    _selfPickup = json['self_pickup'];
-    _homeDelivery = json['delivery'];
-    _restaurantLocationCoverage = json['restaurant_location_coverage'] != null
-        ? new RestaurantLocationCoverage.fromJson(json['restaurant_location_coverage']) : null;
-    _minimumOrderValue = json['minimum_order_value'] != null ? json['minimum_order_value'].toDouble() : 0;
+    minimumOrderValue = json['minimum_order_value'] != null ? json['minimum_order_value'].toDouble() : 0;
     if (json['branches'] != null) {
-      _branches = [];
+      branches = [];
       json['branches'].forEach((v) {
-        _branches.add(new Branches.fromJson(v));
+        branches.add(Branches.fromJson(v));
       });
     }
     if (json['banner_for_restaurant_web_app'] != null) {
-      _bannerForRestaurantWebApp = [];
+      bannerForRestaurantWebApp = [];
       json['banner_for_restaurant_web_app'].forEach((v) {
-        _bannerForRestaurantWebApp.add(new BannerForRestaurantWebApp.fromJson(v));
+        bannerForRestaurantWebApp.add(BannerForRestaurantWebApp.fromJson(v));
       });
     }
-    _deliveryManagement = json['delivery_management'] != null
-        ? new DeliveryManagement.fromJson(json['delivery_management'])
-        : null;
-    _playStoreConfig = json['play_store_config'] != null
-        ? new PlayStoreConfig.fromJson(json['play_store_config'])
-        : null;
-    _appStoreConfig = json['app_store_config'] != null
-        ? new AppStoreConfig.fromJson(json['app_store_config'])
-        : null;
+    deliveryManagement =
+        json['delivery_management'] != null ? DeliveryManagement.fromJson(json['delivery_management']) : null;
+    playStoreConfig = json['play_store_config'] != null ? PlayStoreConfig.fromJson(json['play_store_config']) : null;
+    appStoreConfig = json['app_store_config'] != null ? AppStoreConfig.fromJson(json['app_store_config']) : null;
 
     if (json['social_media_link'] != null) {
-      _socialMediaLink = <SocialMediaLink>[];
+      socialMediaLink = <SocialMediaLink>[];
       json['social_media_link'].forEach((v) {
-        _socialMediaLink.add(new SocialMediaLink.fromJson(v));
+        socialMediaLink.add(SocialMediaLink.fromJson(v));
       });
     }
-    if(json['software_version'] !=null){
-      _softwareVersion = json['software_version'];
+    if (json['software_version'] != null) {
+      softwareVersion = json['software_version'];
     }
-    if(json['footer_text']!=null){
-      _footerCopyright = json['footer_text'];
+    if (json['footer_text'] != null) {
+      footerCopyright = json['footer_text'];
     }
-    _timeZone = json['time_zone'];
-    _decimalPointSettings = json['decimal_point_settings'] ?? 1;
+    timeZone = json['time_zone'];
+    decimalPointSettings = json['decimal_point_settings'] ?? 1;
 
-    _restaurantScheduleTime = List<RestaurantScheduleTime>.from(json["restaurant_schedule_time"].map((x) => RestaurantScheduleTime.fromJson(x)));
+    restaurantScheduleTime = List<RestaurantScheduleTime>.from(
+        json["restaurant_schedule_time"].map((x) => RestaurantScheduleTime.fromJson(x)));
 
-    // try {
-    // }catch(_){
-    //   _restaurantScheduleTime = [];
-    // }
+    scheduleOrderSlotDuration = json['schedule_order_slot_duration'] ?? 30;
 
-    try {
-      _scheduleOrderSlotDuration = json['schedule_order_slot_duration'] ?? 30;
-    }catch(_){
-      _scheduleOrderSlotDuration = int.tryParse(json['schedule_order_slot_duration'] ?? 30);
-    }
-
-    _timeFormat =  json['time_format'].toString() ?? '12';
+    timeFormat = json['time_format'].toString() ?? '12';
     debugPrint('social login status: ${json['social_login']}');
 
-    if(json['social_login'] != null) {
-      _socialLoginStatus = SocialStatus.fromJson(json['social_login']) ;
-    }
-
-
-
-
+    socialLoginStatus = SocialStatus.fromJson(json['social_login']) ?? ;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['restaurant_name'] = this._restaurantName;
-    data['restaurant_logo'] = this._restaurantLogo;
-    data['restaurant_address'] = this._restaurantAddress;
-    data['restaurant_phone'] = this._restaurantPhone;
-    data['restaurant_email'] = this._restaurantEmail;
-    if (this._baseUrls != null) {
-      data['base_urls'] = this._baseUrls.toJson();
-    }
-    data['currency_symbol'] = this._currencySymbol;
-    data['delivery_charge'] = this._deliveryCharge;
-    data['cash_on_delivery'] = this._cashOnDelivery;
-    data['digital_payment'] = this._digitalPayment;
-    data['terms_and_conditions'] = this._termsAndConditions;
-    data['service_fee_estimated_tax'] = this._taxFee;
-    data['privacy_policy'] = this.privacyPolicy;
-    data['about_us'] = this.aboutUs;
-    data['email_verification'] = this.emailVerification;
-    data['phone_verification'] = this.phoneVerification;
-    data['currency_symbol_position'] = this.currencySymbolPosition;
-    data['banner_for_restaurant_web_app'] = this.bannerForRestaurantWebApp;
-    data['maintenance_mode'] = this.maintenanceMode;
-    data['country'] = this.countryCode;
-    data['self_pickup'] = this.selfPickup;
-    data['delivery'] = this.homeDelivery;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['restaurant_name'] = restaurantName;
+    data['restaurant_logo'] = restaurantLogo;
+    data['restaurant_address'] = restaurantAddress;
+    data['restaurant_phone'] = restaurantPhone;
+    data['restaurant_email'] = restaurantEmail;
+    
+      data['base_urls'] = baseUrls?.toJson();
+    
+    data['currency_symbol'] = currencySymbol;
+    data['delivery_charge'] = deliveryCharge;
+    data['cash_on_delivery'] = cashOnDelivery;
+    data['digital_payment'] = digitalPayment;
+    data['terms_and_conditions'] = termsAndConditions;
+    data['service_fee_estimated_tax'] = taxFee;
+    data['privacy_policy'] = privacyPolicy;
+    data['about_us'] = aboutUs;
+    data['email_verification'] = emailVerification;
+    data['phone_verification'] = phoneVerification;
+    data['currency_symbol_position'] = currencySymbolPosition;
+    data['banner_for_restaurant_web_app'] = bannerForRestaurantWebApp;
+    data['maintenance_mode'] = maintenanceMode;
+    data['country'] = countryCode;
+    data['self_pickup'] = selfPickup;
+    data['delivery'] = homeDelivery;
     if (this._restaurantLocationCoverage != null) {
       data['restaurant_location_coverage'] = this._restaurantLocationCoverage.toJson();
     }
@@ -298,8 +191,7 @@ class ConfigModel {
       data['app_store_config'] = this._appStoreConfig.toJson();
     }
     if (this._socialMediaLink != null) {
-      data['social_media_link'] =
-          this._socialMediaLink.map((v) => v.toJson()).toList();
+      data['social_media_link'] = this._socialMediaLink.map((v) => v.toJson()).toList();
     }
     data['software_version'] = this._softwareVersion;
     data['footer_text'] = this._footerCopyright;
@@ -324,22 +216,21 @@ class BaseUrls {
   String _branchImageUrl;
   String _orderDeliveryImageUrl;
 
-  BaseUrls(
-      {String productImageUrl,
-        String customerImageUrl,
-        String bannerImageUrl,
-        String categoryImageUrl,
-        String categoryBannerImageUrl,
-        String reviewImageUrl,
-        String notificationImageUrl,
-        String restaurantImageUrl,
-        String deliveryManImageUrl,
-        String chatImageUrl,
-        String offerUrl,
-        String branchImageUrl,
-        String orderDeliveryImageUrl,
-
-      }) {
+  BaseUrls({
+    String productImageUrl,
+    String customerImageUrl,
+    String bannerImageUrl,
+    String categoryImageUrl,
+    String categoryBannerImageUrl,
+    String reviewImageUrl,
+    String notificationImageUrl,
+    String restaurantImageUrl,
+    String deliveryManImageUrl,
+    String chatImageUrl,
+    String offerUrl,
+    String branchImageUrl,
+    String orderDeliveryImageUrl,
+  }) {
     this._productImageUrl = productImageUrl;
     this._customerImageUrl = customerImageUrl;
     this._bannerImageUrl = bannerImageUrl;
@@ -353,7 +244,6 @@ class BaseUrls {
     this._offerUrl = offerUrl;
     this._branchImageUrl = branchImageUrl;
     this._orderDeliveryImageUrl = orderDeliveryImageUrl;
-
   }
 
   String get productImageUrl => _productImageUrl;
@@ -375,7 +265,7 @@ class BaseUrls {
     _customerImageUrl = json['customer_image_url'] ?? '';
     _bannerImageUrl = json['banner_image_url'] ?? '';
     _categoryImageUrl = json['category_image_url'] ?? '';
-    _categoryBannerImageUrl = json['category_banner_image_url' ?? '' ];
+    _categoryBannerImageUrl = json['category_banner_image_url' ?? ''];
     _reviewImageUrl = json['review_image_url'] ?? '';
     _notificationImageUrl = json['notification_image_url' ?? ''];
     _restaurantImageUrl = json['restaurant_image_url'] ?? '';
@@ -384,11 +274,10 @@ class BaseUrls {
     _offerUrl = json['offer_image_url'] ?? '';
     _branchImageUrl = json['branch_image_url'] ?? '';
     _orderDeliveryImageUrl = json['delivered_order_image_url'] ?? '';
-
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['product_image_url'] = this._productImageUrl;
     data['customer_image_url'] = this._customerImageUrl;
     data['banner_image_url'] = this._bannerImageUrl;
@@ -405,6 +294,7 @@ class BaseUrls {
     return data;
   }
 }
+
 class BannerForRestaurantWebApp {
   final int id;
   final String title;
@@ -419,8 +309,8 @@ class BannerForRestaurantWebApp {
   final String buttonText;
   final String buttonLink;
 
-  BannerForRestaurantWebApp({
-      this.id,
+  BannerForRestaurantWebApp(
+      {this.id,
       this.title,
       this.description,
       this.image,
@@ -430,8 +320,7 @@ class BannerForRestaurantWebApp {
       this.isMobileView,
       this.buttonText,
       this.buttonLink,
-    this.mobileViewDescription
-  });
+      this.mobileViewDescription});
 
   BannerForRestaurantWebApp copyWith({
     int id,
@@ -460,42 +349,40 @@ class BannerForRestaurantWebApp {
         buttonLink: buttonLink ?? this.buttonLink,
       );
   factory BannerForRestaurantWebApp.fromJson(Map<String, dynamic> json) => BannerForRestaurantWebApp(
-    id: json["id"],
-    title: json["title"],
-    description: json["description"],
-    mobileViewDescription: json["mobile_view_description"],
-
-    image: List<String>.from(json["image"].map((x) => x)),
-    status: json["status"],
-    restaurantId: json["restaurant_id"],
-    bannerType: json["banner_type"],
-    isMobileView: json["is_mobile_view"],
-    buttonText: json["button_text"],
-    buttonLink: json["button_link"],
-  );
+        id: json["id"],
+        title: json["title"],
+        description: json["description"],
+        mobileViewDescription: json["mobile_view_description"],
+        image: List<String>.from(json["image"].map((x) => x)),
+        status: json["status"],
+        restaurantId: json["restaurant_id"],
+        bannerType: json["banner_type"],
+        isMobileView: json["is_mobile_view"],
+        buttonText: json["button_text"],
+        buttonLink: json["button_link"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "title": title,
-    "description": description,
-    "mobile_view_description": mobileViewDescription,
-
-    "image": List<dynamic>.from(image.map((x) => x)),
-    "status": status,
-    "restaurant_id": restaurantId,
-    "banner_type": bannerType,
-    "is_mobile_view": isMobileView,
-    "button_text": buttonText,
-    "button_link": buttonLink,
-  };
+        "id": id,
+        "title": title,
+        "description": description,
+        "mobile_view_description": mobileViewDescription,
+        "image": List<dynamic>.from(image.map((x) => x)),
+        "status": status,
+        "restaurant_id": restaurantId,
+        "banner_type": bannerType,
+        "is_mobile_view": isMobileView,
+        "button_text": buttonText,
+        "button_link": buttonLink,
+      };
 }
+
 class RestaurantLocationCoverage {
   String _longitude;
   String _latitude;
   double _coverage;
 
-  RestaurantLocationCoverage(
-      {String longitude, String latitude, double coverage}) {
+  RestaurantLocationCoverage({String longitude, String latitude, double coverage}) {
     this._longitude = longitude;
     this._latitude = latitude;
     this._coverage = coverage;
@@ -512,7 +399,7 @@ class RestaurantLocationCoverage {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['longitude'] = this._longitude;
     data['latitude'] = this._latitude;
     data['coverage'] = this._coverage;
@@ -532,18 +419,18 @@ class Branches {
   String _image;
   bool _status;
 
-  Branches(
-      {int id,
-        String name,
-        String email,
-        String longitude,
-        String latitude,
-        String address,
-        double coverage,
-        String coverImage,
-        String image,
-        bool status,
-      }) {
+  Branches({
+    int id,
+    String name,
+    String email,
+    String longitude,
+    String latitude,
+    String address,
+    double coverage,
+    String coverImage,
+    String image,
+    bool status,
+  }) {
     this._id = id;
     this._name = name;
     this._email = email;
@@ -577,11 +464,10 @@ class Branches {
     _image = json['image'];
     _status = json['status'];
     _coverImage = json['cover_image'];
-
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this._id;
     data['name'] = this._name;
     data['email'] = this._email;
@@ -594,19 +480,20 @@ class Branches {
     return data;
   }
 }
+
 class BranchValue {
   final Branches branches;
   final double distance;
 
   BranchValue(this.branches, this.distance);
 }
+
 class DeliveryManagement {
   int _status;
   double _minShippingCharge;
   double _shippingPerKm;
 
-  DeliveryManagement(
-      {int status, double minShippingCharge, double shippingPerKm}) {
+  DeliveryManagement({int status, double minShippingCharge, double shippingPerKm}) {
     this._status = status;
     this._minShippingCharge = minShippingCharge;
     this._shippingPerKm = shippingPerKm;
@@ -623,38 +510,39 @@ class DeliveryManagement {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = this._status;
     data['min_shipping_charge'] = this._minShippingCharge;
     data['shipping_per_km'] = this._shippingPerKm;
     return data;
   }
 }
-class PlayStoreConfig{
+
+class PlayStoreConfig {
   bool _status;
   String _link;
   double _minVersion;
 
-  PlayStoreConfig({bool status, String link, double minVersion}){
+  PlayStoreConfig({bool status, String link, double minVersion}) {
     this._status = status;
     this._link = link;
     this._minVersion = minVersion;
   }
   bool get status => _status;
   String get link => _link;
-  double get minVersion =>_minVersion;
+  double get minVersion => _minVersion;
 
   PlayStoreConfig.fromJson(Map<String, dynamic> json) {
     _status = json['status'];
-    if(json['link'] != null){
+    if (json['link'] != null) {
       _link = json['link'];
     }
-    if(json['min_version'] != null && json['min_version'] != '' ){
+    if (json['min_version'] != null && json['min_version'] != '') {
       _minVersion = double.parse(json['min_version']);
     }
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = this._status;
     data['link'] = this._link;
     data['min_version'] = this._minVersion;
@@ -663,12 +551,12 @@ class PlayStoreConfig{
   }
 }
 
-class AppStoreConfig{
+class AppStoreConfig {
   bool _status;
   String _link;
   double _minVersion;
 
-  AppStoreConfig({bool status, String link, double minVersion}){
+  AppStoreConfig({bool status, String link, double minVersion}) {
     this._status = status;
     this._link = link;
     this._minVersion = minVersion;
@@ -676,21 +564,19 @@ class AppStoreConfig{
 
   bool get status => _status;
   String get link => _link;
-  double get minVersion =>_minVersion;
-
+  double get minVersion => _minVersion;
 
   AppStoreConfig.fromJson(Map<String, dynamic> json) {
     _status = json['status'];
-    if(json['link'] != null){
+    if (json['link'] != null) {
       _link = json['link'];
     }
-    if(json['min_version'] !=null  && json['min_version'] != ''){
+    if (json['min_version'] != null && json['min_version'] != '') {
       _minVersion = double.parse(json['min_version']);
     }
-
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = this._status;
     data['link'] = this._link;
     data['min_version'] = this._minVersion;
@@ -706,12 +592,7 @@ class SocialMediaLink {
   int status;
   String updatedAt;
 
-  SocialMediaLink(
-      {this.id,
-        this.name,
-        this.link,
-        this.status,
-        this.updatedAt});
+  SocialMediaLink({this.id, this.name, this.link, this.status, this.updatedAt});
 
   SocialMediaLink.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -722,7 +603,7 @@ class SocialMediaLink {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     data['link'] = this.link;
@@ -744,31 +625,31 @@ class RestaurantScheduleTime {
   String closingTime;
 
   factory RestaurantScheduleTime.fromJson(Map<String, dynamic> json) => RestaurantScheduleTime(
-    day: json["day"].toString(),
-    openingTime: json["opening_time"].toString(),
-    closingTime: json["closing_time"].toString(),
-  );
+        day: json["day"].toString(),
+        openingTime: json["opening_time"].toString(),
+        closingTime: json["closing_time"].toString(),
+      );
 
   Map<String, dynamic> toJson() => {
-    "day": day,
-    "opening_time": openingTime,
-    "closing_time": closingTime,
-  };
+        "day": day,
+        "opening_time": openingTime,
+        "closing_time": closingTime,
+      };
 }
 
-class SocialStatus{
+class SocialStatus {
   bool isGoogle;
   bool isFacebook;
 
   SocialStatus(this.isGoogle, this.isFacebook);
 
-  SocialStatus.fromJson(Map<String, dynamic> json){
+  SocialStatus.fromJson(Map<String, dynamic> json) {
     isGoogle = '${json['google']}' == '1';
     isFacebook = '${json['facebook']}' == '1';
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['google'] = this.isGoogle;
     data['facebook'] = this.isFacebook;
     return data;

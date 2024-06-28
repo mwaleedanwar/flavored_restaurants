@@ -122,19 +122,19 @@ class CouponProvider extends ChangeNotifier {
         bool _isAvailable = _currentTime.isAfter(_startTime) && _currentTime.isBefore(_endTime);
 
         CartModel _cartModel = CartModel(
-            0.0,
-            0.0,
-            priceWithDiscount,
-            [_variation],
-            0.0,
-            //(price - PriceConverter.convertWithDiscount(context, price,  _coupon.discount,  _coupon.product.discountType)),
-            Provider.of<ProductProvider>(context, listen: false).quantity,
-            '',
-            price - PriceConverter.convertWithDiscount(context, price, _coupon.product.tax, _coupon.product.taxType),
-            _addOnIdList,
-            _coupon.product,
-            true,
-            false);
+            price: 0.0,
+            points: 0.0,
+            discountedPrice: priceWithDiscount,
+            variation: [_variation],
+            discountAmount: 0.0,
+            quantity: Provider.of<ProductProvider>(context, listen: false).quantity,
+            specialInstruction: '',
+            taxAmount: price -
+                PriceConverter.convertWithDiscount(context, price, _coupon.product.tax, _coupon.product.taxType),
+            addOnIds: _addOnIdList,
+            product: _coupon.product,
+            isGift: true,
+            isFree: false);
         print('==cart add:${_cartModel.discountAmount}');
         print('==cart add:${_cartModel.discountedPrice}');
 

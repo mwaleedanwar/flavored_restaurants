@@ -1,5 +1,3 @@
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
-
 class AddressModel {
   int id;
   String addressType;
@@ -48,20 +46,20 @@ class AddressModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['address_type'] = this.addressType;
-    data['contact_person_number'] = this.contactPersonNumber;
-    data['address'] = this.address;
-    data['latitude'] = this.latitude;
-    data['longitude'] = this.longitude;
-    data['created_at'] = this.createdAt;
-    data['updated_at'] = this.updatedAt;
-    data['user_id'] = this.userId;
-    data['_method'] = this.method;
-    data['contact_person_name'] = this.contactPersonName;
-    data['road'] = this.buildingNumber;
-    data['house'] = this.floorNumber;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['address_type'] = addressType;
+    data['contact_person_number'] = contactPersonNumber;
+    data['address'] = address;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
+    data['created_at'] = createdAt;
+    data['updated_at'] = updatedAt;
+    data['user_id'] = userId;
+    data['_method'] = method;
+    data['contact_person_name'] = contactPersonName;
+    data['road'] = buildingNumber;
+    data['house'] = floorNumber;
     return data;
   }
 }

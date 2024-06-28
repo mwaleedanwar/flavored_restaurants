@@ -22,14 +22,14 @@ class MessageBody {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['order_id'] = this.orderId;
-    data['sender_id'] = this.senderId;
-    data['receiver_id'] = this.receiverId;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['order_id'] = orderId;
+    data['sender_id'] = senderId;
+    data['receiver_id'] = receiverId;
+    data['message'] = message;
     data['time'] = FieldValue.serverTimestamp();
-    data['image_urls'] = this.imageUrls;
+    data['image_urls'] = imageUrls;
     return data;
   }
 }

@@ -935,7 +935,7 @@ class CartListWidget extends StatelessWidget {
                       width: 85,
                       fit: BoxFit.cover,
                       image:
-                          '${Provider.of<SplashProvider>(context, listen: false).baseUrls.offerUrl}/${cart.dealsList[index].deal.image}',
+                          '${Provider.of<SplashProvider>(context, listen: false).baseUrls.offerUrl}/${cart.dealsList[index].dealsDataModel.image}',
                       imageErrorBuilder: (c, o, s) =>
                           Image.asset(Images.placeholder_image, height: 70, width: 85, fit: BoxFit.cover),
                     ),
@@ -944,7 +944,7 @@ class CartListWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(cart.dealsList[index].deal.name,
+                        Text(cart.dealsList[index].dealsDataModel.name,
                             style: rubikMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
                         SizedBox(height: 2),
                         // RatingBar(
@@ -1026,7 +1026,7 @@ class CartListWidget extends StatelessWidget {
                     ]),
                   ),
                   children: [
-                    for (var deal in cart.dealsList[index].deal.dealItems)
+                    for (var deal in cart.dealsList[index].dealsDataModel.dealItems)
                       Container(
                         margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_DEFAULT),
                         decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(10)),

@@ -1,68 +1,48 @@
-/// errors : [{"code":"l_name","message":"The last name field is required."},{"code":"password","message":"The password field is required."}]
-
 class ErrorResponse {
-  List<Errors> _errors;
+  List<Errors> errors;
 
-  List<Errors> get errors => _errors;
+  ErrorResponse({this.errors});
 
-  ErrorResponse({
-    List<Errors> errors}){
-    _errors = errors;
-  }
-
-  ErrorResponse.fromJson(dynamic json) {
-    Map<String, dynamic> _json;
-    if(json.runtimeType == ErrorResponse){
-      _json = json.toJson();
-    }else{
-      _json = json;
+  ErrorResponse.fromJson(dynamic errorJson) {
+    Map<String, dynamic> json;
+    if (errorJson.runtimeType == ErrorResponse) {
+      json = errorJson.toJson();
+    } else {
+      json = errorJson;
     }
 
-    if (_json["errors"] != null) {
-      _errors = [];
-      _json["errors"].forEach((v) {
-        _errors.add(Errors.fromJson(v));
+    if (json["errors"] != null) {
+      errors = [];
+      json["errors"].forEach((v) {
+        errors.add(Errors.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    var map = <String, dynamic>{};
-    if (_errors != null) {
-      map["errors"] = _errors.map((v) => v.toJson()).toList();
+    final map = <String, dynamic>{};
+    if (errors != null) {
+      map["errors"] = errors.map((v) => v.toJson()).toList();
     }
     return map;
   }
-
 }
 
-/// code : "l_name"
-/// message : "The last name field is required."
-
 class Errors {
-  String _code;
-  String _message;
+  String code;
+  String message;
 
-  String get code => _code;
-  String get message => _message;
-
-  Errors({
-    String code,
-    String message}){
-    _code = code;
-    _message = message;
-  }
+  Errors({this.code, this.message});
 
   Errors.fromJson(dynamic json) {
-    _code = json["code"];
-    _message = json["message"];
+    code = json["code"];
+    message = json["message"];
   }
 
   Map<String, dynamic> toJson() {
-    var map = <String, dynamic>{};
-    map["code"] = _code;
-    map["message"] = _message;
+    final map = <String, dynamic>{};
+    map["code"] = code;
+    map["message"] = message;
     return map;
   }
-
 }
