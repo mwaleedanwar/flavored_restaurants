@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:masked_text/masked_text.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_model.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/provider_barrel.dart';
 import 'package:provider/provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/body/place_order_body.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/cart_model.dart';
@@ -324,9 +325,16 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                                                                     controller: controller,
                                                                     // enablePostalCode: false,
                                                                     style: CardFormStyle(
-                                                                        borderColor: Colors.transparent,
-                                                                        textColor: ColorResources.COLOR_BLACK,
-                                                                        placeholderColor: ColorResources.COLOR_BLACK),
+                                                                      borderColor: Colors.transparent,
+                                                                      textColor:
+                                                                          Provider.of<ThemeProvider>(context).darkTheme
+                                                                              ? Colors.white
+                                                                              : ColorResources.COLOR_BLACK,
+                                                                      placeholderColor:
+                                                                          Provider.of<ThemeProvider>(context).darkTheme
+                                                                              ? Colors.white
+                                                                              : ColorResources.COLOR_BLACK,
+                                                                    ),
                                                                     onCardChanged: (card) {
                                                                       debugPrint(card.toString());
                                                                     },
