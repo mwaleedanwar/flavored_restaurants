@@ -15,15 +15,15 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapWidget extends StatefulWidget {
   final DeliveryAddress address;
-  MapWidget({@required this.address});
+  const MapWidget({super.key, required this.address});
 
   @override
-  _MapWidgetState createState() => _MapWidgetState();
+  State<MapWidget> createState() => _MapWidgetState();
 }
 
 class _MapWidgetState extends State<MapWidget> {
-  LatLng _latLng;
-  Set<Marker> _markers = Set.of([]);
+  late LatLng _latLng;
+  Set<Marker> _markers = {};
 
   @override
   void initState() {
@@ -35,13 +35,17 @@ class _MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(
+              preferredSize: Size.fromHeight(100),
+              child: WebAppBar(),
+            )
           : CustomAppBar(context: context, title: getTranslated('delivery_address', context)),
       body: SingleChildScrollView(
-        physics: ResponsiveHelper.isDesktop(context) ? AlwaysScrollableScrollPhysics() : NeverScrollableScrollPhysics(),
+        physics: ResponsiveHelper.isDesktop(context)
+            ? const AlwaysScrollableScrollPhysics()
+            : const NeverScrollableScrollPhysics(),
         child: Column(
           children: [
             Padding(
@@ -53,14 +57,16 @@ class _MapWidgetState extends State<MapWidget> {
                       ? BoxDecoration(
                           color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [BoxShadow(color: Colors.grey[300], blurRadius: 5, spreadRadius: 1)],
+                          boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 5, spreadRadius: 1)],
                         )
                       : null,
-                  height: ResponsiveHelper.isDesktop(context) ? _height * 0.7 : _height * 0.9,
+                  height: ResponsiveHelper.isDesktop(context)
+                      ? MediaQuery.of(context).size.height * 0.7
+                      : MediaQuery.of(context).size.height * 0.9,
                   width: Dimensions.WEB_SCREEN_WIDTH,
                   child: Stack(children: [
                     GoogleMap(
-                      minMaxZoomPreference: MinMaxZoomPreference(0, 16),
+                      minMaxZoomPreference: const MinMaxZoomPreference(0, 16),
                       initialCameraPosition: CameraPosition(target: _latLng, zoom: 14),
                       zoomGesturesEnabled: true,
                       myLocationButtonEnabled: false,
@@ -73,11 +79,11 @@ class _MapWidgetState extends State<MapWidget> {
                       right: Dimensions.PADDING_SIZE_LARGE,
                       bottom: Dimensions.PADDING_SIZE_LARGE,
                       child: Container(
-                        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                        padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),
                           color: Theme.of(context).cardColor,
-                          boxShadow: [BoxShadow(color: Colors.grey[300], spreadRadius: 3, blurRadius: 10)],
+                          boxShadow: [BoxShadow(color: Colors.grey.shade300, spreadRadius: 3, blurRadius: 10)],
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,7 +98,7 @@ class _MapWidgetState extends State<MapWidget> {
                                 size: 30,
                                 color: Theme.of(context).primaryColor,
                               ),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,8 +127,8 @@ class _MapWidgetState extends State<MapWidget> {
                 ),
               ),
             ),
-            if (ResponsiveHelper.isDesktop(context)) SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-            if (ResponsiveHelper.isDesktop(context)) FooterView(),
+            if (ResponsiveHelper.isDesktop(context)) const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+            if (ResponsiveHelper.isDesktop(context)) const FooterView(),
           ],
         ),
       ),
@@ -132,12 +138,14 @@ class _MapWidgetState extends State<MapWidget> {
   void _setMarker() async {
     Uint8List destinationImageData = await convertAssetToUnit8List(Images.destination_marker, width: 70);
 
-    _markers = Set.of([]);
-    _markers.add(Marker(
-      markerId: MarkerId('marker'),
-      position: _latLng,
-      icon: BitmapDescriptor.fromBytes(destinationImageData),
-    ));
+    _markers = {};
+    _markers.add(
+      Marker(
+        markerId: const MarkerId('marker'),
+        position: _latLng,
+        icon: BitmapDescriptor.bytes(destinationImageData),
+      ),
+    );
 
     setState(() {});
   }
@@ -146,6 +154,6 @@ class _MapWidgetState extends State<MapWidget> {
     ByteData data = await rootBundle.load(imagePath);
     Codec codec = await instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
     FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ImageByteFormat.png)).buffer.asUint8List();
+    return (await fi.image.toByteData(format: ImageByteFormat.png))!.buffer.asUint8List();
   }
 }

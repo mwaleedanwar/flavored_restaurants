@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/language_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/language_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/category_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/localization_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/product_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/on_hover.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../../localization/language_constrants.dart';
-import '../../../../../provider/category_provider.dart';
-import '../../../../../provider/localization_provider.dart';
-import '../../../../../provider/product_provider.dart';
-import '../../../../../utill/app_constants.dart';
-import '../../../../../utill/color_resources.dart';
-import '../../../../../utill/dimensions.dart';
-import '../../../../base/custom_snackbar.dart';
-import '../../../../base/on_hover.dart';
 
 class LanguageHoverWidget extends StatefulWidget {
   final List<LanguageModel> languageList;
-  const LanguageHoverWidget({Key key, @required this.languageList}) : super(key: key);
+  const LanguageHoverWidget({super.key, required this.languageList});
 
   @override
   State<LanguageHoverWidget> createState() => _LanguageHoverWidgetState();
@@ -27,12 +26,12 @@ class _LanguageHoverWidgetState extends State<LanguageHoverWidget> {
     return Consumer<LanguageProvider>(builder: (context, languageProvider, child) {
       return Container(
         color: Theme.of(context).cardColor,
-        padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+        padding: const EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
         child: Column(
             children: widget.languageList
                 .map((language) => InkWell(
                       onTap: () async {
-                        if (languageProvider.languages.length > 0 && languageProvider.selectIndex != -1) {
+                        if (languageProvider.languages.isNotEmpty && languageProvider.selectIndex != -1) {
                           Provider.of<ProductProvider>(context, listen: false).latestOffset = 1;
                           Provider.of<ProductProvider>(context, listen: false).popularOffset = 1;
                           Provider.of<LocalizationProvider>(context, listen: false)
@@ -86,7 +85,7 @@ class _LanguageHoverWidgetState extends State<LanguageHoverWidget> {
                                     language.languageName,
                                     overflow: TextOverflow.ellipsis,
                                     maxLines: 1,
-                                    style: TextStyle(fontSize: Dimensions.FONT_SIZE_SMALL),
+                                    style: const TextStyle(fontSize: Dimensions.FONT_SIZE_SMALL),
                                   ),
                                 ],
                               ),
@@ -95,11 +94,7 @@ class _LanguageHoverWidgetState extends State<LanguageHoverWidget> {
                         );
                       }),
                     ))
-                .toList()
-            // [
-            //   Text(_categoryList[5].name),
-            // ],
-            ),
+                .toList()),
       );
     });
   }

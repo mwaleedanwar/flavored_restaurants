@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -12,57 +14,58 @@ import 'package:image_picker/image_picker.dart';
 class ProfileProvider with ChangeNotifier {
   final ProfileRepo profileRepo;
 
-  ProfileProvider({@required this.profileRepo});
+  ProfileProvider({required this.profileRepo});
 
-  UserInfoModel _userInfoModel;
+  UserInfoModel? _userInfoModel;
 
-  UserInfoModel get userInfoModel => _userInfoModel;
+  UserInfoModel? get userInfoModel => _userInfoModel;
   double points = 0.0;
 
   Future<ResponseModel> getUserInfo(BuildContext context) async {
-    ResponseModel _responseModel;
+    ResponseModel? responseModel;
     ApiResponse apiResponse = await profileRepo.getUserInfo();
-    debugPrint('-get the info done${jsonDecode(apiResponse.response.body)}');
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-      debugPrint('-get the 1 done${UserInfoModel.fromJson(jsonDecode(apiResponse.response.body))}');
+    debugPrint('-> get the info done: ${jsonDecode(apiResponse.response!.body)}');
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      debugPrint('-get the 1 done${UserInfoModel.fromJson(jsonDecode(apiResponse.response!.body))}');
 
-      _userInfoModel = UserInfoModel.fromJson(jsonDecode(apiResponse.response.body));
-      points = _userInfoModel.point;
-      debugPrint('-get the response done${_userInfoModel}');
+      _userInfoModel = UserInfoModel.fromJson(jsonDecode(apiResponse.response!.body));
+      points = _userInfoModel!.point ?? 0;
+      debugPrint('-get the response done $_userInfoModel');
 
-      _responseModel = ResponseModel(true, 'successful');
+      responseModel = ResponseModel(true, 'successful');
     } else {
       ApiChecker.checkApi(context, apiResponse);
+      responseModel = ResponseModel(false, apiResponse.toString());
     }
     notifyListeners();
-    return _responseModel;
+    return responseModel;
   }
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   Future<ResponseModel> updateUserInfo(
-      UserInfoModel updateUserModel, String password, File file, XFile data, String token) async {
+      UserInfoModel updateUserModel, String password, File? file, XFile? data, String token) async {
     _isLoading = true;
     notifyListeners();
-    print('=====emil:${userInfoModel.email}');
-    ResponseModel _responseModel;
+    debugPrint('=====emil :${userInfoModel?.email}');
+    ResponseModel responseModel;
     http.StreamedResponse response = await profileRepo.updateProfile(updateUserModel, password, file, data, token);
     _isLoading = false;
     if (response.statusCode == 200) {
       Map map = jsonDecode(await response.stream.bytesToString());
       String message = map["message"];
       _userInfoModel = updateUserModel;
-      _responseModel = ResponseModel(true, message);
-      print(message);
+      responseModel = ResponseModel(true, message);
+      debugPrint(message);
     } else {
-      _responseModel = ResponseModel(false, '${response.statusCode} ${response.reasonPhrase}');
-      print('${response.statusCode} ${response.reasonPhrase}');
+      responseModel = ResponseModel(false, '${response.statusCode} ${response.reasonPhrase}');
+      debugPrint('${response.statusCode} ${response.reasonPhrase}');
       _isLoading = false;
     }
     _isLoading = false;
 
     notifyListeners();
-    return _responseModel;
+    return responseModel;
   }
 }

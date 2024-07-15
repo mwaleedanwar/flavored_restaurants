@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/response_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/userinfo_model.dart';
@@ -31,27 +33,25 @@ class ProfileScreenWeb extends StatefulWidget {
   final TextEditingController passwordController;
   final TextEditingController confirmPasswordController;
 
-  final Function pickImage;
-  final XFile file;
-  const ProfileScreenWeb(
-      {Key key,
-      @required this.firstNameFocus,
-      @required this.lastNameFocus,
-      @required this.emailFocus,
-      @required this.phoneNumberFocus,
-      @required this.passwordFocus,
-      @required this.confirmPasswordFocus,
-      @required this.firstNameController,
-      @required this.lastNameController,
-      @required this.emailController,
-      @required this.phoneNumberController,
-      @required this.passwordController,
-      @required this.confirmPasswordController,
-      //function
-      @required this.pickImage,
-      //file
-      @required this.file})
-      : super(key: key);
+  final void Function() pickImage;
+  final XFile? file;
+  const ProfileScreenWeb({
+    super.key,
+    required this.firstNameFocus,
+    required this.lastNameFocus,
+    required this.emailFocus,
+    required this.phoneNumberFocus,
+    required this.passwordFocus,
+    required this.confirmPasswordFocus,
+    required this.firstNameController,
+    required this.lastNameController,
+    required this.emailController,
+    required this.phoneNumberController,
+    required this.passwordController,
+    required this.confirmPasswordController,
+    required this.pickImage,
+    this.file,
+  });
 
   @override
   State<ProfileScreenWeb> createState() => _ProfileScreenWebState();
@@ -81,41 +81,41 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
                           height: 150,
                           color: ColorResources.getProfileMenuHeaderColor(context),
                           alignment: Alignment.centerLeft,
-                          padding: EdgeInsets.symmetric(horizontal: 240.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 240.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               profileProvider.userInfoModel != null
                                   ? Text(
-                                      '${profileProvider.userInfoModel.fName ?? ''} ${profileProvider.userInfoModel.lName ?? ''}',
+                                      '${profileProvider.userInfoModel?.fName ?? ''} ${profileProvider.userInfoModel?.lName ?? ''}',
                                       style: robotoRegular.copyWith(
                                           fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE,
                                           color: ColorResources.getWhiteAndBlack(context)),
                                     )
-                                  : SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT, width: 150),
-                              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                  : const SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT, width: 150),
+                              const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                               profileProvider.userInfoModel != null
                                   ? Text(
-                                      '${profileProvider.userInfoModel.email ?? ''}',
+                                      profileProvider.userInfoModel?.email ?? '',
                                       style: robotoRegular.copyWith(color: ColorResources.getWhiteAndBlack(context)),
                                     )
-                                  : SizedBox(height: 15, width: 100),
-                              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                  : const SizedBox(height: 15, width: 100),
+                              const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                               profileProvider.userInfoModel != null
                                   ? Text(
-                                      '${getTranslated('points', context)}: ${profileProvider.userInfoModel.point ?? ''}',
+                                      '${getTranslated('points', context)}: ${profileProvider.userInfoModel?.point ?? ''}',
                                       style: rubikRegular.copyWith(color: ColorResources.getWhiteAndBlack(context)),
                                     )
-                                  : SizedBox(),
+                                  : const SizedBox(),
                             ],
                           ),
                         ),
-                        SizedBox(height: 100),
+                        const SizedBox(height: 100),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+                          padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
                           child: Padding(
-                            padding: EdgeInsets.only(left: 240.0),
+                            padding: const EdgeInsets.only(left: 240.0),
                             child: Column(
                               children: [
                                 Row(
@@ -126,12 +126,12 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
                                       children: [
                                         Text(
                                           getTranslated('first_name', context),
-                                          style: Theme.of(context).textTheme.headline2.copyWith(
+                                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                               color: ColorResources.getHintColor(context),
                                               fontWeight: FontWeight.w400,
                                               fontSize: Dimensions.FONT_SIZE_SMALL),
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                         SizedBox(
                                           width: 430,
                                           child: CustomTextField(
@@ -145,17 +145,17 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
                                           ),
                                         ),
 
-                                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                                         // for email section
                                         Text(
                                           getTranslated('email', context),
-                                          style: Theme.of(context).textTheme.headline2.copyWith(
+                                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                               color: ColorResources.getHintColor(context),
                                               fontWeight: FontWeight.w400,
                                               fontSize: Dimensions.FONT_SIZE_SMALL),
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                         SizedBox(
                                           width: 430,
                                           child: CustomTextField(
@@ -169,16 +169,16 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
                                           ),
                                         ),
 
-                                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                                         Text(
                                           getTranslated('password', context),
-                                          style: Theme.of(context).textTheme.headline2.copyWith(
+                                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                               color: ColorResources.getHintColor(context),
                                               fontWeight: FontWeight.w400,
                                               fontSize: Dimensions.FONT_SIZE_SMALL),
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                         SizedBox(
                                           width: 430,
                                           child: CustomTextField(
@@ -192,21 +192,21 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
                                           ),
                                         ),
 
-                                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                                       ],
                                     ),
-                                    SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                                    const SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           getTranslated('last_name', context),
-                                          style: Theme.of(context).textTheme.headline2.copyWith(
+                                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                               color: ColorResources.getHintColor(context),
                                               fontWeight: FontWeight.w400,
                                               fontSize: Dimensions.FONT_SIZE_SMALL),
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                         SizedBox(
                                           width: 430,
                                           child: CustomTextField(
@@ -219,17 +219,17 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
                                             capitalization: TextCapitalization.words,
                                           ),
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                                         // for phone Number section
                                         Text(
                                           getTranslated('mobile_number', context),
-                                          style: Theme.of(context).textTheme.headline2.copyWith(
+                                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                               color: ColorResources.getHintColor(context),
                                               fontWeight: FontWeight.w400,
                                               fontSize: Dimensions.FONT_SIZE_SMALL),
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
                                         SizedBox(
                                           width: 430,
@@ -242,16 +242,16 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
                                             inputType: TextInputType.phone,
                                           ),
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                                         Text(
                                           getTranslated('confirm_password', context),
-                                          style: Theme.of(context).textTheme.headline2.copyWith(
+                                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                               color: ColorResources.getHintColor(context),
                                               fontWeight: FontWeight.w400,
                                               fontSize: Dimensions.FONT_SIZE_SMALL),
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                         SizedBox(
                                           width: 430,
                                           child: CustomTextField(
@@ -264,10 +264,10 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
                                             inputAction: TextInputAction.done,
                                           ),
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                                       ],
                                     ),
-                                    SizedBox(height: 55.0)
+                                    const SizedBox(height: 55.0)
                                   ],
                                 ),
                                 SizedBox(
@@ -275,53 +275,54 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
                                   child: CustomButton(
                                     btnTxt: getTranslated('update_profile', context),
                                     onTap: () async {
-                                      String _firstName = widget.firstNameController.text.trim();
-                                      String _lastName = widget.lastNameController.text.trim();
-                                      String _phoneNumber = widget.phoneNumberController.text.trim();
-                                      String _password = widget.passwordController.text.trim();
-                                      String _confirmPassword = widget.confirmPasswordController.text.trim();
-                                      if (profileProvider.userInfoModel.fName == _firstName &&
-                                          profileProvider.userInfoModel.lName == _lastName &&
-                                          profileProvider.userInfoModel.phone == _phoneNumber &&
-                                          profileProvider.userInfoModel.email == widget.emailController.text &&
+                                      String firstName = widget.firstNameController.text.trim();
+                                      String lastName = widget.lastNameController.text.trim();
+                                      String phoneNumber = widget.phoneNumberController.text.trim();
+                                      String password = widget.passwordController.text.trim();
+                                      String confirmPassword = widget.confirmPasswordController.text.trim();
+                                      if (profileProvider.userInfoModel?.fName == firstName &&
+                                          profileProvider.userInfoModel?.lName == lastName &&
+                                          profileProvider.userInfoModel?.phone == phoneNumber &&
+                                          profileProvider.userInfoModel?.email == widget.emailController.text &&
                                           widget.file == null &&
-                                          _password.isEmpty &&
-                                          _confirmPassword.isEmpty) {
+                                          password.isEmpty &&
+                                          confirmPassword.isEmpty) {
                                         showCustomSnackBar(
                                             getTranslated('change_something_to_update', context), context);
-                                      } else if (_firstName.isEmpty) {
+                                      } else if (firstName.isEmpty) {
                                         showCustomSnackBar(getTranslated('enter_first_name', context), context);
-                                      } else if (_lastName.isEmpty) {
+                                      } else if (lastName.isEmpty) {
                                         showCustomSnackBar(getTranslated('enter_last_name', context), context);
-                                      } else if (_phoneNumber.isEmpty) {
+                                      } else if (phoneNumber.isEmpty) {
                                         showCustomSnackBar(getTranslated('enter_phone_number', context), context);
-                                      } else if ((_password.isNotEmpty && _password.length < 6) ||
-                                          (_confirmPassword.isNotEmpty && _confirmPassword.length < 6)) {
+                                      } else if ((password.isNotEmpty && password.length < 6) ||
+                                          (confirmPassword.isNotEmpty && confirmPassword.length < 6)) {
                                         showCustomSnackBar(getTranslated('password_should_be', context), context);
-                                      } else if (_password != _confirmPassword) {
+                                      } else if (password != confirmPassword) {
                                         showCustomSnackBar(getTranslated('password_did_not_match', context), context);
                                       } else {
-                                        UserInfoModel updateUserInfoModel = UserInfoModel();
-                                        updateUserInfoModel.fName = _firstName ?? "";
-                                        updateUserInfoModel.lName = _lastName ?? "";
-                                        updateUserInfoModel.phone = _phoneNumber ?? '';
-                                        updateUserInfoModel.phone = _phoneNumber ?? '';
-                                        String _pass = _password ?? '';
+                                        UserInfoModel updateUserInfoModel =
+                                            UserInfoModel(id: Provider.of<ProfileProvider>(context).userInfoModel!.id);
+                                        updateUserInfoModel.fName = firstName;
+                                        updateUserInfoModel.lName = lastName;
+                                        updateUserInfoModel.phone = phoneNumber;
+                                        updateUserInfoModel.phone = phoneNumber;
+                                        String pass = password;
 
-                                        ResponseModel _responseModel = await profileProvider.updateUserInfo(
+                                        ResponseModel responseModel = await profileProvider.updateUserInfo(
                                           updateUserInfoModel,
-                                          _pass,
+                                          pass,
                                           null,
-                                          widget.file,
+                                          widget.file!,
                                           Provider.of<AuthProvider>(context, listen: false).getUserToken(),
                                         );
 
-                                        if (_responseModel.isSuccess) {
+                                        if (responseModel.isSuccess) {
                                           profileProvider.getUserInfo(context);
                                           showCustomSnackBar(getTranslated('updated_successfully', context), context,
                                               isError: false);
                                         } else {
-                                          showCustomSnackBar(_responseModel.message, context);
+                                          showCustomSnackBar(responseModel.message, context);
                                         }
                                         setState(() {});
                                       }
@@ -347,18 +348,23 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
                                 border: Border.all(color: Colors.white, width: 4),
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Colors.white.withOpacity(0.1), blurRadius: 22, offset: Offset(0, 8.8))
+                                      color: Colors.white.withOpacity(0.1),
+                                      blurRadius: 22,
+                                      offset: const Offset(0, 8.8))
                                 ]),
                             child: ClipOval(
                               child: widget.file == null
                                   ? FadeInImage.assetNetwork(
-                                      placeholder: Images.placeholder_user, height: 170, width: 170, fit: BoxFit.cover,
+                                      placeholder: Images.placeholder_user,
+                                      height: 170,
+                                      width: 170,
+                                      fit: BoxFit.cover,
                                       image:
-                                          '${Provider.of<SplashProvider>(context, listen: false).baseUrls.customerImageUrl}/'
-                                          '${profileProvider.userInfoModel != null ? profileProvider.userInfoModel.image : ''}',
+                                          '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/'
+                                          '${profileProvider.userInfoModel != null ? profileProvider.userInfoModel!.image : ''}',
                                       //imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_user, height: 170, width: 170, fit: BoxFit.cover),
                                     )
-                                  : Image.network(widget.file.path, height: 170.0, width: 170.0, fit: BoxFit.cover),
+                                  : Image.network(widget.file!.path, height: 170.0, width: 170.0, fit: BoxFit.cover),
                             ),
                           ),
                           Positioned(
@@ -374,7 +380,7 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
                                       color: Theme.of(context).primaryColor.withOpacity(0.5),
                                       shape: BoxShape.circle,
                                     ),
-                                    child: Icon(Icons.camera_alt, color: Colors.white60),
+                                    child: const Icon(Icons.camera_alt, color: Colors.white60),
                                   ),
                                 );
                               }))
@@ -386,8 +392,8 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
               ),
             );
           }),
-          SizedBox(height: 55),
-          FooterView(),
+          const SizedBox(height: 55),
+          const FooterView(),
         ],
       ),
     );

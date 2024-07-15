@@ -5,86 +5,80 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/helper/date_converter.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/price_converter.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/theme_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/provider_barrel.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/on_hover.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/rating_bar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/wish_button.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/cart_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../provider/auth_provider.dart';
-import '../../../../../provider/coupon_provider.dart';
-import '../../../../../provider/product_provider.dart';
-
 import 'package:intl/intl.dart';
 
-import '../../../../../provider/profile_provider.dart';
-import '../../../../../utill/app_toast.dart';
 import '../../../../../utill/routes.dart';
 
 class ProductWidgetWeb extends StatelessWidget {
   final bool fromPopularItem;
   final Product product;
-  int index;
-  bool isFromCart;
-  bool isFromCartSheet;
-  bool isFromLoyaltyPoints;
+  final int? index;
+  final bool isFromCart;
+  final bool isFromCartSheet;
+  final bool isFromLoyaltyPoints;
 
-  ProductWidgetWeb(
-      {@required this.product,
-      this.fromPopularItem = false,
-      this.isFromCart = false,
-      this.isFromLoyaltyPoints = false,
-      this.index,
-      this.isFromCartSheet = false});
+  const ProductWidgetWeb({
+    super.key,
+    required this.product,
+    this.fromPopularItem = false,
+    this.isFromCart = false,
+    this.isFromLoyaltyPoints = false,
+    this.index,
+    this.isFromCartSheet = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    double _startingPrice;
-    double _endingPrice;
-    if (product.choiceOptions.length != 0) {
-      List<double> _priceList = [];
-      for (Variation variation in product.variations) {
-        for (Value value in variation.values) {
-          _priceList.add(double.parse(value.optionPrice));
+    double startingPrice;
+    double endingPrice = 0;
+
+    if ((product.choiceOptions ?? []).isNotEmpty) {
+      List<double> priceList = [];
+      for (Variation variation in product.variations ?? []) {
+        for (Value value in variation.values ?? []) {
+          priceList.add(double.parse(value.optionPrice));
         }
       }
-      _priceList.sort((a, b) => a.compareTo(b));
-      _startingPrice = _priceList[0];
-      if (_priceList[0] < _priceList[_priceList.length - 1]) {
-        _endingPrice = _priceList[_priceList.length - 1];
+      priceList.sort((a, b) => a.compareTo(b));
+      startingPrice = priceList[0];
+      if (priceList[0] < priceList[priceList.length - 1]) {
+        endingPrice = priceList[priceList.length - 1];
       }
     } else {
-      _startingPrice = product.price;
+      startingPrice = product.price;
     }
-    print('=====statring price ${product.name}:${product.price}');
+    debugPrint('=====statring price ${product.name}:${product.price}');
 
     double priceDiscount =
         PriceConverter.convertDiscount(context, product.price, product.discount, product.discountType);
 
-    bool _isAvailable = product.availableTimeStarts != null && product.availableTimeEnds != null
-        ? DateConverter.isAvailable(product.availableTimeStarts, product.availableTimeEnds, context)
+    bool isAvailable = product.availableTimeStarts != null && product.availableTimeEnds != null
+        ? DateConverter.isAvailable(product.availableTimeStarts!, product.availableTimeEnds!, context)
         : false;
 
     return ResponsiveHelper.isMobilePhone()
-        ? _itemView(_isAvailable, priceDiscount, _startingPrice, _endingPrice)
+        ? _itemView(isAvailable, priceDiscount, startingPrice, endingPrice)
         : OnHover(builder: (isHover) {
-            return _itemView(_isAvailable, priceDiscount, _startingPrice, _endingPrice);
+            return _itemView(isAvailable, priceDiscount, startingPrice, endingPrice);
           });
   }
 
   void _addToCart(
     BuildContext context,
-    int _cartIndex,
+    int? cartIndex,
   ) {
-    print('===show sheet');
+    debugPrint('===show sheet');
     ResponsiveHelper.isMobile(context)
         ? showModalBottomSheet(
             context: context,
@@ -92,10 +86,7 @@ class ProductWidgetWeb extends StatelessWidget {
             backgroundColor: Colors.transparent,
             builder: (con) => CartBottomSheet(
               product: product,
-              cart: _cartIndex != null ? Provider.of<CartProvider>(context, listen: false).cartList[_cartIndex] : null,
-              callback: (CartModel cartModel) {
-                showCustomSnackBar(getTranslated('added_to_cart', context), context, isError: false);
-              },
+              cart: cartIndex != null ? Provider.of<CartProvider>(context, listen: false).cartList[cartIndex] : null,
             ),
           )
         : showDialog(
@@ -104,115 +95,107 @@ class ProductWidgetWeb extends StatelessWidget {
                   child: CartBottomSheet(
                     product: product,
                     fromSetMenu: true,
-                    cart: _cartIndex != null
-                        ? Provider.of<CartProvider>(context, listen: false).cartList[_cartIndex]
+                    cart: cartIndex != null
+                        ? Provider.of<CartProvider>(context, listen: false).cartList[cartIndex]
                         : null,
-                    callback: (CartModel cartModel) {
-                      showCustomSnackBar(getTranslated('added_to_cart', context), context, isError: false);
-                    },
                   ),
                 ));
   }
 
-  Consumer<CartProvider> _itemView(
-      bool _isAvailable, double priceDiscount, double _startingPrice, double _endingPrice) {
-    Variation _variation = Variation();
-
-    return Consumer<CartProvider>(builder: (context, _cartProvider, child) {
-      int _cartIndex = _cartProvider.getCartIndex(product);
-      print(
-          '=====price ${product.name}:${PriceConverter.convertPrice(context, _startingPrice, discount: product.discount, discountType: product.discountType)}');
-      String _productImage = '';
+  Consumer<CartProvider> _itemView(bool isAvailable, double priceDiscount, double startingPrice, double? endingPrice) {
+    return Consumer<CartProvider>(builder: (context, cartProvider, child) {
+      int? cartIndex = cartProvider.getCartIndex(product);
+      debugPrint(
+          '=====price ${product.name}:${PriceConverter.convertPrice(context, startingPrice, discount: product.discount, discountType: product.discountType)}');
+      String productImage = '';
       try {
-        _productImage =
-            '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/${product.image}';
-      } catch (e) {}
+        productImage =
+            '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${product.image}';
+      } catch (e) {
+        debugPrint('ERROR PRODUCT WIDGET WEB $e');
+      }
 
-      return Consumer<ProductProvider>(builder: (context, _productProvider, child) {
+      return Consumer<ProductProvider>(builder: (context, productProvider, child) {
         return InkWell(
           onTap: () {
             if (isFromCart) {
               if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
-                debugPrint('==cehck listid:${product.choiceOptions.length}');
-                if (!_cartProvider.cartList.map((e) => e.product.id).contains(product.id)) {
-                  if (product.choiceOptions.length != 0) {
-                    List<double> _priceList = [];
-                    for (Variation variation in product.variations) {
-                      for (Value value in variation.values) {
-                        _priceList.add(double.parse(value.optionPrice));
+                debugPrint('==check list id: ${product.choiceOptions?.length}');
+                if (!cartProvider.cartList.map((e) => e.product?.id).contains(product.id)) {
+                  if ((product.choiceOptions ?? []).isNotEmpty) {
+                    List<double> priceList = [];
+                    for (Variation variation in product.variations ?? []) {
+                      for (Value value in variation.values ?? []) {
+                        priceList.add(double.parse(value.optionPrice));
                       }
                     }
-                    _priceList.sort((a, b) => a.compareTo(b));
-                    _startingPrice = _priceList[0];
-                    if (_priceList[0] < _priceList[_priceList.length - 1]) {
-                      _endingPrice = _priceList[_priceList.length - 1];
+                    priceList.sort((a, b) => a.compareTo(b));
+                    startingPrice = priceList[0];
+                    if (priceList[0] < priceList[priceList.length - 1]) {
+                      endingPrice = priceList[priceList.length - 1];
                     }
                   } else {
-                    _startingPrice = product.price;
+                    startingPrice = product.price;
                   }
 
-                  List<String> _variationList = [];
-                  for (int index = 0; index < product.choiceOptions.length; index++) {
-                    print('===index:${index}');
-                    _variationList.add(product.choiceOptions[index].options[_productProvider.variationIndex[index]]
+                  List<String> variationList = [];
+                  for (int index = 0; index < (product.choiceOptions ?? []).length; index++) {
+                    debugPrint('===index:$index');
+                    variationList.add(product.choiceOptions![index].options[productProvider.variationIndex[index]]
                         .replaceAll(' ', ''));
                   }
                   String variationType = '';
                   bool isFirst = true;
-                  _variationList.forEach((variation) {
+                  for (var variation in variationList) {
                     if (isFirst) {
                       variationType = '$variationType$variation';
                       isFirst = false;
                     } else {
                       variationType = '$variationType-$variation';
                     }
-                  });
+                  }
 
                   double price = product.price;
-                  for (Variation variation in product.variations) {
+                  for (Variation variation in product.variations ?? []) {
                     if (variation.type == variationType) {
-                      // price = variation.price;
-                      _variation = variation;
+                      variation = variation;
                       break;
                     }
                   }
                   double priceWithDiscount =
                       PriceConverter.convertWithDiscount(context, price, product.discount, product.discountType);
-                  double addonsCost = 0;
-                  List<AddOn> _addOnIdList = [];
-                  isFromCartSheet ? null : _productProvider.resetQuantity();
+                  List<AddOn> addOnIdList = [];
+                  isFromCartSheet ? null : productProvider.resetQuantity();
 
-                  DateTime _currentTime = Provider.of<SplashProvider>(context, listen: false).currentTime;
-                  DateTime _start = DateFormat('hh:mm:ss').parse(product.availableTimeStarts);
-                  DateTime _end = DateFormat('hh:mm:ss').parse(product.availableTimeEnds);
-                  DateTime _startTime = DateTime(_currentTime.year, _currentTime.month, _currentTime.day, _start.hour,
-                      _start.minute, _start.second);
-                  DateTime _endTime = DateTime(
-                      _currentTime.year, _currentTime.month, _currentTime.day, _end.hour, _end.minute, _end.second);
-                  if (_endTime.isBefore(_startTime)) {
-                    _endTime = _endTime.add(Duration(days: 1));
+                  DateTime currentTime = Provider.of<SplashProvider>(context, listen: false).currentTime;
+                  DateTime start = DateFormat('hh:mm:ss').parse(product.availableTimeStarts!);
+                  DateTime end = DateFormat('hh:mm:ss').parse(product.availableTimeEnds!);
+                  DateTime startTime = DateTime(
+                      currentTime.year, currentTime.month, currentTime.day, start.hour, start.minute, start.second);
+                  DateTime endTime =
+                      DateTime(currentTime.year, currentTime.month, currentTime.day, end.hour, end.minute, end.second);
+                  if (endTime.isBefore(startTime)) {
+                    endTime = endTime.add(const Duration(days: 1));
                   }
-                  bool _isAvailable = _currentTime.isAfter(_startTime) && _currentTime.isBefore(_endTime);
-                  print('===price $price');
-                  CartModel _cartModel = CartModel(
+                  debugPrint('===price $price');
+                  CartModel cartModel = CartModel(
                     price: price,
                     points: 0.0,
                     discountedPrice: priceWithDiscount,
-                    variation: [_variation],
                     discountAmount: (price -
                         PriceConverter.convertWithDiscount(context, price, product.discount, product.discountType)),
                     quantity: 1,
                     specialInstruction: '',
                     taxAmount: price - PriceConverter.convertWithDiscount(context, price, product.tax, product.taxType),
-                    addOnIds: _addOnIdList,
+                    addOnIds: addOnIdList,
                     product: product,
                     isGift: false,
                     isFree: isFromLoyaltyPoints,
                   );
 
-                  _cartProvider.addToCart(_cartModel, _cartIndex);
+                  cartProvider.addToCart(cartModel, cartIndex);
                 } else {
-                  Provider.of<CartProvider>(context, listen: false).removeFromCart(_cartIndex);
+                  Provider.of<CartProvider>(context, listen: false).removeFromCart(cartIndex);
                 }
               } else {
                 // appToast(text: 'You need to login first');
@@ -221,15 +204,15 @@ class ProductWidgetWeb extends StatelessWidget {
             } else {
               if (isFromLoyaltyPoints) {
                 debugPrint(
-                    '==:${Provider.of<ProfileProvider>(context, listen: false).userInfoModel.point < double.parse(product.loyaltyPoints)}');
-                if (Provider.of<ProfileProvider>(context, listen: false).userInfoModel.point <
+                    '==:${Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.point! < double.parse(product.loyaltyPoints)}');
+                if (Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.point! <
                     double.parse(product.loyaltyPoints)) {
                   showCustomSnackBar('You don\'t have enough hearts to get this product free', context);
                 } else {
-                  _addToCart(context, _cartIndex);
+                  _addToCart(context, cartIndex);
                 }
               } else {
-                _addToCart(context, _cartIndex);
+                _addToCart(context, cartIndex);
               }
             }
           },
@@ -243,9 +226,11 @@ class ProductWidgetWeb extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     boxShadow: [
                       BoxShadow(
-                          color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 800 : 300],
-                          blurRadius: Provider.of<ThemeProvider>(context).darkTheme ? 2 : 5,
-                          spreadRadius: Provider.of<ThemeProvider>(context).darkTheme ? 0 : 1)
+                        color:
+                            Provider.of<ThemeProvider>(context).darkTheme ? Colors.grey.shade800 : Colors.grey.shade300,
+                        blurRadius: Provider.of<ThemeProvider>(context).darkTheme ? 2 : 5,
+                        spreadRadius: Provider.of<ThemeProvider>(context).darkTheme ? 0 : 1,
+                      )
                     ]),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,19 +239,19 @@ class ProductWidgetWeb extends StatelessWidget {
                       Stack(
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
                             child: FadeInImage.assetNetwork(
                               placeholder: Images.placeholder_rectangle,
                               fit: BoxFit.cover,
                               height: isFromCart ? 80 : 105,
                               width: isFromCart ? 100 : 195,
-                              image: _productImage,
+                              image: productImage,
                               imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_rectangle,
                                   fit: BoxFit.cover, height: isFromCart ? 80 : 105, width: isFromCart ? 100 : 195),
                             ),
                           ),
-                          _isAvailable
-                              ? SizedBox()
+                          isAvailable
+                              ? const SizedBox()
                               : Positioned(
                                   top: 0,
                                   left: 0,
@@ -275,7 +260,7 @@ class ProductWidgetWeb extends StatelessWidget {
                                   child: Container(
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                                        borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
                                         color: Colors.black.withOpacity(0.6)),
                                     child: Text(getTranslated('not_available_now', context),
                                         textAlign: TextAlign.center,
@@ -288,7 +273,7 @@ class ProductWidgetWeb extends StatelessWidget {
                       isFromCart
                           ? Expanded(
                               child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                                padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
                                 child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -299,118 +284,100 @@ class ProductWidgetWeb extends StatelessWidget {
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                       ),
-                                      // SizedBox(
-                                      //     height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                      //
-                                      // RatingBar(
-                                      //   rating: product.rating.length > 0 ? double
-                                      //       .parse(product.rating[0].average) : 0.0,
-                                      //   size: 12,
-                                      // ),
-                                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                      const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                       Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Flexible(
                                             child: Text(
-                                              '${PriceConverter.convertPrice(context, _startingPrice, discount: product.discount, discountType: product.discountType)}'
-                                              '${_endingPrice != null ? ' - ${PriceConverter.convertPrice(context, _endingPrice, discount: product.discount, discountType: product.discountType)}' : ''}',
+                                              '${PriceConverter.convertPrice(context, startingPrice, discount: product.discount, discountType: product.discountType)}'
+                                              '${endingPrice != null ? ' - ${PriceConverter.convertPrice(context, endingPrice ?? 0, discount: product.discount, discountType: product.discountType)}' : ''}',
                                               style: rubikBold.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL),
                                             ),
                                           ),
-                                          _cartProvider.cartList.map((e) => e.product.id).contains(product.id)
-                                              ? SizedBox()
+                                          cartProvider.cartList.map((e) => e.product?.id).contains(product.id)
+                                              ? const SizedBox()
                                               : InkWell(
                                                   onTap: () {
                                                     if (Provider.of<AuthProvider>(context, listen: false)
                                                         .isLoggedIn()) {
                                                       debugPrint('==cehck listid:${product.id}');
-                                                      if (!_cartProvider.cartList
-                                                          .map((e) => e.product.id)
+                                                      if (!cartProvider.cartList
+                                                          .map((e) => e.product?.id)
                                                           .contains(product.id)) {
-                                                        if (product.choiceOptions.length != 0) {
-                                                          List<double> _priceList = [];
-                                                          for (Variation variation in product.variations) {
-                                                            for (Value value in variation.values) {
-                                                              _priceList.add(double.parse(value.optionPrice));
+                                                        if ((product.choiceOptions ?? []).isNotEmpty) {
+                                                          List<double> priceList = [];
+                                                          for (Variation variation in product.variations ?? []) {
+                                                            for (Value value in variation.values ?? []) {
+                                                              priceList.add(double.parse(value.optionPrice));
                                                             }
                                                           }
-                                                          _priceList.sort((a, b) => a.compareTo(b));
-                                                          _startingPrice = _priceList[0];
-                                                          if (_priceList[0] < _priceList[_priceList.length - 1]) {
-                                                            _endingPrice = _priceList[_priceList.length - 1];
+                                                          priceList.sort((a, b) => a.compareTo(b));
+                                                          startingPrice = priceList[0];
+                                                          if (priceList[0] < priceList[priceList.length - 1]) {
+                                                            endingPrice = priceList[priceList.length - 1];
                                                           }
                                                         } else {
-                                                          _startingPrice = product.price;
+                                                          startingPrice = product.price;
                                                         }
 
-                                                        List<String> _variationList = [];
+                                                        List<String> variationList = [];
                                                         for (int index = 0;
-                                                            index < product.choiceOptions.length;
+                                                            index < (product.choiceOptions ?? []).length;
                                                             index++) {
-                                                          _variationList.add(product.choiceOptions[index]
-                                                              .options[_productProvider.variationIndex[index]]
+                                                          variationList.add(product.choiceOptions![index]
+                                                              .options[productProvider.variationIndex[index]]
                                                               .replaceAll(' ', ''));
                                                         }
                                                         String variationType = '';
                                                         bool isFirst = true;
-                                                        _variationList.forEach((variation) {
+                                                        for (var variation in variationList) {
                                                           if (isFirst) {
                                                             variationType = '$variationType$variation';
                                                             isFirst = false;
                                                           } else {
                                                             variationType = '$variationType-$variation';
                                                           }
-                                                        });
+                                                        }
 
                                                         double price = product.price;
-                                                        for (Variation variation in product.variations) {
+                                                        for (Variation variation in product.variations ?? []) {
                                                           if (variation.type == variationType) {
-                                                            // price = variation.price; TODO: FIX
-                                                            _variation = variation;
+                                                            variation = variation;
                                                             break;
                                                           }
                                                         }
                                                         double priceWithDiscount = PriceConverter.convertWithDiscount(
                                                             context, price, product.discount, product.discountType);
-                                                        double addonsCost = 0;
-                                                        List<AddOn> _addOnIdList = [];
-                                                        isFromCartSheet ? null : _productProvider.resetQuantity();
+                                                        List<AddOn> addOnIdList = [];
+                                                        isFromCartSheet ? null : productProvider.resetQuantity();
 
-                                                        DateTime _currentTime =
+                                                        DateTime currentTime =
                                                             Provider.of<SplashProvider>(context, listen: false)
                                                                 .currentTime;
-                                                        DateTime _start =
-                                                            DateFormat('hh:mm:ss').parse(product.availableTimeStarts);
-                                                        DateTime _end =
-                                                            DateFormat('hh:mm:ss').parse(product.availableTimeEnds);
-                                                        DateTime _startTime = DateTime(
-                                                            _currentTime.year,
-                                                            _currentTime.month,
-                                                            _currentTime.day,
-                                                            _start.hour,
-                                                            _start.minute,
-                                                            _start.second);
-                                                        DateTime _endTime = DateTime(
-                                                            _currentTime.year,
-                                                            _currentTime.month,
-                                                            _currentTime.day,
-                                                            _end.hour,
-                                                            _end.minute,
-                                                            _end.second);
-                                                        if (_endTime.isBefore(_startTime)) {
-                                                          _endTime = _endTime.add(Duration(days: 1));
+                                                        DateTime start =
+                                                            DateFormat('hh:mm:ss').parse(product.availableTimeStarts!);
+                                                        DateTime end =
+                                                            DateFormat('hh:mm:ss').parse(product.availableTimeEnds!);
+                                                        DateTime startTime = DateTime(
+                                                            currentTime.year,
+                                                            currentTime.month,
+                                                            currentTime.day,
+                                                            start.hour,
+                                                            start.minute,
+                                                            start.second);
+                                                        DateTime endTime = DateTime(currentTime.year, currentTime.month,
+                                                            currentTime.day, end.hour, end.minute, end.second);
+                                                        if (endTime.isBefore(startTime)) {
+                                                          endTime = endTime.add(const Duration(days: 1));
                                                         }
-                                                        bool _isAvailable = _currentTime.isAfter(_startTime) &&
-                                                            _currentTime.isBefore(_endTime);
 
-                                                        CartModel _cartModel = CartModel(
+                                                        CartModel cartModel = CartModel(
                                                             price: price,
                                                             points: isFromLoyaltyPoints
                                                                 ? double.parse(product.loyaltyPoints)
                                                                 : 0.0,
                                                             discountedPrice: priceWithDiscount,
-                                                            variation: [_variation],
                                                             discountAmount: (price -
                                                                 PriceConverter.convertWithDiscount(context, price,
                                                                     product.discount, product.discountType)),
@@ -419,15 +386,15 @@ class ProductWidgetWeb extends StatelessWidget {
                                                             taxAmount: price -
                                                                 PriceConverter.convertWithDiscount(
                                                                     context, price, product.tax, product.taxType),
-                                                            addOnIds: _addOnIdList,
+                                                            addOnIds: addOnIdList,
                                                             product: product,
                                                             isGift: false,
                                                             isFree: isFromLoyaltyPoints);
 
-                                                        _cartProvider.addToCart(_cartModel, _cartIndex);
+                                                        cartProvider.addToCart(cartModel, cartIndex);
                                                       } else {
                                                         Provider.of<CartProvider>(context, listen: false)
-                                                            .removeFromCart(_cartIndex);
+                                                            .removeFromCart(cartIndex);
                                                       }
                                                     } else {
                                                       Navigator.pushNamed(context, Routes.getLoginRoute());
@@ -436,44 +403,42 @@ class ProductWidgetWeb extends StatelessWidget {
                                                     }
                                                   },
                                                   child: Icon(Icons.add,
-                                                      color: Theme.of(context).textTheme.bodyText1.color)),
+                                                      color: Theme.of(context).textTheme.bodyLarge?.color)),
                                         ],
                                       ),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 4,
                                       ),
-
-                                      _cartProvider.cartList.map((e) => e.product.id).contains(product.id)
+                                      cartProvider.cartList.map((e) => e.product?.id).contains(product.id)
                                           ? Row(children: [
                                               InkWell(
                                                 onTap: () {
                                                   Provider.of<CouponProvider>(context, listen: false)
                                                       .removeCouponData(true);
-                                                  if (_cartProvider.cartList
-                                                          .where((element) => element.product.id == product.id)
+                                                  if (cartProvider.cartList
+                                                          .where((element) => element.product?.id == product.id)
                                                           .toList()[0]
                                                           .quantity >
                                                       1) {
                                                     Provider.of<CartProvider>(context, listen: false).setQuantity(
-                                                        isIncrement: false,
-                                                        fromProductView: false,
-                                                        cart: _cartProvider.cartList
-                                                            .where((element) => element.product.id == product.id)
-                                                            .toList()[0],
-                                                        productIndex: null);
+                                                      isIncrement: false,
+                                                      cart: cartProvider.cartList
+                                                          .where((element) => element.product?.id == product.id)
+                                                          .toList()[0],
+                                                    );
                                                   } else {
                                                     Provider.of<CartProvider>(context, listen: false)
-                                                        .removeFromCart(_cartIndex);
+                                                        .removeFromCart(cartIndex);
                                                   }
                                                 },
-                                                child: Padding(
+                                                child: const Padding(
                                                   padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                                                   child: Icon(Icons.remove, size: 20),
                                                 ),
                                               ),
                                               Text(
-                                                  _cartProvider.cartList
-                                                      .where((element) => element.product.id == product.id)
+                                                  cartProvider.cartList
+                                                      .where((element) => element.product?.id == product.id)
                                                       .toList()[0]
                                                       .quantity
                                                       .toString(),
@@ -481,32 +446,31 @@ class ProductWidgetWeb extends StatelessWidget {
                                                       rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
                                               InkWell(
                                                 onTap: () {
-                                                  print(
-                                                      '==is gift:${_cartProvider.cartList.where((element) => element.product.id == product.id).toList()[0].isFree}');
+                                                  debugPrint(
+                                                      '==is gift:${cartProvider.cartList.where((element) => element.product?.id == product.id).toList()[0].isFree}');
 
                                                   Provider.of<CouponProvider>(context, listen: false)
                                                       .removeCouponData(true);
                                                   Provider.of<CartProvider>(context, listen: false).setQuantity(
-                                                      isIncrement: true,
-                                                      fromProductView: false,
-                                                      cart: _cartProvider.cartList
-                                                          .where((element) => element.product.id == product.id)
-                                                          .toList()[0],
-                                                      productIndex: null);
+                                                    isIncrement: true,
+                                                    cart: cartProvider.cartList
+                                                        .where((element) => element.product?.id == product.id)
+                                                        .toList()[0],
+                                                  );
                                                 },
-                                                child: Padding(
+                                                child: const Padding(
                                                   padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                                                   child: Icon(Icons.add, size: 20),
                                                 ),
                                               ),
                                             ])
-                                          : SizedBox()
+                                          : const SizedBox()
                                     ]),
                               ),
                             )
                           : Expanded(
                               child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                                padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
                                 child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -523,13 +487,13 @@ class ProductWidgetWeb extends StatelessWidget {
                                       //   rating: product.rating.length > 0 ? double.parse(product.rating[0].average) : 0.0,
                                       //   size: 12,
                                       // ),
-                                      SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                      const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
 
                                       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                                         Flexible(
                                           child: Text(
-                                            '${PriceConverter.convertPrice(context, _startingPrice)}'
-                                            '${_endingPrice != null ? ' - ${PriceConverter.convertPrice(context, _endingPrice)}' : ''}',
+                                            '${PriceConverter.convertPrice(context, startingPrice)}'
+                                            '${endingPrice != null ? ' - ${PriceConverter.convertPrice(context, endingPrice ?? 0)}' : ''}',
                                             style: rubikBold.copyWith(
                                               fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
                                               color: ColorResources.COLOR_GREY,
@@ -537,106 +501,15 @@ class ProductWidgetWeb extends StatelessWidget {
                                             ),
                                           ),
                                         ),
-                                        Icon(Icons.add, color: Theme.of(context).textTheme.bodyText1.color),
+                                        Icon(Icons.add, color: Theme.of(context).textTheme.bodyLarge?.color),
                                       ])
                                     ]),
                               ),
                             ),
-
-                      // Flexible(
-                      //   child: Padding(
-                      //     padding: EdgeInsets.symmetric(horizontal: Dimensions
-                      //         .PADDING_SIZE_SMALL),
-                      //     child: Column(crossAxisAlignment: CrossAxisAlignment
-                      //         .center, mainAxisAlignment: MainAxisAlignment
-                      //         .center, children: [
-                      //       Text(product.name, style: rubikMedium.copyWith(
-                      //           fontSize: Dimensions.FONT_SIZE_SMALL,
-                      //           color: ColorResources.getCartTitleColor(
-                      //               context)),
-                      //           maxLines: 2,
-                      //           overflow: TextOverflow.ellipsis,
-                      //           textAlign: TextAlign.center),
-                      //       SizedBox(
-                      //           height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                      //
-                      //       RatingBar(
-                      //           rating: product.rating.length > 0 ? double
-                      //               .parse(product.rating[0].average) : 0.0,
-                      //           size: Dimensions.PADDING_SIZE_DEFAULT),
-                      //       SizedBox(
-                      //           height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                      //
-                      //       FittedBox(
-                      //         child: Row(
-                      //           mainAxisAlignment: MainAxisAlignment.center,
-                      //           children: [
-                      //             priceDiscount > 0
-                      //                 ? Padding(
-                      //                 padding: const EdgeInsets.symmetric(
-                      //                     horizontal: Dimensions
-                      //                         .PADDING_SIZE_EXTRA_SMALL),
-                      //                 child: Text(
-                      //                     '${PriceConverter.convertPrice(
-                      //                         context,
-                      //                         _startingPrice)}''${_endingPrice !=
-                      //                         null ? ' - ${PriceConverter
-                      //                         .convertPrice(
-                      //                         context, _endingPrice)}' : ''}',
-                      //                     style: rubikBold.copyWith(
-                      //                         fontSize: Dimensions
-                      //                             .FONT_SIZE_EXTRA_SMALL,
-                      //                         decoration: TextDecoration
-                      //                             .lineThrough)))
-                      //                 : SizedBox(),
-                      //             Text('${PriceConverter.convertPrice(
-                      //                 context, _startingPrice,
-                      //                 discount: product.discount,
-                      //                 discountType: product
-                      //                     .discountType)}''${_endingPrice !=
-                      //                 null
-                      //                 ? ' - ${PriceConverter.convertPrice(
-                      //                 context, _endingPrice,
-                      //                 discount: product.discount,
-                      //                 discountType: product.discountType)}'
-                      //                 : ''}',
-                      //                 style: rubikBold.copyWith(
-                      //                     fontSize: Dimensions
-                      //                         .FONT_SIZE_SMALL,
-                      //                     color: ColorResources
-                      //                         .APPBAR_HEADER_COL0R))
-                      //           ],
-                      //         ),
-                      //       ),
-                      //       SizedBox(
-                      //           height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                      //
-                      //       Align(
-                      //         alignment: Alignment.center,
-                      //         child: SizedBox(
-                      //           width: 100,
-                      //           child: FittedBox(
-                      //               child: ElevatedButton(
-                      //                   style: ElevatedButton.styleFrom(
-                      //                       backgroundColor: ColorResources
-                      //                           .APPBAR_HEADER_COL0R,
-                      //                       shape: RoundedRectangleBorder(
-                      //                           borderRadius: BorderRadius
-                      //                               .circular(
-                      //                               isFromCart ? 10 : 30))),
-                      //                   onPressed: () =>
-                      //                       _addToCart(context, _cartIndex),
-                      //                   child: Icon(Icons.add)
-                      //               )),
-                      //         ),
-                      //       ),
-                      //     ]),
-                      //   ),
-                      // ),
                     ]),
               ),
               isFromCart
-                  ? SizedBox()
+                  ? const SizedBox()
                   : Positioned.fill(
                       child: Align(
                       alignment: Alignment.topRight,

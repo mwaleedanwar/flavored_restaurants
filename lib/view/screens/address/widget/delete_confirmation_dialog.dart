@@ -9,31 +9,35 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../data/model/response/PaymentCardModel.dart';
+import '../../../../data/model/response/payment_card_model.dart';
 
 class DeleteConfirmationDialog extends StatelessWidget {
   final AddressModel addressModel;
   final int index;
-  DeleteConfirmationDialog({@required this.addressModel, @required this.index});
+  const DeleteConfirmationDialog({
+    super.key,
+    required this.addressModel,
+    required this.index,
+  });
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Container(
+      child: SizedBox(
         width: 300,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           CircleAvatar(
             radius: 30,
             backgroundColor: Theme.of(context).primaryColor,
-            child: Icon(
+            child: const Icon(
               Icons.contact_support,
               size: 50,
               color: Colors.white,
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+            padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
             child: FittedBox(
               child: Text(getTranslated('want_to_delete', context),
                   style: rubikRegular, textAlign: TextAlign.center, maxLines: 1),
@@ -52,7 +56,7 @@ class DeleteConfirmationDialog extends StatelessWidget {
                             valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                           ),
                         ));
-                Provider.of<LocationProvider>(context, listen: false).deleteUserAddressByID(addressModel.id, index,
+                Provider.of<LocationProvider>(context, listen: false).deleteUserAddressByID(addressModel.id!, index,
                     (bool isSuccessful, String message) {
                   Navigator.pop(context);
                   showCustomSnackBar(message, context, isError: !isSuccessful);
@@ -60,9 +64,9 @@ class DeleteConfirmationDialog extends StatelessWidget {
                 });
               },
               child: Container(
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                 alignment: Alignment.center,
-                decoration: BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10))),
+                decoration: const BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10))),
                 child: Text(getTranslated('yes', context),
                     style: rubikBold.copyWith(color: Theme.of(context).primaryColor)),
               ),
@@ -71,11 +75,11 @@ class DeleteConfirmationDialog extends StatelessWidget {
                 child: InkWell(
               onTap: () => Navigator.pop(context),
               child: Container(
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(10)),
+                  borderRadius: const BorderRadius.only(bottomRight: Radius.circular(10)),
                 ),
                 child: Text(getTranslated('no', context), style: rubikBold.copyWith(color: Colors.white)),
               ),
@@ -90,26 +94,30 @@ class DeleteConfirmationDialog extends StatelessWidget {
 class CardDeleteConfirmationDialog extends StatelessWidget {
   final PyamentCardModel paymentCardModel;
   final int index;
-  CardDeleteConfirmationDialog({@required this.paymentCardModel, @required this.index});
+  const CardDeleteConfirmationDialog({
+    super.key,
+    required this.paymentCardModel,
+    required this.index,
+  });
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Container(
+      child: SizedBox(
         width: 300,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           CircleAvatar(
             radius: 30,
             backgroundColor: Theme.of(context).primaryColor,
-            child: Icon(
+            child: const Icon(
               Icons.contact_support,
               size: 50,
               color: Colors.white,
             ),
           ),
           Padding(
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+            padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
             child: FittedBox(
               child: Text(getTranslated('want_to_delete', context),
                   style: rubikRegular, textAlign: TextAlign.center, maxLines: 1),
@@ -128,7 +136,7 @@ class CardDeleteConfirmationDialog extends StatelessWidget {
                             valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                           ),
                         ));
-                print('===Carxd UD:${paymentCardModel.paymentId}');
+                debugPrint('===Card PaymentID: ${paymentCardModel.paymentId}');
                 Provider.of<PaymentProvider>(context, listen: false)
                     .removeCard(paymentCardModel.paymentId, context)
                     .then((value) {
@@ -137,9 +145,9 @@ class CardDeleteConfirmationDialog extends StatelessWidget {
                 });
               },
               child: Container(
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                 alignment: Alignment.center,
-                decoration: BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10))),
+                decoration: const BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10))),
                 child: Text(getTranslated('yes', context),
                     style: rubikBold.copyWith(color: Theme.of(context).primaryColor)),
               ),
@@ -148,11 +156,11 @@ class CardDeleteConfirmationDialog extends StatelessWidget {
                 child: InkWell(
               onTap: () => Navigator.pop(context),
               child: Container(
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(10)),
+                  borderRadius: const BorderRadius.only(bottomRight: Radius.circular(10)),
                 ),
                 child: Text(getTranslated('no', context), style: rubikBold.copyWith(color: Colors.white)),
               ),

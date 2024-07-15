@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -9,9 +11,9 @@ import '../view/base/custom_snackbar.dart';
 
 class WishListProvider extends ChangeNotifier {
   final WishListRepo wishListRepo;
-  WishListProvider({@required this.wishListRepo});
+  WishListProvider({required this.wishListRepo});
 
-  List<Product> _wishList;
+  List<Product> _wishList = [];
   List<int> _wishIdList = [];
 
   List<Product> get wishList => _wishList;
@@ -25,8 +27,9 @@ class WishListProvider extends ChangeNotifier {
     _wishIdList.add(product.id);
     notifyListeners();
     ApiResponse apiResponse = await wishListRepo.addWishList(product.id);
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-      Map map = jsonDecode(apiResponse.response.body);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      Map map = jsonDecode(apiResponse.response!.body);
       String message = map['message'];
       showCustomSnackBar(message, context, isError: false);
     } else {
@@ -42,8 +45,9 @@ class WishListProvider extends ChangeNotifier {
     _wishIdList.remove(product.id);
     notifyListeners();
     ApiResponse apiResponse = await wishListRepo.removeWishList(product.id);
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-      Map map = jsonDecode(apiResponse.response.body);
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
+      Map map = jsonDecode(apiResponse.response!.body);
       String message = map['message'];
       showCustomSnackBar(message, context, isError: false);
     } else {
@@ -59,10 +63,14 @@ class WishListProvider extends ChangeNotifier {
     _wishList = [];
     _wishIdList = [];
     ApiResponse apiResponse = await wishListRepo.getWishList(languageCode);
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+    if (apiResponse.response != null &&
+        apiResponse.response!.statusCode == 200) {
       _wishList = [];
       _wishIdList = [];
-      _wishList.addAll(ProductModel.fromJson(jsonDecode(apiResponse.response.body)).products);
+      _wishList.addAll(
+          ProductModel.fromJson(jsonDecode(apiResponse.response!.body))
+                  .products ??
+              []);
       for (int i = 0; i < _wishList.length; i++) {
         _wishIdList.add(_wishList[i].id);
       }

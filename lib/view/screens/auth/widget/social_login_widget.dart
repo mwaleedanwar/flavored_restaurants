@@ -1,5 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-// import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/social_login_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
@@ -14,20 +15,20 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/forgot_password/v
 import 'package:provider/provider.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../../../../utill/app_constants.dart';
-
 class SocialLoginWidget extends StatefulWidget {
+  const SocialLoginWidget({super.key});
+
   @override
   State<SocialLoginWidget> createState() => _SocialLoginWidgetState();
 }
 
 class _SocialLoginWidgetState extends State<SocialLoginWidget> {
-  SocialLoginModel socialLogin = SocialLoginModel();
+  SocialLoginModel? socialLogin;
 
   void route(
     bool isRoute,
-    String token,
-    String temporaryToken,
+    String? token,
+    String? temporaryToken,
     String errorMessage,
   ) async {
     if (isRoute) {
@@ -38,15 +39,15 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
           (route) => false,
         );
       } else if (temporaryToken != null && temporaryToken.isNotEmpty) {
-        if (Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification) {
-          Provider.of<AuthProvider>(context, listen: false).checkEmail(socialLogin.email).then((value) async {
+        if (Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification) {
+          Provider.of<AuthProvider>(context, listen: false).checkEmail(socialLogin?.email ?? '').then((value) async {
             if (value.isSuccess) {
-              Provider.of<AuthProvider>(context, listen: false).updateEmail(socialLogin.email.toString());
+              Provider.of<AuthProvider>(context, listen: false).updateEmail((socialLogin?.email).toString());
               Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(
                       builder: (_) => VerificationScreen(
-                            emailAddress: socialLogin.email,
+                            emailAddress: socialLogin!.email,
                             fromSignUp: true,
                           )),
                   (route) => false);
@@ -56,7 +57,7 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-                builder: (_) => VerificationScreen(
+                builder: (_) => const VerificationScreen(
                       emailAddress: '',
                       fromSignUp: true,
                     )),
@@ -71,141 +72,72 @@ class _SocialLoginWidgetState extends State<SocialLoginWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final _socialStatus = Provider.of<SplashProvider>(context, listen: false).configModel.socialLoginStatus;
+    final socialStatus = Provider.of<SplashProvider>(context, listen: false).configModel!.socialLoginStatus;
     return Consumer<AuthProvider>(builder: (context, authProvider, _) {
       return Column(children: [
         Center(
-            child: Text('${getTranslated('sign_in_with', context)}',
+            child: Text(getTranslated('sign_in_with', context),
                 style: poppinsRegular.copyWith(
-                    color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.6),
+                    color: Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.6),
                     fontSize: Dimensions.FONT_SIZE_SMALL))),
-        SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+        const SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          if (_socialStatus.isGoogle)
-            Row(
-              children: [
-                InkWell(
-                  onTap: () async {
-                    try {
-                      GoogleSignInAuthentication _auth = await authProvider.googleLogin();
-                      GoogleSignInAccount _googleAccount = authProvider.googleAccount;
+          if (socialStatus?.isGoogle ?? false)
+            InkWell(
+              onTap: () async {
+                try {
+                  GoogleSignInAuthentication? auth = await authProvider.googleLogin();
+                  GoogleSignInAccount? googleAccount = authProvider.googleAccount;
 
-                      print('---------------google ----------- ${_googleAccount.email}');
-                      print('---------------display name ----------- ${_googleAccount.displayName}');
-                      print('---------------photoUrl ----------- ${_googleAccount.photoUrl}');
-                      print('---------------token ----------- ${_auth.idToken}');
-                      print('---------------uniq id ----------- ${_googleAccount.id}');
+                  debugPrint('---------------google ----------- ${googleAccount?.email}');
+                  debugPrint('---------------display name ----------- ${googleAccount?.displayName}');
+                  debugPrint('---------------photoUrl ----------- ${googleAccount?.photoUrl}');
+                  debugPrint('---------------token ----------- ${auth?.idToken}');
+                  debugPrint('---------------uniq id ----------- ${googleAccount?.id}');
 
-                      Provider.of<AuthProvider>(context, listen: false).socialLogin(
-                          SocialLoginModel(
-                              email: _googleAccount.email,
-                              token: _auth.idToken,
-                              uniqueId: _googleAccount.id,
-                              medium: 'google',
-                              firstName: _googleAccount.displayName.split(' ')[0],
-                              lastName: _googleAccount.displayName.split(' ')[1],
-                              restaurantId: F.restaurantId.toString()),
-                          route);
-                    } catch (er) {
-                      print('access token error is : $er');
-                    }
-                  },
-                  child: Container(
-                    height: ResponsiveHelper.isDesktop(context) ? 50 : 40,
-                    width: ResponsiveHelper.isDesktop(context)
-                        ? 130
-                        : ResponsiveHelper.isTab(context)
-                            ? 110
-                            : 40,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.1),
-                      borderRadius: BorderRadius.all(Radius.circular(Dimensions.RADIUS_DEFAULT)),
-                    ),
-                    child: Image.asset(
-                      Images.google,
-                      height: ResponsiveHelper.isDesktop(context)
-                          ? 30
-                          : ResponsiveHelper.isTab(context)
-                              ? 25
-                              : 20,
-                      width: ResponsiveHelper.isDesktop(context)
-                          ? 30
-                          : ResponsiveHelper.isTab(context)
-                              ? 25
-                              : 20,
-                    ),
-                  ),
+                  Provider.of<AuthProvider>(context, listen: false).socialLogin(
+                      SocialLoginModel(
+                          email: googleAccount!.email,
+                          token: auth!.idToken!,
+                          uniqueId: googleAccount.id,
+                          medium: 'google',
+                          firstName: googleAccount.displayName!.split(' ')[0],
+                          lastName: googleAccount.displayName!.split(' ')[1],
+                          restaurantId: F.restaurantId.toString()),
+                      route);
+                } catch (er) {
+                  debugPrint('access token error is : $er');
+                }
+              },
+              child: Container(
+                height: ResponsiveHelper.isDesktop(context) ? 50 : 40,
+                width: ResponsiveHelper.isDesktop(context)
+                    ? 130
+                    : ResponsiveHelper.isTab(context)
+                        ? 110
+                        : 40,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).textTheme.bodyMedium?.color?.withOpacity(0.1),
+                  borderRadius: const BorderRadius.all(Radius.circular(Dimensions.RADIUS_DEFAULT)),
                 ),
-                if (_socialStatus.isFacebook)
-                  SizedBox(
-                    width: Dimensions.PADDING_SIZE_DEFAULT,
-                  ),
-              ],
+                child: Image.asset(
+                  Images.google,
+                  height: ResponsiveHelper.isDesktop(context)
+                      ? 30
+                      : ResponsiveHelper.isTab(context)
+                          ? 25
+                          : 20,
+                  width: ResponsiveHelper.isDesktop(context)
+                      ? 30
+                      : ResponsiveHelper.isTab(context)
+                          ? 25
+                          : 20,
+                ),
+              ),
             ),
-          // if (_socialStatus.isFacebook)
-          //   InkWell(
-          //     onTap: () async {
-          //       LoginResult _result = await FacebookAuth.instance.login();
-          //       print('isuue ============== ${_result.message}');
-          //
-          //       if (_result.status == LoginStatus.success) {
-          //         Map _userData = await FacebookAuth.instance.getUserData();
-          //
-          //         print(
-          //             'facebook --------------------------------------------------- $_userData');
-          //
-          //         Provider.of<AuthProvider>(context, listen: false).socialLogin(
-          //           SocialLoginModel(
-          //               email: _userData['email'],
-          //               token: _result.accessToken.token,
-          //               uniqueId: _result.accessToken.userId,
-          //               medium: 'facebook',
-          //               firstName: _userData['name'].split(' ')[0],
-          //               lastName: _userData['name'].split(' ')[0],
-          //               restaurantId: AppConstants.restaurantId.toString()),
-          //           route,
-          //         );
-          //       }
-          //     },
-          //     child: Container(
-          //       height: ResponsiveHelper.isDesktop(context)
-          //           ? 50
-          //           : ResponsiveHelper.isTab(context)
-          //               ? 40
-          //               : 40,
-          //       width: ResponsiveHelper.isDesktop(context)
-          //           ? 130
-          //           : ResponsiveHelper.isTab(context)
-          //               ? 110
-          //               : 40,
-          //       alignment: Alignment.center,
-          //       decoration: BoxDecoration(
-          //         color: Theme.of(context)
-          //             .textTheme
-          //             .bodyText1
-          //             .color
-          //             .withOpacity(0.1),
-          //         borderRadius: BorderRadius.all(
-          //             Radius.circular(Dimensions.RADIUS_DEFAULT)),
-          //       ),
-          //       child: Image.asset(
-          //         Images.facebook,
-          //         height: ResponsiveHelper.isDesktop(context)
-          //             ? 30
-          //             : ResponsiveHelper.isTab(context)
-          //                 ? 25
-          //                 : 20,
-          //         width: ResponsiveHelper.isDesktop(context)
-          //             ? 30
-          //             : ResponsiveHelper.isTab(context)
-          //                 ? 25
-          //                 : 20,
-          //       ),
-          //     ),
-          //   ),
         ]),
-        SizedBox(
+        const SizedBox(
           height: Dimensions.PADDING_SIZE_EXTRA_SMALL,
         ),
       ]);

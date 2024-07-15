@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/error_response.dart';
@@ -22,26 +24,26 @@ class ApiErrorHandler {
               errorDescription = "Receive timeout in connection with API server";
               break;
             case DioErrorType.response:
-              switch (error.response.statusCode) {
+              switch (error.response?.statusCode) {
                 case 404:
                   errorDescription = 'Not available';
                   break;
                 case 500:
                 case 503:
-                  errorDescription = error.response.statusMessage;
+                  errorDescription = error.response?.statusMessage;
                   break;
                 default:
-                  ErrorResponse errorResponse;
+                  ErrorResponse? errorResponse;
                   try {
-                    errorResponse = ErrorResponse.fromJson(error.response.data);
+                    errorResponse = ErrorResponse.fromJson(error.response?.data);
                   } catch (e) {
                     debugPrint('Unknown error parsing error json: $e');
                   }
-                  if (errorResponse != null && errorResponse.errors != null && errorResponse.errors.isNotEmpty) {
+                  if (errorResponse != null && errorResponse.errors != null && errorResponse.errors!.isNotEmpty) {
                     debugPrint('error----------------== ${errorResponse.toJson()}');
                     errorDescription = errorResponse;
                   } else {
-                    errorDescription = "Failed to load data - status code: ${error.response.statusCode}";
+                    errorDescription = "Failed to load data - status code: ${error.response?.statusCode}";
                   }
               }
               break;
@@ -50,6 +52,7 @@ class ApiErrorHandler {
               break;
           }
         } else {
+          log('MASSIVE ERROR $error');
           errorDescription = "Unexpected error occured";
         }
       } on FormatException catch (e) {

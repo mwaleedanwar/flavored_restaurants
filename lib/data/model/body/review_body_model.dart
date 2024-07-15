@@ -1,30 +1,32 @@
 class ReviewBody {
-  String productId;
-  String deliveryManId;
+  String? productId;
+  String? deliveryManId;
   String comment;
   String rating;
   String orderId;
-  double orderTip;
-  List<String> fileUpload;
+  double? orderTip;
+  List<String>? fileUpload;
 
   ReviewBody({
+    required this.comment,
+    required this.rating,
+    required this.orderId,
     this.productId,
     this.deliveryManId,
-    this.comment,
-    this.rating,
-    this.orderId,
     this.orderTip,
     this.fileUpload,
   });
 
-  ReviewBody.fromJson(Map<String, dynamic> json) {
-    productId = json['product_id'];
-    deliveryManId = json['delivery_man_id'];
-    comment = json['comment'];
-    orderId = json['order_id'];
-    rating = json['rating'];
-    orderTip = json['delivery_tip_amount'];
-    fileUpload = json['attachment'].cast<String>();
+  factory ReviewBody.fromJson(Map<String, dynamic> json) {
+    return ReviewBody(
+      productId: json['product_id'],
+      deliveryManId: json['delivery_man_id'],
+      comment: json['comment'],
+      orderId: json['order_id'],
+      rating: json['rating'],
+      orderTip: json['delivery_tip_amount'],
+      fileUpload: json['attachment'].cast<String>(),
+    );
   }
 
   Map<String, dynamic> toJson() {

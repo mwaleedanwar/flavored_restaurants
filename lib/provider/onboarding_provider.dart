@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/api_response.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/onboarding_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/repository/onboarding_repo.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
@@ -11,11 +8,14 @@ class OnBoardingProvider with ChangeNotifier {
   final OnBoardingRepo onboardingRepo;
   final SharedPreferences sharedPreferences;
 
-  OnBoardingProvider({@required this.onboardingRepo, @required this.sharedPreferences}) {
+  OnBoardingProvider({
+    required this.onboardingRepo,
+    required this.sharedPreferences,
+  }) {
     _loadShowOnBoardingStatus();
   }
 
-  List<OnBoardingModel> _onBoardingList = [];
+  final _onBoardingList = <OnBoardingModel>[];
   bool _showOnBoardingStatus = false;
   bool get showOnBoardingStatus => _showOnBoardingStatus;
   List<OnBoardingModel> get onBoardingList => _onBoardingList;
@@ -29,21 +29,22 @@ class OnBoardingProvider with ChangeNotifier {
   }
 
   void _loadShowOnBoardingStatus() async {
-    _showOnBoardingStatus = sharedPreferences.getBool(AppConstants.ON_BOARDING_SKIP) ?? true;
+    _showOnBoardingStatus =
+        sharedPreferences.getBool(AppConstants.ON_BOARDING_SKIP) ?? true;
   }
 
   void toggleShowOnBoardingStatus() {
     sharedPreferences.setBool(AppConstants.ON_BOARDING_SKIP, false);
   }
 
-  void initBoardingList(BuildContext context) async {
-    var _list = await onboardingRepo.getOnBoardingList(context);
-    if (_list.isNotEmpty) {
+  void initBoardingList(BuildContext context) {
+    final list = onboardingRepo.getOnBoardingList();
+    if (list.isNotEmpty) {
       _onBoardingList.clear();
-      _onBoardingList.addAll(_list);
+      _onBoardingList.addAll(list);
       notifyListeners();
     } else {
-      print('error');
+      debugPrint('error');
     }
   }
 }

@@ -3,13 +3,14 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constran
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/category_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/localization_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/web/widget/arrey_button.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/web/widget/category_page_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class CategoryViewWeb extends StatefulWidget {
+  const CategoryViewWeb({super.key});
+
   @override
   State<CategoryViewWeb> createState() => _CategoryViewWebState();
 }
@@ -18,11 +19,11 @@ class _CategoryViewWebState extends State<CategoryViewWeb> {
   final PageController pageController = PageController();
 
   void _nextPage() {
-    pageController.nextPage(duration: Duration(seconds: 1), curve: Curves.easeInOut);
+    pageController.nextPage(duration: const Duration(seconds: 1), curve: Curves.easeInOut);
   }
 
   void _previousPage() {
-    pageController.previousPage(duration: Duration(seconds: 1), curve: Curves.easeInOut);
+    pageController.previousPage(duration: const Duration(seconds: 1), curve: Curves.easeInOut);
   }
 
   @override
@@ -39,47 +40,42 @@ class _CategoryViewWebState extends State<CategoryViewWeb> {
                     children: [
                       Expanded(
                         child: SizedBox(
-                          height: 160,
-                          child: category.categoryList != null
-                              ? category.categoryList.length > 0
-                                  ? CategoryPageView(categoryProvider: category, pageController: pageController)
-                                  : Center(child: Text(getTranslated('no_category_available', context)))
-                              : CategoryShimmer(),
-                        ),
+                            height: 160,
+                            child: category.categoryList.isNotEmpty
+                                ? CategoryPageView(categoryProvider: category, pageController: pageController)
+                                : Center(child: Text(getTranslated('no_category_available', context)))),
                       ),
                     ],
                   ),
                 ),
-                if (category.categoryList != null)
+                if (category.categoryList.isNotEmpty)
                   Positioned.fill(
                       child: Align(
+                          alignment: Provider.of<LocalizationProvider>(context).isLtr
+                              ? Alignment.centerLeft
+                              : Alignment.centerRight,
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: ArrayButton(
                                 isLeft: true,
                                 isLarge: true,
                                 onTop: _previousPage,
-                                isVisible: !category.pageFirstIndex &&
-                                    (category.categoryList != null ? category.categoryList.length > 7 : false)),
-                          ),
-                          alignment: Provider.of<LocalizationProvider>(context).isLtr
-                              ? Alignment.centerLeft
-                              : Alignment.centerRight)),
-                if (category.categoryList != null)
+                                isVisible: !category.pageFirstIndex && category.categoryList.length > 7),
+                          ))),
+                if (category.categoryList.isNotEmpty)
                   Positioned.fill(
                       child: Align(
+                          alignment: Provider.of<LocalizationProvider>(context).isLtr
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
                           child: Padding(
                             padding: const EdgeInsets.only(bottom: 16),
                             child: ArrayButton(
                                 isLeft: false,
                                 isLarge: true,
                                 onTop: _nextPage,
-                                isVisible: !category.pageLastIndex &&
-                                    (category.categoryList != null ? category.categoryList.length > 7 : false)),
-                          ),
-                          alignment: Provider.of<LocalizationProvider>(context).isLtr
-                              ? Alignment.centerRight
-                              : Alignment.centerLeft)),
+                                isVisible: !category.pageLastIndex && category.categoryList.length > 7),
+                          ))),
               ],
             ),
           ],
@@ -90,6 +86,8 @@ class _CategoryViewWebState extends State<CategoryViewWeb> {
 }
 
 class CategoryShimmer extends StatelessWidget {
+  const CategoryShimmer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -97,26 +95,26 @@ class CategoryShimmer extends StatelessWidget {
       child: ListView.builder(
         itemCount: 7,
         // padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
           return Container(
-            margin: EdgeInsets.symmetric(horizontal: 15.0),
+            margin: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Shimmer(
-              duration: Duration(seconds: 2),
-              enabled: Provider.of<CategoryProvider>(context).categoryList == null,
+              duration: const Duration(seconds: 2),
+              enabled: Provider.of<CategoryProvider>(context).categoryList.isNotEmpty,
               child: Column(children: [
                 Container(
                   height: 125,
                   width: 125,
                   decoration: BoxDecoration(
-                    color: Colors.grey[300],
+                    color: Colors.grey.shade300,
                     shape: BoxShape.circle,
                   ),
                 ),
-                SizedBox(height: 5),
-                Container(height: 10, width: 50, color: Colors.grey[300]),
+                const SizedBox(height: 5),
+                Container(height: 10, width: 50, color: Colors.grey.shade300),
               ]),
             ),
           );
@@ -127,26 +125,28 @@ class CategoryShimmer extends StatelessWidget {
 }
 
 class CategoryAllShimmer extends StatelessWidget {
+  const CategoryAllShimmer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 80,
       child: Padding(
-        padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+        padding: const EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
         child: Shimmer(
-          duration: Duration(seconds: 2),
-          enabled: Provider.of<CategoryProvider>(context).categoryList == null,
+          duration: const Duration(seconds: 2),
+          enabled: Provider.of<CategoryProvider>(context).categoryList.isNotEmpty,
           child: Column(children: [
             Container(
               height: 65,
               width: 65,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: Colors.grey.shade300,
                 shape: BoxShape.circle,
               ),
             ),
-            SizedBox(height: 5),
-            Container(height: 10, width: 50, color: Colors.grey[300]),
+            const SizedBox(height: 5),
+            Container(height: 10, width: 50, color: Colors.grey.shade300),
           ]),
         ),
       ),

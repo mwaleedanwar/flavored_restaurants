@@ -18,17 +18,23 @@ import 'package:provider/provider.dart';
 
 import '../thanks_feedback_screen.dart';
 
-class ProductReviewWidget extends StatelessWidget {
+class ProductReviewWidget extends StatefulWidget {
   final List<OrderDetailsModel> orderDetailsList;
-  ProductReviewWidget({@required this.orderDetailsList});
+  const ProductReviewWidget({super.key, required this.orderDetailsList});
 
+  @override
+  State<ProductReviewWidget> createState() => _ProductReviewWidgetState();
+}
+
+class _ProductReviewWidgetState extends State<ProductReviewWidget> {
+  final reviewTextController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Consumer<ProductProvider>(
       builder: (context, productProvider, child) {
         return Scrollbar(
           child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
                 Center(
@@ -40,21 +46,21 @@ class ProductReviewWidget extends StatelessWidget {
                     child: SizedBox(
                       width: 1170,
                       child: ListView.builder(
-                        itemCount: orderDetailsList.length,
-                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: widget.orderDetailsList.length,
+                        physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                        padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                         itemBuilder: (context, index) {
                           return Container(
-                            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                            margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
+                            padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                            margin: const EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
                             decoration: BoxDecoration(
                               boxShadow: [
                                 BoxShadow(
                                     color: Colors.grey.withOpacity(0.2),
                                     spreadRadius: 1,
                                     blurRadius: 2,
-                                    offset: Offset(0, 1))
+                                    offset: const Offset(0, 1))
                               ],
                               color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL),
@@ -72,23 +78,23 @@ class ProductReviewWidget extends StatelessWidget {
                                         width: 85,
                                         fit: BoxFit.cover,
                                         image:
-                                            '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/${orderDetailsList[index].productDetails.image}',
+                                            '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${widget.orderDetailsList[index].productDetails!.image}',
                                         imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_image,
                                             height: 70, width: 85, fit: BoxFit.cover),
                                       ),
                                     ),
-                                    SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                                    const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                                     Expanded(
                                         child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        Text(orderDetailsList[index].productDetails.name,
+                                        Text(widget.orderDetailsList[index].productDetails!.name,
                                             style: rubikMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
-                                        SizedBox(height: 10),
+                                        const SizedBox(height: 10),
                                         Text(
                                             PriceConverter.convertPrice(
-                                                context, orderDetailsList[index].productDetails.price),
+                                                context, widget.orderDetailsList[index].productDetails!.price),
                                             style: rubikBold),
                                       ],
                                     )),
@@ -99,7 +105,7 @@ class ProductReviewWidget extends StatelessWidget {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       Text(
-                                        orderDetailsList[index].quantity.toString(),
+                                        widget.orderDetailsList[index].quantity.toString(),
                                         style: rubikMedium.copyWith(
                                             color: Theme.of(context).primaryColor,
                                             fontSize: Dimensions.FONT_SIZE_SMALL),
@@ -108,7 +114,7 @@ class ProductReviewWidget extends StatelessWidget {
                                     ]),
                                   ],
                                 ),
-                                Divider(height: 20),
+                                const Divider(height: 20),
 
                                 // Rate
                                 Text(
@@ -116,7 +122,7 @@ class ProductReviewWidget extends StatelessWidget {
                                   style: rubikMedium.copyWith(color: ColorResources.getGreyBunkerColor(context)),
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                 SizedBox(
                                   height: 30,
                                   child: ListView.builder(
@@ -142,14 +148,15 @@ class ProductReviewWidget extends StatelessWidget {
                                     },
                                   ),
                                 ),
-                                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                                 Text(
                                   getTranslated('share_your_opinion', context),
                                   style: rubikMedium.copyWith(color: ColorResources.getGreyBunkerColor(context)),
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                                 CustomTextField(
+                                  controller: reviewTextController,
                                   maxLines: 3,
                                   capitalization: TextCapitalization.sentences,
                                   isEnabled: !productProvider.submitList[index],
@@ -159,11 +166,11 @@ class ProductReviewWidget extends StatelessWidget {
                                     productProvider.setReview(index, text);
                                   },
                                 ),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
 
                                 // Submit button
                                 Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+                                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
                                   child: Column(
                                     children: [
                                       !productProvider.loadingList[index]
@@ -185,10 +192,10 @@ class ProductReviewWidget extends StatelessWidget {
                                                       currentFocus.unfocus();
                                                     }
                                                     ReviewBody reviewBody = ReviewBody(
-                                                      productId: orderDetailsList[index].productId.toString(),
+                                                      productId: widget.orderDetailsList[index].productId.toString(),
                                                       rating: productProvider.ratingList[index].toString(),
                                                       comment: productProvider.reviewList[index],
-                                                      orderId: orderDetailsList[index].orderId.toString(),
+                                                      orderId: widget.orderDetailsList[index].orderId.toString(),
                                                     );
                                                     productProvider.submitReview(index, reviewBody).then((value) {
                                                       if (value.isSuccess) {
@@ -196,7 +203,7 @@ class ProductReviewWidget extends StatelessWidget {
                                                         Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                                builder: (context) => ThanksFeedbackScreen()));
+                                                                builder: (context) => const ThanksFeedbackScreen()));
 
                                                         productProvider.setReview(index, '');
                                                       } else {
@@ -223,8 +230,8 @@ class ProductReviewWidget extends StatelessWidget {
                   ),
                 ),
                 if (ResponsiveHelper.isDesktop(context))
-                  Padding(
-                    padding: const EdgeInsets.only(top: Dimensions.PADDING_SIZE_DEFAULT),
+                  const Padding(
+                    padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_DEFAULT),
                     child: FooterView(),
                   ),
               ],

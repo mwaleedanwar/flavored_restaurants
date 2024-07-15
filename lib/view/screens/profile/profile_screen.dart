@@ -1,3 +1,6 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -18,37 +21,35 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_text_field.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/not_logged_in_screen.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/profile/profile_screen_web.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:masked_text/masked_text.dart';
 
-import '../../../utill/app_constants.dart';
-
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  FocusNode _firstNameFocus;
-  FocusNode _lastNameFocus;
-  FocusNode _emailFocus;
-  FocusNode _phoneNumberFocus;
-  FocusNode _passwordFocus;
-  FocusNode _confirmPasswordFocus;
-  TextEditingController _firstNameController;
-  TextEditingController _lastNameController;
-  TextEditingController _emailController;
-  TextEditingController _phoneNumberController;
-  TextEditingController _passwordController;
-  TextEditingController _confirmPasswordController;
+  final _firstNameFocus = FocusNode();
+  final _lastNameFocus = FocusNode();
+  final _emailFocus = FocusNode();
+  final _phoneNumberFocus = FocusNode();
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
-  File file;
-  XFile data;
+  File? file;
+  XFile? data;
   final picker = ImagePicker();
   final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
-  bool _isLoggedIn;
+  bool _isLoggedIn = false;
 
   void _choose() async {
     final pickedFile =
@@ -74,79 +75,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Provider.of<ProfileProvider>(context, listen: false).getUserInfo(context);
     }
 
-    _firstNameFocus = FocusNode();
-    _lastNameFocus = FocusNode();
-    _emailFocus = FocusNode();
-    _phoneNumberFocus = FocusNode();
-    _passwordFocus = FocusNode();
-    _confirmPasswordFocus = FocusNode();
-    _firstNameController = TextEditingController();
-    _lastNameController = TextEditingController();
-    _emailController = TextEditingController();
-    _phoneNumberController = TextEditingController();
-    _passwordController = TextEditingController();
-    _confirmPasswordController = TextEditingController();
-
     if (Provider.of<ProfileProvider>(context, listen: false).userInfoModel != null) {
-      UserInfoModel _userInfoModel = Provider.of<ProfileProvider>(context, listen: false).userInfoModel;
-      _firstNameController.text = _userInfoModel.fName ?? '';
-      _lastNameController.text = _userInfoModel.lName ?? '';
-      _phoneNumberController.text = _userInfoModel.phone.replaceAll('+1', '') ?? '';
-      _emailController.text = _userInfoModel.email ?? '';
+      UserInfoModel userInfoModel = Provider.of<ProfileProvider>(context, listen: false).userInfoModel!;
+      _firstNameController.text = userInfoModel.fName ?? '';
+      _lastNameController.text = userInfoModel.lName ?? '';
+      _phoneNumberController.text = userInfoModel.phone?.replaceAll('+1', '') ?? '';
+      _emailController.text = userInfoModel.email ?? '';
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final double _width = MediaQuery.of(context).size.width;
+    final double width = MediaQuery.of(context).size.width;
     return Scaffold(
       key: _scaffoldKey,
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : CustomAppBar(context: context, title: getTranslated('my_profile', context)),
       body: _isLoggedIn
           ? Consumer<ProfileProvider>(
               builder: (context, profileProvider, child) {
-                // if(ResponsiveHelper.isDesktop(context)) {
-                //   return ProfileScreenWeb(
-                //     file: data,
-                //     pickImage: _pickImage,
-                //     confirmPasswordController: _confirmPasswordController,
-                //     confirmPasswordFocus: _confirmPasswordFocus,
-                //     emailController: _emailController,
-                //     firstNameController: _firstNameController,
-                //     firstNameFocus: _firstNameFocus,
-                //     lastNameController: _lastNameController,
-                //     lastNameFocus: _lastNameFocus,
-                //     emailFocus: _emailFocus,
-                //     passwordController: _passwordController,
-                //     passwordFocus: _passwordFocus,
-                //     phoneNumberController: _phoneNumberController,
-                //     phoneNumberFocus: _phoneNumberFocus
-                //   );
-                // }
                 return profileProvider.userInfoModel != null
                     ? Column(
                         children: [
                           Expanded(
                             child: Scrollbar(
                               child: SingleChildScrollView(
-                                physics: BouncingScrollPhysics(),
-                                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                                physics: const BouncingScrollPhysics(),
+                                padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                                 child: Center(
                                   child: Container(
-                                    width: _width > 700 ? 700 : _width,
-                                    padding: _width > 700
-                                        ? EdgeInsets.symmetric(
+                                    width: width > 700 ? 700 : width,
+                                    padding: width > 700
+                                        ? const EdgeInsets.symmetric(
                                             horizontal: Dimensions.PADDING_SIZE_LARGE,
                                             vertical: Dimensions.PADDING_SIZE_SMALL)
                                         : null,
-                                    decoration: _width > 700
+                                    decoration: width > 700
                                         ? BoxDecoration(
                                             color: Theme.of(context).cardColor,
                                             borderRadius: BorderRadius.circular(10),
                                             boxShadow: [
-                                              BoxShadow(color: Colors.grey[300], blurRadius: 5, spreadRadius: 1)
+                                              BoxShadow(color: Colors.grey.shade300, blurRadius: 5, spreadRadius: 1)
                                             ],
                                           )
                                         : null,
@@ -164,14 +134,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   borderRadius: BorderRadius.circular(25),
                                                   child: file != null
                                                       ? Image.file(
-                                                          file,
+                                                          file!,
                                                           width: 80,
                                                           height: 80,
                                                           fit: BoxFit.cover,
                                                         )
                                                       : data != null
                                                           ? Image.network(
-                                                              data.path,
+                                                              data!.path,
                                                               width: 80,
                                                               height: 80,
                                                               fit: BoxFit.cover,
@@ -182,56 +152,60 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                               height: 80,
                                                               fit: BoxFit.cover,
                                                               image:
-                                                                  '${Provider.of<SplashProvider>(context, listen: false).baseUrls.customerImageUrl}/${profileProvider.userInfoModel.image}',
-                                                              imageErrorBuilder: (c, o, s) => Image.asset(
-                                                                Images.placeholder_user,
-                                                                width: 80,
-                                                                height: 80,
-                                                                fit: BoxFit.cover,
-                                                              ),
+                                                                  '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/${profileProvider.userInfoModel!.image}',
+                                                              imageErrorBuilder: (c, o, s) {
+                                                                log('Link => ${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/${profileProvider.userInfoModel!.image}');
+                                                                log(o.toString());
+                                                                return Image.asset(
+                                                                  Images.placeholder_user,
+                                                                  width: 80,
+                                                                  height: 80,
+                                                                  fit: BoxFit.cover,
+                                                                );
+                                                              },
                                                             ),
                                                 ),
                                                 Positioned(
                                                   bottom: 15,
                                                   right: -10,
                                                   child: InkWell(
-                                                      onTap: ResponsiveHelper.isMobilePhone() ? _choose : _pickImage,
+                                                      onTap: ResponsiveHelper.isMobilePhone() ? _pickImage : _choose,
                                                       child: Container(
                                                         alignment: Alignment.center,
-                                                        padding: EdgeInsets.all(2),
+                                                        padding: const EdgeInsets.all(2),
                                                         decoration: BoxDecoration(
                                                           shape: BoxShape.circle,
                                                           color: ColorResources.BORDER_COLOR,
                                                           border: Border.all(
                                                               width: 2, color: ColorResources.COLOR_GREY_CHATEAU),
                                                         ),
-                                                        child: Icon(Icons.edit, size: 13),
+                                                        child: const Icon(Icons.edit, size: 13),
                                                       )),
                                                 ),
                                               ],
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 10,
                                         ),
                                         // for name
                                         Center(
                                             child: Text(
-                                          '${profileProvider.userInfoModel.fName} ${profileProvider.userInfoModel.lName}',
+                                          '${profileProvider.userInfoModel?.fName ?? ''} ${profileProvider.userInfoModel?.lName ?? ''}',
                                           style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE),
                                         )),
 
-                                        SizedBox(height: 28),
+                                        const SizedBox(height: 28),
                                         // for first name section
                                         Text(
                                           getTranslated('first_name', context),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline2
-                                              .copyWith(color: ColorResources.getHintColor(context)),
+                                              .displayMedium
+                                              ?.copyWith(color: ColorResources.getHintColor(context)),
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                         CustomTextField(
                                           hintText: 'John',
                                           isShowBorder: true,
@@ -241,17 +215,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           inputType: TextInputType.name,
                                           capitalization: TextCapitalization.words,
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                                         // for last name section
                                         Text(
                                           getTranslated('last_name', context),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline2
-                                              .copyWith(color: ColorResources.getHintColor(context)),
+                                              .displayMedium
+                                              ?.copyWith(color: ColorResources.getHintColor(context)),
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                         CustomTextField(
                                           hintText: 'Doe',
                                           isShowBorder: true,
@@ -261,103 +235,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           inputType: TextInputType.name,
                                           capitalization: TextCapitalization.words,
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-                                        // for email section
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                                         Text(
                                           getTranslated('email', context),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline2
-                                              .copyWith(color: ColorResources.getHintColor(context)),
+                                              .displayMedium
+                                              ?.copyWith(color: ColorResources.getHintColor(context)),
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                         CustomTextField(
                                           hintText: 'Enter your email',
                                           isShowBorder: true,
                                           controller: _emailController,
                                           focusNode: _emailFocus,
                                           nextFocus: _phoneNumberFocus,
-                                          onChanged: (v) {
-                                            print('===vlue:${v}');
-                                          },
                                           inputType: TextInputType.emailAddress,
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                                         // for phone Number section
                                         Text(
                                           getTranslated('mobile_number', context),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline2
-                                              .copyWith(color: ColorResources.getHintColor(context)),
+                                              .displayMedium
+                                              ?.copyWith(color: ColorResources.getHintColor(context)),
                                         ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                         MaskedTextField(
                                           mask: AppConstants.phone_form,
-                                          style: Theme.of(context).textTheme.headline2.copyWith(
-                                              color: Theme.of(context).textTheme.bodyText1.color,
+                                          style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                              color: Theme.of(context).textTheme.bodyLarge?.color,
                                               fontSize: Dimensions.FONT_SIZE_LARGE),
                                           controller: _phoneNumberController,
                                           readOnly: true,
                                           focusNode: _phoneNumberFocus,
                                           keyboardType: TextInputType.phone,
                                           decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 22),
+                                            contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
                                             border: OutlineInputBorder(
                                               borderRadius: BorderRadius.circular(10.0),
-                                              borderSide: BorderSide(style: BorderStyle.none, width: 0),
+                                              borderSide: const BorderSide(style: BorderStyle.none, width: 0),
                                             ),
                                             isDense: true,
                                             hintText: AppConstants.phone_form_hint,
                                             fillColor: Theme.of(context).cardColor,
-                                            hintStyle: Theme.of(context).textTheme.headline2.copyWith(
+                                            hintStyle: Theme.of(context).textTheme.displayMedium?.copyWith(
                                                 fontSize: Dimensions.FONT_SIZE_SMALL,
                                                 color: ColorResources.COLOR_GREY_CHATEAU),
                                             filled: true,
-                                            prefixIconConstraints: BoxConstraints(minWidth: 23, maxHeight: 20),
+                                            prefixIconConstraints: const BoxConstraints(minWidth: 23, maxHeight: 20),
                                           ),
                                         ),
-                                        // CustomTextField(
-                                        //   hintText: getTranslated('number_hint', context),
-                                        //   isShowBorder: true,
-                                        //   controller: _phoneNumberController,
-                                        //   focusNode: _phoneNumberFocus,
-                                        //   nextFocus: _passwordFocus,
-                                        //   inputType: TextInputType.phone,
-                                        // ),
-                                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                                        // Text(
-                                        //   getTranslated('password', context),
-                                        //   style: Theme.of(context).textTheme.headline2.copyWith(color: ColorResources.getHintColor(context)),
-                                        // ),
-                                        // SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                        // CustomTextField(
-                                        //   hintText: getTranslated('password_hint', context),
-                                        //   isShowBorder: true,
-                                        //   controller: _passwordController,
-                                        //   focusNode: _passwordFocus,
-                                        //   nextFocus: _confirmPasswordFocus,
-                                        //   isPassword: true,
-                                        //   isShowSuffixIcon: true,
-                                        // ),
-                                        // SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                                        // Text(
-                                        //   getTranslated('confirm_password', context),
-                                        //   style: Theme.of(context).textTheme.headline2.copyWith(color: ColorResources.getHintColor(context)),
-                                        // ),
-                                        // SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                        // CustomTextField(
-                                        //   hintText: getTranslated('password_hint', context),
-                                        //   isShowBorder: true,
-                                        //   controller: _confirmPasswordController,
-                                        //   focusNode: _confirmPasswordFocus,
-                                        //   isPassword: true,
-                                        //   isShowSuffixIcon: true,
-                                        //   inputAction: TextInputAction.done,
-                                        // ),
-                                        // SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+
+                                        const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                                       ],
                                     ),
                                   ),
@@ -368,68 +300,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           !profileProvider.isLoading
                               ? Center(
                                   child: Container(
-                                    width: _width > 700 ? 700 : _width,
-                                    padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                                    width: width > 700 ? 700 : width,
+                                    padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                                     margin: ResponsiveHelper.isDesktop(context)
-                                        ? EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL)
+                                        ? const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL)
                                         : EdgeInsets.zero,
                                     child: CustomButton(
                                       btnTxt: getTranslated('update_profile', context),
                                       onTap: () async {
-                                        String _firstName = _firstNameController.text.trim();
-                                        String _lastName = _lastNameController.text.trim();
-                                        String _email = _emailController.text.trim();
-                                        String _phoneNumber = _phoneNumberController.text.trim();
-                                        String _password = _passwordController.text.trim();
-                                        String _confirmPassword = _confirmPasswordController.text.trim();
-                                        if (profileProvider.userInfoModel.fName == _firstName &&
-                                            profileProvider.userInfoModel.lName == _lastName &&
-                                            profileProvider.userInfoModel.phone == _phoneNumber &&
-                                            profileProvider.userInfoModel.email == _emailController.text &&
+                                        String firstName = _firstNameController.text.trim();
+                                        String lastName = _lastNameController.text.trim();
+                                        String email = _emailController.text.trim();
+                                        String phoneNumber = _phoneNumberController.text.trim();
+                                        String password = _passwordController.text.trim();
+                                        String confirmPassword = _confirmPasswordController.text.trim();
+                                        if (profileProvider.userInfoModel?.fName == firstName &&
+                                            profileProvider.userInfoModel?.lName == lastName &&
+                                            profileProvider.userInfoModel?.phone == phoneNumber &&
+                                            profileProvider.userInfoModel?.email == _emailController.text &&
                                             file == null &&
                                             data == null &&
-                                            _password.isEmpty &&
-                                            _confirmPassword.isEmpty) {
+                                            password.isEmpty &&
+                                            confirmPassword.isEmpty) {
                                           showCustomSnackBar(
                                               getTranslated('change_something_to_update', context), context);
-                                        } else if (_firstName.isEmpty) {
+                                        } else if (firstName.isEmpty) {
                                           showCustomSnackBar(getTranslated('enter_first_name', context), context);
-                                        } else if (_lastName.isEmpty) {
+                                        } else if (lastName.isEmpty) {
                                           showCustomSnackBar(getTranslated('enter_last_name', context), context);
-                                        } else if (_phoneNumber.isEmpty) {
+                                        } else if (phoneNumber.isEmpty) {
                                           showCustomSnackBar(getTranslated('enter_phone_number', context), context);
-                                        } else if ((_password.isNotEmpty && _password.length < 6) ||
-                                            (_confirmPassword.isNotEmpty && _confirmPassword.length < 6)) {
+                                        } else if ((password.isNotEmpty && password.length < 6) ||
+                                            (confirmPassword.isNotEmpty && confirmPassword.length < 6)) {
                                           showCustomSnackBar(getTranslated('password_should_be', context), context);
-                                        } else if (_password != _confirmPassword) {
+                                        } else if (password != confirmPassword) {
                                           showCustomSnackBar(getTranslated('password_did_not_match', context), context);
                                         } else {
-                                          print('===vlue:${_email}');
+                                          debugPrint('===email: $email');
 
-                                          UserInfoModel updateUserInfoModel = UserInfoModel();
-                                          updateUserInfoModel.fName = _firstName ?? "";
-                                          updateUserInfoModel.lName = _lastName ?? "";
-                                          updateUserInfoModel.email = _emailController.text ?? "";
-                                          updateUserInfoModel.phone = AppConstants.country_code +
-                                                  _phoneNumber.replaceAll(RegExp('[()\\-\\s]'), '') ??
-                                              '';
-                                          String _pass = _password ?? '';
-                                          print('=====emil:${updateUserInfoModel.email}');
+                                          UserInfoModel updateUserInfoModel = UserInfoModel(
+                                              id: 0,
+                                              fName: firstName,
+                                              lName: lastName,
+                                              emailVerificationToken: _emailController.text,
+                                              phone: AppConstants.country_code +
+                                                  phoneNumber.replaceAll(RegExp('[()\\-\\s]'), ''));
 
-                                          ResponseModel _responseModel = await profileProvider.updateUserInfo(
+                                          String pass = password;
+                                          debugPrint('=====emil:${updateUserInfoModel.email}');
+
+                                          ResponseModel responseModel = await profileProvider.updateUserInfo(
                                             updateUserInfoModel,
-                                            _pass,
+                                            pass,
                                             file,
                                             data,
                                             Provider.of<AuthProvider>(context, listen: false).getUserToken(),
                                           );
 
-                                          if (_responseModel.isSuccess) {
+                                          if (responseModel.isSuccess) {
                                             profileProvider.getUserInfo(context);
                                             showCustomSnackBar(getTranslated('updated_successfully', context), context,
                                                 isError: false);
                                           } else {
-                                            showCustomSnackBar(_responseModel.message, context);
+                                            showCustomSnackBar(responseModel.message, context);
                                           }
                                           setState(() {});
                                         }
@@ -437,17 +370,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                   ),
                                 )
-                              : Center(
-                                  child: CircularProgressIndicator(
-                                      valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor))),
+                              : Padding(
+                                  padding: const EdgeInsets.only(bottom: 10.0),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                                    ),
+                                  ),
+                                ),
                         ],
                       )
                     : Center(
                         child: CircularProgressIndicator(
-                            valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)));
+                            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)));
               },
             )
-          : NotLoggedInScreen(),
+          : const NotLoggedInScreen(),
     );
   }
 }

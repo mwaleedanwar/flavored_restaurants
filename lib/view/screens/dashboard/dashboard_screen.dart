@@ -1,4 +1,4 @@
-import 'dart:developer';
+// ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/network_info.dart';
@@ -12,43 +12,38 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/provider/product_provider.dart
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/cart/cart_screen.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/home_screen.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/modified_home_page.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/menu/menu_screen.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/order/order_screen.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/wishlist/wishlist_screen.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/branch_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/category_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/coupon_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/gitft_dialog/gift_dialog.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/heart_points/heart_points.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/new_home.dart';
 import 'package:provider/provider.dart';
-
-import '../../../provider/branch_provider.dart';
-import '../../../provider/category_provider.dart';
-import '../../../provider/coupon_provider.dart';
-import '../../../provider/splash_provider.dart';
-import '../../../utill/images.dart';
-import '../../gitft_dialog/gift_dialog.dart';
-import '../heart_points/heart_points.dart';
-import '../home/new_home.dart';
 
 class DashboardScreen extends StatefulWidget {
   final int pageIndex;
 
-  const DashboardScreen({Key key, @required this.pageIndex}) : super(key: key);
+  const DashboardScreen({super.key, required this.pageIndex});
 
   @override
   DashboardScreenState createState() => DashboardScreenState();
 }
 
 class DashboardScreenState extends State<DashboardScreen> {
-  PageController _pageController;
+  final _pageController = PageController();
   int _pageIndex = 0;
-  List<Widget> _screens;
-  GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    print('===branch id:${Provider.of<BranchProvider>(context, listen: false).getBranchId()}');
+    debugPrint('===branch id:${Provider.of<BranchProvider>(context, listen: false).getBranchId()}');
     Provider.of<BranchProvider>(context, listen: false).setCurrentId();
-    print('===branch dash id:${Provider.of<BranchProvider>(context, listen: false).branch}');
+    debugPrint('===branch dash id:${Provider.of<BranchProvider>(context, listen: false).branch}');
     Provider.of<AllCategoryProvider>(context, listen: false).getCategoryList(
       context,
       false,
@@ -76,30 +71,6 @@ class DashboardScreenState extends State<DashboardScreen> {
     Provider.of<OrderProvider>(context, listen: false).changeStatus(true);
     _pageIndex = widget.pageIndex;
 
-    _pageController = PageController(initialPage: widget.pageIndex);
-
-    _screens = [
-      ModifiedHomePage(),
-
-      ///version 1
-      // MenuPage(),
-      TestMenuScreen(),
-
-      ///version 2
-      // MyHomePage(),
-      ///version 3
-
-      // HomeScreen(false),
-
-      CartScreen(),
-      OrderScreen(),
-      // WishListScreen(),
-      HeartPointScreen()
-      // MenuScreen(onTap: (int pageIndex) {
-      //   _setPage(pageIndex);
-      // }),
-    ];
-
     if (ResponsiveHelper.isMobilePhone()) {
       NetworkInfo.checkConnectivity(_scaffoldKey);
     }
@@ -113,20 +84,27 @@ class DashboardScreenState extends State<DashboardScreen> {
   }
 
   _showDialog() async {
-    await Future.delayed(Duration(milliseconds: 50));
+    await Future.delayed(const Duration(milliseconds: 50));
     showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => GiftDialog(
-              couponModel: Provider.of<CouponProvider>(context, listen: false).gift,
+              couponModel: Provider.of<CouponProvider>(context, listen: false).gift!,
             ));
   }
 
   _showWelcomDialog() async {
-    await Future.delayed(Duration(milliseconds: 50));
-    showDialog(context: context, barrierDismissible: false, builder: (context) => WelcomeMessageDialog());
+    await Future.delayed(const Duration(milliseconds: 50));
+    showDialog(context: context, barrierDismissible: false, builder: (context) => const WelcomeMessageDialog());
   }
 
+  final _screens = const [
+    ModifiedHomePage(),
+    TestMenuScreen(),
+    CartScreen(),
+    OrderScreen(),
+    HeartPointScreen(),
+  ];
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -158,11 +136,11 @@ class DashboardScreenState extends State<DashboardScreen> {
                   _setPage(index);
                 },
               )
-            : SizedBox(),
+            : const SizedBox(),
         body: PageView.builder(
           controller: _pageController,
           itemCount: _screens.length,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             return _screens[index];
           },
@@ -171,13 +149,13 @@ class DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  BottomNavigationBarItem _barItem(IconData icon, String label, int index, {bool isImage = false, String path}) {
+  BottomNavigationBarItem _barItem(IconData icon, String label, int index, {bool isImage = false, String? path}) {
     return BottomNavigationBarItem(
       icon: Stack(
         clipBehavior: Clip.none,
         children: [
           isImage
-              ? Image.asset(path,
+              ? Image.asset(path!,
                   height: 27, color: index == _pageIndex ? Theme.of(context).primaryColor : ColorResources.COLOR_GREY)
               : Icon(icon,
                   color: index == _pageIndex ? Theme.of(context).primaryColor : ColorResources.COLOR_GREY, size: 25),
@@ -186,9 +164,9 @@ class DashboardScreenState extends State<DashboardScreen> {
                   top: -7,
                   right: -7,
                   child: Container(
-                    padding: EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(4),
                     alignment: Alignment.center,
-                    decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                    decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
                     child: Text(
                       (Provider.of<CartProvider>(context).cartList.length +
                               Provider.of<CartProvider>(context).cateringList.length +
@@ -199,7 +177,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                 )
-              : SizedBox(),
+              : const SizedBox(),
         ],
       ),
       label: label,

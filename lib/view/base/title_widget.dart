@@ -6,9 +6,9 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 
 class TitleWidget extends StatelessWidget {
   final String title;
-  final Function onTap;
+  final void Function()? onTap;
 
-  TitleWidget({@required this.title, this.onTap});
+  const TitleWidget({super.key, required this.title, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +18,16 @@ class TitleWidget extends StatelessWidget {
           ? InkWell(
               onTap: onTap,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(10, 5, 0, 5),
+                padding: const EdgeInsets.fromLTRB(10, 5, 0, 5),
                 child: Text(
                   getTranslated('view_all', context),
                   style: rubikRegular.copyWith(
-                      fontSize: Dimensions.FONT_SIZE_SMALL, color: Theme.of(context).primaryColor),
+                      fontSize: Dimensions.FONT_SIZE_SMALL,
+                      color: Theme.of(context).primaryColor),
                 ),
               ),
             )
-          : SizedBox(),
+          : const SizedBox(),
     ]);
   }
 }

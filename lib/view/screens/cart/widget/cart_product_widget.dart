@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/cart_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_model.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/price_converter.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/coupon_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
@@ -12,83 +12,87 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/rating_bar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/cart_bottom_sheet.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/marque_text.dart';
 import 'package:provider/provider.dart';
 
-class CartProductWidget extends StatelessWidget {
-  final CartModel cart;
+class CartProductWidget extends StatefulWidget {
+  final CartModel? cart;
   final int cartIndex;
-  final List<AddOns> addOns;
+  final List<AddOns>? addOns;
   final bool isAvailable;
 
-  CartProductWidget({@required this.cart, @required this.cartIndex, @required this.isAvailable, @required this.addOns});
+  const CartProductWidget({
+    super.key,
+    this.cart,
+    required this.cartIndex,
+    required this.isAvailable,
+    this.addOns,
+  });
 
+  @override
+  State<CartProductWidget> createState() => _CartProductWidgetState();
+}
+
+class _CartProductWidgetState extends State<CartProductWidget> {
   var variations = [];
+
   @override
   Widget build(BuildContext context) {
-    String _variationText = '';
-    if (cart.variation != null && cart.variation.length > 0) {
-      List<String> _variationTypes = cart.variation[0].type != null ? cart.variation[0].type.split('-') : [];
-      if (_variationTypes.length == cart.product.choiceOptions.length) {
-        int _index = 0;
-        cart.product.choiceOptions.forEach((choice) {
-          _variationText = _variationText + '${(_index == 0) ? '' : ',  '}${choice.title} - ${_variationTypes[_index]}';
-          _index = _index + 1;
+    String variationText = '';
+    if (
+        // widget.cart?.product?.choiceOptions != null &&
+        widget.cart?.variation != null && widget.cart!.variation!.isNotEmpty) {
+      List<String> variationTypes = widget.cart!.variation!.first!.type.split('-');
+
+      if (variationTypes.length == widget.cart!.product!.choiceOptions!.length) {
+        int index = 0;
+        widget.cart!.product!.choiceOptions?.forEach((choice) {
+          variationText = '$variationText${(index == 0) ? '' : ',  '}${choice.title} - ${variationTypes[index]}';
+          index = index + 1;
         });
       } else {
-        _variationText = cart.product.variations[0].type;
+        variationText = widget.cart!.product!.variations!.first.type;
       }
-      for (Variation variation in cart.variation) {
-        if (variation.values != null) {
-          variation.values.forEach((element) {
+      for (Variation? variation in widget.cart!.variation ?? []) {
+        if (variation?.values != null) {
+          for (var element in variation!.values!) {
             variations.add(element);
-          });
+          }
         }
       }
     }
-    print('---cart:${variations}');
 
     return InkWell(
       onTap: () {
-        if (!cart.isFree || cart.price != 0.0) {
+        if (!(widget.cart?.isFree ?? false) || widget.cart?.price != 0.0) {
           ResponsiveHelper.isMobile(context)
               ? showModalBottomSheet(
                   context: context,
                   isScrollControlled: true,
                   backgroundColor: Colors.transparent,
                   builder: (con) => CartBottomSheet(
-                    product: cart.product,
-                    cartIndex: cartIndex,
-                    cart: cart,
+                    product: widget.cart!.product!,
+                    cart: widget.cart,
                     fromCart: true,
-                    callback: (CartModel cartModel) {
-                      showCustomSnackBar(getTranslated('updated_in_cart', context), context, isError: false);
-                    },
                   ),
                 )
               : showDialog(
                   context: context,
                   builder: (con) => Dialog(
                         child: CartBottomSheet(
-                          product: cart.product,
-                          cartIndex: cartIndex,
-                          cart: cart,
+                          product: widget.cart!.product!,
+                          cart: widget.cart,
                           fromCart: true,
-                          callback: (CartModel cartModel) {
-                            showCustomSnackBar(getTranslated('updated_in_cart', context), context, isError: false);
-                          },
                         ),
                       ));
         }
       },
       child: Container(
-        margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_DEFAULT),
+        margin: const EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_DEFAULT),
         decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(10)),
         child: Stack(children: [
-          Positioned(
+          const Positioned(
             top: 0,
             bottom: 0,
             right: 0,
@@ -99,17 +103,17 @@ class CartProductWidget extends StatelessWidget {
             key: UniqueKey(),
             onDismissed: (DismissDirection direction) {
               Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
-              Provider.of<CartProvider>(context, listen: false).removeFromCart(cartIndex);
+              Provider.of<CartProvider>(context, listen: false).removeFromCart(widget.cartIndex);
             },
             child: Container(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                   vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL),
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(10),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 300],
+                    color: Provider.of<ThemeProvider>(context).darkTheme ? Colors.grey.shade700 : Colors.grey.shade300,
                     blurRadius: 5,
                     spreadRadius: 1,
                   )
@@ -118,74 +122,50 @@ class CartProductWidget extends StatelessWidget {
               child: Column(
                 children: [
                   Row(children: [
-                    Stack(
-                      children: [
-                        // ClipRRect(
-                        //   borderRadius: BorderRadius.circular(10),
-                        //   child: FadeInImage.assetNetwork(
-                        //     placeholder: Images.placeholder_image,
-                        //     height: 70,
-                        //     width: 85,
-                        //     fit: BoxFit.cover,
-                        //     image:
-                        //         '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/${cart.product.image}',
-                        //     imageErrorBuilder: (c, o, s) => Image.asset(
-                        //         Images.placeholder_image,
-                        //         height: 70,
-                        //         width: 85,
-                        //         fit: BoxFit.cover),
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                    SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                    const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                     Expanded(
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(cart.product.name, style: rubikMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
-                            SizedBox(height: 2),
-                            // RatingBar(
-                            //     rating: cart.product.rating.length > 0
-                            //         ? double.parse(
-                            //             cart.product.rating[0].average)
-                            //         : 0.0,
-                            //     size: 12),
-                            SizedBox(height: 5),
+                            Text(widget.cart!.product!.name,
+                                style: rubikMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
+                            const SizedBox(height: 2),
+                            const SizedBox(height: 5),
                             Row(children: [
                               Flexible(
                                 child: Text(
-                                  cart.isFree
-                                      ? '${cart.points} heart points'
-                                      : PriceConverter.convertPrice(context, cart.price
-                                          // + _variationPrice(cart.variation)
-                                          ),
+                                  widget.cart!.isFree
+                                      ? '${widget.cart!.points} heart points'
+                                      : PriceConverter.convertPrice(
+                                          context,
+                                          widget.cart!.price,
+                                        ),
                                   style: rubikBold,
                                 ),
                               ),
-                              SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                              cart.discountAmount > 0
+                              const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                              widget.cart!.discountAmount > 0
                                   ? Flexible(
                                       child: Text(
                                           PriceConverter.convertPrice(
-                                              context, cart.discountedPrice + cart.discountAmount),
+                                              context, widget.cart!.discountedPrice + widget.cart!.discountAmount),
                                           style: rubikBold.copyWith(
                                             color: ColorResources.COLOR_GREY,
                                             fontSize: Dimensions.FONT_SIZE_SMALL,
                                             decoration: TextDecoration.lineThrough,
                                           )),
                                     )
-                                  : SizedBox(),
+                                  : const SizedBox(),
                             ]),
-                            cart.product.variations.length > 0
+                            widget.cart?.product?.variations?.isNotEmpty ?? false
                                 ? Padding(
-                                    padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                    padding: const EdgeInsets.only(top: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                     child: Row(mainAxisSize: MainAxisSize.min, children: [
                                       Flexible(
                                         child: MarqueeWidget(
-                                          backDuration: Duration(microseconds: 500),
-                                          animationDuration: Duration(microseconds: 500),
+                                          backDuration: const Duration(microseconds: 500),
+                                          animationDuration: const Duration(microseconds: 500),
                                           direction: Axis.horizontal,
                                           child: Row(
                                             children: List.generate(variations.length, (index) {
@@ -200,17 +180,17 @@ class CartProductWidget extends StatelessWidget {
                                       ),
                                     ]),
                                   )
-                                : SizedBox(),
+                                : const SizedBox(),
                           ]),
                     ),
-                    cart.isGift == true
+                    widget.cart?.isGift == true
                         ? Text(
                             'Your\nGift',
                             style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w800, color: Theme.of(context).primaryColor),
                             textAlign: TextAlign.center,
                           )
-                        : cart.isFree
+                        : widget.cart?.isFree ?? false
                             ? Text(
                                 'Free',
                                 style: TextStyle(
@@ -218,38 +198,40 @@ class CartProductWidget extends StatelessWidget {
                                 textAlign: TextAlign.center,
                               )
                             : Container(
-                                decoration: BoxDecoration(
-                                    color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.circular(5)),
+                                decoration:
+                                    BoxDecoration(color: F.appbarHeaderColor, borderRadius: BorderRadius.circular(5)),
                                 child: Row(children: [
                                   InkWell(
                                     onTap: () {
                                       Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
-                                      if (cart.quantity > 1) {
+                                      if ((widget.cart?.quantity ?? 0) > 1) {
                                         Provider.of<CartProvider>(context, listen: false).setQuantity(
-                                            isIncrement: false, fromProductView: false, cart: cart, productIndex: null);
+                                          isIncrement: false,
+                                          cart: widget.cart,
+                                        );
                                       } else {
-                                        Provider.of<CartProvider>(context, listen: false).removeFromCart(cartIndex);
+                                        Provider.of<CartProvider>(context, listen: false)
+                                            .removeFromCart(widget.cartIndex);
                                       }
                                     },
-                                    child: Padding(
+                                    child: const Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: Dimensions.PADDING_SIZE_SMALL,
                                           vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                       child: Icon(Icons.remove, size: 20),
                                     ),
                                   ),
-                                  Text(cart.quantity.toString(),
+                                  Text((widget.cart?.quantity ?? 0).toString(),
                                       style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
                                   InkWell(
                                     onTap: () {
-                                      print('==is gift:${cart.price}');
-                                      if (cart.isFree) {}
-
                                       Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
                                       Provider.of<CartProvider>(context, listen: false).setQuantity(
-                                          isIncrement: true, fromProductView: false, cart: cart, productIndex: null);
+                                        isIncrement: true,
+                                        cart: widget.cart,
+                                      );
                                     },
-                                    child: Padding(
+                                    child: const Padding(
                                       padding: EdgeInsets.symmetric(
                                           horizontal: Dimensions.PADDING_SIZE_SMALL,
                                           vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
@@ -258,56 +240,41 @@ class CartProductWidget extends StatelessWidget {
                                   ),
                                 ]),
                               ),
-                    // !ResponsiveHelper.isMobile(context)
-                    //     ? Padding(
-                    //         padding: EdgeInsets.symmetric(
-                    //             horizontal: Dimensions.PADDING_SIZE_SMALL),
-                    //         child: IconButton(
-                    //           onPressed: () {
-                    //             Provider.of<CouponProvider>(context,
-                    //                     listen: false)
-                    //                 .removeCouponData(true);
-                    //             Provider.of<CartProvider>(context,
-                    //                     listen: false)
-                    //                 .removeFromCart(cartIndex);
-                    //           },
-                    //           icon: Icon(Icons.delete, color: Colors.red),
-                    //         ),
-                    //       )
-                    //     : SizedBox(),
                   ]),
-                  addOns.length > 0
+                  widget.addOns?.isNotEmpty ?? false
                       ? SizedBox(
                           height: 30,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            physics: BouncingScrollPhysics(),
-                            padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_SMALL),
-                            itemCount: addOns.length,
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.only(top: Dimensions.PADDING_SIZE_SMALL),
+                            itemCount: widget.addOns!.length,
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+                                padding: const EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
                                 child: Row(children: [
                                   InkWell(
                                     onTap: () {
-                                      Provider.of<CartProvider>(context, listen: false).removeAddOn(cartIndex, index);
+                                      Provider.of<CartProvider>(context, listen: false)
+                                          .removeAddOn(widget.cartIndex, index);
                                     },
                                     child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 2),
+                                      padding: const EdgeInsets.symmetric(horizontal: 2),
                                       child: Icon(Icons.remove_circle, color: Theme.of(context).primaryColor, size: 18),
                                     ),
                                   ),
-                                  Text(addOns[index].name, style: rubikRegular),
-                                  SizedBox(width: 2),
-                                  Text(PriceConverter.convertPrice(context, addOns[index].price), style: rubikMedium),
-                                  SizedBox(width: 2),
-                                  Text('(${cart.addOnIds[index].quantity})', style: rubikRegular),
+                                  Text(widget.addOns![index].name, style: rubikRegular),
+                                  const SizedBox(width: 2),
+                                  Text(PriceConverter.convertPrice(context, widget.addOns![index].price),
+                                      style: rubikMedium),
+                                  const SizedBox(width: 2),
+                                  Text('(${widget.cart!.addOnIds![index].quantity})', style: rubikRegular),
                                 ]),
                               );
                             },
                           ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                 ],
               ),
             ),
@@ -322,177 +289,147 @@ class CartOfferWidget extends StatelessWidget {
   final CateringCartModel cateringCartModel;
   final int cartIndex;
 
-  CartOfferWidget({
-    @required this.cartIndex,
-    this.cateringCartModel,
+  const CartOfferWidget({
+    super.key,
+    required this.cartIndex,
+    required this.cateringCartModel,
   });
 
   @override
   Widget build(BuildContext context) {
-    String _variationText = '';
-
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_DEFAULT),
-        decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(10)),
-        child: Stack(children: [
-          Positioned(
-            top: 0,
-            bottom: 0,
-            right: 0,
-            left: 0,
-            child: Icon(Icons.delete, color: ColorResources.COLOR_WHITE, size: 50),
-          ),
-          Dismissible(
-            key: UniqueKey(),
-            onDismissed: (DismissDirection direction) {
-              Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
-              Provider.of<CartProvider>(context, listen: false).removeFromCart(cartIndex);
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                  vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 300],
-                    blurRadius: 5,
-                    spreadRadius: 1,
-                  )
-                ],
-              ),
-              child: Column(
-                children: [
-                  Row(children: [
-                    Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: FadeInImage.assetNetwork(
-                            placeholder: Images.placeholder_image,
-                            height: 70,
-                            width: 85,
-                            fit: BoxFit.cover,
-                            image:
-                                '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/${cateringCartModel.catering.offerProduct.image}',
-                            imageErrorBuilder: (c, o, s) =>
-                                Image.asset(Images.placeholder_image, height: 70, width: 85, fit: BoxFit.cover),
-                          ),
+    return Container(
+      margin: const EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_DEFAULT),
+      decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(10)),
+      child: Stack(children: [
+        const Positioned(
+          top: 0,
+          bottom: 0,
+          right: 0,
+          left: 0,
+          child: Icon(Icons.delete, color: ColorResources.COLOR_WHITE, size: 50),
+        ),
+        Dismissible(
+          key: UniqueKey(),
+          onDismissed: (DismissDirection direction) {
+            Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
+            Provider.of<CartProvider>(context, listen: false).removeFromCart(cartIndex);
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+                vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Provider.of<ThemeProvider>(context).darkTheme ? Colors.grey.shade700 : Colors.grey.shade300,
+                  blurRadius: 5,
+                  spreadRadius: 1,
+                )
+              ],
+            ),
+            child: Column(
+              children: [
+                Row(children: [
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: FadeInImage.assetNetwork(
+                          placeholder: Images.placeholder_image,
+                          height: 70,
+                          width: 85,
+                          fit: BoxFit.cover,
+                          image:
+                              '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${cateringCartModel.catering!.offerProduct!.image}',
+                          imageErrorBuilder: (c, o, s) =>
+                              Image.asset(Images.placeholder_image, height: 70, width: 85, fit: BoxFit.cover),
                         ),
-                      ],
-                    ),
-                    SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                    Expanded(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(cateringCartModel.catering.name,
-                                style: rubikMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
-                            SizedBox(height: 2),
-                            // RatingBar(
-                            //     rating: cart.product.rating.length > 0
-                            //         ? double.parse(
-                            //             cart.product.rating[0].average)
-                            //         : 0.0,
-                            //     size: 12),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    'Tray Quantity : ${cateringCartModel.catering.offerProduct.itemQuantity}',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 5),
-
-                            Row(children: [
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                  Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(cateringCartModel.catering!.name,
+                              style: rubikMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
+                          const SizedBox(height: 2),
+                          const SizedBox(height: 5),
+                          Row(
+                            children: [
                               Flexible(
                                 child: Text(
-                                  PriceConverter.convertPrice(context, cateringCartModel.discountAmount ?? 0.0),
+                                  'Tray Quantity : ${cateringCartModel.catering?.offerProduct?.itemQuantity ?? 0}',
                                 ),
                               ),
-                            ]),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          Row(children: [
+                            Flexible(
+                              child: Text(
+                                PriceConverter.convertPrice(
+                                  context,
+                                  cateringCartModel.discountAmount ?? 0.0,
+                                ),
+                              ),
+                            ),
                           ]),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.circular(5)),
-                      child: Row(children: [
-                        InkWell(
-                          onTap: () {
-                            Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
-                            if (cateringCartModel.quantity > 1) {
-                              Provider.of<CartProvider>(context, listen: false).setQuantity(
-                                  isIncrement: false,
-                                  fromProductView: false,
-                                  isCatering: true,
-                                  isCart: false,
-                                  catering: cateringCartModel,
-                                  productIndex: null);
-                            } else {
-                              Provider.of<CartProvider>(context, listen: false)
-                                  .removeFromCart(cartIndex, isCatering: true, isCart: false);
-                            }
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: Dimensions.PADDING_SIZE_SMALL,
-                                vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                            child: Icon(Icons.remove, size: 20),
-                          ),
-                        ),
-                        Text(cateringCartModel.quantity.toString(),
-                            style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
-                        InkWell(
-                          onTap: () {
-                            Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
+                        ]),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(color: F.appbarHeaderColor, borderRadius: BorderRadius.circular(5)),
+                    child: Row(children: [
+                      InkWell(
+                        onTap: () {
+                          Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
+                          if (cateringCartModel.quantity > 1) {
                             Provider.of<CartProvider>(context, listen: false).setQuantity(
-                                isIncrement: true,
-                                fromProductView: false,
-                                isCatering: true,
-                                isCart: false,
-                                catering: cateringCartModel,
-                                productIndex: null);
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: Dimensions.PADDING_SIZE_SMALL,
-                                vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                            child: Icon(Icons.add, size: 20),
-                          ),
+                              isIncrement: false,
+                              isCatering: true,
+                              isCart: false,
+                              catering: cateringCartModel,
+                            );
+                          } else {
+                            Provider.of<CartProvider>(context, listen: false)
+                                .removeFromCart(cartIndex, isCatering: true, isCart: false);
+                          }
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                          child: Icon(Icons.remove, size: 20),
                         ),
-                      ]),
-                    ),
-                    // !ResponsiveHelper.isMobile(context)
-                    //     ? Padding(
-                    //         padding: EdgeInsets.symmetric(
-                    //             horizontal: Dimensions.PADDING_SIZE_SMALL),
-                    //         child: IconButton(
-                    //           onPressed: () {
-                    //             Provider.of<CouponProvider>(context,
-                    //                     listen: false)
-                    //                 .removeCouponData(true);
-                    //             Provider.of<CartProvider>(context,
-                    //                     listen: false)
-                    //                 .removeFromCart(cartIndex);
-                    //           },
-                    //           icon: Icon(Icons.delete, color: Colors.red),
-                    //         ),
-                    //       )
-                    //     : SizedBox(),
-                  ]),
-                ],
-              ),
+                      ),
+                      Text(cateringCartModel.quantity.toString(),
+                          style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
+                      InkWell(
+                        onTap: () {
+                          Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
+                          Provider.of<CartProvider>(context, listen: false).setQuantity(
+                            isIncrement: true,
+                            isCatering: true,
+                            isCart: false,
+                            catering: cateringCartModel,
+                          );
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                          child: Icon(Icons.add, size: 20),
+                        ),
+                      ),
+                    ]),
+                  ),
+                ]),
+              ],
             ),
           ),
-        ]),
-      ),
+        ),
+      ]),
     );
   }
 }
@@ -501,181 +438,138 @@ class CartHappyHourWidget extends StatelessWidget {
   final HappyHoursCartModel happyHoursCartModel;
   final int cartIndex;
 
-  CartHappyHourWidget({
-    @required this.cartIndex,
-    this.happyHoursCartModel,
+  const CartHappyHourWidget({
+    super.key,
+    required this.cartIndex,
+    required this.happyHoursCartModel,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
-      child: Container(
-        margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_DEFAULT),
-        decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(10)),
-        child: Stack(children: [
-          Positioned(
-            top: 0,
-            bottom: 0,
-            right: 0,
-            left: 0,
-            child: Icon(Icons.delete, color: ColorResources.COLOR_WHITE, size: 50),
-          ),
-          Dismissible(
-            key: UniqueKey(),
-            onDismissed: (DismissDirection direction) {
-              Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
-              Provider.of<CartProvider>(context, listen: false).removeFromCart(cartIndex);
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                  vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 300],
-                    blurRadius: 5,
-                    spreadRadius: 1,
-                  )
-                ],
-              ),
-              child: Column(
-                children: [
-                  Row(children: [
-                    Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: FadeInImage.assetNetwork(
-                            placeholder: Images.placeholder_image,
-                            height: 70,
-                            width: 85,
-                            fit: BoxFit.cover,
-                            image:
-                                '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/${happyHoursCartModel.happyHours.image}',
-                            imageErrorBuilder: (c, o, s) =>
-                                Image.asset(Images.placeholder_image, height: 70, width: 85, fit: BoxFit.cover),
-                          ),
+    return Container(
+      margin: const EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_DEFAULT),
+      decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(10)),
+      child: Stack(children: [
+        const Positioned(
+          top: 0,
+          bottom: 0,
+          right: 0,
+          left: 0,
+          child: Icon(Icons.delete, color: ColorResources.COLOR_WHITE, size: 50),
+        ),
+        Dismissible(
+          key: UniqueKey(),
+          onDismissed: (DismissDirection direction) {
+            Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
+            Provider.of<CartProvider>(context, listen: false).removeFromCart(cartIndex);
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+                vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Provider.of<ThemeProvider>(context).darkTheme ? Colors.grey.shade700 : Colors.grey.shade300,
+                  blurRadius: 5,
+                  spreadRadius: 1,
+                )
+              ],
+            ),
+            child: Column(
+              children: [
+                Row(children: [
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: FadeInImage.assetNetwork(
+                          placeholder: Images.placeholder_image,
+                          height: 70,
+                          width: 85,
+                          fit: BoxFit.cover,
+                          image:
+                              '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${happyHoursCartModel.happyHours!.image}',
+                          imageErrorBuilder: (c, o, s) =>
+                              Image.asset(Images.placeholder_image, height: 70, width: 85, fit: BoxFit.cover),
                         ),
-                      ],
-                    ),
-                    SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                    Expanded(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(happyHoursCartModel.happyHours.name,
-                                style: rubikMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
-                            SizedBox(height: 2),
-                            // RatingBar(
-                            //     rating: cart.product.rating.length > 0
-                            //         ? double.parse(
-                            //             cart.product.rating[0].average)
-                            //         : 0.0,
-                            //     size: 12),
-                            SizedBox(height: 5),
-                            Text(
-                              'Actual Price : ${happyHoursCartModel.price}',
-                            ),
-                            SizedBox(height: 5),
-
-                            Row(children: [
-                              Flexible(
-                                child: Text(
-                                  'Happy Price : ${happyHoursCartModel.discountAmount}',
-                                ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                  Expanded(
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(happyHoursCartModel.happyHours!.name,
+                              style: rubikMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
+                          const SizedBox(height: 2),
+                          const SizedBox(height: 5),
+                          Text(
+                            'Actual Price : ${happyHoursCartModel.price}',
+                          ),
+                          const SizedBox(height: 5),
+                          Row(children: [
+                            Flexible(
+                              child: Text(
+                                'Happy Price : ${happyHoursCartModel.discountAmount}',
                               ),
-                            ]),
+                            ),
                           ]),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).backgroundColor, borderRadius: BorderRadius.circular(5)),
-                      child: Row(children: [
-                        InkWell(
-                          onTap: () {
-                            Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
-                            if (happyHoursCartModel.quantity > 1) {
-                              Provider.of<CartProvider>(context, listen: false).setQuantity(
-                                  isIncrement: false,
-                                  fromProductView: false,
-                                  isCart: false,
-                                  isHappyHours: true,
-                                  happyHours: happyHoursCartModel,
-                                  productIndex: null);
-                            } else {
-                              Provider.of<CartProvider>(context, listen: false)
-                                  .removeFromCart(cartIndex, isCatering: false, isCart: false, isHappyHours: true);
-                            }
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: Dimensions.PADDING_SIZE_SMALL,
-                                vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                            child: Icon(Icons.remove, size: 20),
-                          ),
-                        ),
-                        Text(happyHoursCartModel.quantity.toString(),
-                            style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
-                        InkWell(
-                          onTap: () {
-                            Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
+                        ]),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(color: F.appbarHeaderColor, borderRadius: BorderRadius.circular(5)),
+                    child: Row(children: [
+                      InkWell(
+                        onTap: () {
+                          Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
+                          if (happyHoursCartModel.quantity > 1) {
                             Provider.of<CartProvider>(context, listen: false).setQuantity(
-                                isIncrement: true,
-                                fromProductView: false,
-                                isCart: false,
-                                isHappyHours: true,
-                                happyHours: happyHoursCartModel,
-                                productIndex: null);
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: Dimensions.PADDING_SIZE_SMALL,
-                                vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                            child: Icon(Icons.add, size: 20),
-                          ),
+                              isIncrement: false,
+                              isCart: false,
+                              isHappyHours: true,
+                              happyHours: happyHoursCartModel,
+                            );
+                          } else {
+                            Provider.of<CartProvider>(context, listen: false)
+                                .removeFromCart(cartIndex, isCatering: false, isCart: false, isHappyHours: true);
+                          }
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                          child: Icon(Icons.remove, size: 20),
                         ),
-                      ]),
-                    ),
-                    // !ResponsiveHelper.isMobile(context)
-                    //     ? Padding(
-                    //         padding: EdgeInsets.symmetric(
-                    //             horizontal: Dimensions.PADDING_SIZE_SMALL),
-                    //         child: IconButton(
-                    //           onPressed: () {
-                    //             Provider.of<CouponProvider>(context,
-                    //                     listen: false)
-                    //                 .removeCouponData(true);
-                    //             Provider.of<CartProvider>(context,
-                    //                     listen: false)
-                    //                 .removeFromCart(cartIndex);
-                    //           },
-                    //           icon: Icon(Icons.delete, color: Colors.red),
-                    //         ),
-                    //       )
-                    //     : SizedBox(),
-                  ]),
-                ],
-              ),
+                      ),
+                      Text(happyHoursCartModel.quantity.toString(),
+                          style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
+                      InkWell(
+                        onTap: () {
+                          Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
+                          Provider.of<CartProvider>(context, listen: false).setQuantity(
+                            isIncrement: true,
+                            isCart: false,
+                            isHappyHours: true,
+                            happyHours: happyHoursCartModel,
+                          );
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                          child: Icon(Icons.add, size: 20),
+                        ),
+                      ),
+                    ]),
+                  ),
+                ]),
+              ],
             ),
           ),
-        ]),
-      ),
+        ),
+      ]),
     );
   }
-}
-
-double _variationPrice(List<Variation> variationsIn) {
-  double extra = 0;
-  for (Variation variation in variationsIn) {
-    if (variation != null) {
-      for (Value value in variation.values) {
-        extra += double.parse(value.optionPrice);
-      }
-    }
-  }
-  return extra;
 }

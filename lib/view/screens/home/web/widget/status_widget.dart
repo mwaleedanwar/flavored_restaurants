@@ -7,6 +7,8 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:provider/provider.dart';
 
 class StatusWidget extends StatelessWidget {
+  const StatusWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
@@ -30,7 +32,7 @@ class StatusWidget extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: TextStyle(color: F.appbarHeaderColor, fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL),
                             )),
-                            CircleAvatar(
+                            const CircleAvatar(
                               radius: 13,
                               backgroundColor: ColorResources.COLOR_WHITE,
                             )
@@ -46,7 +48,7 @@ class StatusWidget extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            CircleAvatar(
+                            const CircleAvatar(
                               radius: 13,
                               backgroundColor: ColorResources.COLOR_WHITE,
                             ),

@@ -7,7 +7,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 
 class SetMenuRepo {
   final HttpClient httpClient;
-  SetMenuRepo({@required this.httpClient});
+  SetMenuRepo({required this.httpClient});
 
   Future<ApiResponse> getSetMenuList(String languageCode) async {
     debugPrint('---getSetMenuList----');
@@ -16,7 +16,7 @@ class SetMenuRepo {
         AppConstants.SET_MENU_URI,
         options: Options(headers: {'X-localization': languageCode}),
       );
-      debugPrint('---getSetMenuList response"${response}--');
+      debugPrint('---getSetMenuList response $response--');
 
       return ApiResponse.withSuccess(response);
     } catch (e) {

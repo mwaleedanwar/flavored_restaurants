@@ -7,9 +7,16 @@ class CustomStepper extends StatelessWidget {
   final bool isActive;
   final bool haveTopBar;
   final String title;
-  final Widget child;
+  final Widget? child;
   final double height;
-  CustomStepper({@required this.title, @required this.isActive, this.child, this.haveTopBar = true, this.height = 30});
+  const CustomStepper({
+    super.key,
+    required this.title,
+    required this.isActive,
+    this.child,
+    this.haveTopBar = true,
+    this.height = 30,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +26,18 @@ class CustomStepper extends StatelessWidget {
               Container(
                 height: height,
                 width: 2,
-                margin: EdgeInsets.only(left: 14),
+                margin: const EdgeInsets.only(left: 14),
                 color: isActive ? Theme.of(context).primaryColor : ColorResources.COLOR_GREY,
               ),
-              child == null ? SizedBox() : child,
+              child == null ? const SizedBox() : child!,
             ])
-          : SizedBox(),
+          : const SizedBox(),
       Row(children: [
         isActive
             ? Icon(Icons.check_circle, color: Theme.of(context).primaryColor, size: 30)
             : Container(
-                padding: EdgeInsets.all(7),
-                margin: EdgeInsets.only(left: 6),
+                padding: const EdgeInsets.all(7),
+                margin: const EdgeInsets.only(left: 6),
                 decoration: BoxDecoration(
                     border: Border.all(color: ColorResources.COLOR_GREY, width: 2), shape: BoxShape.circle),
               ),

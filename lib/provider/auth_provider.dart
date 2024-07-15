@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -24,7 +26,8 @@ import 'coupon_provider.dart';
 class AuthProvider with ChangeNotifier {
   final AuthRepo authRepo;
 
-  AuthProvider({@required this.authRepo});
+  GoogleSignInAccount? googleAccount;
+  AuthProvider({required this.authRepo});
 
   // for registration section
   bool _isLoading = false;
@@ -34,12 +37,15 @@ class AuthProvider with ChangeNotifier {
   bool get isSignUp => _isSignUp;
   String _registrationErrorMessage = '';
 
+  final _googleSignIn = GoogleSignIn();
+
   String get registrationErrorMessage => _registrationErrorMessage;
-  resetSignUp() {
+
+  void resetSignUp() {
     _isSignUp = false;
   }
 
-  setSignUp() {
+  void setSignUp() {
     _isSignUp = true;
   }
 
@@ -54,9 +60,9 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
     ApiResponse apiResponse = await authRepo.registration(signUpModel, context);
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-      Map map = jsonDecode(apiResponse.response.body);
-      String token;
+    if (apiResponse.response?.statusCode != null && apiResponse.response!.statusCode == 200) {
+      Map map = jsonDecode(apiResponse.response!.body);
+      String? token;
       try {
         token = map["token"];
 
@@ -71,7 +77,7 @@ class AuthProvider with ChangeNotifier {
       await authRepo.updateToken();
       _isLoading = false;
       if (map['coupon'] != null) {
-        print('====coupon data:${CouponModel.fromJson(map['coupon'])}');
+        debugPrint('====coupon data:${CouponModel.fromJson(map['coupon'])}');
         Provider.of<CouponProvider>(context, listen: false).giftCoupon(CouponModel.fromJson(map['coupon']));
       }
       setSignUp();
@@ -88,9 +94,9 @@ class AuthProvider with ChangeNotifier {
         debugPrint('==is not string');
 
         ErrorResponse errorResponse = apiResponse.error;
-        errorMessage = errorResponse.errors[0].message;
+        errorMessage = errorResponse.errors?.first.message ?? 'UNKOWN ERROR REGISTRATION';
       }
-      print(errorMessage);
+      debugPrint(errorMessage);
       _registrationErrorMessage = errorMessage;
       responseModel = ResponseModel(false, errorMessage);
     }
@@ -109,19 +115,19 @@ class AuthProvider with ChangeNotifier {
     _loginErrorMessage = '';
     notifyListeners();
     ApiResponse apiResponse = await authRepo.login(email: email, password: password);
-    debugPrint('after repnose:${apiResponse.response.body}');
+    debugPrint('after repnose:${apiResponse.response?.body}');
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+    if (apiResponse.response?.statusCode != null && apiResponse.response!.statusCode == 200) {
       debugPrint('after repnose 200}');
 
-      Map map = jsonDecode(apiResponse.response.body);
+      Map map = jsonDecode(apiResponse.response!.body);
       String token = map["token"];
 
       authRepo.saveUserToken(token);
       await authRepo.updateToken();
       responseModel = ResponseModel(true, 'successful');
     } else {
-      if (apiResponse.response.statusCode == 401) {
+      if (apiResponse.response?.statusCode == 401) {
         showCustomSnackBar('Invalid credentials', context);
       }
       _isLoading = false;
@@ -133,7 +139,7 @@ class AuthProvider with ChangeNotifier {
       } else {
         errorMessage = apiResponse.error.errors[0].message;
       }
-      print(errorMessage);
+      debugPrint(errorMessage);
       _loginErrorMessage = errorMessage;
       responseModel = ResponseModel(false, errorMessage);
     }
@@ -147,19 +153,19 @@ class AuthProvider with ChangeNotifier {
     _loginErrorMessage = '';
     notifyListeners();
     ApiResponse apiResponse = await authRepo.verifyOtp(signUpModel: signUpModel);
-    debugPrint('after repnose:${apiResponse.response.body}');
+    debugPrint('after repnose:${apiResponse.response?.body}');
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+    if (apiResponse.response?.statusCode != null && apiResponse.response!.statusCode == 200) {
       debugPrint('after repnose 200}');
 
-      Map map = jsonDecode(apiResponse.response.body);
+      Map map = jsonDecode(apiResponse.response!.body);
       String token = map["token"];
 
       authRepo.saveUserToken(token);
       await authRepo.updateToken();
       responseModel = ResponseModel(true, 'successful');
     } else {
-      if (apiResponse.response.statusCode == 401) {
+      if (apiResponse.response!.statusCode == 401) {
         showCustomSnackBar('Invalid credentials', context);
       }
       _isLoading = false;
@@ -171,7 +177,7 @@ class AuthProvider with ChangeNotifier {
       } else {
         errorMessage = apiResponse.error.errors[0].message;
       }
-      print(errorMessage);
+      debugPrint(errorMessage);
       _loginErrorMessage = errorMessage;
       responseModel = ResponseModel(false, errorMessage);
     }
@@ -186,28 +192,27 @@ class AuthProvider with ChangeNotifier {
   bool get isForgotPasswordLoading => _isForgotPasswordLoading;
 
   Future<ResponseModel> forgetPassword(String email) async {
-    print('====forgetPassword');
+    debugPrint('====forgetPassword');
     _isForgotPasswordLoading = true;
     notifyListeners();
     ApiResponse apiResponse = await authRepo.forgetPassword(email);
     _isForgotPasswordLoading = false;
     notifyListeners();
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-      responseModel = ResponseModel(true, jsonDecode(apiResponse.response.body)['message']);
-      // appToast(text: 'Code sent successfully');
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      responseModel = ResponseModel(true, jsonDecode(apiResponse.response!.body)['message']);
     } else {
-      if (apiResponse.response.statusCode == 404) {
+      if (apiResponse.response!.statusCode == 404) {
         appToast(text: 'Please enter a valid number');
       }
       String errorMessage;
       if (apiResponse.error is String) {
-        print('forgetError S: ${apiResponse.error.toString()}');
+        debugPrint('forgetError S: ${apiResponse.error.toString()}');
         errorMessage = apiResponse.error.toString();
       } else {
         ErrorResponse errorResponse = apiResponse.error;
-        print('forgetError: ${errorResponse.errors[0].message}');
-        errorMessage = errorResponse.errors[1].message;
+        debugPrint('forgetError: ${errorResponse.errors?[0].message}');
+        errorMessage = errorResponse.errors?[1].message ?? 'UNKOWN ERROR FORGET PASSWORD';
       }
       responseModel = ResponseModel(false, errorMessage);
     }
@@ -216,7 +221,7 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> updateToken() async {
     ApiResponse apiResponse = await authRepo.updateToken();
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
     } else {
       String errorMessage;
       if (apiResponse.error is String) {
@@ -224,29 +229,29 @@ class AuthProvider with ChangeNotifier {
       } else {
         errorMessage = apiResponse.error;
       }
-      print(errorMessage);
+      debugPrint(errorMessage);
     }
   }
 
   Future<ResponseModel> verifyToken(String email) async {
-    print('varify number : $email');
+    debugPrint('varify number : $email');
     _isPhoneNumberVerificationButtonLoading = true;
     notifyListeners();
     ApiResponse apiResponse = await authRepo.verifyToken(email, _verificationCode);
     _isPhoneNumberVerificationButtonLoading = false;
     notifyListeners();
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-      responseModel = ResponseModel(true, jsonDecode(apiResponse.response.body)["message"]);
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      responseModel = ResponseModel(true, jsonDecode(apiResponse.response!.body)["message"]);
     } else {
       String errorMessage;
       if (apiResponse.error is String) {
-        print(apiResponse.error.toString());
+        debugPrint(apiResponse.error.toString());
         errorMessage = apiResponse.error.toString();
       } else {
         ErrorResponse errorResponse = apiResponse.error;
-        print(errorResponse.errors[0].message);
-        errorMessage = errorResponse.errors[0].message;
+        debugPrint(errorResponse.errors?[0].message);
+        errorMessage = errorResponse.errors?[0].message ?? 'UNKNOWN ERROR VERIFYING TOKEN';
       }
       responseModel = ResponseModel(false, errorMessage);
     }
@@ -260,17 +265,17 @@ class AuthProvider with ChangeNotifier {
     _isForgotPasswordLoading = false;
     notifyListeners();
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-      responseModel = ResponseModel(true, jsonDecode(apiResponse.response.body)["message"]);
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      responseModel = ResponseModel(true, jsonDecode(apiResponse.response!.body)["message"]);
     } else {
       String errorMessage;
       if (apiResponse.error is String) {
-        print(apiResponse.error.toString());
+        debugPrint(apiResponse.error.toString());
         errorMessage = apiResponse.error.toString();
       } else {
         ErrorResponse errorResponse = apiResponse.error;
-        print(errorResponse.errors[0].message);
-        errorMessage = errorResponse.errors[0].message;
+        debugPrint(errorResponse.errors?[0].message);
+        errorMessage = errorResponse.errors?[0].message ?? 'UNKNOWN ERROR RESETTING PASSWORD';
       }
       responseModel = ResponseModel(false, errorMessage);
     }
@@ -281,9 +286,9 @@ class AuthProvider with ChangeNotifier {
   bool _isPhoneNumberVerificationButtonLoading = false;
 
   bool get isPhoneNumberVerificationButtonLoading => _isPhoneNumberVerificationButtonLoading;
-  String _verificationMsg = '';
+  String? _verificationMsg = '';
 
-  String get verificationMessage => _verificationMsg;
+  String? get verificationMessage => _verificationMsg;
   String _email = '';
   String _phone = '';
 
@@ -313,17 +318,17 @@ class AuthProvider with ChangeNotifier {
     _isPhoneNumberVerificationButtonLoading = false;
     notifyListeners();
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-      responseModel = ResponseModel(true, jsonDecode(apiResponse.response.body)["token"]);
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      responseModel = ResponseModel(true, jsonDecode(apiResponse.response!.body)["token"]);
     } else {
       String errorMessage;
       if (apiResponse.error is String) {
-        print(apiResponse.error.toString());
+        debugPrint(apiResponse.error.toString());
         errorMessage = apiResponse.error.toString();
       } else {
         ErrorResponse errorResponse = apiResponse.error;
-        print(errorResponse.errors[0].message);
-        errorMessage = errorResponse.errors[0].message;
+        debugPrint(errorResponse.errors?[0].message);
+        errorMessage = errorResponse.errors?[0].message ?? 'UNKOWN ERROR CHECKING EMAIL';
       }
       responseModel = ResponseModel(false, errorMessage);
       _verificationMsg = errorMessage;
@@ -340,17 +345,17 @@ class AuthProvider with ChangeNotifier {
     _isPhoneNumberVerificationButtonLoading = false;
     notifyListeners();
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-      responseModel = ResponseModel(true, jsonDecode(apiResponse.response.body)["message"]);
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      responseModel = ResponseModel(true, jsonDecode(apiResponse.response!.body)["message"]);
     } else {
       String errorMessage;
       if (apiResponse.error is String) {
-        print(apiResponse.error.toString());
+        debugPrint(apiResponse.error.toString());
         errorMessage = apiResponse.error.toString();
       } else {
         ErrorResponse errorResponse = apiResponse.error;
-        print(errorResponse.errors[0].message);
-        errorMessage = errorResponse.errors[0].message;
+        debugPrint(errorResponse.errors?[0].message);
+        errorMessage = errorResponse.errors?[0].message ?? 'UNKOWN ERROR VERIFYING EMAIL';
       }
       responseModel = ResponseModel(false, errorMessage);
       _verificationMsg = errorMessage;
@@ -368,29 +373,33 @@ class AuthProvider with ChangeNotifier {
     _isPhoneNumberVerificationButtonLoading = false;
     notifyListeners();
     OTPResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-      if (jsonDecode(apiResponse.response.body)['coupon'] != null) {
-        print('====coupon data:${CouponModel.fromJson(jsonDecode(apiResponse.response.body)['coupon'])}');
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      if (jsonDecode(apiResponse.response!.body)['coupon'] != null) {
+        debugPrint('====coupon data:${CouponModel.fromJson(jsonDecode(apiResponse.response!.body)['coupon'])}');
         Provider.of<CouponProvider>(context, listen: false)
-            .giftCoupon(CouponModel.fromJson(jsonDecode(apiResponse.response.body)['coupon']));
+            .giftCoupon(CouponModel.fromJson(jsonDecode(apiResponse.response!.body)['coupon']));
       }
       responseModel = OTPResponseModel(
-          true, jsonDecode(apiResponse.response.body)["token"], jsonDecode(apiResponse.response.body)["user_exists"]);
+          true, jsonDecode(apiResponse.response!.body)["token"], jsonDecode(apiResponse.response!.body)["user_exists"]);
     } else {
-      if (apiResponse.response.statusCode == 403) {
+      if (apiResponse.response!.statusCode == 403) {
         // appToast(text: 'The phone has already been taken.',toastColor: Colors.red);
-        showCustomSnackBar('The phone has already been taken.', Get.context, isError: true);
+        showCustomSnackBar(
+          'The phone has already been taken.',
+          Get.context,
+          isError: true,
+        );
       }
-      //print('==check phone esle${responseModel.message}');
+      //debugPrint('==check phone esle${responseModel.message}');
 
       String errorMessage;
       if (apiResponse.error is String) {
-        print(apiResponse.error.toString());
+        debugPrint(apiResponse.error.toString());
         errorMessage = apiResponse.error.toString();
       } else {
         ErrorResponse errorResponse = apiResponse.error;
-        //   print(errorResponse.errors[0].message);
-        errorMessage = errorResponse.errors[0].message;
+        debugPrint(errorResponse.errors?[0].message);
+        errorMessage = errorResponse.errors?[0].message ?? 'UNKOWN ERROR CHECKING PHONE';
       }
       responseModel = OTPResponseModel(false, errorMessage, false);
       _verificationMsg = errorMessage;
@@ -401,31 +410,31 @@ class AuthProvider with ChangeNotifier {
 
   Future<OTPResponseModel> verifyPhone(String phone) async {
     _isPhoneNumberVerificationButtonLoading = true;
-    String _phoneNumber = phone;
+    String phoneNumber = phone;
     if (phone.contains('++')) {
-      _phoneNumber = phone.replaceAll('++', '+');
+      phoneNumber = phone.replaceAll('++', '+');
     }
     _verificationMsg = '';
     notifyListeners();
-    ApiResponse apiResponse = await authRepo.verifyPhone(_phoneNumber, _verificationCode);
-    print('phone verify : $_phoneNumber || $_verificationCode');
+    ApiResponse apiResponse = await authRepo.verifyPhone(phoneNumber, _verificationCode);
+    debugPrint('phone verify : $phoneNumber || $_verificationCode');
     _isPhoneNumberVerificationButtonLoading = false;
     notifyListeners();
     OTPResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-      responseModel = OTPResponseModel(
-          true, jsonDecode(apiResponse.response.body)["message"], jsonDecode(apiResponse.response.body)["user_exists"]);
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      responseModel = OTPResponseModel(true, jsonDecode(apiResponse.response!.body)["message"],
+          jsonDecode(apiResponse.response!.body)["user_exists"]);
     } else {
-      print('=chec phone esle');
+      debugPrint('=chec phone esle');
 
       String errorMessage;
       if (apiResponse.error is String) {
-        print(apiResponse.error.toString());
+        debugPrint(apiResponse.error.toString());
         errorMessage = apiResponse.error.toString();
       } else {
         ErrorResponse errorResponse = apiResponse.error;
-        print(errorResponse.errors[0].message);
-        errorMessage = errorResponse.errors[0].message;
+        debugPrint(errorResponse.errors?[0].message);
+        errorMessage = errorResponse.errors?[0].message ?? 'UNKNOWN ERROR VERIFYING PHONE';
       }
       responseModel = OTPResponseModel(false, errorMessage, false);
       _verificationMsg = errorMessage;
@@ -470,12 +479,12 @@ class AuthProvider with ChangeNotifier {
   Future<bool> clearSharedData() async {
     _isLoading = true;
     notifyListeners();
-    bool _isSuccess = await authRepo.clearSharedData();
+    bool isSuccess = await authRepo.clearSharedData();
     await Provider.of<AuthProvider>(Get.context, listen: false).socialLogout();
 
     _isLoading = false;
     notifyListeners();
-    return _isSuccess;
+    return isSuccess;
   }
 
   void saveUserNumberAndPassword(String number, String password) {
@@ -483,11 +492,11 @@ class AuthProvider with ChangeNotifier {
   }
 
   String getUserNumber() {
-    return authRepo.getUserNumber() ?? "";
+    return authRepo.getUserNumber();
   }
 
   String getUserPassword() {
-    return authRepo.getUserPassword() ?? "";
+    return authRepo.getUserPassword();
   }
 
   Future<bool> clearUserNumberAndPassword() async {
@@ -503,55 +512,56 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
     ApiResponse response = await authRepo.deleteUser();
     _isLoading = false;
-    print('status code is : ${response.response.statusCode}');
-    if (response.response.statusCode == 200) {
+    debugPrint('status code is : ${response.response?.statusCode}');
+    if (response.response != null && response.response!.statusCode == 200) {
       Provider.of<SplashProvider>(context, listen: false).removeSharedData();
       showCustomSnackBar(getTranslated('your_account_remove_successfully', context), context);
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => LoginScreen()), (route) => false);
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (_) => const LoginScreen()), (route) => false);
     } else {
       Navigator.of(context).pop();
       ApiChecker.checkApi(context, response);
     }
   }
 
-  GoogleSignIn _googleSignIn = GoogleSignIn();
-  GoogleSignInAccount googleAccount;
-
-  Future<GoogleSignInAuthentication> googleLogin() async {
-    GoogleSignInAuthentication auth;
+  Future<GoogleSignInAuthentication?> googleLogin() async {
     googleAccount = await _googleSignIn.signIn();
-    auth = await googleAccount.authentication;
-    return auth;
+    return await googleAccount?.authentication;
   }
 
   Future socialLogin(SocialLoginModel socialLogin, Function callback) async {
-    print('============== start social login ==========');
-    print(socialLogin.token);
-    print(socialLogin.email);
-    print(socialLogin.uniqueId);
-    print(socialLogin.medium);
-    print('============== token ==========');
+    debugPrint('============== start social login ==========');
+    debugPrint(socialLogin.token);
+    debugPrint(socialLogin.email);
+    debugPrint(socialLogin.uniqueId);
+    debugPrint(socialLogin.medium);
+    debugPrint('============== token ==========');
 
     _isLoading = true;
     notifyListeners();
     ApiResponse apiResponse = await authRepo.socialLogin(socialLogin);
-    print('============== social login ==========${apiResponse}');
+    debugPrint('============== social login ==========$apiResponse');
 
     _isLoading = false;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-      Map map = jsonDecode(apiResponse.response.body);
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      Map map = jsonDecode(apiResponse.response!.body);
       String message = '';
-      String token = '';
+      String? token = '';
       String temporaryToken = '';
       try {
         message = map['error_message'];
-      } catch (e) {}
+      } catch (e) {
+        debugPrint('ERROR SOCIAL LOGIN');
+      }
       try {
         token = map['token'];
-      } catch (e) {}
+      } catch (e) {
+        debugPrint('ERROR SOCIAL LOGIN');
+      }
       try {
         temporaryToken = map['temporary_token'];
-      } catch (e) {}
+      } catch (e) {
+        debugPrint('ERROR SOCIAL LOGIN');
+      }
 
       if (token != null) {
         authRepo.saveUserToken(token);
@@ -560,20 +570,19 @@ class AuthProvider with ChangeNotifier {
       callback(true, token, temporaryToken, message);
       notifyListeners();
     } else {
-      print('error======================== ${apiResponse.error}');
-      String errorMessage = ErrorResponse.fromJson(apiResponse.error).errors[0].message;
+      debugPrint('error======================== ${apiResponse.error}');
+      String errorMessage =
+          ErrorResponse.fromJson(apiResponse.error).errors?[0].message ?? 'UNKOWN ERROR WITH SOCIAL LOGIN';
       callback(false, '', '', errorMessage);
       notifyListeners();
     }
   }
 
   Future<void> socialLogout() async {
-    final _user = Provider.of<ProfileProvider>(Get.context, listen: false).userInfoModel;
-    if (_user.loginMedium.toLowerCase() == 'google') {
-      final GoogleSignIn _googleSignIn = GoogleSignIn();
-      _googleSignIn.disconnect();
-    } else if (_user.loginMedium.toLowerCase() == 'facebook') {
-      // await FacebookAuth.instance.logOut();
+    final user = Provider.of<ProfileProvider>(Get.context, listen: false).userInfoModel;
+    if (user?.loginMedium?.toLowerCase() == 'google') {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      googleSignIn.disconnect();
     }
   }
 }

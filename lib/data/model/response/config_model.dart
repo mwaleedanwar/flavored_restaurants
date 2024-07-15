@@ -6,7 +6,6 @@ class ConfigModel {
   String restaurantAddress;
   String restaurantPhone;
   String restaurantEmail;
-  BaseUrls baseUrls;
   String currencySymbol;
   double deliveryCharge;
   double taxFee;
@@ -22,142 +21,140 @@ class ConfigModel {
   String countryCode;
   bool selfPickup;
   bool homeDelivery;
-  RestaurantLocationCoverage restaurantLocationCoverage;
   double minimumOrderValue;
-  DeliveryManagement deliveryManagement;
-  PlayStoreConfig playStoreConfig;
-  AppStoreConfig appStoreConfig;
   String softwareVersion;
   String footerCopyright;
   String timeZone;
   int decimalPointSettings;
   int scheduleOrderSlotDuration;
   String timeFormat;
-  SocialStatus socialLoginStatus;
-  List<Branches> branches;
-  List<BannerForRestaurantWebApp> bannerForRestaurantWebApp;
-  List<SocialMediaLink> socialMediaLink;
+  BaseUrls? baseUrls;
+  RestaurantLocationCoverage? restaurantLocationCoverage;
+  SocialStatus? socialLoginStatus;
+  DeliveryManagement? deliveryManagement;
+  List<Branches>? branches;
+  List<BannerForRestaurantWebApp>? bannerForRestaurantWebApp;
   List<RestaurantScheduleTime> restaurantScheduleTime;
+  PlayStoreConfig? playStoreConfig;
+  AppStoreConfig? appStoreConfig;
+  List<SocialMediaLink>? socialMediaLink;
 
   ConfigModel({
-    this.restaurantName,
-    this.restaurantLogo,
-    this.restaurantAddress,
-    this.restaurantPhone,
-    this.restaurantEmail,
+    required this.restaurantName,
+    required this.restaurantLogo,
+    required this.restaurantAddress,
+    required this.restaurantPhone,
+    required this.restaurantEmail,
+    required this.currencySymbol,
+    required this.deliveryCharge,
+    required this.taxFee,
+    required this.cashOnDelivery,
+    required this.digitalPayment,
+    required this.termsAndConditions,
+    required this.privacyPolicy,
+    required this.aboutUs,
+    required this.emailVerification,
+    required this.phoneVerification,
+    required this.currencySymbolPosition,
+    required this.maintenanceMode,
+    required this.countryCode,
+    required this.minimumOrderValue,
+    required this.selfPickup,
+    required this.homeDelivery,
+    required this.scheduleOrderSlotDuration,
+    required this.timeFormat,
+    required this.restaurantScheduleTime,
+    this.socialLoginStatus,
     this.baseUrls,
-    this.currencySymbol,
-    this.deliveryCharge,
-    this.taxFee,
-    this.cashOnDelivery,
-    this.digitalPayment,
-    this.termsAndConditions,
-    this.privacyPolicy,
-    this.aboutUs,
-    this.emailVerification,
-    this.phoneVerification,
-    this.currencySymbolPosition,
-    this.maintenanceMode,
-    this.countryCode,
     this.restaurantLocationCoverage,
-    this.minimumOrderValue,
-    this.selfPickup,
-    this.homeDelivery,
     this.deliveryManagement,
-    this.playStoreConfig,
-    this.appStoreConfig,
+    this.branches,
+    this.bannerForRestaurantWebApp,
     this.softwareVersion = '',
     this.footerCopyright = '',
     this.timeZone = '',
     this.decimalPointSettings = 1,
-    this.scheduleOrderSlotDuration,
-    this.timeFormat,
-    this.socialLoginStatus,
-    this.branches,
-    this.bannerForRestaurantWebApp,
+    this.playStoreConfig,
+    this.appStoreConfig,
     this.socialMediaLink,
-    this.restaurantScheduleTime,
   });
 
-  ConfigModel.fromJson(Map<String, dynamic> json) {
-    restaurantName = json['restaurant_name'];
-    restaurantLogo = json['restaurant_logo'];
-    restaurantAddress = json['restaurant_address'];
-    restaurantPhone = json['restaurant_phone'];
-    restaurantEmail = json['restaurant_email'];
-    baseUrls = json['base_urls'] != null ? BaseUrls.fromJson(json['base_urls']) : null;
-    currencySymbol = json['currency_symbol'];
-    deliveryCharge = json['delivery_charge'].toDouble();
-    cashOnDelivery = json['cash_on_delivery'];
-    digitalPayment = json['digital_payment'];
-    termsAndConditions = json['terms_and_conditions'];
-    privacyPolicy = json['privacy_policy'];
-    aboutUs = json['about_us'];
-    emailVerification = json['email_verification'];
-    phoneVerification = json['phone_verification'];
-    taxFee = json['service_fee_estimated_tax'];
-    currencySymbolPosition = json['currency_symbol_position'];
-    maintenanceMode = json['maintenance_mode'];
-    countryCode = json['country'];
-    selfPickup = json['self_pickup'];
-    homeDelivery = json['delivery'];
-    restaurantLocationCoverage = json['restaurant_location_coverage'] != null
-        ? RestaurantLocationCoverage.fromJson(json['restaurant_location_coverage'])
-        : null;
-    minimumOrderValue = json['minimum_order_value'] != null ? json['minimum_order_value'].toDouble() : 0;
+  factory ConfigModel.fromJson(Map<String, dynamic> json) {
+    final cm = ConfigModel(
+        restaurantName: json['restaurant_name'],
+        restaurantLogo: json['restaurant_logo'],
+        restaurantAddress: json['restaurant_address'],
+        restaurantPhone: json['restaurant_phone'],
+        restaurantEmail: json['restaurant_email'],
+        baseUrls: json['base_urls'] != null ? BaseUrls.fromJson(json['base_urls']) : null,
+        currencySymbol: json['currency_symbol'],
+        deliveryCharge: json['delivery_charge'].toDouble(),
+        cashOnDelivery: json['cash_on_delivery'],
+        digitalPayment: json['digital_payment'],
+        termsAndConditions: json['terms_and_conditions'],
+        privacyPolicy: json['privacy_policy'],
+        aboutUs: json['about_us'],
+        emailVerification: json['email_verification'],
+        phoneVerification: json['phone_verification'],
+        taxFee: json['service_fee_estimated_tax'],
+        currencySymbolPosition: json['currency_symbol_position'],
+        maintenanceMode: json['maintenance_mode'],
+        countryCode: json['country'],
+        selfPickup: json['self_pickup'],
+        homeDelivery: json['delivery'],
+        timeZone: json['time_zone'] ?? '',
+        minimumOrderValue: json['minimum_order_value'] != null ? json['minimum_order_value'].toDouble() : 0,
+        scheduleOrderSlotDuration: json['schedule_order_slot_duration'].runtimeType == int
+            ? json['schedule_order_slot_duration']
+            : int.tryParse(json['schedule_order_slot_duration'].toString()) ?? 30,
+        timeFormat: json['time_format']?.toString() ?? '12',
+        restaurantScheduleTime: List<RestaurantScheduleTime>.from(
+          json["restaurant_schedule_time"].map((x) => RestaurantScheduleTime.fromJson(x)),
+        ),
+        restaurantLocationCoverage: json['restaurant_location_coverage'] != null
+            ? RestaurantLocationCoverage.fromJson(json['restaurant_location_coverage'])
+            : null,
+        deliveryManagement:
+            json['delivery_management'] != null ? DeliveryManagement.fromJson(json['delivery_management']) : null,
+        playStoreConfig: json['play_store_config'] != null ? PlayStoreConfig.fromJson(json['play_store_config']) : null,
+        appStoreConfig: json['app_store_config'] != null ? AppStoreConfig.fromJson(json['app_store_config']) : null,
+        softwareVersion: json['software_version'] ?? '',
+        footerCopyright: json['footer_text'] ?? '',
+        decimalPointSettings: json['decimal_point_settings'] ?? 1,
+        socialLoginStatus: json['social_login'] != null ? SocialStatus.fromJson(json['social_login']) : null);
+
     if (json['branches'] != null) {
-      branches = [];
+      final branches = <Branches>[];
       json['branches'].forEach((v) {
         branches.add(Branches.fromJson(v));
       });
+      cm.branches = branches;
     }
     if (json['banner_for_restaurant_web_app'] != null) {
-      bannerForRestaurantWebApp = [];
+      final bannerForRestaurantWebApp = <BannerForRestaurantWebApp>[];
       json['banner_for_restaurant_web_app'].forEach((v) {
         bannerForRestaurantWebApp.add(BannerForRestaurantWebApp.fromJson(v));
       });
+      cm.bannerForRestaurantWebApp = bannerForRestaurantWebApp;
     }
-    deliveryManagement =
-        json['delivery_management'] != null ? DeliveryManagement.fromJson(json['delivery_management']) : null;
-    playStoreConfig = json['play_store_config'] != null ? PlayStoreConfig.fromJson(json['play_store_config']) : null;
-    appStoreConfig = json['app_store_config'] != null ? AppStoreConfig.fromJson(json['app_store_config']) : null;
-
     if (json['social_media_link'] != null) {
-      socialMediaLink = <SocialMediaLink>[];
+      final socialMediaLink = <SocialMediaLink>[];
       json['social_media_link'].forEach((v) {
         socialMediaLink.add(SocialMediaLink.fromJson(v));
       });
+      cm.socialMediaLink = socialMediaLink;
     }
-    if (json['software_version'] != null) {
-      softwareVersion = json['software_version'];
-    }
-    if (json['footer_text'] != null) {
-      footerCopyright = json['footer_text'];
-    }
-    timeZone = json['time_zone'];
-    decimalPointSettings = json['decimal_point_settings'] ?? 1;
-
-    restaurantScheduleTime = List<RestaurantScheduleTime>.from(
-        json["restaurant_schedule_time"].map((x) => RestaurantScheduleTime.fromJson(x)));
-
-    scheduleOrderSlotDuration = json['schedule_order_slot_duration'] ?? 30;
-
-    timeFormat = json['time_format'].toString() ?? '12';
     debugPrint('social login status: ${json['social_login']}');
-
-    socialLoginStatus = SocialStatus.fromJson(json['social_login']) ?? ;
+    return cm;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['restaurant_name'] = restaurantName;
     data['restaurant_logo'] = restaurantLogo;
     data['restaurant_address'] = restaurantAddress;
     data['restaurant_phone'] = restaurantPhone;
     data['restaurant_email'] = restaurantEmail;
-    
-      data['base_urls'] = baseUrls?.toJson();
-    
     data['currency_symbol'] = currencySymbol;
     data['delivery_charge'] = deliveryCharge;
     data['cash_on_delivery'] = cashOnDelivery;
@@ -174,123 +171,85 @@ class ConfigModel {
     data['country'] = countryCode;
     data['self_pickup'] = selfPickup;
     data['delivery'] = homeDelivery;
-    if (this._restaurantLocationCoverage != null) {
-      data['restaurant_location_coverage'] = this._restaurantLocationCoverage.toJson();
-    }
-    data['minimum_order_value'] = this._minimumOrderValue;
-    if (this._branches != null) {
-      data['branches'] = this._branches.map((v) => v.toJson()).toList();
-    }
-    if (this._deliveryManagement != null) {
-      data['delivery_management'] = this._deliveryManagement.toJson();
-    }
-    if (this._playStoreConfig != null) {
-      data['play_store_config'] = this._playStoreConfig.toJson();
-    }
-    if (this._appStoreConfig != null) {
-      data['app_store_config'] = this._appStoreConfig.toJson();
-    }
-    if (this._socialMediaLink != null) {
-      data['social_media_link'] = this._socialMediaLink.map((v) => v.toJson()).toList();
-    }
-    data['software_version'] = this._softwareVersion;
-    data['footer_text'] = this._footerCopyright;
-    data['time_zone'] = this._timeZone;
-    data['restaurant_schedule_time'] = this._restaurantScheduleTime;
+    data['minimum_order_value'] = minimumOrderValue;
+    data['base_urls'] = baseUrls?.toJson();
+    data['restaurant_location_coverage'] = restaurantLocationCoverage?.toJson();
+    data['branches'] = branches?.map((v) => v.toJson()).toList();
+    data['delivery_management'] = deliveryManagement?.toJson();
+    data['play_store_config'] = playStoreConfig?.toJson();
+    data['app_store_config'] = appStoreConfig?.toJson();
+    data['social_media_link'] = socialMediaLink?.map((v) => v.toJson()).toList();
+    data['software_version'] = softwareVersion;
+    data['footer_text'] = footerCopyright;
+    data['time_zone'] = timeZone;
+    data['restaurant_schedule_time'] = restaurantScheduleTime;
     return data;
   }
 }
 
 class BaseUrls {
-  String _productImageUrl;
-  String _customerImageUrl;
-  String _bannerImageUrl;
-  String _categoryImageUrl;
-  String _categoryBannerImageUrl;
-  String _reviewImageUrl;
-  String _notificationImageUrl;
-  String _restaurantImageUrl;
-  String _deliveryManImageUrl;
-  String _chatImageUrl;
-  String _offerUrl;
-  String _branchImageUrl;
-  String _orderDeliveryImageUrl;
+  String productImageUrl;
+  String customerImageUrl;
+  String bannerImageUrl;
+  String categoryImageUrl;
+  String categoryBannerImageUrl;
+  String reviewImageUrl;
+  String notificationImageUrl;
+  String restaurantImageUrl;
+  String deliveryManImageUrl;
+  String chatImageUrl;
+  String offerUrl;
+  String branchImageUrl;
+  String orderDeliveryImageUrl;
 
   BaseUrls({
-    String productImageUrl,
-    String customerImageUrl,
-    String bannerImageUrl,
-    String categoryImageUrl,
-    String categoryBannerImageUrl,
-    String reviewImageUrl,
-    String notificationImageUrl,
-    String restaurantImageUrl,
-    String deliveryManImageUrl,
-    String chatImageUrl,
-    String offerUrl,
-    String branchImageUrl,
-    String orderDeliveryImageUrl,
-  }) {
-    this._productImageUrl = productImageUrl;
-    this._customerImageUrl = customerImageUrl;
-    this._bannerImageUrl = bannerImageUrl;
-    this._categoryImageUrl = categoryImageUrl;
-    this._categoryBannerImageUrl = categoryBannerImageUrl;
-    this._reviewImageUrl = reviewImageUrl;
-    this._notificationImageUrl = notificationImageUrl;
-    this._restaurantImageUrl = restaurantImageUrl;
-    this._deliveryManImageUrl = deliveryManImageUrl;
-    this._chatImageUrl = chatImageUrl;
-    this._offerUrl = offerUrl;
-    this._branchImageUrl = branchImageUrl;
-    this._orderDeliveryImageUrl = orderDeliveryImageUrl;
-  }
+    required this.productImageUrl,
+    required this.customerImageUrl,
+    required this.bannerImageUrl,
+    required this.categoryImageUrl,
+    required this.categoryBannerImageUrl,
+    required this.reviewImageUrl,
+    required this.notificationImageUrl,
+    required this.restaurantImageUrl,
+    required this.deliveryManImageUrl,
+    required this.chatImageUrl,
+    required this.offerUrl,
+    required this.branchImageUrl,
+    required this.orderDeliveryImageUrl,
+  });
 
-  String get productImageUrl => _productImageUrl;
-  String get customerImageUrl => _customerImageUrl;
-  String get bannerImageUrl => _bannerImageUrl;
-  String get categoryImageUrl => _categoryImageUrl;
-  String get categoryBannerImageUrl => _categoryBannerImageUrl;
-  String get reviewImageUrl => _reviewImageUrl;
-  String get notificationImageUrl => _notificationImageUrl;
-  String get restaurantImageUrl => _restaurantImageUrl;
-  String get deliveryManImageUrl => _deliveryManImageUrl;
-  String get chatImageUrl => _chatImageUrl;
-  String get offerUrl => _offerUrl;
-  String get branchImageUrl => _branchImageUrl;
-  String get orderDeliveryImageUrl => _orderDeliveryImageUrl;
-
-  BaseUrls.fromJson(Map<String, dynamic> json) {
-    _productImageUrl = json['product_image_url'] ?? '';
-    _customerImageUrl = json['customer_image_url'] ?? '';
-    _bannerImageUrl = json['banner_image_url'] ?? '';
-    _categoryImageUrl = json['category_image_url'] ?? '';
-    _categoryBannerImageUrl = json['category_banner_image_url' ?? ''];
-    _reviewImageUrl = json['review_image_url'] ?? '';
-    _notificationImageUrl = json['notification_image_url' ?? ''];
-    _restaurantImageUrl = json['restaurant_image_url'] ?? '';
-    _deliveryManImageUrl = json['delivery_man_image_url'] ?? '';
-    _chatImageUrl = json['chat_image_url'] ?? '';
-    _offerUrl = json['offer_image_url'] ?? '';
-    _branchImageUrl = json['branch_image_url'] ?? '';
-    _orderDeliveryImageUrl = json['delivered_order_image_url'] ?? '';
+  factory BaseUrls.fromJson(Map<String, dynamic> json) {
+    return BaseUrls(
+      productImageUrl: json['product_image_url'] ?? '',
+      customerImageUrl: json['customer_image_url'] ?? '',
+      bannerImageUrl: json['banner_image_url'] ?? '',
+      categoryImageUrl: json['category_image_url'] ?? '',
+      categoryBannerImageUrl: json['category_banner_image_url'] ?? '',
+      reviewImageUrl: json['review_image_url'] ?? '',
+      notificationImageUrl: json['notification_image_url'] ?? '',
+      restaurantImageUrl: json['restaurant_image_url'] ?? '',
+      deliveryManImageUrl: json['delivery_man_image_url'] ?? '',
+      chatImageUrl: json['chat_image_url'] ?? '',
+      offerUrl: json['offer_image_url'] ?? '',
+      branchImageUrl: json['branch_image_url'] ?? '',
+      orderDeliveryImageUrl: json['delivered_order_image_url'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['product_image_url'] = this._productImageUrl;
-    data['customer_image_url'] = this._customerImageUrl;
-    data['banner_image_url'] = this._bannerImageUrl;
-    data['category_image_url'] = this._categoryImageUrl;
-    data['review_image_url'] = this._reviewImageUrl;
-    data['notification_image_url'] = this._notificationImageUrl;
-    data['restaurant_image_url'] = this._restaurantImageUrl;
-    data['delivery_man_image_url'] = this._deliveryManImageUrl;
-    data['chat_image_url'] = this._chatImageUrl;
-    data['offer_image_url'] = this._offerUrl;
-    data['branch_image_url'] = this._branchImageUrl;
-    data['delivered_order_image_url'] = this._orderDeliveryImageUrl;
-
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['product_image_url'] = productImageUrl;
+    data['customer_image_url'] = customerImageUrl;
+    data['banner_image_url'] = bannerImageUrl;
+    data['category_image_url'] = categoryImageUrl;
+    data['review_image_url'] = reviewImageUrl;
+    data['notification_image_url'] = notificationImageUrl;
+    data['restaurant_image_url'] = restaurantImageUrl;
+    data['delivery_man_image_url'] = deliveryManImageUrl;
+    data['chat_image_url'] = chatImageUrl;
+    data['offer_image_url'] = offerUrl;
+    data['branch_image_url'] = branchImageUrl;
+    data['delivered_order_image_url'] = orderDeliveryImageUrl;
     return data;
   }
 }
@@ -298,185 +257,171 @@ class BaseUrls {
 class BannerForRestaurantWebApp {
   final int id;
   final String title;
-  final String description;
-  final String mobileViewDescription;
+  final String? description;
+  final String? mobileViewDescription;
 
   final List<String> image;
   final int status;
   final int restaurantId;
   final String bannerType;
   final int isMobileView;
-  final String buttonText;
-  final String buttonLink;
+  final String? buttonText;
+  final String? buttonLink;
 
-  BannerForRestaurantWebApp(
-      {this.id,
-      this.title,
-      this.description,
-      this.image,
-      this.status,
-      this.restaurantId,
-      this.bannerType,
-      this.isMobileView,
-      this.buttonText,
-      this.buttonLink,
-      this.mobileViewDescription});
+  BannerForRestaurantWebApp({
+    required this.id,
+    required this.title,
+    this.description,
+    required this.image,
+    required this.status,
+    required this.restaurantId,
+    required this.bannerType,
+    required this.isMobileView,
+    this.buttonText,
+    this.buttonLink,
+    this.mobileViewDescription,
+  });
 
   BannerForRestaurantWebApp copyWith({
-    int id,
-    String title,
-    String description,
-    String mobileViewDescription,
-    List<String> image,
-    int status,
-    int restaurantId,
-    String bannerType,
-    int isMobileView,
-    String buttonText,
-    String buttonLink,
-  }) =>
-      BannerForRestaurantWebApp(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        mobileViewDescription: mobileViewDescription ?? this.mobileViewDescription,
-        image: image ?? this.image,
-        status: status ?? this.status,
-        restaurantId: restaurantId ?? this.restaurantId,
-        bannerType: bannerType ?? this.bannerType,
-        isMobileView: isMobileView ?? this.isMobileView,
-        buttonText: buttonText ?? this.buttonText,
-        buttonLink: buttonLink ?? this.buttonLink,
-      );
-  factory BannerForRestaurantWebApp.fromJson(Map<String, dynamic> json) => BannerForRestaurantWebApp(
-        id: json["id"],
-        title: json["title"],
-        description: json["description"],
-        mobileViewDescription: json["mobile_view_description"],
-        image: List<String>.from(json["image"].map((x) => x)),
-        status: json["status"],
-        restaurantId: json["restaurant_id"],
-        bannerType: json["banner_type"],
-        isMobileView: json["is_mobile_view"],
-        buttonText: json["button_text"],
-        buttonLink: json["button_link"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "title": title,
-        "description": description,
-        "mobile_view_description": mobileViewDescription,
-        "image": List<dynamic>.from(image.map((x) => x)),
-        "status": status,
-        "restaurant_id": restaurantId,
-        "banner_type": bannerType,
-        "is_mobile_view": isMobileView,
-        "button_text": buttonText,
-        "button_link": buttonLink,
-      };
-}
-
-class RestaurantLocationCoverage {
-  String _longitude;
-  String _latitude;
-  double _coverage;
-
-  RestaurantLocationCoverage({String longitude, String latitude, double coverage}) {
-    this._longitude = longitude;
-    this._latitude = latitude;
-    this._coverage = coverage;
+    int? id,
+    String? title,
+    String? description,
+    String? mobileViewDescription,
+    List<String>? image,
+    int? status,
+    int? restaurantId,
+    String? bannerType,
+    int? isMobileView,
+    String? buttonText,
+    String? buttonLink,
+  }) {
+    return BannerForRestaurantWebApp(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      mobileViewDescription: mobileViewDescription ?? this.mobileViewDescription,
+      image: image ?? this.image,
+      status: status ?? this.status,
+      restaurantId: restaurantId ?? this.restaurantId,
+      bannerType: bannerType ?? this.bannerType,
+      isMobileView: isMobileView ?? this.isMobileView,
+      buttonText: buttonText ?? this.buttonText,
+      buttonLink: buttonLink ?? this.buttonLink,
+    );
   }
 
-  String get longitude => _longitude;
-  String get latitude => _latitude;
-  double get coverage => _coverage;
-
-  RestaurantLocationCoverage.fromJson(Map<String, dynamic> json) {
-    _longitude = json['longitude'];
-    _latitude = json['latitude'];
-    _coverage = json['coverage'].toDouble();
+  factory BannerForRestaurantWebApp.fromJson(Map<String, dynamic> json) {
+    return BannerForRestaurantWebApp(
+      id: json["id"],
+      title: json["title"],
+      description: json["description"],
+      mobileViewDescription: json["mobile_view_description"],
+      image: List<String>.from(json["image"].map((x) => x)),
+      status: json["status"],
+      restaurantId: json["restaurant_id"],
+      bannerType: json["banner_type"],
+      isMobileView: json["is_mobile_view"],
+      buttonText: json["button_text"],
+      buttonLink: json["button_link"],
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['longitude'] = this._longitude;
-    data['latitude'] = this._latitude;
-    data['coverage'] = this._coverage;
+    return {
+      "id": id,
+      "title": title,
+      "description": description,
+      "mobile_view_description": mobileViewDescription,
+      "image": List<dynamic>.from(image.map((x) => x)),
+      "status": status,
+      "restaurant_id": restaurantId,
+      "banner_type": bannerType,
+      "is_mobile_view": isMobileView,
+      "button_text": buttonText,
+      "button_link": buttonLink,
+    };
+  }
+}
+
+class RestaurantLocationCoverage {
+  String longitude;
+  String latitude;
+  double coverage;
+
+  RestaurantLocationCoverage({
+    required this.longitude,
+    required this.latitude,
+    required this.coverage,
+  });
+
+  factory RestaurantLocationCoverage.fromJson(Map<String, dynamic> json) {
+    return RestaurantLocationCoverage(
+      longitude: json['longitude'],
+      latitude: json['latitude'],
+      coverage: json['coverage'].toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['longitude'] = longitude;
+    data['latitude'] = latitude;
+    data['coverage'] = coverage;
     return data;
   }
 }
 
 class Branches {
-  int _id;
-  String _name;
-  String _email;
-  String _longitude;
-  String _latitude;
-  String _address;
-  double _coverage;
-  String _coverImage;
-  String _image;
-  bool _status;
+  int id;
+  String? name;
+  String email;
+  String longitude;
+  String latitude;
+  String? address;
+  double coverage;
+  String? coverImage;
+  String image;
+  bool status;
 
   Branches({
-    int id,
-    String name,
-    String email,
-    String longitude,
-    String latitude,
-    String address,
-    double coverage,
-    String coverImage,
-    String image,
-    bool status,
-  }) {
-    this._id = id;
-    this._name = name;
-    this._email = email;
-    this._longitude = longitude;
-    this._latitude = latitude;
-    this._address = address;
-    this._coverage = coverage;
-    this._coverImage = coverImage;
-    this._image = image;
-  }
+    required this.id,
+    this.name,
+    required this.email,
+    required this.longitude,
+    required this.latitude,
+    this.address,
+    required this.coverage,
+    this.coverImage,
+    required this.image,
+    required this.status,
+  });
 
-  int get id => _id;
-  String get name => _name;
-  String get email => _email;
-  String get longitude => _longitude;
-  String get latitude => _latitude;
-  String get address => _address;
-  double get coverage => _coverage;
-  String get coverImage => _coverImage;
-  String get image => _image;
-  bool get status => _status;
-
-  Branches.fromJson(Map<String, dynamic> json) {
-    _id = json['id'];
-    _name = json['name'];
-    _email = json['email'];
-    _longitude = json['longitude'];
-    _latitude = json['latitude'];
-    _address = json['address'];
-    _coverage = json['coverage'].toDouble();
-    _image = json['image'];
-    _status = json['status'];
-    _coverImage = json['cover_image'];
+  factory Branches.fromJson(Map<String, dynamic> json) {
+    return Branches(
+      id: json['id'],
+      name: json['name'],
+      email: json['email'],
+      longitude: json['longitude'],
+      latitude: json['latitude'],
+      address: json['address'],
+      coverage: json['coverage'].toDouble(),
+      image: json['image'],
+      status: json['status'],
+      coverImage: json['cover_image'],
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this._id;
-    data['name'] = this._name;
-    data['email'] = this._email;
-    data['longitude'] = this._longitude;
-    data['latitude'] = this._latitude;
-    data['address'] = this._address;
-    data['coverage'] = this._coverage;
-    data['image'] = this._image;
-    data['status'] = this._status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['email'] = email;
+    data['longitude'] = longitude;
+    data['latitude'] = latitude;
+    data['address'] = address;
+    data['coverage'] = coverage;
+    data['image'] = image;
+    data['status'] = status;
     return data;
   }
 }
@@ -489,98 +434,84 @@ class BranchValue {
 }
 
 class DeliveryManagement {
-  int _status;
-  double _minShippingCharge;
-  double _shippingPerKm;
+  int status;
+  double minShippingCharge;
+  double shippingPerKm;
 
-  DeliveryManagement({int status, double minShippingCharge, double shippingPerKm}) {
-    this._status = status;
-    this._minShippingCharge = minShippingCharge;
-    this._shippingPerKm = shippingPerKm;
-  }
+  DeliveryManagement({
+    required this.status,
+    required this.minShippingCharge,
+    required this.shippingPerKm,
+  });
 
-  int get status => _status;
-  double get minShippingCharge => _minShippingCharge;
-  double get shippingPerKm => _shippingPerKm;
-
-  DeliveryManagement.fromJson(Map<String, dynamic> json) {
-    _status = json['status'];
-    _minShippingCharge = json['min_shipping_charge'].toDouble();
-    _shippingPerKm = json['shipping_per_km'].toDouble();
+  factory DeliveryManagement.fromJson(Map<String, dynamic> json) {
+    return DeliveryManagement(
+      status: json['status'],
+      minShippingCharge: json['min_shipping_charge'].toDouble(),
+      shippingPerKm: json['shipping_per_km'].toDouble(),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['status'] = this._status;
-    data['min_shipping_charge'] = this._minShippingCharge;
-    data['shipping_per_km'] = this._shippingPerKm;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['min_shipping_charge'] = minShippingCharge;
+    data['shipping_per_km'] = shippingPerKm;
     return data;
   }
 }
 
 class PlayStoreConfig {
-  bool _status;
-  String _link;
-  double _minVersion;
+  bool status;
+  String? link;
+  double? minVersion;
 
-  PlayStoreConfig({bool status, String link, double minVersion}) {
-    this._status = status;
-    this._link = link;
-    this._minVersion = minVersion;
-  }
-  bool get status => _status;
-  String get link => _link;
-  double get minVersion => _minVersion;
+  PlayStoreConfig({
+    required this.status,
+    this.link,
+    this.minVersion,
+  });
 
-  PlayStoreConfig.fromJson(Map<String, dynamic> json) {
-    _status = json['status'];
-    if (json['link'] != null) {
-      _link = json['link'];
-    }
-    if (json['min_version'] != null && json['min_version'] != '') {
-      _minVersion = double.parse(json['min_version']);
-    }
+  factory PlayStoreConfig.fromJson(Map<String, dynamic> json) {
+    return PlayStoreConfig(
+      status: json['status'],
+      link: json['link'],
+      minVersion: double.tryParse(json['min_version'] ?? ''),
+    );
   }
+
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['status'] = this._status;
-    data['link'] = this._link;
-    data['min_version'] = this._minVersion;
-
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['link'] = link;
+    data['min_version'] = minVersion;
     return data;
   }
 }
 
 class AppStoreConfig {
-  bool _status;
-  String _link;
-  double _minVersion;
+  bool status;
+  String? link;
+  double? minVersion;
 
-  AppStoreConfig({bool status, String link, double minVersion}) {
-    this._status = status;
-    this._link = link;
-    this._minVersion = minVersion;
-  }
+  AppStoreConfig({
+    required this.status,
+    this.link,
+    this.minVersion,
+  });
 
-  bool get status => _status;
-  String get link => _link;
-  double get minVersion => _minVersion;
-
-  AppStoreConfig.fromJson(Map<String, dynamic> json) {
-    _status = json['status'];
-    if (json['link'] != null) {
-      _link = json['link'];
-    }
-    if (json['min_version'] != null && json['min_version'] != '') {
-      _minVersion = double.parse(json['min_version']);
-    }
+  factory AppStoreConfig.fromJson(Map<String, dynamic> json) {
+    return AppStoreConfig(
+      status: json['status'],
+      link: json['link'],
+      minVersion: double.tryParse(json['min_version'] ?? ''),
+    );
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['status'] = this._status;
-    data['link'] = this._link;
-    data['min_version'] = this._minVersion;
-
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['link'] = link;
+    data['min_version'] = minVersion;
     return data;
   }
 }
@@ -590,68 +521,82 @@ class SocialMediaLink {
   String name;
   String link;
   int status;
-  String updatedAt;
+  String? updatedAt;
 
-  SocialMediaLink({this.id, this.name, this.link, this.status, this.updatedAt});
+  SocialMediaLink({
+    required this.id,
+    required this.name,
+    required this.link,
+    required this.status,
+    this.updatedAt,
+  });
 
-  SocialMediaLink.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    link = json['link'];
-    status = json['status'];
-    updatedAt = json['updated_at'];
+  factory SocialMediaLink.fromJson(Map<String, dynamic> json) {
+    return SocialMediaLink(
+      id: json['id'],
+      name: json['name'],
+      link: json['link'],
+      status: json['status'],
+      updatedAt: json['updated_at'],
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['link'] = this.link;
-    data['status'] = this.status;
-    data['updated_at'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['link'] = link;
+    data['status'] = status;
+    data['updated_at'] = updatedAt;
     return data;
   }
 }
 
 class RestaurantScheduleTime {
-  RestaurantScheduleTime({
-    this.day,
-    this.openingTime,
-    this.closingTime,
-  });
-
   String day;
   String openingTime;
   String closingTime;
 
-  factory RestaurantScheduleTime.fromJson(Map<String, dynamic> json) => RestaurantScheduleTime(
-        day: json["day"].toString(),
-        openingTime: json["opening_time"].toString(),
-        closingTime: json["closing_time"].toString(),
-      );
+  RestaurantScheduleTime({
+    required this.day,
+    required this.openingTime,
+    required this.closingTime,
+  });
 
-  Map<String, dynamic> toJson() => {
-        "day": day,
-        "opening_time": openingTime,
-        "closing_time": closingTime,
-      };
+  factory RestaurantScheduleTime.fromJson(Map<String, dynamic> json) {
+    return RestaurantScheduleTime(
+      day: json["day"].toString(),
+      openingTime: json["opening_time"].toString(),
+      closingTime: json["closing_time"].toString(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      "day": day,
+      "opening_time": openingTime,
+      "closing_time": closingTime,
+    };
+  }
 }
 
 class SocialStatus {
   bool isGoogle;
   bool isFacebook;
 
-  SocialStatus(this.isGoogle, this.isFacebook);
+  SocialStatus({required this.isGoogle, required this.isFacebook});
 
-  SocialStatus.fromJson(Map<String, dynamic> json) {
-    isGoogle = '${json['google']}' == '1';
-    isFacebook = '${json['facebook']}' == '1';
+  factory SocialStatus.fromJson(Map<String, dynamic> json) {
+    return SocialStatus(
+      isGoogle: json['google'].toString() == '1',
+      isFacebook: json['facebook'].toString() == '1',
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['google'] = this.isGoogle;
-    data['facebook'] = this.isFacebook;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['google'] = isGoogle;
+    data['facebook'] = isFacebook;
     return data;
   }
 }

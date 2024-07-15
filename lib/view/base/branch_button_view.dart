@@ -7,16 +7,16 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:provider/provider.dart';
 
 class BranchButtonView extends StatelessWidget {
-  final isRow;
+  final bool isRow;
   const BranchButtonView({
-    Key key,
+    super.key,
     this.isRow = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Consumer<BranchProvider>(builder: (context, branchProvider, _) {
-      print('===isRow:${isRow}');
+      debugPrint('===isRow :$isRow');
       return branchProvider.getBranchId() != -1
           ? InkWell(
               onTap: () => Navigator.pushNamed(context, Routes.getBranchListScreen()),
@@ -28,12 +28,12 @@ class BranchButtonView extends StatelessWidget {
                           color: Colors.white,
                           height: Dimensions.PADDING_SIZE_DEFAULT,
                         ),
-                        RotatedBox(
+                        const RotatedBox(
                             quarterTurns: 1,
                             child: Icon(Icons.sync_alt, color: Colors.white, size: Dimensions.PADDING_SIZE_DEFAULT)),
-                        SizedBox(width: 2),
+                        const SizedBox(width: 2),
                         Text(
-                          branchProvider.getBranch().name,
+                          branchProvider.getBranch(context)?.name ?? '',
                           style:
                               poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL, color: Colors.white),
                           maxLines: 1,
@@ -49,26 +49,27 @@ class BranchButtonView extends StatelessWidget {
                         Row(children: [
                           Image.asset(
                             Images.branch_icon,
-                            color: Theme.of(context).textTheme.bodyLarge.color,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
                             height: Dimensions.PADDING_SIZE_DEFAULT,
                           ),
                           RotatedBox(
                               quarterTurns: 1,
                               child: Icon(Icons.sync_alt,
-                                  color: Theme.of(context).textTheme.bodyLarge.color,
+                                  color: Theme.of(context).textTheme.bodyLarge?.color,
                                   size: Dimensions.PADDING_SIZE_DEFAULT))
                         ]),
-                        SizedBox(height: 2),
+                        const SizedBox(height: 2),
                         Text(
-                          branchProvider.getBranch().name,
+                          branchProvider.getBranch(context)?.name ?? '',
                           style: robotoRegular.copyWith(
-                              color: Theme.of(context).textTheme.bodyLarge.color, fontSize: Dimensions.FONT_SIZE_SMALL),
+                              color: Theme.of(context).textTheme.bodyLarge?.color,
+                              fontSize: Dimensions.FONT_SIZE_SMALL),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         )
                       ],
                     ))
-          : SizedBox();
+          : const SizedBox();
     });
   }
 }

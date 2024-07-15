@@ -1,12 +1,8 @@
 import 'dart:io';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/order_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/helper/notification_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/auth_provider.dart';
@@ -24,16 +20,16 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/chat/widget/messa
 import 'package:provider/provider.dart';
 
 class ChatScreen extends StatefulWidget {
-  final OrderModel orderModel;
-  const ChatScreen({Key key, @required this.orderModel}) : super(key: key);
+  final OrderModel? orderModel;
+  const ChatScreen({super.key, required this.orderModel});
+
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _inputMessageController = TextEditingController();
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  bool _isLoggedIn;
+  bool _isLoggedIn = false;
   bool _isFirst = true;
 
   @override
@@ -47,33 +43,34 @@ class _ChatScreenState extends State<ChatScreen> {
         Provider.of<ChatProvider>(context, listen: false).getMessages(
           context,
           1,
-          widget.orderModel != null ? widget.orderModel.id : null,
+          widget.orderModel?.id,
           true,
         );
       } else {
         Provider.of<ChatProvider>(context, listen: false).getMessages(
           context,
           1,
-          widget.orderModel != null ? widget.orderModel.id : null,
+          widget.orderModel?.id,
           false,
         );
         _isFirst = false;
       }
       Provider.of<ProfileProvider>(context, listen: false).getUserInfo(context);
     }
+    setState(() {});
   }
+
+  bool get isAdmin => widget.orderModel == null ? true : false;
 
   @override
   Widget build(BuildContext context) {
-    //
-    final bool _isAdmin = widget.orderModel == null ? true : false;
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : AppBar(
-              title: _isAdmin
-                  ? Text('${Provider.of<SplashProvider>(context, listen: false).configModel.restaurantName}')
-                  : Text(widget.orderModel.deliveryMan.fName + ' ' + widget.orderModel.deliveryMan.lName),
+              title: isAdmin
+                  ? Text(Provider.of<SplashProvider>(context, listen: false).configModel!.restaurantName)
+                  : Text('${widget.orderModel?.deliveryMan?.fName} ${widget.orderModel?.deliveryMan?.lName}'),
               backgroundColor: Theme.of(context).primaryColor,
               actions: <Widget>[
                   Padding(
@@ -89,11 +86,11 @@ class _ChatScreenState extends State<ChatScreen> {
                         borderRadius: BorderRadius.circular(50),
                         child: FadeInImage.assetNetwork(
                           fit: BoxFit.cover,
-                          placeholder: _isAdmin ? F.logo : Images.profile,
-                          image: _isAdmin
+                          placeholder: isAdmin ? F.logo : Images.profile,
+                          image: isAdmin
                               ? ''
-                              : '${Provider.of<SplashProvider>(context, listen: false).baseUrls.deliveryManImageUrl}/${widget.orderModel.deliveryMan.image}',
-                          imageErrorBuilder: (c, t, o) => Image.asset(_isAdmin ? F.logo : Images.profile),
+                              : '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.deliveryManImageUrl}/${widget.orderModel!.deliveryMan!.image}',
+                          imageErrorBuilder: (c, t, o) => Image.asset(isAdmin ? F.logo : Images.profile),
                         ),
                       ),
                     ),
@@ -101,40 +98,36 @@ class _ChatScreenState extends State<ChatScreen> {
                 ]),
       body: _isLoggedIn
           ? Center(
-              child: Container(
+              child: SizedBox(
                 width: ResponsiveHelper.isDesktop(context) ? 1170 : MediaQuery.of(context).size.width,
                 child: Column(
                   children: [
                     Consumer<ChatProvider>(builder: (context, chatProvider, child) {
                       return Expanded(
-                        child: chatProvider.messageList != null
-                            ? chatProvider.messageList.length > 0
-                                ? ListView.builder(
-                                    reverse: true,
-                                    physics: AlwaysScrollableScrollPhysics(),
-                                    itemCount: chatProvider.messageList.length,
-                                    itemBuilder: (context, index) {
-                                      return MessageBubble(
-                                          messages: chatProvider.messageList[index], isAdmin: _isAdmin);
-                                    })
-                                : SizedBox()
-                            : MessageBubbleShimmer(isMe: false),
-                      );
+                          child: chatProvider.messageList.isNotEmpty
+                              ? ListView.builder(
+                                  reverse: true,
+                                  physics: const AlwaysScrollableScrollPhysics(),
+                                  itemCount: chatProvider.messageList.length,
+                                  itemBuilder: (context, index) {
+                                    return MessageBubble(messages: chatProvider.messageList[index], isAdmin: isAdmin);
+                                  })
+                              : const MessageBubbleShimmer(isMe: false));
                     }),
                     Container(
                       color: Theme.of(context).cardColor,
                       child: Column(
                         children: [
                           Consumer<ChatProvider>(builder: (context, chatProvider, _) {
-                            return chatProvider.chatImage.length > 0
-                                ? Container(
+                            return chatProvider.chatImage.isNotEmpty
+                                ? SizedBox(
                                     height: 100,
                                     child: ListView.builder(
                                       scrollDirection: Axis.horizontal,
                                       shrinkWrap: true,
                                       itemCount: chatProvider.chatImage.length,
                                       itemBuilder: (BuildContext context, index) {
-                                        return chatProvider.chatImage.length > 0
+                                        return chatProvider.chatImage.isNotEmpty
                                             ? Padding(
                                                 padding: const EdgeInsets.all(8.0),
                                                 child: Stack(
@@ -142,8 +135,12 @@ class _ChatScreenState extends State<ChatScreen> {
                                                     Container(
                                                       width: 100,
                                                       height: 100,
+                                                      decoration: const BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                                                      ),
                                                       child: ClipRRect(
-                                                        borderRadius: BorderRadius.all(
+                                                        borderRadius: const BorderRadius.all(
                                                             Radius.circular(Dimensions.PADDING_SIZE_DEFAULT)),
                                                         child: ResponsiveHelper.isWeb()
                                                             ? Image.network(
@@ -159,10 +156,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                                                 fit: BoxFit.cover,
                                                               ),
                                                       ),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                                                      ),
                                                     ),
                                                     Positioned(
                                                       top: 0,
@@ -170,12 +163,12 @@ class _ChatScreenState extends State<ChatScreen> {
                                                       child: InkWell(
                                                         onTap: () => chatProvider.removeImage(index),
                                                         child: Container(
-                                                            decoration: BoxDecoration(
+                                                            decoration: const BoxDecoration(
                                                                 color: Colors.white,
                                                                 borderRadius: BorderRadius.all(
                                                                     Radius.circular(Dimensions.PADDING_SIZE_DEFAULT))),
-                                                            child: Padding(
-                                                              padding: const EdgeInsets.all(4.0),
+                                                            child: const Padding(
+                                                              padding: EdgeInsets.all(4.0),
                                                               child: Icon(
                                                                 Icons.clear,
                                                                 color: Colors.red,
@@ -187,11 +180,11 @@ class _ChatScreenState extends State<ChatScreen> {
                                                   ],
                                                 ),
                                               )
-                                            : SizedBox();
+                                            : const SizedBox();
                                       },
                                     ),
                                   )
-                                : SizedBox();
+                                : const SizedBox();
                           }),
                           Row(children: [
                             InkWell(
@@ -199,7 +192,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                 Provider.of<ChatProvider>(context, listen: false).pickImage(false);
                               },
                               child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+                                padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
                                 child: Image.asset(Images.image,
                                     width: 25, height: 25, color: Theme.of(context).hintColor),
                               ),
@@ -208,7 +201,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               height: 25,
                               child: VerticalDivider(width: 0, thickness: 1, color: Theme.of(context).hintColor),
                             ),
-                            SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
+                            const SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
                             Expanded(
                               child: TextField(
                                 inputFormatters: [LengthLimitingTextInputFormatter(Dimensions.MESSAGE_INPUT_LENGTH)],
@@ -258,9 +251,9 @@ class _ChatScreenState extends State<ChatScreen> {
                                 }
                               },
                               child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+                                padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
                                 child: Provider.of<ChatProvider>(context, listen: false).isLoading
-                                    ? SizedBox(
+                                    ? const SizedBox(
                                         width: 25,
                                         height: 25,
                                         child: CircularProgressIndicator(),
@@ -283,7 +276,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
               ),
             )
-          : NotLoggedInScreen(),
+          : const NotLoggedInScreen(),
     );
   }
 }

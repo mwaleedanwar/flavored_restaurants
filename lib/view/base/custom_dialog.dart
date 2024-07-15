@@ -9,40 +9,40 @@ class CustomDialog extends StatelessWidget {
   final IconData icon;
   final String title;
   final String description;
-  final Function onTapTrue;
-  final Function onTapFalse;
+  final void Function() onTapTrue;
+  final void Function() onTapFalse;
   final String buttonTextTrue;
   final String buttonTextFalse;
   const CustomDialog({
-    Key key,
-    this.icon,
-    this.title,
-    this.description,
-    this.buttonTextTrue,
-    this.buttonTextFalse,
-    this.onTapFalse,
-    this.onTapTrue,
-  }) : super(key: key);
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.description,
+    required this.buttonTextTrue,
+    required this.buttonTextFalse,
+    required this.onTapFalse,
+    required this.onTapTrue,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Container(
+      child: SizedBox(
         width: 300,
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           CircleAvatar(
             radius: 30,
             backgroundColor: Theme.of(context).primaryColor,
             child: Icon(icon, size: 50, color: Colors.white),
           ),
           Container(
-            padding: EdgeInsets.symmetric(vertical: 5, horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            padding: const EdgeInsets.symmetric(vertical: 5, horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
             child: Text(title, style: rubikRegular, textAlign: TextAlign.center),
           ),
           Padding(
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+            padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
             child: Text(description, style: rubikRegular, textAlign: TextAlign.center),
           ),
           Container(height: 0.5, color: Theme.of(context).hintColor),
@@ -51,9 +51,9 @@ class CustomDialog extends StatelessWidget {
                 child: InkWell(
               onTap: onTapTrue,
               child: Container(
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                 alignment: Alignment.center,
-                decoration: BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10))),
+                decoration: const BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10))),
                 child: Text(buttonTextTrue, style: rubikBold.copyWith(color: Theme.of(context).primaryColor)),
               ),
             )),
@@ -61,11 +61,11 @@ class CustomDialog extends StatelessWidget {
                 child: InkWell(
               onTap: onTapFalse,
               child: Container(
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.only(bottomRight: Radius.circular(10)),
+                  borderRadius: const BorderRadius.only(bottomRight: Radius.circular(10)),
                 ),
                 child: Text(buttonTextFalse, style: rubikBold.copyWith(color: Colors.white)),
               ),
@@ -84,16 +84,16 @@ void showAnimatedDialog(BuildContext context, Widget dialog, {bool isFlip = fals
     barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
     barrierColor: Colors.black.withOpacity(0.5),
     pageBuilder: (context, animation1, animation2) => dialog,
-    transitionDuration: Duration(milliseconds: 500),
+    transitionDuration: const Duration(milliseconds: 500),
     transitionBuilder: (context, a1, a2, widget) {
       if (isFlip) {
         return Rotation3DTransition(
           alignment: Alignment.center,
           turns: Tween<double>(begin: math.pi, end: 2.0 * math.pi)
-              .animate(CurvedAnimation(parent: a1, curve: Interval(0.0, 1.0, curve: Curves.linear))),
+              .animate(CurvedAnimation(parent: a1, curve: const Interval(0.0, 1.0, curve: Curves.linear))),
           child: FadeTransition(
             opacity: Tween<double>(begin: 0.0, end: 1.0)
-                .animate(CurvedAnimation(parent: a1, curve: Interval(0.5, 1.0, curve: Curves.elasticOut))),
+                .animate(CurvedAnimation(parent: a1, curve: const Interval(0.5, 1.0, curve: Curves.elasticOut))),
             child: widget,
           ),
         );
@@ -112,27 +112,24 @@ void showAnimatedDialog(BuildContext context, Widget dialog, {bool isFlip = fals
 
 class Rotation3DTransition extends AnimatedWidget {
   const Rotation3DTransition({
-    Key key,
-    @required Animation<double> turns,
+    super.key,
+    required Animation<double> turns,
     this.alignment = Alignment.center,
-    this.child,
-  })  : assert(turns != null),
-        super(key: key, listenable: turns);
+    required this.child,
+  }) : super(listenable: turns);
 
-  Animation<double> get turns => listenable;
+  Animation<double> get turns => listenable as Animation<double>;
 
   final Alignment alignment;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final double turnsValue = turns.value;
-    final Matrix4 transform = Matrix4.identity()
-      ..setEntry(3, 2, 0.0006)
-      ..rotateY(turnsValue);
     return Transform(
-      transform: transform,
-      alignment: FractionalOffset(0.5, 0.5),
+      transform: Matrix4.identity()
+        ..setEntry(3, 2, 0.0006)
+        ..rotateY(turns.value),
+      alignment: const FractionalOffset(0.5, 0.5),
       child: child,
     );
   }

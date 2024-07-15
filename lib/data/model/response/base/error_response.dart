@@ -1,5 +1,5 @@
 class ErrorResponse {
-  List<Errors> errors;
+  List<Errors>? errors;
 
   ErrorResponse({this.errors});
 
@@ -8,22 +8,20 @@ class ErrorResponse {
     if (errorJson.runtimeType == ErrorResponse) {
       json = errorJson.toJson();
     } else {
-      json = errorJson;
+      json = errorJson ?? {};
     }
 
     if (json["errors"] != null) {
       errors = [];
       json["errors"].forEach((v) {
-        errors.add(Errors.fromJson(v));
+        errors!.add(Errors.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    if (errors != null) {
-      map["errors"] = errors.map((v) => v.toJson()).toList();
-    }
+    map["errors"] = errors?.map((v) => v.toJson()).toList();
     return map;
   }
 }
@@ -32,12 +30,12 @@ class Errors {
   String code;
   String message;
 
-  Errors({this.code, this.message});
+  Errors({required this.code, required this.message});
 
-  Errors.fromJson(dynamic json) {
-    code = json["code"];
-    message = json["message"];
-  }
+  factory Errors.fromJson(Map<String, dynamic> json) => Errors(
+        code: json["code"],
+        message: json["message"],
+      );
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

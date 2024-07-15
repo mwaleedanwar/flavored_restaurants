@@ -1,22 +1,19 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/offer_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/specialoffer_bottom_sheet.dart';
-
-import '../../../../helper/responsive_helper.dart';
-import '../../../../provider/splash_provider.dart';
-import '../../../../provider/theme_provider.dart';
-import '../../../../utill/color_resources.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/theme_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../utill/dimensions.dart';
-import '../../../../utill/images.dart';
-import 'cart_bottom_sheet.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 
 class SpecialOfferCard extends StatefulWidget {
   final SpecialOfferModel specialOfferModel;
 
-  const SpecialOfferCard({Key key, this.specialOfferModel}) : super(key: key);
+  const SpecialOfferCard({super.key, required this.specialOfferModel});
 
   @override
   State<SpecialOfferCard> createState() => _SpecialOfferCardState();
@@ -26,19 +23,19 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
   @override
   Widget build(BuildContext context) {
     var imageUrl =
-        '${Provider.of<SplashProvider>(context, listen: false).baseUrls.offerUrl}/${widget.specialOfferModel.image}';
-    print('--offer url:$imageUrl');
+        '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.offerUrl}/${widget.specialOfferModel.image}';
+    debugPrint('--offer url:$imageUrl');
 
     return InkWell(
       onTap: () {
         _showOfferSheet(context, specialOfferModel: widget.specialOfferModel);
       },
       child: Container(
-        margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+        margin: const EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 900 : 300],
+              color: Provider.of<ThemeProvider>(context).darkTheme ? Colors.grey.shade900 : Colors.grey.shade300,
               blurRadius: Provider.of<ThemeProvider>(context).darkTheme ? 2 : 5,
               spreadRadius: Provider.of<ThemeProvider>(context).darkTheme ? 0 : 1,
             )
@@ -62,7 +59,7 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
     );
   }
 
-  void _showOfferSheet(BuildContext context, {SpecialOfferModel specialOfferModel}) {
+  void _showOfferSheet(BuildContext context, {required SpecialOfferModel specialOfferModel}) {
     ResponsiveHelper.isMobile(context)
         ? showModalBottomSheet(
             context: context,

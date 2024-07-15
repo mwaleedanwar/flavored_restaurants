@@ -20,14 +20,14 @@ import 'package:provider/provider.dart';
 
 class SearchResultScreen extends StatefulWidget {
   final String searchString;
-  SearchResultScreen({@required this.searchString});
+  const SearchResultScreen({super.key, required this.searchString});
 
   @override
   State<SearchResultScreen> createState() => _SearchResultScreenState();
 }
 
 class _SearchResultScreenState extends State<SearchResultScreen> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   String _type = 'all';
 
   @override
@@ -46,10 +46,10 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : null,
       body: SafeArea(
         child: Padding(
@@ -59,14 +59,14 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
             builder: (context, searchProvider, child) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 15),
+                const SizedBox(height: 15),
                 Center(
                   child: SizedBox(
                     width: 1170,
                     child: Row(
                       children: [
                         ResponsiveHelper.isDesktop(context)
-                            ? SizedBox()
+                            ? const SizedBox()
                             : Expanded(
                                 child: CustomTextField(
                                   hintText: getTranslated('search_items_here', context),
@@ -82,22 +82,22 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                     showDialog(
                                         context: context,
                                         builder: (BuildContext context) {
-                                          List<double> _prices = [];
+                                          List<double> prices = [];
                                           searchProvider.filterProductList
-                                              .forEach((product) => _prices.add(product.price));
-                                          _prices.sort();
-                                          double _maxValue = _prices.length > 0 ? _prices[_prices.length - 1] : 1000;
+                                              ?.forEach((product) => prices.add(product.price));
+                                          prices.sort();
+                                          double maxValue = prices.isNotEmpty ? prices[prices.length - 1] : 1000;
                                           return Dialog(
                                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                                            child: Container(width: 550, child: FilterWidget(maxValue: _maxValue)),
+                                            child: SizedBox(width: 550, child: FilterWidget(maxValue: maxValue)),
                                           );
                                         });
                                   },
                                 ),
                               ),
-                        SizedBox(width: 12),
+                        const SizedBox(width: 12),
                         ResponsiveHelper.isDesktop(context)
-                            ? SizedBox()
+                            ? const SizedBox()
                             : InkWell(
                                 onTap: () {
                                   Navigator.of(context).pop();
@@ -107,7 +107,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                   height: 18,
                                   decoration:
                                       BoxDecoration(shape: BoxShape.circle, color: Theme.of(context).primaryColor),
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.close,
                                     color: Colors.white,
                                     size: 10,
@@ -118,7 +118,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 searchProvider.searchProductList != null
                     ? Center(
                         child: SizedBox(
@@ -127,11 +127,11 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  '${searchProvider.searchProductList.length} ${getTranslated('product_found', context)}',
+                                  '${(searchProvider.searchProductList ?? []).length} ${getTranslated('product_found', context)}',
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline2
-                                      .copyWith(color: ColorResources.getGreyBunkerColor(context)),
+                                      .displayMedium
+                                      ?.copyWith(color: ColorResources.getGreyBunkerColor(context)),
                                 ),
                               ),
                               InkWell(
@@ -139,27 +139,25 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                   showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        List<double> _prices = [];
+                                        List<double> prices = [];
                                         searchProvider.filterProductList
-                                            .forEach((product) => _prices.add(product.price));
-                                        _prices.sort();
-                                        double _maxValue = _prices.length > 0 ? _prices[_prices.length - 1] : 1000;
+                                            ?.forEach((product) => prices.add(product.price));
+                                        prices.sort();
+                                        double maxValue = prices.isNotEmpty ? prices[prices.length - 1] : 1000;
                                         return Dialog(
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-                                          child: Container(width: 550, child: FilterWidget(maxValue: _maxValue)),
+                                          child: SizedBox(width: 550, child: FilterWidget(maxValue: maxValue)),
                                         );
                                       });
                                 },
-                                child: Container(
-                                  child: Image.asset(Images.filter),
-                                ),
+                                child: Image.asset(Images.filter),
                               )
                             ],
                           ),
                         ),
                       )
-                    : SizedBox.shrink(),
-                SizedBox(height: 13),
+                    : const SizedBox.shrink(),
+                const SizedBox(height: 13),
                 IgnorePointer(
                   ignoring: searchProvider.searchProductList == null,
                   child: FilterButtonWidget(
@@ -174,24 +172,24 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                 ),
                 Expanded(
                   child: searchProvider.searchProductList != null
-                      ? searchProvider.searchProductList.length > 0
+                      ? searchProvider.searchProductList!.isNotEmpty
                           ? Scrollbar(
                               child: SingleChildScrollView(
-                                physics: BouncingScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                 child: Center(
                                   child: Column(
                                     children: [
                                       ConstrainedBox(
                                         constraints: BoxConstraints(
-                                            minHeight: !ResponsiveHelper.isDesktop(context) && _height < 600
-                                                ? _height
-                                                : _height - 400),
-                                        child: Container(
+                                            minHeight: !ResponsiveHelper.isDesktop(context) && height < 600
+                                                ? height
+                                                : height - 400),
+                                        child: SizedBox(
                                           width: 1170,
                                           child: GridView.builder(
-                                            physics: NeverScrollableScrollPhysics(),
+                                            physics: const NeverScrollableScrollPhysics(),
                                             shrinkWrap: true,
-                                            itemCount: searchProvider.searchProductList.length,
+                                            itemCount: searchProvider.searchProductList!.length,
                                             padding: ResponsiveHelper.isDesktop(context)
                                                 ? const EdgeInsets.symmetric(horizontal: Dimensions.FONT_SIZE_SMALL)
                                                 : EdgeInsets.zero,
@@ -205,21 +203,21 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                                         ? 3
                                                         : 1),
                                             itemBuilder: (context, index) => ResponsiveHelper.isDesktop(context)
-                                                ? ProductWidgetWeb(product: searchProvider.searchProductList[index])
-                                                : ProductWidget(product: searchProvider.searchProductList[index]),
+                                                ? ProductWidgetWeb(product: searchProvider.searchProductList![index])
+                                                : ProductWidget(product: searchProvider.searchProductList![index]),
                                           ),
                                         ),
                                       ),
-                                      SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
-                                      ResponsiveHelper.isDesktop(context) ? FooterView() : SizedBox(),
+                                      const SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                                      ResponsiveHelper.isDesktop(context) ? const FooterView() : const SizedBox(),
                                     ],
                                   ),
                                 ),
                               ),
                             )
-                          : NoDataScreen()
+                          : const NoDataScreen()
                       : Center(
-                          child: Container(
+                          child: SizedBox(
                             width: 1170,
                             child: GridView.builder(
                               itemCount: 10, //searchProvider.searchProductList.length,
@@ -234,7 +232,7 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
                                         : 1,
                               ),
                               itemBuilder: (context, index) => ResponsiveHelper.isDesktop(context)
-                                  ? ProductWidgetWebShimmer()
+                                  ? const ProductWidgetWebShimmer()
                                   : ProductShimmer(isEnabled: searchProvider.searchProductList == null),
                             ),
                           ),

@@ -21,26 +21,20 @@ import 'catering_sheet_view.dart';
 import 'happy_hours_sheet.dart';
 
 class SpecialOffersBottomSheet extends StatefulWidget {
-  SpecialOfferModel specialOfferModel;
+  final SpecialOfferModel specialOfferModel;
 
-  SpecialOffersBottomSheet({@required this.specialOfferModel});
+  const SpecialOffersBottomSheet({super.key, required this.specialOfferModel});
 
   @override
-  State<SpecialOffersBottomSheet> createState() => _SpecialOffersBottomSheetState();
+  State<SpecialOffersBottomSheet> createState() =>
+      _SpecialOffersBottomSheetState();
 }
 
 class _SpecialOffersBottomSheetState extends State<SpecialOffersBottomSheet> {
-  int _cartIndex;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Consumer<CartProvider>(builder: (context, _cartProvider, child) {
-      _cartProvider.setCartUpdate(false);
+    return Consumer<CartProvider>(builder: (context, cartProvider, child) {
+      cartProvider.setCartUpdate(false);
       return Stack(
         children: [
           Container(
@@ -48,12 +42,15 @@ class _SpecialOffersBottomSheetState extends State<SpecialOffersBottomSheet> {
             constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height * 0.8,
             ),
-            padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+            padding: const EdgeInsets.symmetric(
+                horizontal: Dimensions.PADDING_SIZE_DEFAULT),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: ResponsiveHelper.isMobile(context)
-                  ? BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))
-                  : BorderRadius.all(Radius.circular(20)),
+                  ? const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20))
+                  : const BorderRadius.all(Radius.circular(20)),
             ),
             child: Consumer<ProductProvider>(
               builder: (context, productProvider, child) {
@@ -64,32 +61,32 @@ class _SpecialOffersBottomSheetState extends State<SpecialOffersBottomSheet> {
                     ResponsiveHelper.isMobile(context)
                         ? Center(
                             child: Container(
-                              margin: EdgeInsets.only(bottom: 10, top: 10),
+                              margin:
+                                  const EdgeInsets.only(bottom: 10, top: 10),
                               height: 5,
                               width: 80,
-                              decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(5)),
+                              decoration: BoxDecoration(
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(5)),
                             ),
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                     widget.specialOfferModel.type == 'buffet'
                         ? BuffeeSheetView(
                             specialOfferModel: widget.specialOfferModel,
                           )
-                        : SizedBox.shrink(),
+                        : const SizedBox.shrink(),
                     widget.specialOfferModel.type == 'catering'
                         ? CateringSheetView(
                             specialOfferModel: widget.specialOfferModel,
                           )
-                        : SizedBox.shrink(),
+                        : const SizedBox.shrink(),
                     widget.specialOfferModel.type == 'happyhour'
                         ? HapyyHoursSheetView(
                             specialOfferModel: widget.specialOfferModel,
                           )
-                        : SizedBox.shrink(),
-                    // widget.specialOfferModel.type == 'happyhour'
-                    //     ? GroupOrderSheetView()
-                    //     : SizedBox.shrink(),
-                    SizedBox(
+                        : const SizedBox.shrink(),
+                    const SizedBox(
                       height: 8,
                     ),
                     widget.specialOfferModel.type == 'buffet'
@@ -99,14 +96,15 @@ class _SpecialOffersBottomSheetState extends State<SpecialOffersBottomSheet> {
                             backgroundColor: Theme.of(context).primaryColor,
                             onTap: () {
                               if (ResponsiveHelper.isDesktop(context)) {
-                                Navigator.pushNamed(context, Routes.getChatRoute(orderModel: null));
+                                Navigator.pushNamed(context,
+                                    Routes.getChatRoute(orderModel: null));
                               } else {
                                 launchUrl(Uri.parse(
-                                    'tel:${Provider.of<SplashProvider>(context, listen: false).configModel.restaurantPhone}'));
+                                    'tel:${Provider.of<SplashProvider>(context, listen: false).configModel!.restaurantPhone}'));
                               }
                             })
-                        : SizedBox.shrink(),
-                    SizedBox(
+                        : const SizedBox.shrink(),
+                    const SizedBox(
                       height: 12,
                     ),
                   ],
@@ -115,11 +113,13 @@ class _SpecialOffersBottomSheetState extends State<SpecialOffersBottomSheet> {
             ),
           ),
           ResponsiveHelper.isMobile(context)
-              ? SizedBox()
+              ? const SizedBox()
               : Positioned(
                   right: 10,
                   top: 5,
-                  child: InkWell(onTap: () => Navigator.pop(context), child: Icon(Icons.close)),
+                  child: InkWell(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(Icons.close)),
                 ),
         ],
       );

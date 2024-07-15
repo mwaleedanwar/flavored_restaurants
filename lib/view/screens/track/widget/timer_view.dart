@@ -7,6 +7,8 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:provider/provider.dart';
 
 class TimerView extends StatefulWidget {
+  const TimerView({super.key});
+
   @override
   State<TimerView> createState() => _TimerViewState();
 }
@@ -15,18 +17,18 @@ class _TimerViewState extends State<TimerView> {
   @override
   Widget build(BuildContext context) {
     return Consumer<TimerProvider>(builder: (context, orderTimer, child) {
-      int days, hours, minutes, seconds;
+      int days = 0, hours = 0, minutes = 0, seconds = 0;
       if (orderTimer.duration != null) {
-        days = orderTimer.duration.inDays;
-        hours = orderTimer.duration.inHours - days * 24;
-        minutes = orderTimer.duration.inMinutes - (24 * days * 60) - (hours * 60);
-        seconds = orderTimer.duration.inSeconds - (24 * days * 60 * 60) - (hours * 60 * 60) - (minutes * 60);
+        days = orderTimer.duration!.inDays;
+        hours = orderTimer.duration!.inHours - days * 24;
+        minutes = orderTimer.duration!.inMinutes - (24 * days * 60) - (hours * 60);
+        seconds = orderTimer.duration!.inSeconds - (24 * days * 60 * 60) - (hours * 60 * 60) - (minutes * 60);
       }
-      print('end time : ${orderTimer.duration}');
+      debugPrint('end time : ${orderTimer.duration}');
       return Column(
         children: [
           Image.asset(Images.delivery_man_gif, height: 200),
-          SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+          const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
           Text(
             minutes < 25
                 ? getTranslated('be_prepared_your_food', context)
@@ -35,29 +37,29 @@ class _TimerViewState extends State<TimerView> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+          const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
           days > 0 || hours > 0
               ? Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                     if (days > 0) TimerBox(time: days, text: getTranslated('day', context), isBorder: true),
-                    if (days > 0) SizedBox(width: 5),
+                    if (days > 0) const SizedBox(width: 5),
                     if (days > 0) Text(':', style: TextStyle(color: Theme.of(context).primaryColor)),
-                    if (days > 0) SizedBox(width: 5),
+                    if (days > 0) const SizedBox(width: 5),
                     TimerBox(time: hours, text: getTranslated('hour', context), isBorder: true),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Text(':', style: TextStyle(color: Theme.of(context).primaryColor)),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     TimerBox(time: minutes, text: getTranslated('min', context), isBorder: true),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Text(':', style: TextStyle(color: Theme.of(context).primaryColor)),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     TimerBox(
                       time: seconds,
                       text: getTranslated('sec', context),
                       isBorder: true,
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                   ]),
                 )
               : Row(
@@ -67,7 +69,7 @@ class _TimerViewState extends State<TimerView> {
                       '${minutes < 25 ? 0 : minutes - 25} - ${minutes < 25 ? 25 : minutes}',
                       style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_OVER_LARGE),
                     ),
-                    SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                     Text(getTranslated('min', context),
                         style: rubikRegular.copyWith(
                           color: Theme.of(context).primaryColor,
@@ -86,7 +88,12 @@ class TimerBox extends StatelessWidget {
   final bool isBorder;
   final String text;
 
-  TimerBox({this.time, this.isBorder = false, this.text});
+  const TimerBox({
+    super.key,
+    required this.time,
+    this.isBorder = false,
+    required this.text,
+  });
 
   @override
   Widget build(BuildContext context) {

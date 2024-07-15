@@ -20,39 +20,42 @@ import 'package:provider/provider.dart';
 
 class ChooseLanguageScreen extends StatelessWidget {
   final bool fromMenu;
-  ChooseLanguageScreen({this.fromMenu = false});
+  const ChooseLanguageScreen({super.key, this.fromMenu = false});
 
   @override
   Widget build(BuildContext context) {
-    final double _width = MediaQuery.of(context).size.width;
     Provider.of<LanguageProvider>(context, listen: false).initializeAllLanguages(context);
 
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : null,
       body: SafeArea(
         child: Center(
           child: Container(
-            padding: _width > 700 ? EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE) : EdgeInsets.zero,
+            padding: MediaQuery.of(context).size.width > 700
+                ? const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE)
+                : EdgeInsets.zero,
             child: Container(
-              width: _width > 700 ? 700 : _width,
-              padding: _width > 700 ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
-              decoration: _width > 700
+              width: MediaQuery.of(context).size.width > 700 ? 700 : MediaQuery.of(context).size.width,
+              padding: MediaQuery.of(context).size.width > 700
+                  ? const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT)
+                  : null,
+              decoration: MediaQuery.of(context).size.width > 700
                   ? BoxDecoration(
                       color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(10),
-                      boxShadow: [BoxShadow(color: Colors.grey[300], blurRadius: 5, spreadRadius: 1)],
+                      boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 5, spreadRadius: 1)],
                     )
                   : null,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Center(
                     child: Container(
                       width: 1170,
-                      padding: EdgeInsets.only(
+                      padding: const EdgeInsets.only(
                           left: Dimensions.PADDING_SIZE_LARGE,
                           top: Dimensions.PADDING_SIZE_LARGE,
                           right: Dimensions.PADDING_SIZE_LARGE),
@@ -60,32 +63,32 @@ class ChooseLanguageScreen extends StatelessWidget {
                         getTranslated('choose_the_language', context),
                         style: Theme.of(context)
                             .textTheme
-                            .headline3
-                            .copyWith(fontSize: 22, color: Theme.of(context).textTheme.bodyText1.color),
+                            .displaySmall
+                            ?.copyWith(fontSize: 22, color: Theme.of(context).textTheme.bodyLarge?.color),
                       ),
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Center(
                     child: Container(
                       width: 1170,
-                      padding:
-                          EdgeInsets.only(left: Dimensions.PADDING_SIZE_LARGE, right: Dimensions.PADDING_SIZE_LARGE),
-                      child: SearchWidget(),
+                      padding: const EdgeInsets.only(
+                          left: Dimensions.PADDING_SIZE_LARGE, right: Dimensions.PADDING_SIZE_LARGE),
+                      child: const SearchWidget(),
                     ),
                   ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 30),
                   Consumer<LanguageProvider>(
                       builder: (context, languageProvider, child) => Expanded(
                               child: Scrollbar(
                             child: SingleChildScrollView(
-                              physics: BouncingScrollPhysics(),
+                              physics: const BouncingScrollPhysics(),
                               child: Center(
                                 child: SizedBox(
                                   width: 1170,
                                   child: ListView.builder(
                                       itemCount: languageProvider.languages.length,
-                                      physics: NeverScrollableScrollPhysics(),
+                                      physics: const NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
                                       itemBuilder: (context, index) => _languageWidget(
                                           context: context,
@@ -108,7 +111,7 @@ class ChooseLanguageScreen extends StatelessWidget {
                                 btnTxt: getTranslated('save', context),
                                 onTap: () {
                                   Provider.of<OnBoardingProvider>(context, listen: false).toggleShowOnBoardingStatus();
-                                  if (languageProvider.languages.length > 0 && languageProvider.selectIndex != -1) {
+                                  if (languageProvider.languages.isNotEmpty && languageProvider.selectIndex != -1) {
                                     Provider.of<LocalizationProvider>(context, listen: false).setLanguage(Locale(
                                       AppConstants.languages[languageProvider.selectIndex].languageCode,
                                       AppConstants.languages[languageProvider.selectIndex].countryCode,
@@ -150,14 +153,18 @@ class ChooseLanguageScreen extends StatelessWidget {
     );
   }
 
-  Widget _languageWidget(
-      {BuildContext context, LanguageModel languageModel, LanguageProvider languageProvider, int index}) {
+  Widget _languageWidget({
+    required BuildContext context,
+    required LanguageModel languageModel,
+    required LanguageProvider languageProvider,
+    required int index,
+  }) {
     return InkWell(
       onTap: () {
         languageProvider.setSelectIndex(index);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
           color: languageProvider.selectIndex == index ? Theme.of(context).primaryColor.withOpacity(.15) : null,
           border: Border(
@@ -169,7 +176,7 @@ class ChooseLanguageScreen extends StatelessWidget {
                   color: languageProvider.selectIndex == index ? Theme.of(context).primaryColor : Colors.transparent)),
         ),
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 15),
+          padding: const EdgeInsets.symmetric(vertical: 15),
           decoration: BoxDecoration(
             border: Border(
                 bottom: BorderSide(
@@ -184,19 +191,19 @@ class ChooseLanguageScreen extends StatelessWidget {
               Row(
                 children: [
                   Image.asset(languageModel.imageUrl, width: 34, height: 34),
-                  SizedBox(width: 30),
+                  const SizedBox(width: 30),
                   Text(
                     languageModel.languageName,
                     style: Theme.of(context)
                         .textTheme
-                        .headline2
-                        .copyWith(color: Theme.of(context).textTheme.bodyText1.color),
+                        .displayMedium
+                        ?.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
                   ),
                 ],
               ),
               languageProvider.selectIndex == index
                   ? Image.asset(Images.done, width: 17, height: 17, color: Theme.of(context).primaryColor)
-                  : SizedBox.shrink()
+                  : const SizedBox.shrink()
             ],
           ),
         ),

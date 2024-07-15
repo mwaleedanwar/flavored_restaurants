@@ -1,14 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_model.dart';
-
-import '../response/offer_model.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/offer_model.dart';
 
 class PlaceOrderBody {
-  List<Cart> cart;
-  List<SpecialOfferModel> catering;
-  List<OfferProduct> happyHours;
+  List<Cart>? cart;
+  List<SpecialOfferModel>? catering;
+  List<OfferProduct>? happyHours;
   double couponDiscountAmount;
-  String couponDiscountTitle;
+  String? couponDiscountTitle;
   double orderAmount;
   String orderType;
   int restaurantId;
@@ -18,146 +16,145 @@ class PlaceOrderBody {
   String chargeId;
   String tipChargeId;
   String orderNote;
-  String couponCode;
+  String? couponCode;
   String deliveryTime;
   String deliveryDate;
   int branchId;
   double distance;
-  double orderTip;
-  double taxFee;
-  String transactionReference;
-  String platform;
-  String address;
-  String floor;
+  double? orderTip;
+  double? taxFee;
+  String? transactionReference;
+  String? platform;
+  String? address;
+  String? floor;
 
-  String cardNo;
-  String firstName;
-  String expiryMonth;
-  String lastName;
-  String email;
-  String expYear;
-  String phone;
-  String latitude;
-  String longitude;
-  String ccv;
-  String cardHolder;
-  String contactName;
-  String contactPhone;
-  String addressType;
-  PlaceOrderBody copyWith({String paymentMethod, String transactionReference}) {
-    paymentMethod = paymentMethod;
-    transactionReference = transactionReference;
-    return this;
-  }
+  String? cardNo;
+  String? firstName;
+  String? expiryMonth;
+  String? lastName;
+  String? email;
+  String? expYear;
+  String? phone;
+  String? latitude;
+  String? longitude;
+  String? ccv;
+  String? cardHolder;
+  String? contactName;
+  String? contactPhone;
+  String? addressType;
 
-  PlaceOrderBody(
-      {@required this.cart,
-      @required this.catering,
-      @required this.couponDiscountAmount,
-      @required this.couponDiscountTitle,
-      @required this.couponCode,
-      @required this.orderAmount,
-      @required this.restaurantId,
-      @required this.orderType,
-      @required this.paymentMethod,
-      @required this.branchId,
-      @required this.deliveryTime,
-      @required this.deliveryDate,
-      @required this.orderNote,
-      @required this.distance,
-      @required this.userId,
-      @required this.paymentId,
-      @required this.chargeId,
-      @required this.tipChargeId,
-      @required this.happyHours,
-      this.orderTip,
-      this.taxFee,
-      this.transactionReference,
-      this.platform,
-      this.address,
-      this.cardNo,
-      this.expiryMonth,
-      this.firstName,
-      this.lastName,
-      this.email,
-      this.expYear,
-      this.phone,
-      this.floor,
-      this.latitude,
-      this.longitude,
-      this.ccv,
-      this.cardHolder,
-      this.contactName,
-      this.contactPhone,
-      this.addressType});
+  PlaceOrderBody({
+    required this.cart,
+    required this.catering,
+    required this.couponDiscountAmount,
+    this.couponDiscountTitle,
+    this.couponCode,
+    required this.orderAmount,
+    required this.restaurantId,
+    required this.orderType,
+    required this.paymentMethod,
+    required this.branchId,
+    required this.deliveryTime,
+    required this.deliveryDate,
+    required this.orderNote,
+    required this.distance,
+    required this.userId,
+    required this.paymentId,
+    required this.chargeId,
+    required this.tipChargeId,
+    required this.happyHours,
+    this.orderTip,
+    this.taxFee,
+    this.transactionReference,
+    this.platform,
+    this.address,
+    this.cardNo,
+    this.expiryMonth,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.expYear,
+    this.phone,
+    this.floor,
+    this.latitude,
+    this.longitude,
+    this.ccv,
+    this.cardHolder,
+    this.contactName,
+    this.contactPhone,
+    this.addressType,
+  });
 
-  PlaceOrderBody.fromJson(Map<String, dynamic> json) {
+  factory PlaceOrderBody.fromJson(Map<String, dynamic> json) {
+    final pob = PlaceOrderBody(
+      couponDiscountAmount: json['coupon_discount_amount'],
+      couponDiscountTitle: json['coupon_discount_title'],
+      orderAmount: json['order_amount'],
+      orderType: json['order_type'],
+      restaurantId: json['delivery_address_id'],
+      paymentMethod: json['payment_method'],
+      userId: json['user_id'],
+      chargeId: json['charge_id'],
+      tipChargeId: json['tip_charge_id '],
+      paymentId: json['payment_id'],
+      orderNote: json['order_note'],
+      couponCode: json['coupon_code'],
+      deliveryTime: json['delivery_time'],
+      deliveryDate: json['delivery_date'],
+      branchId: json['branch_id'],
+      distance: json['distance'],
+      orderTip: json['order_tip_amount'],
+      taxFee: json['total_tax_amount'],
+      platform: json['platform '],
+      address: json['address'],
+      cardNo: json['card_no'],
+      expiryMonth: json['exp_month'],
+      firstName: json['f_name'],
+      lastName: json['l_name'],
+      email: json['email'],
+      expYear: json['exp_year'],
+      phone: json['phone'],
+      floor: json['floor'],
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+      ccv: json['cvc'],
+      cardHolder: json['card_holder_name'],
+      contactName: json['contact_person_name'],
+      contactPhone: json['contact_person_number'],
+      addressType: json['address_type'],
+      cart: null,
+      catering: null,
+      happyHours: null,
+    );
     if (json['cart'] != null) {
-      cart = [];
+      final cart = <Cart>[];
       json['cart'].forEach((v) {
         cart.add(Cart.fromJson(v));
       });
+      pob.cart = cart;
     }
     if (json['catering'] != null) {
-      cart = [];
+      final catering = <SpecialOfferModel>[];
       json['catering'].forEach((v) {
         catering.add(SpecialOfferModel.fromJson(v));
       });
+      pob.catering = catering;
     }
     if (json['happy_hours'] != null) {
-      cart = [];
+      final happyHours = <OfferProduct>[];
       json['happy_hours'].forEach((v) {
-        catering.add(SpecialOfferModel.fromJson(v));
+        happyHours.add(OfferProduct.fromJson(v));
       });
+      pob.happyHours = happyHours;
     }
-    couponDiscountAmount = json['coupon_discount_amount'];
-    couponDiscountTitle = json['coupon_discount_title'];
-    orderAmount = json['order_amount'];
-    orderType = json['order_type'];
-    restaurantId = json['delivery_address_id'];
-    paymentMethod = json['payment_method'];
-    userId = json['user_id'];
-    chargeId = json['charge_id'];
-    tipChargeId = json['tip_charge_id '];
-    paymentId = json['payment_id'];
-    orderNote = json['order_note'];
-    couponCode = json['coupon_code'];
-    deliveryTime = json['delivery_time'];
-    deliveryDate = json['delivery_date'];
-    branchId = json['branch_id'];
-    distance = json['distance'];
-    orderTip = json['order_tip_amount'];
-    taxFee = json['total_tax_amount'];
-    platform = json['platform '];
-    address = json['address'];
-    cardNo = json['card_no'];
-    expiryMonth = json['exp_month'];
-    firstName = json['f_name'];
-    lastName = json['l_name'];
-    email = json['email'];
-    expYear = json['exp_year'];
-    phone = json['phone'];
-    floor = json['floor'];
-    latitude = json['latitude'];
-    longitude = json['longitude'];
-    ccv = json['cvc'];
-    cardHolder = json['card_holder_name'];
-    contactName = json['contact_person_name'];
-    contactPhone = json['contact_person_number'];
-    addressType = json['address_type'];
+    return pob;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (catering != null) {
-      data['catering'] = catering.map((v) => v.toJson()).toList();
-    }
-    if (happyHours != null) {
-      data['happy_hours'] = happyHours.map((v) => v.toJson()).toList();
-    }
-    if (cart != null) {
-      data['cart'] = cart.map((v) => v.toJson()).toList();
-    }
+    data['catering'] = catering?.map((v) => v.toJson()).toList();
+    data['happy_hours'] = happyHours?.map((v) => v.toJson()).toList();
+    data['cart'] = cart?.map((v) => v.toJson()).toList();
     data['coupon_discount_amount'] = couponDiscountAmount;
     data['coupon_discount_title'] = couponDiscountTitle;
     data['order_amount'] = orderAmount;
@@ -192,64 +189,147 @@ class PlaceOrderBody {
     data['contact_person_name'] = contactName;
     data['contact_person_number'] = contactPhone;
     data['address_type'] = addressType;
-
-    if (transactionReference != null) {
-      data['transaction_reference'] = transactionReference;
-    }
-    if (platform != null) {
-      data['platform'] = platform;
-    }
+    data['transaction_reference'] = transactionReference;
+    data['platform'] = platform;
     return data;
+  }
+
+  PlaceOrderBody copyWith({
+    List<Cart>? cart,
+    List<SpecialOfferModel>? catering,
+    List<OfferProduct>? happyHours,
+    double? couponDiscountAmount,
+    String? couponDiscountTitle,
+    double? orderAmount,
+    String? orderType,
+    int? restaurantId,
+    String? paymentMethod,
+    String? userId,
+    String? paymentId,
+    String? chargeId,
+    String? tipChargeId,
+    String? orderNote,
+    String? couponCode,
+    String? deliveryTime,
+    String? deliveryDate,
+    int? branchId,
+    double? distance,
+    double? orderTip,
+    double? taxFee,
+    String? transactionReference,
+    String? platform,
+    String? address,
+    String? floor,
+    String? cardNo,
+    String? firstName,
+    String? expiryMonth,
+    String? lastName,
+    String? email,
+    String? expYear,
+    String? phone,
+    String? latitude,
+    String? longitude,
+    String? ccv,
+    String? cardHolder,
+    String? contactName,
+    String? contactPhone,
+    String? addressType,
+  }) {
+    return PlaceOrderBody(
+      cart: cart ?? this.cart,
+      catering: catering ?? this.catering,
+      happyHours: happyHours ?? this.happyHours,
+      couponDiscountAmount: couponDiscountAmount ?? this.couponDiscountAmount,
+      couponDiscountTitle: couponDiscountTitle ?? this.couponDiscountTitle,
+      orderAmount: orderAmount ?? this.orderAmount,
+      orderType: orderType ?? this.orderType,
+      restaurantId: restaurantId ?? this.restaurantId,
+      paymentMethod: paymentMethod ?? this.paymentMethod,
+      userId: userId ?? this.userId,
+      paymentId: paymentId ?? this.paymentId,
+      chargeId: chargeId ?? this.chargeId,
+      tipChargeId: tipChargeId ?? this.tipChargeId,
+      orderNote: orderNote ?? this.orderNote,
+      couponCode: couponCode ?? this.couponCode,
+      deliveryTime: deliveryTime ?? this.deliveryTime,
+      deliveryDate: deliveryDate ?? this.deliveryDate,
+      branchId: branchId ?? this.branchId,
+      distance: distance ?? this.distance,
+      orderTip: orderTip ?? this.orderTip,
+      taxFee: taxFee ?? this.taxFee,
+      transactionReference: transactionReference ?? this.transactionReference,
+      platform: platform ?? this.platform,
+      address: address ?? this.address,
+      floor: floor ?? this.floor,
+      cardNo: cardNo ?? this.cardNo,
+      firstName: firstName ?? this.firstName,
+      expiryMonth: expiryMonth ?? this.expiryMonth,
+      lastName: lastName ?? this.lastName,
+      email: email ?? this.email,
+      expYear: expYear ?? this.expYear,
+      phone: phone ?? this.phone,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      ccv: ccv ?? this.ccv,
+      cardHolder: cardHolder ?? this.cardHolder,
+      contactName: contactName ?? this.contactName,
+      contactPhone: contactPhone ?? this.contactPhone,
+      addressType: addressType ?? this.addressType,
+    );
   }
 }
 
 class Cart {
-  String productId;
-  String cateringId;
-  String happyHoursId;
-  String dealId;
+  String? productId;
+  String? cateringId;
+  String? happyHoursId;
+  String? dealId;
   String price;
-  String variant;
+  String? variant;
   double discountAmount;
   int quantity;
   double taxAmount;
-  List<Variation> variation;
   List<int> addOnIds;
   List<int> addOnQtys;
+  List<Variation>? variation;
 
-  Cart(
-    this.productId,
-    this.price,
+  Cart({
+    required this.price,
+    required this.discountAmount,
+    required this.quantity,
+    required this.taxAmount,
+    required this.addOnIds,
+    required this.addOnQtys,
     this.cateringId,
+    this.variant,
     this.happyHoursId,
     this.dealId,
-    this.variant,
+    this.productId,
     this.variation,
-    this.discountAmount,
-    this.quantity,
-    this.taxAmount,
-    this.addOnIds,
-    this.addOnQtys,
-  );
+  });
 
-  Cart.fromJson(Map<String, dynamic> json) {
-    productId = json['product_id'];
-    cateringId = json['catering_id'];
-    happyHoursId = json['happy_hour_id'];
-    dealId = json['deal_id'];
-    price = json['price'];
-    variant = json['variant'];
+  factory Cart.fromJson(Map<String, dynamic> json) {
+    final cart = Cart(
+      productId: json['product_id'],
+      cateringId: json['catering_id'],
+      happyHoursId: json['happy_hour_id'],
+      dealId: json['deal_id'],
+      price: json['price'],
+      variant: json['variant'],
+      discountAmount: json['discount_amount'],
+      quantity: json['quantity'],
+      taxAmount: json['tax_amount'],
+      addOnIds: json['add_on_ids'].cast<int>(),
+      addOnQtys: json['add_on_qtys'].cast<int>(),
+    );
     if (json['variation'] != null) {
-      variation = [];
+      final variation = <Variation>[];
       json['variation'].forEach((v) {
         variation.add(Variation.fromJson(v));
       });
+      cart.variation = variation;
     }
-    discountAmount = json['discount_amount'];
-    quantity = json['quantity'];
-    taxAmount = json['tax_amount'];
-    addOnIds = json['add_on_ids'].cast<int>();
-    addOnQtys = json['add_on_qtys'].cast<int>();
+    return cart;
   }
 
   Map<String, dynamic> toJson() {
@@ -260,9 +340,7 @@ class Cart {
     data['deal_id'] = dealId;
     data['price'] = price;
     data['variant'] = variant;
-    if (variation != null) {
-      data['variation'] = variation.map((v) => v.toJson()).toList();
-    }
+    data['variation'] = variation?.map((v) => v.toJson()).toList();
     data['discount_amount'] = discountAmount;
     data['quantity'] = quantity;
     data['tax_amount'] = taxAmount;

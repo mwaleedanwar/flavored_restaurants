@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -19,25 +21,25 @@ import 'package:provider/provider.dart';
 import 'widget/permission_dialog.dart';
 
 class SelectLocationScreen extends StatefulWidget {
-  final GoogleMapController googleMapController;
-  SelectLocationScreen({@required this.googleMapController});
+  final GoogleMapController? googleMapController;
+  const SelectLocationScreen({super.key, this.googleMapController});
 
   @override
-  _SelectLocationScreenState createState() => _SelectLocationScreenState();
+  State<SelectLocationScreen> createState() => _SelectLocationScreenState();
 }
 
 class _SelectLocationScreenState extends State<SelectLocationScreen> {
-  GoogleMapController _controller;
-  TextEditingController _locationController = TextEditingController();
-  CameraPosition _cameraPosition;
-  LatLng _initialPosition;
+  late GoogleMapController _controller;
+  final _locationController = TextEditingController();
+  late CameraPosition _cameraPosition;
+  late LatLng _initialPosition;
 
   @override
   void initState() {
     super.initState();
     _initialPosition = LatLng(
-      double.parse(Provider.of<SplashProvider>(context, listen: false).configModel.branches[0].latitude),
-      double.parse(Provider.of<SplashProvider>(context, listen: false).configModel.branches[0].longitude),
+      double.parse(Provider.of<SplashProvider>(context, listen: false).configModel!.branches!.first.latitude),
+      double.parse(Provider.of<SplashProvider>(context, listen: false).configModel!.branches!.first.longitude),
     );
     if (Provider.of<LocationProvider>(context, listen: false).position != null) {
       Provider.of<LocationProvider>(context, listen: false).setPickData();
@@ -50,32 +52,31 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
     _controller.dispose();
   }
 
-  void _openSearchDialog(BuildContext context, GoogleMapController mapController) async {
-    showDialog(context: context, builder: (context) => LocationSearchDialog(mapController: mapController));
+  void _openSearchDialog(BuildContext context) async {
+    showDialog(context: context, builder: (context) => const LocationSearchDialog());
   }
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
+    final height = MediaQuery.of(context).size.height;
     if (Provider.of<LocationProvider>(context).address != null) {
-      // _locationController.text = '${Provider.of<LocationProvider>(context).address.name ?? ''}, '
-      //     '${Provider.of<LocationProvider>(context).address.subAdministrativeArea ?? ''}, '
-      //     '${Provider.of<LocationProvider>(context).address.isoCountryCode ?? ''}';
       _locationController.text = Provider.of<LocationProvider>(context).address ?? '';
     }
 
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(120))
+          ? const PreferredSize(preferredSize: Size.fromHeight(120), child: WebAppBar())
           : AppBar(
               backgroundColor: Theme.of(context).primaryColor,
               elevation: 0,
-              leading: SizedBox.shrink(),
+              leading: const SizedBox.shrink(),
               centerTitle: true,
               title: Text(getTranslated('select_delivery_address', context)),
             ),
       body: SingleChildScrollView(
-        physics: ResponsiveHelper.isDesktop(context) ? AlwaysScrollableScrollPhysics() : NeverScrollableScrollPhysics(),
+        physics: ResponsiveHelper.isDesktop(context)
+            ? const AlwaysScrollableScrollPhysics()
+            : const NeverScrollableScrollPhysics(),
         child: Column(
           children: [
             Padding(
@@ -87,11 +88,11 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                       ? BoxDecoration(
                           color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [BoxShadow(color: Colors.grey[300], blurRadius: 5, spreadRadius: 1)],
+                          boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 5, spreadRadius: 1)],
                         )
                       : null,
                   width: Dimensions.WEB_SCREEN_WIDTH,
-                  height: ResponsiveHelper.isDesktop(context) ? _height * 0.7 : _height * 0.9,
+                  height: ResponsiveHelper.isDesktop(context) ? height * 0.7 : height * 0.9,
                   child: Consumer<LocationProvider>(
                     builder: (context, locationProvider, child) => Stack(
                       clipBehavior: Clip.none,
@@ -103,17 +104,17 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                             zoom: 16,
                           ),
                           zoomControlsEnabled: false,
-                          minMaxZoomPreference: MinMaxZoomPreference(0, 16),
+                          minMaxZoomPreference: const MinMaxZoomPreference(0, 16),
                           compassEnabled: false,
                           indoorViewEnabled: true,
                           mapToolbarEnabled: true,
                           onCameraIdle: () {
-                            locationProvider.updatePosition(_cameraPosition, false, null, context, false);
+                            locationProvider.updatePosition(_cameraPosition, false, context, false);
                           },
-                          onCameraMove: ((_position) => _cameraPosition = _position),
+                          onCameraMove: ((position) => _cameraPosition = position),
                           // markers: Set<Marker>.of(locationProvider.markers),
                           onMapCreated: (GoogleMapController controller) {
-                            Future.delayed(Duration(milliseconds: 500)).then((value) {
+                            Future.delayed(const Duration(milliseconds: 500)).then((value) {
                               _controller = controller;
                               _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
                                   target: locationProvider.pickPosition.longitude.toInt() == 0 &&
@@ -129,7 +130,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                         ),
                         locationProvider.pickAddress != null
                             ? InkWell(
-                                onTap: () => _openSearchDialog(context, _controller),
+                                onTap: () => _openSearchDialog(context),
                                 child: Container(
                                   width: MediaQuery.of(context).size.width,
                                   padding: const EdgeInsets.symmetric(
@@ -140,26 +141,18 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                       color: Theme.of(context).cardColor,
                                       borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL)),
                                   child: Builder(builder: (context) {
-                                    _locationController.text = locationProvider.pickAddress;
-                                    // if(locationProvider.pickAddress.name != null && ResponsiveHelper.isMobilePhone()) {
-                                    //   locationProvider.locationController.text = '${locationProvider.pickAddress.name ?? ''} ${locationProvider.pickAddress.subAdministrativeArea ?? ''} ${locationProvider.pickAddress.isoCountryCode ?? ''}';
-                                    // }
+                                    _locationController.text = locationProvider.pickAddress ?? '';
 
                                     return Row(children: [
                                       Expanded(
-                                          child: Text(
-                                              locationProvider.pickAddress ?? ''
-                                              // locationProvider.pickAddress.name != null
-                                              // ? '${locationProvider.pickAddress.name ?? ''} ${locationProvider.pickAddress.subAdministrativeArea ?? ''} ${locationProvider.pickAddress.isoCountryCode ?? ''}'
-                                              ,
-                                              maxLines: 1,
-                                              overflow: TextOverflow.ellipsis)),
-                                      Icon(Icons.search, size: 20),
+                                          child: Text(locationProvider.pickAddress ?? '',
+                                              maxLines: 1, overflow: TextOverflow.ellipsis)),
+                                      const Icon(Icons.search, size: 20),
                                     ]);
                                   }),
                                 ),
                               )
-                            : SizedBox.shrink(),
+                            : const SizedBox.shrink(),
                         Positioned(
                           bottom: 0,
                           right: 0,
@@ -174,7 +167,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                 child: Container(
                                   width: 50,
                                   height: 50,
-                                  margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
+                                  margin: const EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL),
                                     color: ColorResources.COLOR_WHITE,
@@ -187,18 +180,18 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                 ),
                               ),
                               Center(
-                                child: Container(
+                                child: SizedBox(
                                   width: ResponsiveHelper.isDesktop(context) ? 450 : 1170,
                                   child: Padding(
-                                    padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                                    padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
                                     child: CustomButton(
                                       btnTxt: getTranslated('select_location', context),
                                       onTap: locationProvider.loading
                                           ? null
                                           : () {
                                               if (widget.googleMapController != null) {
-                                                widget.googleMapController.setMapStyle('[]');
-                                                widget.googleMapController
+                                                widget.googleMapController!.setMapStyle('[]');
+                                                widget.googleMapController!
                                                     .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
                                                         target: LatLng(
                                                           locationProvider.pickPosition.latitude,
@@ -232,15 +225,15 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                             ? Center(
                                 child: CircularProgressIndicator(
                                     valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)))
-                            : SizedBox(),
+                            : const SizedBox(),
                       ],
                     ),
                   ),
                 ),
               ),
             ),
-            if (ResponsiveHelper.isDesktop(context)) SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-            if (ResponsiveHelper.isDesktop(context)) FooterView(),
+            if (ResponsiveHelper.isDesktop(context)) const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+            if (ResponsiveHelper.isDesktop(context)) const FooterView(),
           ],
         ),
       ),
@@ -252,7 +245,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     } else if (permission == LocationPermission.deniedForever) {
-      showDialog(context: context, barrierDismissible: false, builder: (context) => PermissionDialog());
+      showDialog(context: context, barrierDismissible: false, builder: (context) => const PermissionDialog());
     } else {
       callback();
     }

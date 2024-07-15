@@ -5,7 +5,6 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constran
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/localization_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/news_letter_controller.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
@@ -13,28 +12,21 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/on_hover.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../provider/auth_provider.dart';
-
 class FooterView extends StatefulWidget {
-  const FooterView({Key key}) : super(key: key);
+  const FooterView({super.key});
 
   @override
   State<FooterView> createState() => _FooterViewState();
 }
 
 class _FooterViewState extends State<FooterView> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
+  final _newsLetterController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    TextEditingController _newsLetterController = TextEditingController();
     return Container(
       color: ColorResources.getFooterColor(context),
       width: double.maxFinite,
@@ -55,25 +47,31 @@ class _FooterViewState extends State<FooterView> {
                           const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                           FittedBox(
                             child: Text(
-                              Provider.of<SplashProvider>(context).configModel.restaurantName ?? F.appName,
+                              Provider.of<SplashProvider>(context)
+                                      .configModel
+                                      ?.restaurantName ??
+                                  F.appName,
                               maxLines: 1,
                               style: TextStyle(
-                                  fontWeight: FontWeight.w800, fontSize: 48, color: Theme.of(context).primaryColor),
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 48,
+                                  color: Theme.of(context).primaryColor),
                             ),
                           ),
                           const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                           Text('Newsletter',
                               style: robotoRegular.copyWith(
-                                  fontWeight: FontWeight.w600, color: ColorResources.getGreyBunkerColor(context))),
-
+                                  fontWeight: FontWeight.w600,
+                                  color: ColorResources.getGreyBunkerColor(
+                                      context))),
                           const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                           Text(getTranslated('subscribe_to_our', context),
                               style: robotoRegular.copyWith(
                                   fontSize: Dimensions.FONT_SIZE_DEFAULT,
-                                  color: ColorResources.getGreyBunkerColor(context))),
-
-                          const SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
-
+                                  color: ColorResources.getGreyBunkerColor(
+                                      context))),
+                          const SizedBox(
+                              height: Dimensions.PADDING_SIZE_DEFAULT),
                           Container(
                             width: 400,
                             decoration: BoxDecoration(
@@ -81,21 +79,25 @@ class _FooterViewState extends State<FooterView> {
                                 borderRadius: BorderRadius.circular(8.0),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: ColorResources.COLOR_BLACK.withOpacity(0.05),
+                                    color: ColorResources.COLOR_BLACK
+                                        .withOpacity(0.05),
                                     blurRadius: 2,
                                   )
                                 ]),
                             child: Row(
                               children: [
-                                SizedBox(width: 20),
+                                const SizedBox(width: 20),
                                 Expanded(
                                     child: TextField(
                                   controller: _newsLetterController,
-                                  style: rubikMedium.copyWith(color: ColorResources.COLOR_BLACK),
+                                  style: rubikMedium.copyWith(
+                                      color: ColorResources.COLOR_BLACK),
                                   decoration: InputDecoration(
-                                    hintText: getTranslated('your_email_address', context),
+                                    hintText: getTranslated(
+                                        'your_email_address', context),
                                     hintStyle: rubikRegular.copyWith(
-                                        color: ColorResources.getGreyColor(context),
+                                        color: ColorResources.getGreyColor(
+                                            context),
                                         fontSize: Dimensions.FONT_SIZE_LARGE),
                                     border: InputBorder.none,
                                   ),
@@ -103,13 +105,22 @@ class _FooterViewState extends State<FooterView> {
                                 )),
                                 InkWell(
                                   onTap: () {
-                                    String email = _newsLetterController.text.trim().toString();
+                                    String email = _newsLetterController.text
+                                        .trim()
+                                        .toString();
                                     if (email.isEmpty) {
-                                      showCustomSnackBar(getTranslated('enter_email_address', context), context);
+                                      showCustomSnackBar(
+                                          getTranslated(
+                                              'enter_email_address', context),
+                                          context);
                                     } else if (EmailChecker.isNotValid(email)) {
-                                      showCustomSnackBar(getTranslated('enter_valid_email', context), context);
+                                      showCustomSnackBar(
+                                          getTranslated(
+                                              'enter_valid_email', context),
+                                          context);
                                     } else {
-                                      Provider.of<NewsLetterProvider>(context, listen: false)
+                                      Provider.of<NewsLetterProvider>(context,
+                                              listen: false)
                                           .addToNewsLetter(context, email)
                                           .then((value) {
                                         _newsLetterController.clear();
@@ -117,45 +128,62 @@ class _FooterViewState extends State<FooterView> {
                                     }
                                   },
                                   child: Container(
-                                    margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 4, vertical: 2),
                                     decoration: BoxDecoration(
                                       color: Theme.of(context).primaryColor,
                                       borderRadius: BorderRadius.circular(8.0),
                                     ),
-                                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                                    child: Text(getTranslated('subscribe', context),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 10),
+                                    child: Text(
+                                        getTranslated('subscribe', context),
                                         style: rubikRegular.copyWith(
-                                            color: Colors.white, fontSize: Dimensions.FONT_SIZE_DEFAULT)),
+                                            color: Colors.white,
+                                            fontSize:
+                                                Dimensions.FONT_SIZE_DEFAULT)),
                                   ),
                                 )
                               ],
                             ),
                           ),
-                          const SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
-
-                          // const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-
-                          Consumer<SplashProvider>(builder: (context, splashProvider, child) {
-                            final _isLtr = Provider.of<LocalizationProvider>(context, listen: false).isLtr;
+                          const SizedBox(
+                              height: Dimensions.PADDING_SIZE_DEFAULT),
+                          Consumer<SplashProvider>(
+                              builder: (context, splashProvider, child) {
+                            final isLtr = Provider.of<LocalizationProvider>(
+                                    context,
+                                    listen: false)
+                                .isLtr;
 
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                if (splashProvider.configModel.socialMediaLink.length != null &&
-                                    splashProvider.configModel.socialMediaLink.length > 0)
+                                if (splashProvider
+                                            .configModel?.socialMediaLink !=
+                                        null &&
+                                    splashProvider.configModel!.socialMediaLink!
+                                        .isNotEmpty)
                                   Text(getTranslated('follow_us_on', context),
                                       style: rubikRegular.copyWith(
-                                          color: ColorResources.getGreyBunkerColor(context),
-                                          fontSize: Dimensions.FONT_SIZE_DEFAULT)),
-                                Container(
+                                          color:
+                                              ColorResources.getGreyBunkerColor(
+                                                  context),
+                                          fontSize:
+                                              Dimensions.FONT_SIZE_DEFAULT)),
+                                SizedBox(
                                   height: 50,
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
                                     shrinkWrap: true,
-                                    itemCount: splashProvider.configModel.socialMediaLink.length,
+                                    itemCount: (splashProvider
+                                                .configModel?.socialMediaLink ??
+                                            [])
+                                        .length,
                                     itemBuilder: (BuildContext context, index) {
-                                      String name = splashProvider.configModel.socialMediaLink[index].name;
-                                      String icon;
+                                      String? name = splashProvider.configModel
+                                          ?.socialMediaLink?[index].name;
+                                      String? icon;
                                       if (name == 'facebook') {
                                         icon = Images.facebook_icon;
                                       } else if (name == 'linkedin') {
@@ -169,22 +197,36 @@ class _FooterViewState extends State<FooterView> {
                                       } else if (name == 'pinterest') {
                                         icon = Images.pinterest;
                                       }
-                                      return splashProvider.configModel.socialMediaLink.length > 0
+                                      return (splashProvider.configModel
+                                                      ?.socialMediaLink ??
+                                                  [])
+                                              .isNotEmpty
                                           ? InkWell(
                                               onTap: () {
-                                                _launchURL(splashProvider.configModel.socialMediaLink[index].link);
+                                                _launchURL(splashProvider
+                                                    .configModel!
+                                                    .socialMediaLink![index]
+                                                    .link);
                                               },
                                               child: Padding(
                                                 padding: EdgeInsets.only(
-                                                    left: _isLtr && index == 0 ? 0 : 4,
-                                                    right: !_isLtr && index == 0 ? 0 : 4),
-                                                child: Image.asset(icon,
-                                                    height: Dimensions.PADDING_SIZE_EXTRA_LARGE,
-                                                    width: Dimensions.PADDING_SIZE_EXTRA_LARGE,
-                                                    fit: BoxFit.contain),
+                                                    left: isLtr && index == 0
+                                                        ? 0
+                                                        : 4,
+                                                    right: !isLtr && index == 0
+                                                        ? 0
+                                                        : 4),
+                                                child: icon != null
+                                                    ? Image.asset(icon,
+                                                        height: Dimensions
+                                                            .PADDING_SIZE_EXTRA_LARGE,
+                                                        width: Dimensions
+                                                            .PADDING_SIZE_EXTRA_LARGE,
+                                                        fit: BoxFit.contain)
+                                                    : const SizedBox(),
                                               ),
                                             )
-                                          : SizedBox();
+                                          : const SizedBox();
                                     },
                                   ),
                                 ),
@@ -193,157 +235,206 @@ class _FooterViewState extends State<FooterView> {
                           }),
                         ],
                       )),
-                  Provider.of<SplashProvider>(context, listen: false).configModel.playStoreConfig.status ||
-                          Provider.of<SplashProvider>(context, listen: false).configModel.appStoreConfig.status
-                      ? Expanded(
-                          flex: 4,
-                          child: Column(
-                            children: [
-                              const SizedBox(height: Dimensions.PADDING_SIZE_LARGE * 2),
-                              Text(
-                                  Provider.of<SplashProvider>(context, listen: false)
-                                              .configModel
-                                              .playStoreConfig
-                                              .status &&
-                                          Provider.of<SplashProvider>(context, listen: false)
-                                              .configModel
-                                              .appStoreConfig
-                                              .status
-                                      ? getTranslated('download_our_apps', context)
-                                      : getTranslated('download_our_app', context),
-                                  style: rubikBold.copyWith(
-                                      color: ColorResources.getGreyBunkerColor(context),
-                                      fontSize: Dimensions.FONT_SIZE_LARGE)),
-                              const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Provider.of<SplashProvider>(context, listen: false).configModel.playStoreConfig.status
-                                      ? InkWell(
+                  Consumer<SplashProvider>(builder: (_, provider, __) {
+                    final playstore =
+                        provider.configModel?.playStoreConfig?.status ?? false;
+                    final playstoreLink =
+                        provider.configModel?.playStoreConfig?.link;
+                    final appstore =
+                        provider.configModel?.appStoreConfig?.status ?? false;
+                    final appstoreLink =
+                        provider.configModel?.appStoreConfig?.link;
+                    return playstore || appstore
+                        ? Expanded(
+                            flex: 4,
+                            child: Column(
+                              children: [
+                                const SizedBox(
+                                    height: Dimensions.PADDING_SIZE_LARGE * 2),
+                                Text(
+                                    playstore && appstore
+                                        ? getTranslated(
+                                            'download_our_apps', context)
+                                        : getTranslated(
+                                            'download_our_app', context),
+                                    style: rubikBold.copyWith(
+                                        color:
+                                            ColorResources.getGreyBunkerColor(
+                                                context),
+                                        fontSize: Dimensions.FONT_SIZE_LARGE)),
+                                const SizedBox(
+                                    height: Dimensions.PADDING_SIZE_LARGE),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    if (playstore)
+                                      InkWell(
                                           onTap: () {
-                                            _launchURL(Provider.of<SplashProvider>(context, listen: false)
-                                                .configModel
-                                                .playStoreConfig
-                                                .link);
+                                            _launchURL(playstoreLink!);
                                           },
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                                            child: Image.asset(Images.play_store, height: 50, fit: BoxFit.contain),
-                                          ))
-                                      : SizedBox(),
-                                  Provider.of<SplashProvider>(context, listen: false).configModel.appStoreConfig.status
-                                      ? InkWell(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Image.asset(
+                                                Images.play_store,
+                                                height: 50,
+                                                fit: BoxFit.contain),
+                                          )),
+                                    if (appstore)
+                                      InkWell(
                                           onTap: () {
-                                            _launchURL(Provider.of<SplashProvider>(context, listen: false)
-                                                .configModel
-                                                .appStoreConfig
-                                                .link);
+                                            _launchURL(appstoreLink!);
                                           },
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                                            child: Image.asset(Images.app_store, height: 50, fit: BoxFit.contain),
-                                          ))
-                                      : SizedBox(),
-                                ],
-                              )
-                            ],
-                          ),
-                        )
-                      : SizedBox(),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Image.asset(Images.app_store,
+                                                height: 50,
+                                                fit: BoxFit.contain),
+                                          )),
+                                  ],
+                                )
+                              ],
+                            ),
+                          )
+                        : const SizedBox();
+                  }),
                   Expanded(
                       flex: 2,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: Dimensions.PADDING_SIZE_LARGE * 2),
+                          const SizedBox(
+                              height: Dimensions.PADDING_SIZE_LARGE * 2),
                           Text(getTranslated('my_account', context),
                               style: rubikBold.copyWith(
-                                  color: ColorResources.getGreyBunkerColor(context),
+                                  color: ColorResources.getGreyBunkerColor(
+                                      context),
                                   fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
                           const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                           OnHover(builder: (hovered) {
                             return InkWell(
                                 onTap: () {
-                                  if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
-                                    Navigator.pushNamed(context, Routes.getProfileRoute());
+                                  if (Provider.of<AuthProvider>(context,
+                                          listen: false)
+                                      .isLoggedIn()) {
+                                    Navigator.pushNamed(
+                                        context, Routes.getProfileRoute());
                                   } else {
-                                    Navigator.pushNamed(context, Routes.getLoginRoute());
+                                    Navigator.pushNamed(
+                                        context, Routes.getLoginRoute());
                                   }
                                 },
                                 child: Text(getTranslated('profile', context),
                                     style: hovered
-                                        ? rubikMedium.copyWith(color: Theme.of(context).primaryColor)
+                                        ? rubikMedium.copyWith(
+                                            color:
+                                                Theme.of(context).primaryColor)
                                         : rubikRegular.copyWith(
-                                            color: ColorResources.getGreyBunkerColor(context),
-                                            fontSize: Dimensions.FONT_SIZE_DEFAULT)));
+                                            color: ColorResources
+                                                .getGreyBunkerColor(context),
+                                            fontSize:
+                                                Dimensions.FONT_SIZE_DEFAULT)));
                           }),
                           const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                           OnHover(builder: (hovered) {
                             return InkWell(
                                 onTap: () {
-                                  if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
-                                    Navigator.pushNamed(context, Routes.getAddressRoute());
+                                  if (Provider.of<AuthProvider>(context,
+                                          listen: false)
+                                      .isLoggedIn()) {
+                                    Navigator.pushNamed(
+                                        context, Routes.getAddressRoute());
                                   } else {
-                                    Navigator.pushNamed(context, Routes.getLoginRoute());
+                                    Navigator.pushNamed(
+                                        context, Routes.getLoginRoute());
                                   }
                                 },
                                 child: Text(getTranslated('address', context),
                                     style: hovered
-                                        ? rubikMedium.copyWith(color: Theme.of(context).primaryColor)
+                                        ? rubikMedium.copyWith(
+                                            color:
+                                                Theme.of(context).primaryColor)
                                         : rubikRegular.copyWith(
-                                            color: ColorResources.getGreyBunkerColor(context),
-                                            fontSize: Dimensions.FONT_SIZE_DEFAULT)));
+                                            color: ColorResources
+                                                .getGreyBunkerColor(context),
+                                            fontSize:
+                                                Dimensions.FONT_SIZE_DEFAULT)));
                           }),
                           const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                           OnHover(builder: (hovered) {
                             return InkWell(
                                 onTap: () {
-                                  if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
-                                    Navigator.pushNamed(context, Routes.getCouponRoute());
+                                  if (Provider.of<AuthProvider>(context,
+                                          listen: false)
+                                      .isLoggedIn()) {
+                                    Navigator.pushNamed(
+                                        context, Routes.getCouponRoute());
                                   } else {
-                                    Navigator.pushNamed(context, Routes.getLoginRoute());
+                                    Navigator.pushNamed(
+                                        context, Routes.getLoginRoute());
                                   }
                                 },
                                 child: Text('Coupons',
                                     style: hovered
-                                        ? rubikMedium.copyWith(color: Theme.of(context).primaryColor)
+                                        ? rubikMedium.copyWith(
+                                            color:
+                                                Theme.of(context).primaryColor)
                                         : rubikRegular.copyWith(
-                                            color: ColorResources.getGreyBunkerColor(context),
-                                            fontSize: Dimensions.FONT_SIZE_DEFAULT)));
+                                            color: ColorResources
+                                                .getGreyBunkerColor(context),
+                                            fontSize:
+                                                Dimensions.FONT_SIZE_DEFAULT)));
                           }),
                           const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                           OnHover(builder: (hovered) {
                             return InkWell(
                                 onTap: () {
-                                  if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
-                                    Navigator.pushNamed(context, Routes.getPaymentsRoute());
+                                  if (Provider.of<AuthProvider>(context,
+                                          listen: false)
+                                      .isLoggedIn()) {
+                                    Navigator.pushNamed(
+                                        context, Routes.getPaymentsRoute());
                                   } else {
-                                    Navigator.pushNamed(context, Routes.getLoginRoute());
+                                    Navigator.pushNamed(
+                                        context, Routes.getLoginRoute());
                                   }
                                 },
                                 child: Text('Wallet',
                                     style: hovered
-                                        ? rubikMedium.copyWith(color: Theme.of(context).primaryColor)
+                                        ? rubikMedium.copyWith(
+                                            color:
+                                                Theme.of(context).primaryColor)
                                         : rubikRegular.copyWith(
-                                            color: ColorResources.getGreyBunkerColor(context),
-                                            fontSize: Dimensions.FONT_SIZE_DEFAULT)));
+                                            color: ColorResources
+                                                .getGreyBunkerColor(context),
+                                            fontSize:
+                                                Dimensions.FONT_SIZE_DEFAULT)));
                           }),
                           const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                           OnHover(builder: (hovered) {
                             return InkWell(
                                 onTap: () {
-                                  if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
-                                    Navigator.pushNamed(context, Routes.getDashboardRoute('order'));
+                                  if (Provider.of<AuthProvider>(context,
+                                          listen: false)
+                                      .isLoggedIn()) {
+                                    Navigator.pushNamed(context,
+                                        Routes.getDashboardRoute('order'));
                                   } else {
-                                    Navigator.pushNamed(context, Routes.getLoginRoute());
+                                    Navigator.pushNamed(
+                                        context, Routes.getLoginRoute());
                                   }
                                 },
                                 child: Text('Orders',
                                     style: hovered
-                                        ? rubikMedium.copyWith(color: Theme.of(context).primaryColor)
+                                        ? rubikMedium.copyWith(
+                                            color:
+                                                Theme.of(context).primaryColor)
                                         : rubikRegular.copyWith(
-                                            color: ColorResources.getGreyBunkerColor(context),
-                                            fontSize: Dimensions.FONT_SIZE_DEFAULT)));
+                                            color: ColorResources
+                                                .getGreyBunkerColor(context),
+                                            fontSize:
+                                                Dimensions.FONT_SIZE_DEFAULT)));
                           }),
                         ],
                       )),
@@ -352,80 +443,96 @@ class _FooterViewState extends State<FooterView> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: Dimensions.PADDING_SIZE_LARGE * 2),
+                          const SizedBox(
+                              height: Dimensions.PADDING_SIZE_LARGE * 2),
                           Text(getTranslated('quick_links', context),
                               style: rubikBold.copyWith(
-                                  color: ColorResources.getGreyBunkerColor(context),
+                                  color: ColorResources.getGreyBunkerColor(
+                                      context),
                                   fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
                           const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                           OnHover(builder: (hovered) {
                             return InkWell(
-                                onTap: () => Navigator.pushNamed(context, Routes.getSupportRoute()),
-                                child: Text(getTranslated('contact_us', context),
+                                onTap: () => Navigator.pushNamed(
+                                    context, Routes.getSupportRoute()),
+                                child: Text(
+                                    getTranslated('contact_us', context),
                                     style: hovered
-                                        ? rubikMedium.copyWith(color: Theme.of(context).primaryColor)
+                                        ? rubikMedium.copyWith(
+                                            color:
+                                                Theme.of(context).primaryColor)
                                         : rubikRegular.copyWith(
-                                            color: ColorResources.getGreyBunkerColor(context),
-                                            fontSize: Dimensions.FONT_SIZE_DEFAULT)));
+                                            color: ColorResources
+                                                .getGreyBunkerColor(context),
+                                            fontSize:
+                                                Dimensions.FONT_SIZE_DEFAULT)));
                           }),
                           const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                           OnHover(builder: (hovered) {
                             return InkWell(
-                                onTap: () => Navigator.pushNamed(context, Routes.getPolicyRoute()),
-                                child: Text(getTranslated('privacy_policy', context),
+                                onTap: () => Navigator.pushNamed(
+                                    context, Routes.getPolicyRoute()),
+                                child: Text(
+                                    getTranslated('privacy_policy', context),
                                     style: hovered
-                                        ? rubikMedium.copyWith(color: Theme.of(context).primaryColor)
+                                        ? rubikMedium.copyWith(
+                                            color:
+                                                Theme.of(context).primaryColor)
                                         : rubikRegular.copyWith(
-                                            color: ColorResources.getGreyBunkerColor(context),
-                                            fontSize: Dimensions.FONT_SIZE_DEFAULT)));
+                                            color: ColorResources
+                                                .getGreyBunkerColor(context),
+                                            fontSize:
+                                                Dimensions.FONT_SIZE_DEFAULT)));
                           }),
                           const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                           OnHover(builder: (hovered) {
                             return InkWell(
-                                onTap: () => Navigator.pushNamed(context, Routes.getTermsRoute()),
-                                child: Text(getTranslated('terms_and_condition', context),
+                                onTap: () => Navigator.pushNamed(
+                                    context, Routes.getTermsRoute()),
+                                child: Text(
+                                    getTranslated(
+                                        'terms_and_condition', context),
                                     style: hovered
-                                        ? rubikMedium.copyWith(color: Theme.of(context).primaryColor)
+                                        ? rubikMedium.copyWith(
+                                            color:
+                                                Theme.of(context).primaryColor)
                                         : rubikRegular.copyWith(
-                                            color: ColorResources.getGreyBunkerColor(context),
-                                            fontSize: Dimensions.FONT_SIZE_DEFAULT)));
+                                            color: ColorResources
+                                                .getGreyBunkerColor(context),
+                                            fontSize:
+                                                Dimensions.FONT_SIZE_DEFAULT)));
                           }),
                           const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                           OnHover(builder: (hovered) {
                             return InkWell(
-                                onTap: () => Navigator.pushNamed(context, Routes.getAboutUsRoute()),
+                                onTap: () => Navigator.pushNamed(
+                                    context, Routes.getAboutUsRoute()),
                                 child: Text(getTranslated('about_us', context),
                                     style: hovered
-                                        ? rubikMedium.copyWith(color: Theme.of(context).primaryColor)
+                                        ? rubikMedium.copyWith(
+                                            color:
+                                                Theme.of(context).primaryColor)
                                         : rubikRegular.copyWith(
-                                            color: ColorResources.getGreyBunkerColor(context),
-                                            fontSize: Dimensions.FONT_SIZE_DEFAULT)));
+                                            color: ColorResources
+                                                .getGreyBunkerColor(context),
+                                            fontSize:
+                                                Dimensions.FONT_SIZE_DEFAULT)));
                           }),
                         ],
                       )),
                 ],
               ),
             ),
-            Divider(thickness: .5),
-            //   SizedBox(
-            //   width: 500.0,
-            //   child: Text(
-            //       //Provider.of<SplashProvider>(context,listen: false).configModel.footerCopyright ??
-            //      // '${getTranslated('copyright', context)} ${Provider.of<SplashProvider>(context,listen: false).configModel.restaurantName}',
-            //       '${getTranslated('copyright', context)} ${Provider.of<SplashProvider>(context,listen: false).configModel.restaurantName}',
-            //       overflow: TextOverflow.ellipsis,maxLines: 1,textAlign: TextAlign.center),
-            // ),
+            const Divider(thickness: .5),
             SizedBox(
               width: 500.0,
               child: Text(
-                  //Provider.of<SplashProvider>(context,listen: false).configModel.footerCopyright ??
-                  // '${getTranslated('copyright', context)} ${Provider.of<SplashProvider>(context,listen: false).configModel.restaurantName}',
-                  '© 2023 ${Provider.of<SplashProvider>(context, listen: false).configModel.restaurantName}',
+                  '© 2023 ${Provider.of<SplashProvider>(context, listen: false).configModel?.restaurantName ?? F.appName}',
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   textAlign: TextAlign.center),
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT)
+            const SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT)
           ],
         ),
       ),

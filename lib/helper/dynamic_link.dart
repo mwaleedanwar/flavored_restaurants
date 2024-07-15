@@ -1,62 +1,59 @@
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../utill/routes.dart';
+class DynamicLinkHelp {
+  FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
 
-class DynamicLinkHelp{
-  FirebaseDynamicLinks dynamicLinks= FirebaseDynamicLinks.instance;
-
-  void inItDynamicLinkData(context,)async{
+  void inItDynamicLinkData(context) async {
     dynamicLinks.onLink.listen((dynamicLink) {
-      if(dynamicLink!=null){
-        handleUri(dynamicLink.link,context);
+      if (dynamicLink.android != null || dynamicLink.ios != null) {
+        handleUri(dynamicLink.link, context);
       }
-
-
-    }).onError((error){
-      print('onLink error');
-      print(error.message);
+    }).onError((error) {
+      debugPrint('onLink error');
+      debugPrint(error.message);
     });
   }
-  void handleUri(Uri uri,context)async{
-    List<String> separatedLikn=[];
-    separatedLikn.addAll(uri.path.split('/'));
-    Navigator.pushNamed(context, Routes.getLoginRoute());
-    //Navigator.pushNamed(context, Routes.getSignUpRoute(code));
 
+  void handleUri(Uri uri, context) async {
+    List<String> separatedLink = [];
+    separatedLink.addAll(uri.path.split('/'));
+    Navigator.pushNamed(context, Routes.getLoginRoute());
   }
-  buildDynamicLinks(String title,String code,String description,) async {
-    print('=dynamicm staet');
+
+  buildDynamicLinks(
+    String title,
+    String code,
+    String description,
+  ) async {
+    debugPrint('=dynamicm staet');
     String url = "http://Nopal Dos.page.link";
     final DynamicLinkParameters parameters = DynamicLinkParameters(
       uriPrefix: url,
       link: Uri.parse('$url/$code'),
-      androidParameters:const AndroidParameters(
+      androidParameters: const AndroidParameters(
         packageName: "com.nopal.app",
         minimumVersion: 0,
       ),
-
-      iosParameters:const IOSParameters(
+      iosParameters: const IOSParameters(
         bundleId: "com.nopal.app",
         minimumVersion: '0',
       ),
       socialMetaTagParameters: SocialMetaTagParameters(
-          description: 'Use This Coupon ${code}: ',
-          //imageUrl: Uri.parse("$image"),
-          title: title),
+        description: 'Use This Coupon $code: ',
+        title: title,
+      ),
     );
-    final ShortDynamicLink shortLink =
-    await dynamicLinks.buildShortLink(parameters);
+    final ShortDynamicLink shortLink = await dynamicLinks.buildShortLink(parameters);
 
-    String desc = '${shortLink.shortUrl.toString()}';
-    print('=dynamicm shet');
+    String desc = shortLink.shortUrl.toString();
+    debugPrint('=dynamicm shet');
 
-    await Share.share('Link:${desc}\n${description}', subject: title,);
-
+    await Share.share(
+      'Link:$desc\n$description',
+      subject: title,
+    );
   }
-
-
-
-
 }

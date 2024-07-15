@@ -10,10 +10,11 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/branch_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/main_common.dart';
+
 class ProductRepo {
   final HttpClient httpClient;
 
-  ProductRepo({@required this.httpClient});
+  ProductRepo({required this.httpClient});
 
   Future<ApiResponse> getLatestProductList(String offset, String languageCode) async {
     debugPrint('----getLatestProductList--');
@@ -22,7 +23,7 @@ class ProductRepo {
         '${AppConstants.LATEST_PRODUCT_URI}?limit=12&&offset=$offset&&restaurant_id=${F.restaurantId}',
         options: Options(headers: {'X-localization': languageCode}),
       );
-      print(languageCode);
+      debugPrint(languageCode);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       debugPrint('----getLatestProductList error :$e');
@@ -35,7 +36,7 @@ class ProductRepo {
     debugPrint('----getPointsProductList--');
     try {
       final response = await httpClient.get(
-        '${AppConstants.LOYALTY_POINTS_PRODUCTS}',
+        AppConstants.LOYALTY_POINTS_PRODUCTS,
       );
 
       return ApiResponse.withSuccess(response);
@@ -50,7 +51,7 @@ class ProductRepo {
     debugPrint('----getPointsProductList--');
     try {
       final response = await httpClient.get(
-        '${AppConstants.SPECIAL_OFFER_URL}',
+        AppConstants.SPECIAL_OFFER_URL,
       );
 
       return ApiResponse.withSuccess(response);
@@ -65,7 +66,7 @@ class ProductRepo {
     debugPrint('----getDealsList--');
     try {
       final response = await httpClient.get(
-        '${AppConstants.DEALS_URL}',
+        AppConstants.DEALS_URL,
       );
 
       return ApiResponse.withSuccess(response);
@@ -97,12 +98,9 @@ class ProductRepo {
       final response = await httpClient.get(
         '${AppConstants.RECOMMENDED_BARVAGES_URL}&branch_id=${Provider.of<BranchProvider>(Get.context, listen: false).branch}',
       );
-
       return ApiResponse.withSuccess(response);
     } catch (e) {
       debugPrint('----getRecommendedSideList error :$e');
-      // appToast(text: 'response:${e}');
-
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
@@ -134,22 +132,6 @@ class ProductRepo {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
-
-  // Future<ApiResponse> searchProduct(String productId, String languageCode) async {
-  //   debugPrint('----searchProduct--');
-  //
-  //   try {
-  //     final response = await httpClient.get(
-  //       '${AppConstants.SEARCH_PRODUCT_URI}$productId',
-  //       options: Options(headers: {'X-localization': languageCode}),
-  //     );
-  //     debugPrint('----searchProduct response: ${response}');
-  //
-  //     return ApiResponse.withSuccess(response);
-  //   } catch (e) {
-  //     return ApiResponse.withError(ApiErrorHandler.getMessage(e));
-  //   }
-  // }
 
   Future<ApiResponse> submitReview(ReviewBody reviewBody) async {
     try {

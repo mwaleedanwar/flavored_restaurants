@@ -4,7 +4,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 
 class ImageDialog extends StatelessWidget {
   final String imageUrl;
-  const ImageDialog({Key key, @required this.imageUrl}) : super(key: key);
+  const ImageDialog({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

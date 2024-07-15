@@ -11,20 +11,21 @@ import 'package:provider/provider.dart';
 
 class OrderView extends StatelessWidget {
   final bool isRunning;
-  OrderView({@required this.isRunning});
+  const OrderView({super.key, required this.isRunning});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<OrderProvider>(
         builder: (context, order, index) {
-          List<OrderModel> orderList;
+          List<OrderModel>? orderList;
           if (order.runningOrderList != null) {
-            orderList = isRunning ? order.runningOrderList.reversed.toList() : order.historyOrderList.reversed.toList();
+            orderList =
+                isRunning ? order.runningOrderList!.reversed.toList() : order.historyOrderList?.reversed.toList();
           }
 
           return orderList != null
-              ? orderList.length > 0
+              ? orderList.isNotEmpty
                   ? RefreshIndicator(
                       onRefresh: () async {
                         await Provider.of<OrderProvider>(context, listen: false).getOrderList(context);
@@ -32,7 +33,7 @@ class OrderView extends StatelessWidget {
                       backgroundColor: Theme.of(context).primaryColor,
                       child: Scrollbar(
                         child: SingleChildScrollView(
-                          physics: AlwaysScrollableScrollPhysics(),
+                          physics: const AlwaysScrollableScrollPhysics(),
                           child: Column(
                             children: [
                               Center(
@@ -45,35 +46,35 @@ class OrderView extends StatelessWidget {
                                     width: 1170,
                                     child: ResponsiveHelper.isDesktop(context)
                                         ? GridView.builder(
-                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                                 crossAxisCount: 2,
                                                 crossAxisSpacing: Dimensions.PADDING_SIZE_DEFAULT,
                                                 childAspectRatio: 3 / 1),
-                                            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                                            padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                                             itemCount: orderList.length,
-                                            physics: NeverScrollableScrollPhysics(),
+                                            physics: const NeverScrollableScrollPhysics(),
                                             shrinkWrap: true,
                                             itemBuilder: (context, index) => OrderItem(
                                                 orderProvider: order,
                                                 isRunning: isRunning,
-                                                orderItem: orderList[index]),
+                                                orderItem: orderList![index]),
                                           )
                                         : ListView.builder(
-                                            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                                            padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                                             itemCount: orderList.length,
-                                            physics: NeverScrollableScrollPhysics(),
+                                            physics: const NeverScrollableScrollPhysics(),
                                             shrinkWrap: true,
                                             itemBuilder: (context, index) => OrderItem(
                                                 orderProvider: order,
                                                 isRunning: isRunning,
-                                                orderItem: orderList[index]),
+                                                orderItem: orderList![index]),
                                           ),
                                   ),
                                 ),
                               ),
                               if (ResponsiveHelper.isDesktop(context))
-                                Padding(
-                                  padding: const EdgeInsets.only(top: Dimensions.PADDING_SIZE_DEFAULT),
+                                const Padding(
+                                  padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_DEFAULT),
                                   child: FooterView(),
                                 ),
                             ],
@@ -81,8 +82,8 @@ class OrderView extends StatelessWidget {
                         ),
                       ),
                     )
-                  : NoDataScreen(isOrder: true)
-              : OrderShimmer();
+                  : const NoDataScreen(isOrder: true)
+              : const OrderShimmer();
         },
       ),
     );

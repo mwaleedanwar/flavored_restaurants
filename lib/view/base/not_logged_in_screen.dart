@@ -11,9 +11,10 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/footer_view.dart';
 import '../../utill/color_resources.dart';
 
 class NotLoggedInScreen extends StatelessWidget {
+  const NotLoggedInScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -23,7 +24,9 @@ class NotLoggedInScreen extends StatelessWidget {
                 : const EdgeInsets.all(0),
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                  minHeight: !ResponsiveHelper.isDesktop(context) && _height < 600 ? _height : _height - 400),
+                  minHeight: !ResponsiveHelper.isDesktop(context) && MediaQuery.of(context).size.height < 600
+                      ? MediaQuery.of(context).size.height
+                      : MediaQuery.of(context).size.height - 400),
               child: Center(
                 child: Container(
                   decoration: ResponsiveHelper.isDesktop(context)
@@ -36,7 +39,7 @@ class NotLoggedInScreen extends StatelessWidget {
                                 blurRadius: 10,
                               )
                             ])
-                      : BoxDecoration(),
+                      : const BoxDecoration(),
                   child: Padding(
                     padding: EdgeInsets.all(ResponsiveHelper.isDesktop(context) ? 100 : 10),
                     child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -73,7 +76,7 @@ class NotLoggedInScreen extends StatelessWidget {
               ),
             ),
           ),
-          if (ResponsiveHelper.isDesktop(context)) FooterView(),
+          if (ResponsiveHelper.isDesktop(context)) const FooterView(),
         ],
       ),
     );

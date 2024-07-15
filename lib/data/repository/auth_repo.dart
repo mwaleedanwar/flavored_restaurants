@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/datasource/remote/dio/dio_client.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/datasource/remote/exception/api_error_handler.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/api_response.dart';
@@ -12,25 +10,20 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/signup_mod
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/social_login_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
 
 import 'package:http/http.dart' as http;
-
-import '../../utill/app_toast.dart';
-import '../../view/base/custom_snackbar.dart';
 
 class AuthRepo {
   final HttpClient httpClient;
   final SharedPreferences sharedPreferences;
 
-  AuthRepo({@required this.httpClient, @required this.sharedPreferences});
+  AuthRepo({required this.httpClient, required this.sharedPreferences});
 
   Future<ApiResponse> registration(SignUpModel signUpModel, context) async {
     try {
-      var url = AppConstants.REGISTER_URI;
-      debugPrint('---register url:${url}');
       http.Response response = await httpClient.post(
-        url,
+        AppConstants.REGISTER_URI,
         data: signUpModel.toJson(),
       );
       debugPrint('---register body:${signUpModel.toJson()}');
@@ -38,17 +31,19 @@ class AuthRepo {
       if (response.statusCode == 200) {
         return ApiResponse.withSuccess(response);
       } else {
-        showCustomSnackBar(jsonDecode(response.body)['errors'][0]['message'].toString(), context);
+        showCustomSnackBar(
+          (jsonDecode(response.body)?['errors']?[0]?['message']).toString(),
+          context,
+        );
 
         return ApiResponse.withError(ApiErrorHandler.getMessage(jsonDecode(response.body)['errors'][0]['message']));
       }
-      return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-  Future<ApiResponse> login({String email, String password}) async {
+  Future<ApiResponse> login({required String email, required String password}) async {
     try {
       var url = AppConstants.LOGIN_URI;
 
@@ -64,7 +59,7 @@ class AuthRepo {
     }
   }
 
-  Future<ApiResponse> verifyOtp({SignUpModel signUpModel}) async {
+  Future<ApiResponse> verifyOtp({required SignUpModel signUpModel}) async {
     try {
       var url = AppConstants.VERIFY_OTP_URI;
 
@@ -79,9 +74,7 @@ class AuthRepo {
     }
   }
 
-  Future<ApiResponse> sendOTp({
-    String phone,
-  }) async {
+  Future<ApiResponse> sendOTp({required String phone}) async {
     try {
       var url = AppConstants.SEND_OTP_URI;
 
@@ -99,7 +92,7 @@ class AuthRepo {
   Future<ApiResponse> updateToken() async {
     debugPrint('========updateToken called');
     try {
-      String _deviceToken = '@';
+      String deviceToken = '@';
 
       if (defaultTargetPlatform == TargetPlatform.iOS) {
         FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
@@ -113,23 +106,23 @@ class AuthRepo {
           sound: true,
         );
         if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-          _deviceToken = await _saveDeviceToken();
+          deviceToken = await _saveDeviceToken();
         }
       } else {
-        _deviceToken = await _saveDeviceToken();
+        deviceToken = await _saveDeviceToken();
       }
 
       if (!kIsWeb) {
         FirebaseMessaging.instance.subscribeToTopic(AppConstants.TOPIC);
       }
-      debugPrint('---app token  fb ${_deviceToken}');
+      debugPrint('---app token  fb $deviceToken');
       debugPrint('---app token  url ${AppConstants.TOKEN_URI}');
 
       http.Response response = await httpClient.post(
         AppConstants.TOKEN_URI,
         data: {
           "_method": "put",
-          "cm_firebase_token": _deviceToken,
+          "cm_firebase_token": deviceToken,
         },
       );
 
@@ -142,27 +135,27 @@ class AuthRepo {
   }
 
   Future<String> _saveDeviceToken() async {
-    print('-------- _saveDeviceToken---------- ');
+    debugPrint('-------- _saveDeviceToken---------- ');
 
-    String _deviceToken = '@';
+    String? deviceToken;
     try {
-      _deviceToken = await FirebaseMessaging.instance.getToken();
-      print('--------Device Token---------- ' + _deviceToken);
+      deviceToken = await FirebaseMessaging.instance.getToken();
+      debugPrint('--------Device Token---------- $deviceToken');
     } catch (error) {
-      print('error is: $error');
+      debugPrint('error is: $error');
     }
-    if (_deviceToken != null) {
-      print('--------Device Token---------- ' + _deviceToken);
+    if (deviceToken != null) {
+      debugPrint('--------Device Token---------- $deviceToken');
+      throw Exception('Null device token');
     }
-    print('--------Device Token---------- ' + _deviceToken);
+    debugPrint('--------Device Token---------- $deviceToken');
 
-    return _deviceToken;
+    return deviceToken!;
   }
 
   // for forgot password
   Future<ApiResponse> forgetPassword(String email) async {
     try {
-      //print({"email_or_phone": email});
       http.Response response = await httpClient.post(AppConstants.FORGET_PASSWORD_URI,
           data: {"email_or_phone": email, "email": email, "restaurant_id": F.restaurantId});
       return ApiResponse.withSuccess(response);
@@ -173,7 +166,7 @@ class AuthRepo {
 
   Future<ApiResponse> verifyToken(String email, String token) async {
     try {
-      print({"email_or_phone": email, "reset_token": token});
+      debugPrint({"email_or_phone": email, "reset_token": token}.toString());
       debugPrint('url for order track :${AppConstants.VERIFY_EMAIL_URI}');
 
       http.Response response = await httpClient
@@ -186,13 +179,13 @@ class AuthRepo {
 
   Future<ApiResponse> resetPassword(String mail, String resetToken, String password, String confirmPassword) async {
     try {
-      print({
+      debugPrint({
         "_method": "put",
         "reset_token": resetToken,
         "password": password,
         "confirm_password": confirmPassword,
         "email_or_phone": mail
-      });
+      }.toString());
       http.Response response = await httpClient.post(
         AppConstants.RESET_PASSWORD_URI,
         data: {
@@ -272,7 +265,7 @@ class AuthRepo {
           queryParameters: {"phone": phone.replaceAll(RegExp('[()\\-\\s]'), ''), "token": token},
           data: {'phone': phone.replaceAll(RegExp('[()\\-\\s]'), ''), 'token': token});
 
-      debugPrint('----${response}');
+      debugPrint('----$response');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -280,18 +273,16 @@ class AuthRepo {
   }
 
   // for  user token
-  Future<void> saveUserToken(String token) async {
+  Future<void> saveUserToken(String? token) async {
     httpClient.token = token;
     //httpClient.dio.options.headers = {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer $token'};
 
-    try {
-      print('----setting token');
+    if (token != null) {
+      debugPrint('----setting token');
       await sharedPreferences.setString(AppConstants.TOKEN, token);
-      print('----done token');
-    } catch (e) {
-      print('----setting token error');
-
-      throw e;
+      debugPrint('----done token');
+    } else {
+      debugPrint('----setting token error');
     }
   }
 
@@ -325,7 +316,7 @@ class AuthRepo {
       await sharedPreferences.setString(AppConstants.USER_PASSWORD, password);
       await sharedPreferences.setString(AppConstants.USER_NUMBER, number);
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
@@ -352,16 +343,16 @@ class AuthRepo {
   }
 
   Future<ApiResponse> socialLogin(SocialLoginModel socialLogin) async {
-    print('------social login -- > ${socialLogin.toJson()}');
-    print('------social gmail -- > ${socialLogin.email}');
-    print('------social body -- > ${socialLogin}');
+    debugPrint('------social login -- > ${socialLogin.toJson()}');
+    debugPrint('------social gmail -- > ${socialLogin.email}');
+    debugPrint('------social body -- > $socialLogin');
 
     try {
       http.Response response = await httpClient.post(
         AppConstants.SOCIAL_LOGIN,
         data: socialLogin.toJson(),
       );
-      print('------social login response-- > ${response}');
+      debugPrint('------social login response-- > $response');
 
       return ApiResponse.withSuccess(response);
     } catch (e) {

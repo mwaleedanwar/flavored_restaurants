@@ -5,7 +5,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/repository/language_repo.
 class LanguageProvider with ChangeNotifier {
   final LanguageRepo languageRepo;
 
-  LanguageProvider({this.languageRepo});
+  LanguageProvider({required this.languageRepo});
 
   int _selectIndex = 0;
 
@@ -20,27 +20,27 @@ class LanguageProvider with ChangeNotifier {
 
   List<LanguageModel> get languages => _languages;
 
-  void searchLanguage(String query, BuildContext context) {
+  void searchLanguage(String query) {
     if (query.isEmpty) {
       _languages.clear();
-      _languages = languageRepo.getAllLanguages(context: context);
+      _languages = languageRepo.getAllLanguages;
       notifyListeners();
     } else {
       _selectIndex = -1;
       _languages = [];
-      languageRepo.getAllLanguages(context: context).forEach((product) async {
+      for (var product in languageRepo.getAllLanguages) {
         if (product.languageName.toLowerCase().contains(query.toLowerCase())) {
           _languages.add(product);
         }
-      });
+      }
       notifyListeners();
     }
   }
 
   void initializeAllLanguages(BuildContext context) {
-    if (_languages.length == 0) {
+    if (_languages.isEmpty) {
       _languages.clear();
-      _languages = languageRepo.getAllLanguages(context: context);
+      _languages = languageRepo.getAllLanguages;
     }
   }
 }

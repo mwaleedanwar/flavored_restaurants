@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
+
 class MarqueeWidget extends StatefulWidget {
   final Widget child;
   final Axis direction;
   final Duration animationDuration, backDuration, pauseDuration;
 
   const MarqueeWidget({
-    Key key,
-    @required this.child,
+    super.key,
+    required this.child,
     this.direction = Axis.horizontal,
     this.animationDuration = const Duration(milliseconds: 30000),
     this.backDuration = const Duration(milliseconds: 30000),
     this.pauseDuration = const Duration(milliseconds: 500),
-  }) : super(key: key);
+  });
 
   @override
-  _MarqueeWidgetState createState() => _MarqueeWidgetState();
+  State<MarqueeWidget> createState() => _MarqueeWidgetState();
 }
 
 class _MarqueeWidgetState extends State<MarqueeWidget> {
-   ScrollController scrollController;
+  ScrollController scrollController = ScrollController(initialScrollOffset: 50.0);
 
   @override
   void initState() {
-    scrollController = ScrollController(initialScrollOffset: 50.0);
     WidgetsBinding.instance.addPostFrameCallback(scroll);
     super.initState();
   }
@@ -36,9 +36,9 @@ class _MarqueeWidgetState extends State<MarqueeWidget> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: widget.child,
       scrollDirection: widget.direction,
       controller: scrollController,
+      child: widget.child,
     );
   }
 

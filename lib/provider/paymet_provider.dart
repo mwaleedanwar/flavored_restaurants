@@ -1,7 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/PaymentCardModel.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/payment_card_model.dart';
 
 import '../data/model/response/base/api_response.dart';
 import '../data/model/response/base/error_response.dart';
@@ -12,10 +14,10 @@ import '../helper/api_checker.dart';
 class PaymentProvider with ChangeNotifier {
   PaymentRepo paymentRepo;
 
-  PaymentProvider({@required this.paymentRepo});
+  PaymentProvider({required this.paymentRepo});
 
-  List<PyamentCardModel> _cardsList;
-  PyamentCardModel _defaultCard;
+  List<PyamentCardModel>? _cardsList;
+  PyamentCardModel? _defaultCard;
 
   bool _isLoading = false;
 
@@ -24,24 +26,24 @@ class PaymentProvider with ChangeNotifier {
 
   String get errorMessage => _errorMessage;
 
-  PyamentCardModel get defaultCard => _defaultCard;
+  PyamentCardModel? get defaultCard => _defaultCard;
 
-  List<PyamentCardModel> get cardsList => _cardsList;
+  List<PyamentCardModel>? get cardsList => _cardsList;
 
   getCardsList(BuildContext context) async {
     _isLoading = true;
     ApiResponse apiResponse = await paymentRepo.getAllCard();
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       _isLoading = false;
       _cardsList = [];
 
-      jsonDecode(apiResponse.response.body).forEach((address) => _cardsList.add(PyamentCardModel.fromJson(address)));
-      if (_cardsList.isNotEmpty) {
-        _defaultCard = _cardsList.where((element) => element.defaultCard == '1').toList()[0];
+      jsonDecode(apiResponse.response!.body).forEach((address) => _cardsList!.add(PyamentCardModel.fromJson(address)));
+      if (_cardsList!.isNotEmpty) {
+        _defaultCard = _cardsList!.where((element) => element.defaultCard == '1').toList()[0];
       } else {
         _defaultCard = null;
       }
-      print('==card list:${_cardsList.length}');
+      debugPrint('==card list:${_cardsList!.length}');
     } else {
       _isLoading = false;
       ApiChecker.checkApi(context, apiResponse);
@@ -58,7 +60,7 @@ class PaymentProvider with ChangeNotifier {
     ApiResponse apiResponse = await paymentRepo.addCard(cardModel);
     _isLoading = false;
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       debugPrint('======card success');
 
       //Map map = jsonDecode(apiResponse.response.body);
@@ -73,12 +75,12 @@ class PaymentProvider with ChangeNotifier {
       debugPrint('======card error');
       String errorMessage = apiResponse.error.toString();
       if (apiResponse.error is String) {
-        print(apiResponse.error.toString());
+        debugPrint(apiResponse.error.toString());
         errorMessage = apiResponse.error.toString();
       } else {
         ErrorResponse errorResponse = apiResponse.error;
-        print(errorResponse.errors[0].message);
-        errorMessage = errorResponse.errors[0].message;
+        debugPrint(errorResponse.errors?.first.message);
+        errorMessage = errorResponse.errors?.first.message ?? 'UNKNOWN ERROR ADDING CARD';
       }
       responseModel = ResponseModel(false, errorMessage);
       _errorMessage = errorMessage;
@@ -95,7 +97,7 @@ class PaymentProvider with ChangeNotifier {
     ApiResponse apiResponse = await paymentRepo.setCardDefault(id);
     _isLoading = false;
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       debugPrint('======card default success');
 
       //  Map map = jsonDecode(apiResponse.response.body);
@@ -111,12 +113,12 @@ class PaymentProvider with ChangeNotifier {
       debugPrint('======card error');
       String errorMessage = apiResponse.error.toString();
       if (apiResponse.error is String) {
-        print(apiResponse.error.toString());
+        debugPrint(apiResponse.error.toString());
         errorMessage = apiResponse.error.toString();
       } else {
         ErrorResponse errorResponse = apiResponse.error;
-        print(errorResponse.errors[0].message);
-        errorMessage = errorResponse.errors[0].message;
+        debugPrint(errorResponse.errors?.first.message);
+        errorMessage = errorResponse.errors?.first.message ?? 'UNKNOWN ERROR SETTING DEFAULT CARD';
       }
       responseModel = ResponseModel(false, errorMessage);
       _errorMessage = errorMessage;
@@ -133,7 +135,7 @@ class PaymentProvider with ChangeNotifier {
     ApiResponse apiResponse = await paymentRepo.removeCRD(id);
     _isLoading = false;
     ResponseModel responseModel;
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       debugPrint('======card default success');
 
       //  Map map = jsonDecode(apiResponse.response.body);
@@ -149,12 +151,12 @@ class PaymentProvider with ChangeNotifier {
       debugPrint('======card error');
       String errorMessage = apiResponse.error.toString();
       if (apiResponse.error is String) {
-        print(apiResponse.error.toString());
+        debugPrint(apiResponse.error.toString());
         errorMessage = apiResponse.error.toString();
       } else {
         ErrorResponse errorResponse = apiResponse.error;
-        print(errorResponse.errors[0].message);
-        errorMessage = errorResponse.errors[0].message;
+        debugPrint(errorResponse.errors?.first.message);
+        errorMessage = errorResponse.errors?.first.message ?? 'UNKOWN ERROR REMOVING CARD';
       }
       responseModel = ResponseModel(false, errorMessage);
       _errorMessage = errorMessage;

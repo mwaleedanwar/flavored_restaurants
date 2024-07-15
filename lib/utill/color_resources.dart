@@ -1,30 +1,32 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class ColorResources {
   static Color getGreyColor(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? Color(0xFF6f7275) : Color(0xFFA0A4A8);
+    return Provider.of<ThemeProvider>(context).darkTheme ? const Color(0xFF6f7275) : const Color(0xFFA0A4A8);
   }
 
   static Color getGrayColor(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? Color(0xFF919191) : Color(0xFF6E6E6E);
+    return Provider.of<ThemeProvider>(context).darkTheme ? const Color(0xFF919191) : const Color(0xFF6E6E6E);
   }
 
   static Color getSearchBg(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? Color(0xFF585a5c) : Color(0xFFF4F7FC);
+    return Provider.of<ThemeProvider>(context).darkTheme ? const Color(0xFF585a5c) : const Color(0xFFF4F7FC);
   }
 
   static Color getBackgroundColor(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? Color(0xFF343636) : Color(0xFFF4F7FC);
+    return Provider.of<ThemeProvider>(context).darkTheme ? const Color(0xFF343636) : const Color(0xFFF4F7FC);
   }
 
   static Color getHintColor(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? Color(0xFF98a1ab) : Color(0xFF52575C);
+    return Provider.of<ThemeProvider>(context).darkTheme ? const Color(0xFF98a1ab) : const Color(0xFF52575C);
   }
 
   static Color getGreyBunkerColor(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? Color(0xFFE4E8EC) : Color(0xFF25282B);
+    return Provider.of<ThemeProvider>(context).darkTheme ? const Color(0xFFE4E8EC) : const Color(0xFF25282B);
   }
 
   static Color getWhiteAndBlack(BuildContext context) {
@@ -36,23 +38,23 @@ class ColorResources {
   }
 
   static Color getCartTitleColor(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? Color(0xFFFFFFFF) : Color(0xFF000743);
+    return Provider.of<ThemeProvider>(context).darkTheme ? const Color(0xFFFFFFFF) : const Color(0xFF000743);
   }
 
   static Color getCartColor(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? Color(0xFF494949) : Color(0xFFFFFFFF);
+    return Provider.of<ThemeProvider>(context).darkTheme ? const Color(0xFF494949) : const Color(0xFFFFFFFF);
   }
 
   static Color getCategoryHoverColor(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? Color(0xFF6490ee) : Color(0xFFC5DCFA);
+    return Provider.of<ThemeProvider>(context).darkTheme ? const Color(0xFF6490ee) : const Color(0xFFC5DCFA);
   }
 
   static Color getHomeSearchBarColor(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? Color(0xFFb2b8bd) : Color(0xFFE4EAEF);
+    return Provider.of<ThemeProvider>(context).darkTheme ? const Color(0xFFb2b8bd) : const Color(0xFFE4EAEF);
   }
 
   static Color getTextTitleColor(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? Color(0xFFFFFFFF) : Color(0xFF000000);
+    return Provider.of<ThemeProvider>(context).darkTheme ? const Color(0xFFFFFFFF) : const Color(0xFF000000);
   }
 
   static Color getProfileMenuHeaderColor(BuildContext context) {
@@ -60,11 +62,11 @@ class ColorResources {
   }
 
   static Color getFooterColor(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? Color(0xFF494949) : Color(0xFFFFDDD9);
+    return Provider.of<ThemeProvider>(context).darkTheme ? const Color(0xFF494949) : const Color(0xFFFFDDD9);
   }
 
   static Color getChatAdminColor(BuildContext context) {
-    return Provider.of<ThemeProvider>(context).darkTheme ? Color(0xFFa1916c) : Color(0xFFFFDDD9);
+    return Provider.of<ThemeProvider>(context).darkTheme ? const Color(0xFFa1916c) : const Color(0xFFFFDDD9);
   }
 
   static const Color COLOR_GREY = Color(0xFFA0A4A8);

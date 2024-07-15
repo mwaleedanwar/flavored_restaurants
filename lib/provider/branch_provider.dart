@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/config_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/repository/splash_repo.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/helper/screen_barrel.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/home_screen.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -11,12 +11,12 @@ import 'package:get/get.dart';
 class BranchProvider extends ChangeNotifier {
   final SplashRepo splashRepo;
 
-  BranchProvider({@required this.splashRepo});
+  BranchProvider({required this.splashRepo});
 
-  int _selectedBranchId;
-  int branch;
+  int? _selectedBranchId;
+  int? branch;
 
-  int get selectedBranchId => _selectedBranchId;
+  int? get selectedBranchId => _selectedBranchId;
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
@@ -31,7 +31,7 @@ class BranchProvider extends ChangeNotifier {
     }
   }
 
-  void updateBranchId(int value, {bool isUpdate = true}) {
+  void updateBranchId(int? value, {bool isUpdate = true}) {
     _selectedBranchId = value;
     branch = value;
 
@@ -52,51 +52,49 @@ class BranchProvider extends ChangeNotifier {
 
     await splashRepo.setBranchId(id);
 
-    await HomeScreen.loadData(true);
     notifyListeners();
   }
 
-  Branches getBranch({int id}) {
-    int branchId = id != null ? id : getBranchId();
-    print('===erro: branch:$branchId');
+  Branches? getBranch(context, {int? id}) {
+    int branchId = id ?? getBranchId();
+    debugPrint('===erro: branch:$branchId');
 
-    Branches branch;
-    ConfigModel _config = Provider.of<SplashProvider>(Get.context, listen: false).configModel;
-    if (_config.branches != null && _config.branches.length > 0) {
+    Branches? branch;
+    ConfigModel? config = Provider.of<SplashProvider>(context, listen: false).configModel;
+    if (config?.branches != null && config!.branches!.isNotEmpty) {
       try {
-        branch = _config.branches.firstWhere((branch) => branch.id == branchId, orElse: null);
+        branch = config.branches!.firstWhere((branch) => branch.id == branchId);
       } catch (e) {
-        print('===erro: branch');
-        branch = _config.branches[0];
-        splashRepo.setBranchId(_config.branches[0].id);
+        debugPrint('===error: branch');
+        branch = config.branches![0];
+        splashRepo.setBranchId(config.branches![0].id);
       }
     }
     return branch;
   }
 
-  List<BranchValue> branchSort(LatLng currentLatLng) {
+  List<BranchValue> branchSort(LatLng? currentLatLng) {
     _isLoading = true;
-    List<BranchValue> _branchValueList = [];
+    List<BranchValue> branchValueList = [];
 
-    Provider.of<SplashProvider>(Get.context, listen: false).configModel.branches.forEach((_branch) {
-      double _distance = -1;
+    for (var branch in Provider.of<SplashProvider>(Get.context!, listen: false).configModel!.branches!) {
+      double distance = -1;
       if (currentLatLng != null) {
-        _distance = Geolocator.distanceBetween(
-              double.parse(_branch.latitude),
-              double.parse(_branch.longitude),
+        distance = Geolocator.distanceBetween(
+              double.parse(branch.latitude),
+              double.parse(branch.longitude),
               currentLatLng.latitude,
               currentLatLng.longitude,
             ) /
             1000;
       }
-
-      _branchValueList.add(BranchValue(_branch, _distance));
-    });
-    _branchValueList.sort((a, b) => a.distance.compareTo(b.distance));
+      branchValueList.add(BranchValue(branch, distance));
+    }
+    branchValueList.sort((a, b) => a.distance.compareTo(b.distance));
 
     _isLoading = false;
     notifyListeners();
 
-    return _branchValueList;
+    return branchValueList;
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -9,25 +11,26 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/helper/api_checker.dart';
 class SetMenuProvider extends ChangeNotifier {
   final SetMenuRepo setMenuRepo;
 
-  SetMenuProvider({@required this.setMenuRepo});
+  SetMenuProvider({required this.setMenuRepo});
 
-  List<Product> _setMenuList;
-  int _currentIndex = 0;
+  List<Product>? _setMenuList;
   bool _pageFirstIndex = true;
   bool _pageLastIndex = false;
 
   bool get pageFirstIndex => _pageFirstIndex;
   bool get pageLastIndex => _pageLastIndex;
 
-  List<Product> get setMenuList => _setMenuList;
-  int get getCurrentIndex => _currentIndex;
+  List<Product>? get setMenuList => _setMenuList;
 
-  Future<void> getSetMenuList(BuildContext context, bool reload, String languageCode) async {
+  Future<void> getSetMenuList(
+      BuildContext context, bool reload, String languageCode) async {
     if (setMenuList == null || reload) {
       ApiResponse apiResponse = await setMenuRepo.getSetMenuList(languageCode);
-      if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+      if (apiResponse.response != null &&
+          apiResponse.response!.statusCode == 200) {
         _setMenuList = [];
-        jsonDecode(apiResponse.response.body).forEach((setMenu) => _setMenuList.add(Product.fromJson(setMenu)));
+        jsonDecode(apiResponse.response!.body)
+            .forEach((setMenu) => _setMenuList!.add(Product.fromJson(setMenu)));
       } else {
         ApiChecker.checkApi(context, apiResponse);
       }

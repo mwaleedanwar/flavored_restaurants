@@ -1,7 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/order_details_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/order_model.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/price_converter.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
@@ -15,16 +16,16 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_divider.dart'
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/footer_view.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 import 'package:provider/provider.dart';
-import 'widget/buttonView.dart';
+import 'widget/button_view.dart';
 import 'widget/details_view.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
-  final OrderModel orderModel;
-  final int orderId;
-  OrderDetailsScreen({@required this.orderModel, @required this.orderId});
+  final OrderModel? orderModel;
+  final int? orderId;
+  const OrderDetailsScreen({super.key, required this.orderModel, required this.orderId});
 
   @override
-  _OrderDetailsScreenState createState() => _OrderDetailsScreenState();
+  State<OrderDetailsScreen> createState() => _OrderDetailsScreenState();
 }
 
 class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
@@ -49,64 +50,53 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double _width = MediaQuery.of(context).size.width;
-    final _height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return Scaffold(
       key: _scaffold,
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : CustomAppBar(context: context, title: getTranslated('order_details', context)),
       body: Consumer<OrderProvider>(
         builder: (context, order, child) {
           double deliveryCharge = 0;
-          double _itemsPrice = 0;
-          double _discount = 0;
-          double _tax = 0;
-          double _tip = 0;
-          double _addOns = 0;
-          double _extraDiscount = 0;
+          double itemsPrice = 0;
+          double discount = 0;
+          double tax = 0;
+          double tip = 0;
+          double addOns = 0;
+          double extraDiscount = 0;
           try {
             if (order.orderDetails != null) {
-              if (order.trackModel.orderType == 'delivery') {
-                deliveryCharge = order.trackModel.deliveryCharge;
+              if (order.trackModel?.orderType == 'delivery') {
+                deliveryCharge = order.trackModel!.deliveryCharge;
               }
-              _tax = order.orderDetails[0].order.totalTaxAmount;
-              _tip = order.orderDetails[0].order.orderTip;
-              for (OrderDetailsModel orderDetails in order.orderDetails) {
-                // _addonsIds.forEach((_id) {
-                //   for(AddOns addOn in _addonsData) {
-                //
-                //     if(_id == addOn.id) {
-                //       _addOns = _addOns + (addOn.price * orderDetails.addOnQtys[_index]);
-                //       _index++;
-                //     }
-                //   }
-                //
-                // });
+              tax = order.orderDetails![0].order.totalTaxAmount;
+              tip = order.orderDetails![0].order.orderTip;
+              for (OrderDetailsModel orderDetails in order.orderDetails ?? []) {
+                itemsPrice = itemsPrice + (orderDetails.price * orderDetails.quantity);
+                debugPrint('===item price:$itemsPrice');
+                debugPrint('===order tio:$tip');
 
-                _itemsPrice = _itemsPrice + (orderDetails.price * orderDetails.quantity);
-                print('===item price:${_itemsPrice}');
-                print('===order tio:${_tip}');
-
-                _discount = _discount + (orderDetails.discountOnProduct * orderDetails.quantity);
+                discount = discount + (orderDetails.discountOnProduct * orderDetails.quantity);
                 // _tax = _tax + (orderDetails.taxAmount * orderDetails.quantity);
               }
             }
           } catch (e) {
-            print('order type $e');
+            debugPrint('order type $e');
           }
-          if (order.trackModel != null && order.trackModel.extraDiscount != null) {
-            _extraDiscount = order.trackModel.extraDiscount ?? 0.0;
+          if (order.trackModel != null && order.trackModel!.extraDiscount != null) {
+            extraDiscount = order.trackModel!.extraDiscount ?? 0.0;
           }
-          double _subTotal = _itemsPrice + _tax + _addOns + _tip;
-          double _total = _itemsPrice +
-              _addOns -
-              _discount -
-              _extraDiscount +
-              _tax +
-              _tip +
+          double subTotal = itemsPrice + tax + addOns + tip;
+          double total = itemsPrice +
+              addOns -
+              discount -
+              extraDiscount +
+              tax +
+              tip +
               deliveryCharge -
-              (order.trackModel != null ? order.trackModel.couponDiscountAmount : 0);
+              (order.trackModel != null ? order.trackModel!.couponDiscountAmount : 0);
 
           return order.orderDetails != null && order.trackModel != null
               ? ResponsiveHelper.isDesktop(context)
@@ -115,13 +105,12 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                         children: [
                           ConstrainedBox(
                             constraints: BoxConstraints(
-                              minHeight:
-                                  !ResponsiveHelper.isDesktop(context) && _height < 600 ? _height : _height - 400,
+                              minHeight: !ResponsiveHelper.isDesktop(context) && height < 600 ? height : height - 400,
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Center(
-                                child: Container(
+                                child: SizedBox(
                                   width: 1170,
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,38 +118,40 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
-                                          width: _width > 700 ? 700 : _width,
-                                          padding:
-                                              _width > 700 ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
-                                          decoration: _width > 700
+                                          width: width > 700 ? 700 : width,
+                                          padding: width > 700
+                                              ? const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT)
+                                              : null,
+                                          decoration: width > 700
                                               ? BoxDecoration(
                                                   color: Theme.of(context).cardColor,
                                                   borderRadius: BorderRadius.circular(10),
                                                   boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.grey[300],
+                                                      color: Colors.grey.shade300,
                                                       blurRadius: 5,
                                                       spreadRadius: 1,
                                                     )
                                                   ],
                                                 )
                                               : null,
-                                          child: DetailsView(),
+                                          child: const DetailsView(),
                                         ),
                                       ),
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
                                           width: 400,
-                                          padding:
-                                              _width > 700 ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
-                                          decoration: _width > 700
+                                          padding: width > 700
+                                              ? const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT)
+                                              : null,
+                                          decoration: width > 700
                                               ? BoxDecoration(
                                                   color: Theme.of(context).cardColor,
                                                   borderRadius: BorderRadius.circular(10),
                                                   boxShadow: [
                                                     BoxShadow(
-                                                      color: Colors.grey[300],
+                                                      color: Colors.grey.shade300,
                                                       blurRadius: 5,
                                                       spreadRadius: 1,
                                                     )
@@ -169,16 +160,16 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                               : null,
                                           child: _amountView(
                                             context,
-                                            _itemsPrice,
-                                            _tax,
-                                            _tip,
-                                            _addOns,
-                                            _subTotal,
-                                            _discount,
+                                            itemsPrice,
+                                            tax,
+                                            tip,
+                                            addOns,
+                                            subTotal,
+                                            discount,
                                             order,
-                                            _extraDiscount,
+                                            extraDiscount,
                                             deliveryCharge,
-                                            _total,
+                                            total,
                                           ),
                                         ),
                                       )
@@ -188,7 +179,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                               ),
                             ),
                           ),
-                          ResponsiveHelper.isDesktop(context) ? FooterView() : SizedBox()
+                          ResponsiveHelper.isDesktop(context) ? const FooterView() : const SizedBox()
                         ],
                       ),
                     )
@@ -196,28 +187,28 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       children: [
                         Expanded(
                           child: Padding(
-                            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
+                            padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
                             child: SingleChildScrollView(
                               child: Column(children: [
-                                DetailsView(),
+                                const DetailsView(),
                                 _amountView(
                                   context,
-                                  _itemsPrice,
-                                  _tax,
-                                  _tip,
-                                  _addOns,
-                                  _subTotal,
-                                  _discount,
+                                  itemsPrice,
+                                  tax,
+                                  tip,
+                                  addOns,
+                                  subTotal,
+                                  discount,
                                   order,
-                                  _extraDiscount,
+                                  extraDiscount,
                                   deliveryCharge,
-                                  _total,
+                                  total,
                                 ),
                               ]),
                             ),
                           ),
                         ),
-                        ButtonView(),
+                        const ButtonView(),
                       ],
                     )
               : Center(
@@ -231,16 +222,16 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
 
   Widget _amountView(
     BuildContext context,
-    double _itemsPrice,
-    double _tax,
-    double _tip,
-    double _addOns,
-    double _subTotal,
-    double _discount,
+    double itemsPrice,
+    double tax,
+    double tip,
+    double addOns,
+    double subTotal,
+    double discount,
     OrderProvider order,
-    double _extraDiscount,
+    double extraDiscount,
     double deliveryCharge,
-    double _total,
+    double total,
   ) {
     return Column(
       children: [
@@ -248,35 +239,35 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(getTranslated('items_price', context),
               style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
-          Text(PriceConverter.convertPrice(context, _itemsPrice),
+          Text(PriceConverter.convertPrice(context, itemsPrice),
               style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
         ]),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
 
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text('Fee & Estimated Tax', style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
-          Text('${PriceConverter.convertPrice(context, _tax)}',
+          Text(PriceConverter.convertPrice(context, tax),
               style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
         ]),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
 
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text('Staff Tip', style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
-          Text('${PriceConverter.convertPrice(context, _tip)}',
+          Text(PriceConverter.convertPrice(context, tip),
               style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
         ]),
 
-        Padding(
+        const Padding(
           padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
           child: CustomDivider(),
         ),
 
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text(getTranslated('subtotal', context), style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
-          Text(PriceConverter.convertPrice(context, _subTotal),
+          Text(PriceConverter.convertPrice(context, subTotal),
               style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
         ]),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
 
         // Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         //   Text(getTranslated('discount', context), style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
@@ -310,7 +301,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
         ]),
 
-        Padding(
+        const Padding(
           padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
           child: CustomDivider(),
         ),
@@ -322,13 +313,13 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 color: Theme.of(context).primaryColor,
               )),
           Text(
-            PriceConverter.convertPrice(context, _total),
+            PriceConverter.convertPrice(context, total),
             style:
                 rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE, color: Theme.of(context).primaryColor),
           ),
         ]),
 
-        if (ResponsiveHelper.isDesktop(context)) ButtonView(),
+        if (ResponsiveHelper.isDesktop(context)) const ButtonView(),
       ],
     );
   }

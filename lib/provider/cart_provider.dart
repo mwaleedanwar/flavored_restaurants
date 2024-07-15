@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/cart_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/deals_data_model.dart';
@@ -9,11 +7,11 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/repository/cart_repo.dart
 
 class CartProvider extends ChangeNotifier {
   final CartRepo cartRepo;
-  CartProvider({@required this.cartRepo});
+  CartProvider({required this.cartRepo});
 
   List<CartModel> _cartList = [];
   List<CateringCartModel> _cateringList = [];
-  List<DealCartModel> _dealsList = [];
+  final List<DealCartModel> _dealsList = [];
   List<HappyHoursCartModel> _happyHoursList = [];
   double _amount = 0.0;
   double taxFee = 0.0;
@@ -32,16 +30,16 @@ class CartProvider extends ChangeNotifier {
   void getCartData() {
     _cartList = [];
     _cartList.addAll(cartRepo.getCartList());
-    _cartList.forEach((cart) {
+    for (var cart in _cartList) {
       _amount = _amount + (cart.discountedPrice * cart.quantity);
-    });
+    }
   }
 
   void setFalse() {
     _isFromCategory = false;
   }
 
-  void addToCart(CartModel cartModel, int index) {
+  void addToCart(CartModel cartModel, int? index) {
     _isFromCategory = true;
     if (index != null && index != -1) {
       _cartList[index].quantity += cartModel.quantity;
@@ -52,7 +50,7 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addCateringToCart(CateringCartModel catering, int index) {
+  void addCateringToCart(CateringCartModel catering, int? index) {
     if (index != null && index != -1) {
       _cateringList.replaceRange(index, index + 1, [catering]);
     } else {
@@ -62,7 +60,7 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addDealToCart(DealCartModel dealCartModel, int index) {
+  void addDealToCart(DealCartModel dealCartModel, int? index) {
     if (index != null && index != -1) {
       _dealsList.replaceRange(index, index + 1, [dealCartModel]);
     } else {
@@ -72,7 +70,7 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addHappyHoursToCart(HappyHoursCartModel offerProduct, int index) {
+  void addHappyHoursToCart(HappyHoursCartModel offerProduct, int? index) {
     if (index != null && index != -1) {
       _happyHoursList.replaceRange(index, index + 1, [offerProduct]);
     } else {
@@ -82,20 +80,20 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setQuantity(
-      {bool isIncrement,
-      bool isCart = true,
-      bool isCatering = false,
-      bool isHappyHours = false,
-      bool isDeal = false,
-      CartModel cart,
-      CateringCartModel catering,
-      HappyHoursCartModel happyHours,
-      DealCartModel dealCartModel,
-      int productIndex,
-      bool fromProductView}) {
+  void setQuantity({
+    required bool isIncrement,
+    bool isCart = true,
+    bool isCatering = false,
+    bool isHappyHours = false,
+    bool isDeal = false,
+    CartModel? cart,
+    CateringCartModel? catering,
+    HappyHoursCartModel? happyHours,
+    DealCartModel? dealCartModel,
+  }) {
+    assert(!(cart == null && catering == null && happyHours == null && dealCartModel == null));
     if (isCart) {
-      int index = fromProductView ? productIndex : _cartList.indexOf(cart);
+      int index = _cartList.indexOf(cart!);
       if (isIncrement) {
         _cartList[index].quantity = _cartList[index].quantity + 1;
         _amount = _amount + _cartList[index].discountedPrice;
@@ -106,18 +104,18 @@ class CartProvider extends ChangeNotifier {
       cartRepo.addToCartList(_cartList);
     }
     if (isCatering) {
-      int index = fromProductView ? productIndex : _cateringList.indexOf(catering);
+      int index = _cateringList.indexOf(catering!);
       if (isIncrement) {
         _cateringList[index].quantity = _cateringList[index].quantity + 1;
-        _amount = _amount + _cateringList[index].discountAmount;
+        _amount = _amount + (_cateringList[index].discountAmount ?? 0);
       } else {
         _cateringList[index].quantity = _cateringList[index].quantity - 1;
-        _amount = _amount - cateringList[index].discountAmount;
+        _amount = _amount - (cateringList[index].discountAmount ?? 0);
       }
       cartRepo.addToCartList(_cartList);
     }
     if (isHappyHours) {
-      int index = fromProductView ? productIndex : _happyHoursList.indexOf(happyHours);
+      int index = _happyHoursList.indexOf(happyHours!);
       if (isIncrement) {
         _happyHoursList[index].quantity = _happyHoursList[index].quantity + 1;
         _amount = _amount + _happyHoursList[index].discountAmount;
@@ -128,7 +126,7 @@ class CartProvider extends ChangeNotifier {
       cartRepo.addToHappyHoursList(_happyHoursList);
     }
     if (isDeal) {
-      int index = fromProductView ? productIndex : _dealsList.indexOf(dealCartModel);
+      int index = _dealsList.indexOf(dealCartModel!);
       if (isIncrement) {
         _dealsList[index].quantity = _dealsList[index].quantity + 1;
         _amount = _amount + _dealsList[index].discountAmount;
@@ -143,19 +141,22 @@ class CartProvider extends ChangeNotifier {
   }
 
   void removeFromCart(
-    int index, {
+    int? index, {
     bool isCart = true,
     bool isCatering = false,
     bool isHappyHours = false,
     bool isDeal = false,
   }) {
+    if (index == null) {
+      return;
+    }
     if (isCart) {
       _amount = _amount - (_cartList[index].discountedPrice * _cartList[index].quantity);
       _cartList.removeAt(index);
       cartRepo.addToCartList(_cartList);
     }
     if (isCatering) {
-      _amount = _amount - (_cateringList[index].discountAmount * _cateringList[index].quantity);
+      _amount = _amount - ((_cateringList[index].discountAmount ?? 1) * _cateringList[index].quantity);
       _cateringList.removeAt(index);
       cartRepo.addToCateringList(_cateringList);
     }
@@ -174,7 +175,7 @@ class CartProvider extends ChangeNotifier {
   }
 
   void removeAddOn(int index, int addOnIndex) {
-    _cartList[index].addOnIds.removeAt(addOnIndex);
+    _cartList[index].addOnIds!.removeAt(addOnIndex);
     cartRepo.addToCartList(_cartList);
     notifyListeners();
   }
@@ -190,9 +191,9 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  int isExistInCart(int productId, List<Variation> variations) {
+  int isExistInCart(int productId, List<Variation?>? variations) {
     for (int index = 0; index < _cartList.length; index++) {
-      if (_cartList[index].product.id == productId) {
+      if (_cartList[index].product!.id == productId) {
         if (variationListMatch(_cartList[index].variation, variations)) {
           return index;
         }
@@ -201,19 +202,18 @@ class CartProvider extends ChangeNotifier {
     return -1;
   }
 
-  bool variationListMatch(List<Variation> a, List<Variation> b) {
-    if (a.isEmpty && b.isEmpty) {
-      return true;
-    }
+  bool variationListMatch(List<Variation?>? a, List<Variation?>? b) {
     if (a == null || b == null || a.contains(null) || b.contains(null) || a.length != b.length) {
       return false;
     }
-
+    if (a.isEmpty && b.isEmpty) {
+      return true;
+    }
     final results = List.generate(a.length, (index) => false);
     int index = 0;
-    for (Variation varA in a) {
-      for (Variation varB in b) {
-        if (varA.name == varB.name && matchVarValues(varA.values, varB.values)) {
+    for (Variation? varA in a) {
+      for (Variation? varB in b) {
+        if (varA!.name == varB!.name && matchVarValues(varA.values, varB.values)) {
           results[index] = true;
           index++;
           break;
@@ -223,7 +223,7 @@ class CartProvider extends ChangeNotifier {
     return !results.contains(false);
   }
 
-  bool matchVarValues(List<Value> a, List<Value> b) {
+  bool matchVarValues(List<Value>? a, List<Value>? b) {
     if (a == null || b == null || a.length != b.length) {
       return false;
     }
@@ -241,11 +241,11 @@ class CartProvider extends ChangeNotifier {
     return !results.contains(false);
   }
 
-  int getCartProductIndex(CartModel cartModel) {
+  int? getCartProductIndex(CartModel cartModel) {
     for (int index = 0; index < _cartList.length; index++) {
-      if (_cartList[index].product.id == cartModel.product.id &&
-          (_cartList[index].variation.length > 0
-              ? _cartList[index].variation[0].type == cartModel.variation[0].type
+      if (_cartList[index].product?.id == cartModel.product?.id &&
+          (_cartList[index].variation != null && _cartList[index].variation!.isNotEmpty
+              ? _cartList[index].variation!.first?.type == cartModel.variation!.first?.type
               : true)) {
         return index;
       }
@@ -253,36 +253,37 @@ class CartProvider extends ChangeNotifier {
     return null;
   }
 
-  int getCartIndex(Product product) {
+  int? getCartIndex(Product? product) {
+    if (product == null) return null;
     for (int index = 0; index < _cartList.length; index++) {
-      if (_cartList[index].product.id == product.id) {
+      if (_cartList[index].product?.id == product.id) {
         return index;
       }
     }
     return null;
   }
 
-  int getCartCateringIndex(SpecialOfferModel catering) {
+  int? getCartCateringIndex(SpecialOfferModel catering) {
     for (int index = 0; index < _cateringList.length; index++) {
-      if (_cateringList[index].catering.id == catering.id) {
+      if (_cateringList[index].catering?.id == catering.id) {
         return index;
       }
     }
     return null;
   }
 
-  int getCartHappyHoursIndex(OfferProduct happyHour) {
+  int? getCartHappyHoursIndex(OfferProduct happyHour) {
     for (int index = 0; index < _happyHoursList.length; index++) {
-      if (_happyHoursList[index].happyHours.id == happyHour.id) {
+      if (_happyHoursList[index].happyHours?.id == happyHour.id) {
         return index;
       }
     }
     return null;
   }
 
-  int getCarDealIndex(DealsDataModel dataModel) {
+  int? getCarDealIndex(DealsDataModel dataModel) {
     for (int index = 0; index < _dealsList.length; index++) {
-      if (_dealsList[index].dealsDataModel.id == dataModel.id) {
+      if (_dealsList[index].dealsDataModel?.id == dataModel.id) {
         return index;
       }
     }

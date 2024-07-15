@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/profile_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
@@ -8,6 +7,8 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:provider/provider.dart';
 
 class MaintenanceScreen extends StatefulWidget {
+  const MaintenanceScreen({super.key});
+
   @override
   State<MaintenanceScreen> createState() => _MaintenanceScreenState();
 }
@@ -16,7 +17,10 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   @override
   void initState() {
     Future(() {
-      if (!Provider.of<SplashProvider>(context, listen: false).configModel.maintenanceMode) {
+      if (!(Provider.of<SplashProvider>(context, listen: false)
+              .configModel
+              ?.maintenanceMode ??
+          false)) {
         Navigator.of(context).pushNamed(Routes.getMainRoute());
       }
     });
@@ -34,9 +38,10 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
             Image.asset(Images.maintenance, width: 200, height: 200),
             Text(
               getTranslated('maintenance_mode', context),
-              style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.w700),
+              style:
+                  const TextStyle(fontSize: 30.0, fontWeight: FontWeight.w700),
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
             Text(
               getTranslated('maintenance_text', context),
               textAlign: TextAlign.center,

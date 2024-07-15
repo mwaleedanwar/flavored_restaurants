@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SearchRepo {
   final HttpClient httpClient;
   final SharedPreferences sharedPreferences;
-  SearchRepo({@required this.httpClient, @required this.sharedPreferences});
+  SearchRepo({required this.httpClient, required this.sharedPreferences});
 
   Future<ApiResponse> getSearchProductList(String query, String languageCode, String type) async {
     debugPrint('-----getSearchProductList');
@@ -33,7 +33,8 @@ class SearchRepo {
       }
       await sharedPreferences.setStringList(AppConstants.SEARCH_ADDRESS, searchKeywordList);
     } catch (e) {
-      throw e;
+      debugPrint('ERROR SAVING SEARCH ADDRESS $e');
+      rethrow;
     }
   }
 

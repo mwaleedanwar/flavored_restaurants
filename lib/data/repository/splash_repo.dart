@@ -4,36 +4,25 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/datasource/remote/excepti
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/api_response.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-
-import '../../utill/app_toast.dart';
 
 class SplashRepo {
   final HttpClient httpClient;
   final SharedPreferences sharedPreferences;
-  SplashRepo({@required this.sharedPreferences, @required this.httpClient});
+  SplashRepo({required this.sharedPreferences, required this.httpClient});
 
   Future<ApiResponse> getConfig() async {
-    // appToast(text: 'here is response starting');
-
     try {
-      print('---get config url ${AppConstants.CONFIG_URI}');
-      var headers = {"Access-Control-Allow-Origin": "*", 'Content-Type': 'application/json', 'Accept': '*/*'};
-      // final response1 = await http.get(Uri.parse(AppConstants.BASE_URL+AppConstants.CONFIG_URI)  ,
-      //   );
-      // print('---get config resonse ${response1.body}');
+      debugPrint('---get config url ${AppConstants.CONFIG_URI}');
 
       final response = await httpClient.get(
         AppConstants.CONFIG_URI,
       );
-      // appToast(text: 'here is response :${response.body}');
-
-      print('---get config resonse ${response.body}');
+      debugPrint('---get config resonse ${response.body}');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       // appToast(text: 'here is response :${e}');
       //
-      print('---get config error:  $e');
+      debugPrint('---get config error:  $e');
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
@@ -43,10 +32,12 @@ class SplashRepo {
       return sharedPreferences.setBool(AppConstants.THEME, false);
     }
     if (!sharedPreferences.containsKey(AppConstants.COUNTRY_CODE)) {
-      return sharedPreferences.setString(AppConstants.COUNTRY_CODE, AppConstants.languages[0].countryCode);
+      return sharedPreferences.setString(
+          AppConstants.COUNTRY_CODE, AppConstants.languages[0].countryCode);
     }
     if (!sharedPreferences.containsKey(AppConstants.LANGUAGE_CODE)) {
-      return sharedPreferences.setString(AppConstants.LANGUAGE_CODE, AppConstants.languages[0].languageCode);
+      return sharedPreferences.setString(
+          AppConstants.LANGUAGE_CODE, AppConstants.languages[0].languageCode);
     }
     if (!sharedPreferences.containsKey(AppConstants.ON_BOARDING_SKIP)) {
       return sharedPreferences.setBool(AppConstants.ON_BOARDING_SKIP, true);
@@ -77,7 +68,9 @@ class SplashRepo {
   Future<void> setBranchId(int id) async {
     await sharedPreferences.setInt(AppConstants.BRANCH, id);
     if (id != -1) {
-      await httpClient.updateHeader(getToken: sharedPreferences.getString(AppConstants.TOKEN));
+      await httpClient.updateHeader(
+        getToken: sharedPreferences.getString(AppConstants.TOKEN),
+      );
     }
   }
 }

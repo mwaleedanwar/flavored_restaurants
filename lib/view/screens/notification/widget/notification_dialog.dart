@@ -9,13 +9,13 @@ import 'package:provider/provider.dart';
 
 class NotificationDialog extends StatelessWidget {
   final NotificationModel notificationModel;
-  NotificationDialog({@required this.notificationModel});
+  const NotificationDialog({super.key, required this.notificationModel});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
-      child: Container(
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(10.0))),
+      child: SizedBox(
         width: 400,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -23,14 +23,14 @@ class NotificationDialog extends StatelessWidget {
             Align(
               alignment: Alignment.centerRight,
               child: IconButton(
-                icon: Icon(Icons.close),
+                icon: const Icon(Icons.close),
                 onPressed: () => Navigator.of(context).pop(),
               ),
             ),
             Container(
               height: 150,
               width: MediaQuery.of(context).size.width,
-              margin: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+              margin: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10), color: Theme.of(context).primaryColor.withOpacity(0.20)),
               child: ClipRRect(
@@ -41,15 +41,15 @@ class NotificationDialog extends StatelessWidget {
                   width: MediaQuery.of(context).size.width,
                   fit: BoxFit.cover,
                   image:
-                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls.notificationImageUrl}/${notificationModel.image}',
+                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.notificationImageUrl}/${notificationModel.image}',
                   imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_banner,
                       height: 150, width: MediaQuery.of(context).size.width, fit: BoxFit.cover),
                 ),
               ),
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+              padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
               child: Text(
                 notificationModel.title,
                 textAlign: TextAlign.center,
@@ -60,7 +60,7 @@ class NotificationDialog extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 20),
               child: Text(
                 notificationModel.description,
                 textAlign: TextAlign.center,

@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final policyModel = policyModelFromJson(jsonString);
-
 import 'dart:convert';
 
 PolicyModel policyModelFromJson(String str) => PolicyModel.fromJson(json.decode(str));
@@ -10,67 +6,51 @@ String policyModelToJson(PolicyModel data) => json.encode(data.toJson());
 
 class PolicyModel {
   PolicyModel({
-    this.returnPage,
-    this.refundPage,
-    this.cancellationPage,
+    required this.returnPage,
+    required this.refundPage,
+    required this.cancellationPage,
   });
 
-  Pages returnPage;
-  Pages refundPage;
-  Pages cancellationPage;
+  Pages? returnPage;
+  Pages? refundPage;
+  Pages? cancellationPage;
 
   factory PolicyModel.fromJson(Map<String, dynamic> json) => PolicyModel(
-    returnPage: Pages.fromJson(
-      json: json["return_page"],
-    ),
-
-    refundPage: Pages.fromJson(
-      json: json["refund_page"],
-    ),
-
-    cancellationPage: Pages.fromJson(
-      json:  json["cancellation_page"],
-    ),
-  );
+        returnPage: json["return_page"]?["status"] == null || json["return_page"]?["status"] == null
+            ? null
+            : Pages.fromJson(json["return_page"]),
+        refundPage: json["refund_page"]?["status"] == null || json["refund_page"]?["status"] == null
+            ? null
+            : Pages.fromJson(json["refund_page"]),
+        cancellationPage: json["cancellation_page"]?["status"] == null || json["cancellation_page"]?["status"] == null
+            ? null
+            : Pages.fromJson(json["cancellation_page"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "return_page": returnPage.toJson(),
-    "refund_page": refundPage.toJson(),
-    "cancellation_page": cancellationPage.toJson(),
-  };
+        "return_page": returnPage?.toJson(),
+        "refund_page": refundPage?.toJson(),
+        "cancellation_page": cancellationPage?.toJson(),
+      };
 }
 
 class Pages {
   Pages({
-    this.status,
-    this.content,
+    required this.status,
+    required this.content,
   });
 
   bool status;
   String content;
 
-  factory Pages.fromJson({
-    Map<String, dynamic> json,
-
-  }) {
-    Pages _pages;
-    try{
-      _pages = Pages(
-        status: int.tryParse(json["status"].toString()) == 1 ? true : false,
-        content: json["content"],
-
-      );
-
-    }catch(e) {
-      _pages = null;
-    }
-    return _pages;
-
-
-
+  factory Pages.fromJson(Map<String, dynamic> json) {
+    return Pages(
+      status: int.tryParse(json["status"].toString()) == 1 ? true : false,
+      content: json["content"],
+    );
   }
   Map<String, dynamic> toJson() => {
-    "status": status,
-    "content": content,
-  };
+        "status": status,
+        "content": content,
+      };
 }

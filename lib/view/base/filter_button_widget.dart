@@ -15,28 +15,29 @@ class FilterButtonWidget extends StatelessWidget {
   final bool isSmall;
   final Function(String value) onSelected;
 
-  FilterButtonWidget({
-    @required this.type,
-    @required this.onSelected,
-    @required this.items,
+  const FilterButtonWidget({
+    super.key,
+    required this.type,
+    required this.onSelected,
+    required this.items,
     this.isBorder = false,
     this.isSmall = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final bool _ltr = Provider.of<LocalizationProvider>(context).isLtr;
-    bool _isVegFilter = Provider.of<ProductProvider>(context).productTypeList == items;
+    final bool ltr = Provider.of<LocalizationProvider>(context).isLtr;
+    bool isVegFilter = Provider.of<ProductProvider>(context).productTypeList == items;
 
     return Align(
         alignment: Alignment.center,
         child: Container(
           height: ResponsiveHelper.isMobile(context) ? 35 : 40,
-          margin: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
+          margin: const EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_SMALL),
           decoration: isBorder
               ? null
               : BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL)),
+                  borderRadius: const BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL)),
                   border: Border.all(color: Theme.of(context).primaryColor),
                 ),
           child: ListView.builder(
@@ -47,17 +48,17 @@ class FilterButtonWidget extends StatelessWidget {
               return InkWell(
                 onTap: () => onSelected(items[index]),
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
                   margin: isBorder
-                      ? EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL)
+                      ? const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL)
                       : EdgeInsets.zero,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     borderRadius: isBorder
-                        ? BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL))
+                        ? const BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL))
                         : BorderRadius.horizontal(
                             left: Radius.circular(
-                              _ltr
+                              ltr
                                   ? index == 0 && items[index] != type
                                       ? Dimensions.RADIUS_SMALL
                                       : 0
@@ -66,7 +67,7 @@ class FilterButtonWidget extends StatelessWidget {
                                       : 0,
                             ),
                             right: Radius.circular(
-                              _ltr
+                              ltr
                                   ? index == items.length - 1 && items[index] != type
                                       ? Dimensions.RADIUS_SMALL
                                       : 0
@@ -82,14 +83,14 @@ class FilterButtonWidget extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      items[index] != items[0] && _isVegFilter
+                      items[index] != items[0] && isVegFilter
                           ? Padding(
-                              padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                              padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                               child: Image.asset(
                                 Images.getImageUrl(items[index]),
                               ),
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                       Text(
                         getTranslated(items[index], context),
                         style: items[index] == type

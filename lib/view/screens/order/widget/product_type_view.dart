@@ -4,23 +4,23 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 
 class ProductTypeView extends StatelessWidget {
-  final productType;
-  const ProductTypeView({Key key, this.productType}) : super(key: key);
+  final String? productType;
+  const ProductTypeView({super.key, this.productType});
 
   @override
   Widget build(BuildContext context) {
     return productType == null
-        ? SizedBox()
+        ? const SizedBox()
         : Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL)),
+              borderRadius: const BorderRadius.all(Radius.circular(Dimensions.RADIUS_SMALL)),
               color: Theme.of(context).primaryColor,
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 2),
               child: Text(
                 getTranslated(
-                  productType,
+                  productType!,
                   context,
                 ),
                 style: robotoRegular.copyWith(color: Colors.white),

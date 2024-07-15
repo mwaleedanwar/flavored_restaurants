@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -12,21 +14,18 @@ import 'localization_provider.dart';
 
 class BannerProvider extends ChangeNotifier {
   final BannerRepo bannerRepo;
-  BannerProvider({@required this.bannerRepo});
+  List<BannerModel>? bannerList;
+  BannerProvider({required this.bannerRepo});
 
-  List<BannerModel> _bannerList;
-  List<Product> _productList = [];
-
-  List<BannerModel> get bannerList => _bannerList;
-  List<Product> get productList => _productList;
+  final productList = <Product>[];
 
   Future<void> getBannerList(BuildContext context, bool reload) async {
     if (bannerList == null || reload) {
       ApiResponse apiResponse = await bannerRepo.getBannerList();
-      if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-        _bannerList = [];
+      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+        bannerList = [];
 
-        jsonDecode(apiResponse.response.body).forEach((category) {
+        jsonDecode(apiResponse.response!.body).forEach((category) {
           BannerModel bannerModel = BannerModel.fromJson(category);
           debugPrint('===getting details:${bannerModel.productId}');
 
@@ -38,8 +37,8 @@ class BannerProvider extends ChangeNotifier {
               Provider.of<LocalizationProvider>(context, listen: false).locale.languageCode,
             );
           }
-          _bannerList.add(bannerModel);
-          print('==banes: list:${_bannerList.length}');
+          bannerList!.add(bannerModel);
+          debugPrint('==banes: list:${bannerList!.length}');
         });
         notifyListeners();
       } else {
@@ -51,8 +50,8 @@ class BannerProvider extends ChangeNotifier {
   void getProductDetails(BuildContext context, String productID, String languageCode) async {
     debugPrint('---getProductDetails#');
     ApiResponse apiResponse = await bannerRepo.getProductDetails(productID, languageCode);
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-      _productList.add(Product.fromJson(jsonDecode(apiResponse.response.body)));
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      productList.add(Product.fromJson(jsonDecode(apiResponse.response!.body)));
     }
   }
 }

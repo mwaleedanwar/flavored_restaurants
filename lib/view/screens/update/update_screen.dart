@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
@@ -11,13 +13,15 @@ import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UpdateScreen extends StatelessWidget {
+  const UpdateScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final _splashProvider = Provider.of<SplashProvider>(context, listen: false);
+    final splashProvider = Provider.of<SplashProvider>(context, listen: false);
     return Scaffold(
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+          padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Image.asset(
               Images.update,
@@ -28,23 +32,26 @@ class UpdateScreen extends StatelessWidget {
             Text(
               getTranslated('your_app_is_deprecated', context),
               style: rubikRegular.copyWith(
-                  fontSize: MediaQuery.of(context).size.height * 0.0175, color: Theme.of(context).disabledColor),
+                  fontSize: MediaQuery.of(context).size.height * 0.0175,
+                  color: Theme.of(context).disabledColor),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.04),
             CustomButton(
                 btnTxt: getTranslated('update_now', context),
                 onTap: () async {
-                  String _appUrl = 'https://google.com';
+                  String? appUrl = 'https://google.com';
                   if (Platform.isAndroid) {
-                    _appUrl = _splashProvider.configModel.playStoreConfig.link;
+                    appUrl = splashProvider.configModel?.playStoreConfig?.link;
                   } else if (Platform.isIOS) {
-                    _appUrl = _splashProvider.configModel.appStoreConfig.link;
+                    appUrl = splashProvider.configModel?.appStoreConfig?.link;
                   }
-                  if (await canLaunchUrl(Uri.parse(_appUrl))) {
-                    launchUrl(Uri.parse(_appUrl));
+                  if (await canLaunchUrl(Uri.parse(appUrl ?? ''))) {
+                    launchUrl(Uri.parse(appUrl!));
                   } else {
-                    showCustomSnackBar('${getTranslated('can_not_launch', context)} $_appUrl', context);
+                    showCustomSnackBar(
+                        '${getTranslated('can_not_launch', context)} $appUrl',
+                        context);
                   }
                 }),
           ]),

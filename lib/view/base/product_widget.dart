@@ -1,11 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/cart_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_model.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/helper/date_converter.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/price_converter.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/theme_provider.dart';
@@ -14,77 +10,77 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/wish_button.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/cart_bottom_sheet.dart';
-
-import 'package:get/get.dart' hide Value;
-
 import 'package:provider/provider.dart';
-import '../../provider/profile_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/profile_provider.dart';
 
 class ProductWidget extends StatelessWidget {
   final Product product;
   final bool isFromPoinst;
   final bool isLined;
   final bool isLast;
-  ProductWidget({@required this.product, this.isFromPoinst = false, this.isLined = false, this.isLast = false});
+  const ProductWidget({
+    super.key,
+    required this.product,
+    this.isFromPoinst = false,
+    this.isLined = false,
+    this.isLast = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    double _startingPrice;
-    double _endingPrice;
-    if (product.choiceOptions.length != 0) {
-      List<double> _priceList = [];
-      // product.variations.forEach((variation) => _priceList.add(variation.price));
-      for (Variation variation in product.variations) {
-        for (Value value in variation.values) {
-          _priceList.add(double.parse(value.optionPrice));
+    double startingPrice;
+    double? endingPrice;
+    if (product.choiceOptions?.isNotEmpty ?? false) {
+      List<double> priceList = [];
+      for (Variation variation in (product.variations ?? [])) {
+        for (Value value in (variation.values ?? [])) {
+          priceList.add(double.parse(value.optionPrice));
         }
       }
-      _priceList.sort((a, b) => a.compareTo(b));
-      _startingPrice = _priceList[0];
-      if (_priceList[0] < _priceList[_priceList.length - 1]) {
-        _endingPrice = _priceList[_priceList.length - 1];
+      priceList.sort((a, b) => a.compareTo(b));
+      startingPrice = priceList[0];
+      if (priceList[0] < priceList[priceList.length - 1]) {
+        endingPrice = priceList[priceList.length - 1];
       }
     } else {
-      _startingPrice = product.price;
+      startingPrice = product.price;
     }
 
-    double _discountedPrice =
+    double discountedPrice =
         PriceConverter.convertWithDiscount(context, product.price, product.discount, product.discountType);
 
-    bool _isAvailable = DateConverter.isAvailable(product.availableTimeStarts, product.availableTimeEnds, context);
-
-    return Consumer<CartProvider>(builder: (context, _cartProvider, child) {
-      String _productImage = '';
+    return Consumer<CartProvider>(builder: (context, cartProvider, child) {
+      String productImage = '';
       try {
-        _productImage =
-            '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/${product.image}';
-      } catch (e) {}
-      int _cartIndex = _cartProvider.getCartIndex(product);
-      print('---image${_productImage}');
+        productImage =
+            '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${product.image}';
+      } catch (e) {
+        debugPrint('ERROR PRODUCT WIDGET');
+      }
+      int cartIndex = cartProvider.getCartIndex(product) ?? -1;
+      debugPrint('---image $productImage');
       return Padding(
-          padding: EdgeInsets.only(bottom: 0),
+          padding: const EdgeInsets.only(bottom: 0),
           child: InkWell(
             onTap: () {
-              print('----here tap');
               if (isFromPoinst) {
                 debugPrint(
-                    '==:${Provider.of<ProfileProvider>(context, listen: false).userInfoModel.point < double.parse(product.loyaltyPoints)}');
-                if (Provider.of<ProfileProvider>(context, listen: false).userInfoModel.point <
+                    '==:${Provider.of<ProfileProvider>(context, listen: false).userInfoModel?.point ?? 0 < double.parse(product.loyaltyPoints)}');
+                if ((Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.point ?? 0) <
                     double.parse(product.loyaltyPoints)) {
                   showCustomSnackBar('You don\'t have enough hearts to get this product free', context);
                 } else {
-                  _addToCart(context, _cartIndex);
+                  _addToCart(context, cartIndex);
                 }
               } else {
-                _addToCart(context, _cartIndex);
+                _addToCart(context, cartIndex);
               }
             },
             child: Column(
               children: [
                 Container(
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                       vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_SMALL),
                   decoration: BoxDecoration(
                     color: Provider.of<ThemeProvider>(context).darkTheme && ResponsiveHelper.isDesktop(context)
@@ -93,7 +89,8 @@ class ProductWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(isLined ? 0 : 10),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 900 : 300],
+                        color:
+                            Provider.of<ThemeProvider>(context).darkTheme ? Colors.grey.shade900 : Colors.grey.shade300,
                         blurRadius: Provider.of<ThemeProvider>(context).darkTheme ? 2 : 5,
                         spreadRadius: Provider.of<ThemeProvider>(context).darkTheme ? 0 : 1,
                       )
@@ -105,7 +102,7 @@ class ProductWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Text(
                               product.name,
                               style: rubikMedium.copyWith(fontSize: 16),
@@ -118,36 +115,36 @@ class ProductWidget extends StatelessWidget {
                             ),
                             Row(
                               children: [
-                                Icon(
+                                const Icon(
                                   Icons.add_circle_outline_outlined,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   width: 5,
                                 ),
                                 Text(
                                   product.price == 0.0
                                       ? '${product.loyaltyPoints} hearts'
-                                      : '${PriceConverter.convertPrice(context, _startingPrice, discount: product.discount, discountType: product.discountType)}'
-                                          '${_endingPrice != null ? ' - ${PriceConverter.convertPrice(context, _endingPrice, discount: product.discount, discountType: product.discountType)}' : ''}',
+                                      : '${PriceConverter.convertPrice(context, startingPrice, discount: product.discount, discountType: product.discountType)}'
+                                          '${endingPrice != null ? ' - ${PriceConverter.convertPrice(context, endingPrice, discount: product.discount, discountType: product.discountType)}' : ''}',
                                   style: rubikMedium.copyWith(
                                       fontSize: Dimensions.FONT_SIZE_DEFAULT, color: ColorResources.COLOR_GREY_CHATEAU),
                                 ),
                                 // WishButton(product: product, edgeInset: EdgeInsets.all(5)),
                               ],
                             ),
-                            product.price > _discountedPrice
+                            product.price > discountedPrice
                                 ? Text(
-                                    '${PriceConverter.convertPrice(context, _startingPrice)}'
-                                    '${_endingPrice != null ? ' - ${PriceConverter.convertPrice(context, _endingPrice)}' : ''}',
+                                    '${PriceConverter.convertPrice(context, startingPrice)}'
+                                    '${endingPrice != null ? ' - ${PriceConverter.convertPrice(context, endingPrice)}' : ''}',
                                     style: rubikMedium.copyWith(
                                       color: ColorResources.COLOR_GREY,
                                       decoration: TextDecoration.lineThrough,
                                       fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
                                     ))
-                                : SizedBox(),
+                                : const SizedBox(),
                           ]),
                     ),
-                    SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                    const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: FadeInImage.assetNetwork(
@@ -155,7 +152,7 @@ class ProductWidget extends StatelessWidget {
                         height: ResponsiveHelper.isMobile(context) ? 110 : 80,
                         width: ResponsiveHelper.isMobile(context) ? 105 : 95,
                         fit: BoxFit.cover,
-                        image: _productImage,
+                        image: productImage,
                         imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_image,
                             height: ResponsiveHelper.isMobile(context) ? 110 : 80,
                             width: ResponsiveHelper.isMobile(context) ? 105 : 95,
@@ -167,10 +164,10 @@ class ProductWidget extends StatelessWidget {
                 isLined
                     ? Container(
                         height: 1.5,
-                        width: Get.width,
+                        width: MediaQuery.of(context).size.width,
                         color: isLast ? Colors.transparent : Colors.black,
                       )
-                    : SizedBox(
+                    : const SizedBox(
                         height: 2,
                       )
               ],
@@ -181,9 +178,9 @@ class ProductWidget extends StatelessWidget {
 
   void _addToCart(
     BuildContext context,
-    int _cartIndex,
+    int? cartIndex,
   ) {
-    print('===show sheet:${isFromPoinst}');
+    debugPrint('===show sheet:$isFromPoinst');
     ResponsiveHelper.isMobile(context)
         ? showModalBottomSheet(
             context: context,
@@ -191,11 +188,10 @@ class ProductWidget extends StatelessWidget {
             backgroundColor: Colors.transparent,
             builder: (con) => CartBottomSheet(
               product: product,
-              cart: _cartIndex != null ? Provider.of<CartProvider>(context, listen: false).cartList[_cartIndex] : null,
+              cart: cartIndex != null && cartIndex >= 0
+                  ? Provider.of<CartProvider>(context, listen: false).cartList[cartIndex]
+                  : null,
               fromPoints: isFromPoinst,
-              callback: (CartModel cartModel) {
-                showCustomSnackBar(getTranslated('added_to_cart', context), context, isError: false);
-              },
             ),
           )
         : showDialog(
@@ -204,12 +200,8 @@ class ProductWidget extends StatelessWidget {
               child: CartBottomSheet(
                 product: product,
                 fromSetMenu: true,
-                cart:
-                    _cartIndex != null ? Provider.of<CartProvider>(context, listen: false).cartList[_cartIndex] : null,
+                cart: cartIndex != null ? Provider.of<CartProvider>(context, listen: false).cartList[cartIndex] : null,
                 fromPoints: isFromPoinst,
-                callback: (CartModel cartModel) {
-                  showCustomSnackBar(getTranslated('added_to_cart', context), context, isError: false);
-                },
               ),
             ),
           );

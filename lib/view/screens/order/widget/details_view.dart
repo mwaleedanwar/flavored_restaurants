@@ -11,19 +11,16 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/map_widget.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/order/order_details_screen.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/order/widget/change_method_dialog.dart';
 import 'package:provider/provider.dart';
 
-import 'change_method_dialog.dart';
-import 'product_type_view.dart';
-
 class DetailsView extends StatelessWidget {
-  const DetailsView({Key key}) : super(key: key);
+  const DetailsView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Consumer<OrderProvider>(builder: (context, order, _) {
-      print('=====${order.trackModel.paymentMethod}');
+      debugPrint('=====${order.trackModel?.paymentMethod}');
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -32,58 +29,61 @@ class DetailsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('${getTranslated('order_id', context)}:', style: rubikRegular),
-                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                Text(order.trackModel.id.toString(), style: rubikMedium),
-                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                Expanded(child: SizedBox()),
-                Icon(Icons.watch_later, size: 17),
-                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                order.trackModel.deliveryTime != null
+                const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                Text((order.trackModel?.id).toString(), style: rubikMedium),
+                const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                const Expanded(child: SizedBox()),
+                const Icon(Icons.watch_later, size: 17),
+                const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                order.trackModel?.deliveryTime != null
                     ? Text(
                         DateConverter.deliveryDateAndTimeToDate(
-                            order.trackModel.deliveryDate, order.trackModel.deliveryTime, context),
+                            order.trackModel!.deliveryDate, order.trackModel!.deliveryTime!, context),
                         style: rubikRegular,
                       )
                     : Text(
-                        DateConverter.isoStringToLocalDateOnly(order.trackModel.createdAt),
+                        DateConverter.isoStringToLocalDateOnly(order.trackModel!.createdAt),
                         style: rubikRegular,
                       ),
               ]),
-          SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+          const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
           Row(children: [
             Text('${getTranslated('item', context)}:', style: rubikRegular),
-            SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-            Text(order.orderDetails.length.toString(),
+            const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+            Text(order.orderDetails!.length.toString(),
                 style: rubikMedium.copyWith(color: Theme.of(context).primaryColor)),
-            Expanded(child: SizedBox()),
-            order.trackModel.orderType == 'delivery'
+            const Expanded(child: SizedBox()),
+            order.trackModel?.orderType == 'delivery'
                 ? TextButton.icon(
                     onPressed: () {
-                      if (order.trackModel.deliveryAddress != null) {
+                      if (order.trackModel?.deliveryAddress != null) {
                         Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => MapWidget(address: order.trackModel.deliveryAddress)));
+                            MaterialPageRoute(builder: (_) => MapWidget(address: order.trackModel!.deliveryAddress!)));
                       } else {
                         showCustomSnackBar(getTranslated('address_not_found', context), context);
                       }
                     },
-                    icon: Icon(Icons.map, size: 18),
+                    icon: const Icon(Icons.map, size: 18),
                     label: Text(getTranslated('delivery_address', context),
                         style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL)),
                     style: TextButton.styleFrom(
-                        shape:
-                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(5), side: BorderSide(width: 1)),
-                        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                        minimumSize: Size(1, 30)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5), side: const BorderSide(width: 1)),
+                        padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                        minimumSize: const Size(1, 30)),
                   )
-                : order.trackModel.orderType == 'pos'
+                : order.trackModel?.orderType == 'pos'
                     ? Text(getTranslated('pos_order', context), style: poppinsRegular)
-                    : order.trackModel.orderType == 'dine_in'
+                    : order.trackModel?.orderType == 'dine_in'
                         ? Text(getTranslated('dine_in', context), style: poppinsRegular)
-                        : Text(order.trackModel.orderType == 'take_away' ? 'Take away' : order.trackModel.orderType,
+                        : Text(
+                            order.trackModel?.orderType == 'take_away'
+                                ? 'Take away'
+                                : order.trackModel?.orderType ?? 'ERROR',
                             style: rubikMedium),
           ]),
-          Divider(height: 20),
+          const Divider(height: 20),
 
           // Payment info
           Align(
@@ -93,18 +93,18 @@ class DetailsView extends StatelessWidget {
               style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
             ),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
 
           Row(children: [
             Expanded(flex: 2, child: Text(getTranslated('status', context), style: rubikRegular)),
             Expanded(
                 flex: 8,
                 child: Text(
-                  getTranslated(order.trackModel.paymentStatus, context),
+                  getTranslated(order.trackModel!.paymentStatus, context),
                   style: rubikMedium.copyWith(color: Theme.of(context).primaryColor),
                 )),
           ]),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
 
           Row(children: [
             Expanded(flex: 2, child: Text(getTranslated('method', context), style: rubikRegular)),
@@ -112,19 +112,19 @@ class DetailsView extends StatelessWidget {
                 flex: 8,
                 child: Row(children: [
                   Text(
-                    (order.trackModel.paymentMethod != null && order.trackModel.paymentMethod.length > 0)
-                        ? order.trackModel.paymentMethod == 'stripe'
+                    (order.trackModel?.paymentMethod != null && order.trackModel!.paymentMethod.isNotEmpty)
+                        ? order.trackModel!.paymentMethod == 'stripe'
                             ? 'Debit/Credit Card'
-                            : '${order.trackModel.paymentMethod[0].toUpperCase()}${order.trackModel.paymentMethod.substring(1).replaceAll('_', ' ')}'
+                            : '${order.trackModel!.paymentMethod[0].toUpperCase()}${order.trackModel!.paymentMethod.substring(1).replaceAll('_', ' ')}'
                         : getTranslated('digital_payment', context),
                     style: poppinsRegular.copyWith(color: Theme.of(context).primaryColor),
                   ),
-                  (order.trackModel.paymentStatus != 'paid' &&
-                          order.trackModel.paymentMethod != 'cash_on_delivery' &&
-                          order.trackModel.orderStatus != 'delivered')
+                  (order.trackModel?.paymentStatus != 'paid' &&
+                          order.trackModel?.paymentMethod != 'cash_on_delivery' &&
+                          order.trackModel?.orderStatus != 'delivered')
                       ? InkWell(
                           onTap: () {
-                            if (Provider.of<SplashProvider>(context, listen: false).configModel.cashOnDelivery !=
+                            if (Provider.of<SplashProvider>(context, listen: false).configModel!.cashOnDelivery !=
                                 'true') {
                               showCustomSnackBar(getTranslated('cash_on_delivery_is_not_activated', context), context,
                                   isError: true);
@@ -133,12 +133,12 @@ class DetailsView extends StatelessWidget {
                                 context: context,
                                 barrierDismissible: false,
                                 builder: (context) => ChangeMethodDialog(
-                                    orderID: order.trackModel.id.toString(),
+                                    orderID: order.trackModel!.id.toString(),
                                     // fromOrder: widget.orderModel !=null,
                                     callback: (String message, bool isSuccess) {
                                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                           content: Text(message),
-                                          duration: Duration(milliseconds: 600),
+                                          duration: const Duration(milliseconds: 600),
                                           backgroundColor: isSuccess ? Colors.green : Colors.red));
                                     }),
                               );
@@ -146,10 +146,11 @@ class DetailsView extends StatelessWidget {
                           },
                           child: Container(
                             alignment: Alignment.center,
-                            margin: EdgeInsets.symmetric(
+                            margin: const EdgeInsets.symmetric(
                                 horizontal: Dimensions.PADDING_SIZE_SMALL,
                                 vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                            padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL, vertical: 2),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: Theme.of(context).primaryColor.withOpacity(0.5)),
@@ -157,32 +158,21 @@ class DetailsView extends StatelessWidget {
                                 style: rubikRegular.copyWith(fontSize: 10, color: Colors.black)),
                           ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                 ])),
           ]),
-          Divider(height: 40),
+          const Divider(height: 40),
 
           ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: order.orderDetails.length,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: order.orderDetails?.length,
             itemBuilder: (context, index) {
-              List<AddOns> _addOns = [];
-              List<AddOns> _addons = order.orderDetails[index].productDetails == null
-                  ? []
-                  : order.orderDetails[index].productDetails.addOns;
+              List<AddOns> addOns = [];
 
-              // order.orderDetails[index].addOnIds.forEach((_id) {
-              //   _addons.forEach((addOn) {
-              //     if (addOn.id == _id) {
-              //       _addOns.add(addOn);
-              //     }
-              //   });
-              //
-              // });
-              print('====nme:${order.orderDetails[0].productDetails.variations}');
+              debugPrint('====nme:${order.orderDetails?[0].productDetails?.variations}');
 
-              return order.orderDetails[index].productDetails != null
+              return order.orderDetails?[index].productDetails != null
                   ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                       Row(children: [
                         ClipRRect(
@@ -192,118 +182,91 @@ class DetailsView extends StatelessWidget {
                             height: 70,
                             width: 80,
                             fit: BoxFit.cover,
-                            image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/'
-                                '${order.orderDetails[index].productDetails.image}',
+                            image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/'
+                                '${order.orderDetails![index].productDetails!.image}',
                             imageErrorBuilder: (c, o, s) =>
                                 Image.asset(Images.placeholder_image, height: 70, width: 80, fit: BoxFit.cover),
                           ),
                         ),
-                        SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                        const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                         Expanded(
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                             Row(
                               children: [
                                 Expanded(
                                   child: Text(
-                                    order.orderDetails[index].productDetails.name,
+                                    order.orderDetails![index].productDetails!.name,
                                     style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL),
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
                                 Text('${getTranslated('quantity', context)}:', style: rubikRegular),
-                                Text(order.orderDetails[index].quantity.toString(),
+                                Text(order.orderDetails![index].quantity.toString(),
                                     style: rubikMedium.copyWith(color: Theme.of(context).primaryColor)),
                               ],
                             ),
-                            SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                            const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Flexible(
                                   child: Row(children: [
                                     Text(
-                                      order.orderDetails[index].price != null
+                                      order.orderDetails?[index].price != null
                                           ? PriceConverter.convertPrice(
                                               context,
-                                              order.orderDetails[index].price -
-                                                  order.orderDetails[index].discountOnProduct)
+                                              order.orderDetails![index].price -
+                                                  order.orderDetails![index].discountOnProduct)
                                           : 'Gift',
                                       style: rubikBold,
                                     ),
-                                    SizedBox(width: 5),
-                                    order.orderDetails[index].discountOnProduct > 0
+                                    const SizedBox(width: 5),
+                                    order.orderDetails![index].discountOnProduct > 0
                                         ? Expanded(
                                             child: Text(
-                                            PriceConverter.convertPrice(context, order.orderDetails[index].price),
+                                            PriceConverter.convertPrice(context, order.orderDetails![index].price),
                                             style: rubikBold.copyWith(
                                               decoration: TextDecoration.lineThrough,
                                               fontSize: Dimensions.FONT_SIZE_SMALL,
                                               color: ColorResources.COLOR_GREY,
                                             ),
                                           ))
-                                        : SizedBox(),
+                                        : const SizedBox(),
                                   ]),
                                 ),
                               ],
                             ),
-                            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-
-                            ///variation
-                            // order.orderDetails[index].productDetails.variations != null?
-                            // // Expanded(
-                            // //   child: ListView.builder(
-                            // //       itemCount: order.orderDetails[index].productDetails.variations.length,
-                            // //       itemBuilder: (context,ind){
-                            // //         return SizedBox(
-                            // //           height: 50,
-                            // //           child: ListView(
-                            // //             children: List.generate( order.orderDetails[index].productDetails.variations[ind].values.length, (v) => Text(order.orderDetails[index].productDetails.variations[ind].values[v].label ?? 'gg',
-                            // //             style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL,),
-                            // //             maxLines: 1,
-                            // //             overflow: TextOverflow.ellipsis,
-                            // //           )
-                            // //           ),
-                            // //           ),
-                            // //         );
-                            // //
-                            // //       }),
-                            // // )
-                            //
-                            //
-                            //
-                            //
-                            //
-                            // :SizedBox(),
+                            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                           ]),
                         ),
                       ]),
-                      _addOns.length > 0
+                      addOns.isNotEmpty
                           ? SizedBox(
                               height: 30,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
-                                physics: BouncingScrollPhysics(),
-                                padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_SMALL),
-                                itemCount: _addOns.length,
+                                physics: const BouncingScrollPhysics(),
+                                padding: const EdgeInsets.only(top: Dimensions.PADDING_SIZE_SMALL),
+                                itemCount: addOns.length,
                                 itemBuilder: (context, i) {
                                   return Padding(
-                                    padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+                                    padding: const EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
                                     child: Row(children: [
-                                      Text(_addOns[i].name, style: rubikRegular),
-                                      SizedBox(width: 2),
-                                      Text(PriceConverter.convertPrice(context, _addOns[i].price), style: rubikMedium),
-                                      SizedBox(width: 2),
-                                      Text('(${order.orderDetails[index].addOnQtys[i]})', style: rubikRegular),
+                                      Text(addOns[i].name, style: rubikRegular),
+                                      const SizedBox(width: 2),
+                                      Text(PriceConverter.convertPrice(context, addOns[i].price), style: rubikMedium),
+                                      const SizedBox(width: 2),
+                                      Text('(${order.orderDetails![index].addOnQtys[i]})', style: rubikRegular),
                                     ]),
                                   );
                                 },
                               ),
                             )
-                          : SizedBox(),
-                      Divider(height: 40),
+                          : const SizedBox(),
+                      const Divider(height: 40),
                     ])
-                  : order.orderDetails[index].offerDetail != null
+                  : order.orderDetails?[index].offerDetail != null
                       ? Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                           Row(children: [
                             ClipRRect(
@@ -314,31 +277,31 @@ class DetailsView extends StatelessWidget {
                                 width: 80,
                                 fit: BoxFit.cover,
                                 image:
-                                    '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/'
-                                    '${order.orderDetails[index].offerDetail.image}',
+                                    '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/'
+                                    '${order.orderDetails![index].offerDetail!.image}',
                                 imageErrorBuilder: (c, o, s) =>
                                     Image.asset(Images.placeholder_image, height: 70, width: 80, fit: BoxFit.cover),
                               ),
                             ),
-                            SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                            const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                             Expanded(
                               child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                                 Row(
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        order.orderDetails[index].offerDetail.name,
+                                        order.orderDetails![index].offerDetail!.name,
                                         style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL),
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                     Text('${getTranslated('quantity', context)}:', style: rubikRegular),
-                                    Text(order.orderDetails[index].quantity.toString(),
+                                    Text(order.orderDetails![index].quantity.toString(),
                                         style: rubikMedium.copyWith(color: Theme.of(context).primaryColor)),
                                   ],
                                 ),
-                                SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
@@ -347,91 +310,73 @@ class DetailsView extends StatelessWidget {
                                         Text(
                                           PriceConverter.convertPrice(
                                               context,
-                                              order.orderDetails[index].price -
-                                                  order.orderDetails[index].discountOnProduct),
+                                              order.orderDetails![index].price -
+                                                  order.orderDetails![index].discountOnProduct),
                                           style: rubikBold,
                                         ),
-                                        SizedBox(width: 5),
-                                        order.orderDetails[index].discountOnProduct > 0
+                                        const SizedBox(width: 5),
+                                        order.orderDetails![index].discountOnProduct > 0
                                             ? Expanded(
                                                 child: Text(
-                                                PriceConverter.convertPrice(context, order.orderDetails[index].price),
+                                                PriceConverter.convertPrice(context, order.orderDetails![index].price),
                                                 style: rubikBold.copyWith(
                                                   decoration: TextDecoration.lineThrough,
                                                   fontSize: Dimensions.FONT_SIZE_SMALL,
                                                   color: ColorResources.COLOR_GREY,
                                                 ),
                                               ))
-                                            : SizedBox(),
+                                            : const SizedBox(),
                                       ]),
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-
-                                // order.orderDetails[index].variation != null?
-                                // Row(children: [
-                                //   if(order.orderDetails[index].variation.type != null)
-                                //     Container(height: 10, width: 10, decoration: BoxDecoration(
-                                //       shape: BoxShape.circle,
-                                //       color: Theme.of(context).textTheme.bodyText1.color,
-                                //     )),
-                                //   SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                //
-                                //   Flexible(
-                                //     child: Text(order.orderDetails[index].variation.type ?? '',
-                                //       style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL,),
-                                //       maxLines: 1,
-                                //       overflow: TextOverflow.ellipsis,
-                                //     ),
-                                //   ),
-                                // ]):SizedBox(),
+                                const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                               ]),
                             ),
                           ]),
-                          _addOns.length > 0
+                          addOns.isNotEmpty
                               ? SizedBox(
                                   height: 30,
                                   child: ListView.builder(
                                     scrollDirection: Axis.horizontal,
-                                    physics: BouncingScrollPhysics(),
-                                    padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_SMALL),
-                                    itemCount: _addOns.length,
+                                    physics: const BouncingScrollPhysics(),
+                                    padding: const EdgeInsets.only(top: Dimensions.PADDING_SIZE_SMALL),
+                                    itemCount: addOns.length,
                                     itemBuilder: (context, i) {
                                       return Padding(
-                                        padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+                                        padding: const EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
                                         child: Row(children: [
-                                          Text(_addOns[i].name, style: rubikRegular),
-                                          SizedBox(width: 2),
-                                          Text(PriceConverter.convertPrice(context, _addOns[i].price),
+                                          Text(addOns[i].name, style: rubikRegular),
+                                          const SizedBox(width: 2),
+                                          Text(PriceConverter.convertPrice(context, addOns[i].price),
                                               style: rubikMedium),
-                                          SizedBox(width: 2),
-                                          Text('(${order.orderDetails[index].addOnQtys[i]})', style: rubikRegular),
+                                          const SizedBox(width: 2),
+                                          Text('(${order.orderDetails![index].addOnQtys[i]})', style: rubikRegular),
                                         ]),
                                       );
                                     },
                                   ),
                                 )
-                              : SizedBox(),
-                          Divider(height: 40),
+                              : const SizedBox(),
+                          const Divider(height: 40),
                         ])
-                      : SizedBox.shrink();
+                      : const SizedBox.shrink();
             },
           ),
 
-          (order.trackModel.orderNote != null && order.trackModel.orderNote.isNotEmpty)
+          (order.trackModel?.orderNote != null && order.trackModel!.orderNote.isNotEmpty)
               ? Container(
-                  padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                  margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_LARGE),
+                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                  margin: const EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_LARGE),
                   width: double.infinity,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(width: 1, color: ColorResources.getGreyColor(context)),
                   ),
-                  child: Text(order.trackModel.orderNote,
+                  child: Text(order.trackModel!.orderNote,
                       style: rubikRegular.copyWith(color: ColorResources.getGreyColor(context))),
                 )
-              : SizedBox(),
+              : const SizedBox(),
         ],
       );
     });

@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class SetMenuViewWeb extends StatefulWidget {
+  const SetMenuViewWeb({super.key});
+
   @override
   State<SetMenuViewWeb> createState() => _SetMenuViewWebState();
 }
@@ -18,11 +20,17 @@ class _SetMenuViewWebState extends State<SetMenuViewWeb> {
   final PageController pageController = PageController();
 
   void _nextPage() {
-    pageController.nextPage(duration: Duration(seconds: 1), curve: Curves.easeInOut);
+    pageController.nextPage(
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
   }
 
   void _previousPage() {
-    pageController.previousPage(duration: Duration(seconds: 1), curve: Curves.easeInOut);
+    pageController.previousPage(
+      duration: const Duration(seconds: 1),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -38,7 +46,7 @@ class _SetMenuViewWebState extends State<SetMenuViewWeb> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
                       child: Text(getTranslated('set_menu', context),
                           style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_OVER_LARGE)),
                     ),
@@ -54,14 +62,14 @@ class _SetMenuViewWebState extends State<SetMenuViewWeb> {
                         isLarge: false,
                         onTop: _previousPage,
                         isVisible: !setMenu.pageFirstIndex &&
-                            (setMenu.setMenuList != null ? setMenu.setMenuList.length > 5 : false)),
-                    SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                            (setMenu.setMenuList != null ? setMenu.setMenuList!.length > 5 : false)),
+                    const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                     ArrayButton(
                         isLeft: false,
                         isLarge: false,
                         onTop: _nextPage,
                         isVisible: !setMenu.pageLastIndex &&
-                            (setMenu.setMenuList != null ? setMenu.setMenuList.length > 5 : false))
+                            (setMenu.setMenuList != null ? setMenu.setMenuList!.length > 5 : false))
                   ]),
                 ))
               ],
@@ -69,10 +77,10 @@ class _SetMenuViewWebState extends State<SetMenuViewWeb> {
             SizedBox(
               height: 360,
               child: setMenu.setMenuList != null
-                  ? setMenu.setMenuList.length > 0
+                  ? setMenu.setMenuList!.isNotEmpty
                       ? SetMenuPageView(setMenuProvider: setMenu, pageController: pageController)
                       : Center(child: Text(getTranslated('no_set_menu_available', context)))
-                  : SetMenuShimmer(),
+                  : const SetMenuShimmer(),
             ),
           ],
         );
@@ -82,37 +90,39 @@ class _SetMenuViewWebState extends State<SetMenuViewWeb> {
 }
 
 class SetMenuShimmer extends StatelessWidget {
+  const SetMenuShimmer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
-      physics: BouncingScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
+      padding: const EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
       itemCount: 4,
       itemBuilder: (context, index) {
         return Container(
           height: 360,
           width: 280,
-          margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL, bottom: 5),
+          margin: const EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL, bottom: 5),
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(10),
-              boxShadow: [BoxShadow(color: Colors.grey[300], blurRadius: 10, spreadRadius: 1)]),
+              boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 10, spreadRadius: 1)]),
           child: Shimmer(
-            duration: Duration(seconds: 1),
-            interval: Duration(seconds: 1),
+            duration: const Duration(seconds: 1),
+            interval: const Duration(seconds: 1),
             enabled: Provider.of<SetMenuProvider>(context).setMenuList == null,
             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Container(
                 height: 225.0,
                 width: 368,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(10)), color: Colors.grey[300]),
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(10)), color: Colors.grey.shade300),
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -120,27 +130,28 @@ class SetMenuShimmer extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                          child: Container(height: 15, color: Colors.grey[300]),
+                          child: Container(height: 15, color: Colors.grey.shade300),
                         ),
-                        RatingBar(rating: 0.0, size: Dimensions.PADDING_SIZE_DEFAULT),
+                        const RatingBar(rating: 0.0, size: Dimensions.PADDING_SIZE_DEFAULT),
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(height: Dimensions.PADDING_SIZE_SMALL, width: 30, color: Colors.grey[300]),
-                              SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                              Container(height: Dimensions.PADDING_SIZE_SMALL, width: 30, color: Colors.grey[300]),
+                              Container(height: Dimensions.PADDING_SIZE_SMALL, width: 30, color: Colors.grey.shade300),
+                              const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                              Container(height: Dimensions.PADDING_SIZE_SMALL, width: 30, color: Colors.grey.shade300),
                             ],
                           ),
                         ),
                         Container(
                           height: 30,
                           width: 240,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.grey[300]),
+                          decoration:
+                              BoxDecoration(borderRadius: BorderRadius.circular(20), color: Colors.grey.shade300),
                         ),
-                        SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                        const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                       ]),
                 ),
               ),

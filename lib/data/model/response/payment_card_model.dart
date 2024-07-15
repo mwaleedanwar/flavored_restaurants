@@ -1,36 +1,14 @@
-// To parse this JSON data, do
-//
-//     final PaymentCardModel = PaymentCardModelFromJson(jsonString);
+// ignore_for_file: non_constant_identifier_names
 
 import 'dart:convert';
 
-// ignore: non_constant_identifier_names
-List<PaymentCardModel> PaymentCardModelFromJson(String str) =>
-    List<PaymentCardModel>.from(json.decode(str).map((x) => PaymentCardModel.fromJson(x)));
+List<PyamentCardModel> PyamentCardModelFromJson(String str) =>
+    List<PyamentCardModel>.from(json.decode(str).map((x) => PyamentCardModel.fromJson(x)));
 
-// ignore: non_constant_identifier_names
-String PaymentCardModelToJson(List<PaymentCardModel> data) =>
+String PyamentCardModelToJson(List<PyamentCardModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class PaymentCardModel {
-  PaymentCardModel({
-    this.id,
-    this.userId,
-    this.paymentId,
-    this.customerAccount,
-    this.cardNo,
-    this.expMonth,
-    this.expYear,
-    this.paymentType,
-    this.paymentIcon,
-    this.status,
-    this.defaultCard,
-    this.createdAt,
-    this.cvc,
-    this.cardholder,
-    this.updatedAt,
-  });
-
+class PyamentCardModel {
   int id;
   String userId;
   String cardholder;
@@ -47,7 +25,25 @@ class PaymentCardModel {
   String createdAt;
   String updatedAt;
 
-  factory PaymentCardModel.fromJson(Map<String, dynamic> json) => PaymentCardModel(
+  PyamentCardModel({
+    required this.id,
+    required this.userId,
+    required this.paymentId,
+    required this.customerAccount,
+    required this.cardNo,
+    required this.expMonth,
+    required this.expYear,
+    required this.paymentType,
+    required this.paymentIcon,
+    required this.status,
+    required this.defaultCard,
+    required this.createdAt,
+    required this.cvc,
+    required this.cardholder,
+    required this.updatedAt,
+  });
+
+  factory PyamentCardModel.fromJson(Map<String, dynamic> json) => PyamentCardModel(
         id: json["id"],
         userId: json["user_id"],
         paymentId: json["payment_id"],

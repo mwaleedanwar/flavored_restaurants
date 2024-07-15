@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/cart_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/order_details_model.dart';
@@ -23,19 +25,25 @@ class OrderItem extends StatelessWidget {
   final OrderModel orderItem;
   final bool isRunning;
   final OrderProvider orderProvider;
-  const OrderItem({Key key, @required this.orderProvider, @required this.isRunning, @required this.orderItem})
-      : super(key: key);
+  const OrderItem({
+    super.key,
+    required this.orderProvider,
+    required this.isRunning,
+    required this.orderItem,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-      margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
+      padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+      margin: const EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 300],
+            color: Provider.of<ThemeProvider>(context).darkTheme
+                ? Colors.grey.shade700
+                : Colors.grey.shade300,
             spreadRadius: 1,
             blurRadius: 5,
           )
@@ -53,39 +61,47 @@ class OrderItem extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+          const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
           Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Row(children: [
                 Text('${getTranslated('order_id', context)}:',
-                    style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL)),
-                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                Text(orderItem.id.toString(), style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL)),
-                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    style: rubikRegular.copyWith(
+                        fontSize: Dimensions.FONT_SIZE_SMALL)),
+                const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                Text(orderItem.id.toString(),
+                    style: rubikMedium.copyWith(
+                        fontSize: Dimensions.FONT_SIZE_SMALL)),
+                const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                 Expanded(
-                    child: orderItem.orderType == 'take_away' || orderItem.orderType == 'dine_in'
+                    child: orderItem.orderType == 'take_away' ||
+                            orderItem.orderType == 'dine_in'
                         ? Text(
                             '(${getTranslated(orderItem.orderType, context)})',
-                            style: rubikMedium.copyWith(color: Theme.of(context).primaryColor),
+                            style: rubikMedium.copyWith(
+                                color: Theme.of(context).primaryColor),
                           )
-                        : SizedBox()),
+                        : const SizedBox()),
               ]),
-              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+              const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
               Text(
                 '${orderItem.detailsCount} ${getTranslated(orderItem.detailsCount > 1 ? 'items' : 'item', context)}',
                 style: rubikRegular.copyWith(color: ColorResources.COLOR_GREY),
               ),
-              SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+              const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
               Row(children: [
-                Icon(Icons.check_circle, color: Theme.of(context).primaryColor, size: 15),
-                SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                Text('${getTranslated('${orderItem.orderStatus}', context)}',
-                    style: rubikRegular.copyWith(color: Theme.of(context).primaryColor)),
+                Icon(Icons.check_circle,
+                    color: Theme.of(context).primaryColor, size: 15),
+                const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                Text(getTranslated(orderItem.orderStatus, context),
+                    style: rubikRegular.copyWith(
+                        color: Theme.of(context).primaryColor)),
               ]),
             ]),
           ),
         ]),
-        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+        const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
         SizedBox(
           height: 50,
           child: Row(children: [
@@ -94,20 +110,22 @@ class OrderItem extends StatelessWidget {
               style: TextButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
-                  side: BorderSide(width: 2, color: ColorResources.DISABLE_COLOR),
+                  side: const BorderSide(
+                      width: 2, color: ColorResources.DISABLE_COLOR),
                 ),
-                minimumSize: Size(1, 50),
-                padding: EdgeInsets.all(0),
+                minimumSize: const Size(1, 50),
+                padding: const EdgeInsets.all(0),
               ),
               onPressed: () {
                 Navigator.pushNamed(
                   context,
                   Routes.getOrderDetailsRoute(orderItem.id),
-                  arguments: OrderDetailsScreen(orderModel: orderItem, orderId: orderItem.id),
+                  arguments: OrderDetailsScreen(
+                      orderModel: orderItem, orderId: orderItem.id),
                 );
               },
               child: Text(getTranslated('details', context),
-                  style: Theme.of(context).textTheme.headline3.copyWith(
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         color: ColorResources.DISABLE_COLOR,
                         fontSize: Dimensions.FONT_SIZE_LARGE,
                       )),
@@ -115,43 +133,55 @@ class OrderItem extends StatelessWidget {
             SizedBox(width: isRunning ? 20 : 0),
             isRunning
                 ? Expanded(
-                    child: orderItem.orderType != 'pos' && orderItem.orderType != 'take_away'
+                    child: orderItem.orderType != 'pos' &&
+                            orderItem.orderType != 'take_away'
                         ? CustomButton(
-                            btnTxt: getTranslated(isRunning ? 'track_order' : 'reorder', context),
+                            btnTxt: getTranslated(
+                                isRunning ? 'track_order' : 'reorder', context),
                             onTap: () async {
                               if (isRunning) {
-                                Navigator.pushNamed(context, Routes.getOrderTrackingRoute(orderItem.id));
+                                Navigator.pushNamed(context,
+                                    Routes.getOrderTrackingRoute(orderItem.id));
                               } else {
-                                List<OrderDetailsModel> orderDetails =
-                                    await orderProvider.getOrderDetails(orderItem.id.toString(), context);
-                                List<CartModel> _cartList = [];
-                                List<bool> _availableList = [];
-                                orderDetails.forEach((orderDetail) {
-                                  // Variation xyz = orderDetail.variation;
-                                  List<AddOn> _addOnList = [];
-                                  List<Variation> _variationList = [];
-                                  for (int i = 0; i < orderDetail.addOnIds.length; i++) {
-                                    //_addOnList.add(AddOn(id: orderDetail.addOnIds[i], quantity: orderDetail.addOnQtys[i]));
-                                  }
+                                List<OrderDetailsModel>? orderDetails =
+                                    await orderProvider.getOrderDetails(
+                                        orderItem.id.toString(), context);
+                                List<CartModel> cartList = [];
+                                List<bool> availableList = [];
+                                orderDetails?.forEach((orderDetail) {
+                                  List<AddOn> addOnList = [];
+                                  List<Variation> variationList = [];
 
-                                  _cartList.add(CartModel(
+                                  cartList.add(CartModel(
                                       price: orderDetail.price,
                                       points: 0.0,
-                                      discountedPrice: PriceConverter.convertWithDiscount(context, orderDetail.price,
-                                          double.parse(orderDetail.discountOnProduct.toString()), 'amount'),
-                                      variation: _variationList,
-                                      discountAmount: double.parse(orderDetail.discountOnProduct.toString()),
+                                      discountedPrice:
+                                          PriceConverter.convertWithDiscount(
+                                              context,
+                                              orderDetail.price,
+                                              double.parse(orderDetail
+                                                  .discountOnProduct
+                                                  .toString()),
+                                              'amount'),
+                                      variation: variationList,
+                                      discountAmount: double.parse(orderDetail
+                                          .discountOnProduct
+                                          .toString()),
                                       quantity: orderDetail.quantity,
                                       specialInstruction: '',
-                                      taxAmount: double.parse(orderDetail.taxAmount.toString()),
-                                      addOnIds: _addOnList,
+                                      taxAmount: double.parse(
+                                          orderDetail.taxAmount.toString()),
+                                      addOnIds: addOnList,
                                       product: orderDetail.productDetails,
                                       isGift: false,
                                       isFree: false));
                                 });
-                                if (_availableList.contains(false)) {
+                                if (availableList.contains(false)) {
                                   showCustomSnackBar(
-                                      getTranslated('one_or_more_product_unavailable', context), context);
+                                      getTranslated(
+                                          'one_or_more_product_unavailable',
+                                          context),
+                                      context);
                                 } else {
                                   if (orderItem.isProductAvailable) {
                                     Navigator.pushNamed(
@@ -163,23 +193,27 @@ class OrderItem extends StatelessWidget {
                                         orderItem.couponDiscountTitle ?? '',
                                       ),
                                       arguments: CheckoutScreen(
-                                        cartList: _cartList,
+                                        cartList: cartList,
                                         fromCart: false,
                                         amount: orderItem.orderAmount,
                                         orderType: orderItem.orderType,
-                                        couponCode: orderItem.couponDiscountTitle ?? '',
+                                        couponCode:
+                                            orderItem.couponDiscountTitle ?? '',
                                       ),
                                     );
                                   } else {
                                     showCustomSnackBar(
-                                        getTranslated('one_or_more_product_unavailable', context), context);
+                                        getTranslated(
+                                            'one_or_more_product_unavailable',
+                                            context),
+                                        context);
                                   }
                                 }
                               }
                             },
                           )
-                        : SizedBox.shrink())
-                : SizedBox.shrink(),
+                        : const SizedBox.shrink())
+                : const SizedBox.shrink(),
           ]),
         ),
       ]),

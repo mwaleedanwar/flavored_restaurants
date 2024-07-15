@@ -10,7 +10,6 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/provider/language_provider.dar
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/localization_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/order_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/product_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/search_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
@@ -18,23 +17,22 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_text_field.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/on_hover.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/web/widget/cetegory_hover_widget.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/web/widget/languageHover_widget.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/web/widget/language_hover_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/web/widget/status_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/menu/widget/sign_out_confirmation_dialog.dart';
 import 'package:provider/provider.dart';
-
-import '../../helper/salutations_function.dart';
-import '../../provider/profile_provider.dart';
-import '../../provider/theme_provider.dart';
-import '../screens/heart_points/heart_points.dart';
-import '../screens/menu/menu_screen.dart';
-import '../screens/refer_and_earn/refer_and_earn_screen.dart';
-import 'branch_button_view.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/helper/salutations_function.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/profile_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/heart_points/heart_points.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/menu/menu_screen.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/refer_and_earn/refer_and_earn_screen.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/branch_button_view.dart';
 
 class WebAppBar extends StatefulWidget implements PreferredSizeWidget {
+  const WebAppBar({super.key});
+
   @override
   State<WebAppBar> createState() => _WebAppBarState();
 
@@ -45,66 +43,50 @@ class WebAppBar extends StatefulWidget implements PreferredSizeWidget {
 class _WebAppBarState extends State<WebAppBar> {
   List<PopupMenuEntry<Object>> popUpMenuList(BuildContext context) {
     List<PopupMenuEntry<Object>> list = <PopupMenuEntry<Object>>[];
-    List<CategoryModel> _categoryList = Provider.of<CategoryProvider>(context, listen: false).categoryList;
+    List<CategoryModel> categoryList = Provider.of<CategoryProvider>(context, listen: false).categoryList;
     list.add(PopupMenuItem(
       padding: EdgeInsets.zero,
-      value: _categoryList,
+      value: categoryList,
       child: MouseRegion(
         onExit: (_) => Navigator.of(context).pop(),
-        child: CategoryHoverWidget(categoryList: _categoryList),
+        child: CategoryHoverWidget(categoryList: categoryList),
       ),
     ));
     return list;
   }
 
   List<PopupMenuEntry<Object>> popUpLanguageList(BuildContext context) {
-    List<PopupMenuEntry<Object>> _languagePopupMenuEntryList = <PopupMenuEntry<Object>>[];
-    List<LanguageModel> _languageList = AppConstants.languages;
-    _languagePopupMenuEntryList.add(PopupMenuItem(
+    List<PopupMenuEntry<Object>> languagePopupMenuEntryList = <PopupMenuEntry<Object>>[];
+    List<LanguageModel> languageList = AppConstants.languages;
+    languagePopupMenuEntryList.add(PopupMenuItem(
       padding: EdgeInsets.zero,
-      value: _languageList,
+      value: languageList,
       child: MouseRegion(
         onExit: (_) => Navigator.of(context).pop(),
-        child: LanguageHoverWidget(languageList: _languageList),
+        child: LanguageHoverWidget(languageList: languageList),
       ),
     ));
-    return _languagePopupMenuEntryList;
-  }
-
-  _showPopupMenu(Offset offset, BuildContext context, bool isCategory) async {
-    double left = offset.dx;
-    double top = offset.dy;
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject();
-    await showMenu(
-      context: context,
-      position: RelativeRect.fromLTRB(left, top, overlay.size.width, overlay.size.height),
-      items: isCategory ? popUpMenuList(context) : popUpLanguageList(context),
-      elevation: 8.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(
-          Radius.circular(12),
-        ),
-      ),
-    );
+    return languagePopupMenuEntryList;
   }
 
   @override
   void initState() {
     Provider.of<ProfileProvider>(context, listen: false).getUserInfo(context);
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool _isLoggedIn = Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
+    final bool isLoggedIn = Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
     Provider.of<LanguageProvider>(context, listen: false).initializeAllLanguages(context);
-    final LanguageModel _currentLanguage = AppConstants.languages.firstWhere((language) =>
+    AppConstants.languages.firstWhere((language) =>
         language.languageCode == Provider.of<LocalizationProvider>(context, listen: false).locale.languageCode);
     return Container(
       decoration: BoxDecoration(color: Theme.of(context).cardColor, boxShadow: [
         BoxShadow(
-            color: ColorResources.getWhiteAndBlack(context).withOpacity(0.10), blurRadius: 20, offset: Offset(0, 10))
+            color: ColorResources.getWhiteAndBlack(context).withOpacity(0.10),
+            blurRadius: 20,
+            offset: const Offset(0, 10))
       ]),
       child: Column(
         children: [
@@ -119,14 +101,14 @@ class _WebAppBarState extends State<WebAppBar> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _isLoggedIn && profile.userInfoModel != null
+                        isLoggedIn && profile.userInfoModel != null
                             ? Row(
                                 children: [
-                                  Text('${getGreetingMessage()}, ${profile.userInfoModel.fName}',
+                                  Text('${getGreetingMessage()}, ${profile.userInfoModel?.fName ?? ''}',
                                       style: poppinsRegular.copyWith(
                                           fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
                                           color: ColorResources.COLOR_WHITE)),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 10,
                                   ),
                                   Image.asset(
@@ -135,17 +117,17 @@ class _WebAppBarState extends State<WebAppBar> {
                                   ),
                                 ],
                               )
-                            : SizedBox(),
+                            : const SizedBox(),
                         !Provider.of<SplashProvider>(context, listen: false).isRestaurantOpenNow(context)
                             ? Consumer<OrderProvider>(builder: (context, orderProvider, child) {
                                 return Text(
-                                  '${'${getTranslated('restaurant_is_close_now', context)}'}',
+                                  getTranslated('restaurant_is_close_now', context),
                                   style:
                                       rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE, color: Colors.white),
                                 );
                               })
-                            : SizedBox(),
-                        !_isLoggedIn
+                            : const SizedBox(),
+                        !isLoggedIn
                             ? InkWell(
                                 onTap: () {
                                   Navigator.pushNamed(context, Routes.getSignUpRoute());
@@ -156,28 +138,28 @@ class _WebAppBarState extends State<WebAppBar> {
                                       rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE, color: Colors.white),
                                 ),
                               )
-                            : SizedBox.shrink(),
+                            : const SizedBox.shrink(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            BranchButtonView(isRow: true),
-                            SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
+                            const BranchButtonView(isRow: true),
+                            const SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
                               child: Text(getTranslated('dark_theme', context),
                                   style: poppinsRegular.copyWith(
                                       color: ColorResources.COLOR_WHITE, fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL)),
                             ),
-                            StatusWidget(),
-                            SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_LARGE),
-                            SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
+                            const StatusWidget(),
+                            const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_LARGE),
+                            const SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
                             InkWell(
                               onTap: () {
-                                if (_isLoggedIn) {
+                                if (isLoggedIn) {
                                   showDialog(
                                       context: context,
                                       barrierDismissible: false,
-                                      builder: (context) => SignOutConfirmationDialog());
+                                      builder: (context) => const SignOutConfirmationDialog());
                                 } else {
                                   Navigator.pushNamed(context, Routes.getLoginRoute());
                                 }
@@ -185,10 +167,10 @@ class _WebAppBarState extends State<WebAppBar> {
                               child: OnHover(builder: (isHover) {
                                 return Row(
                                   children: [
-                                    Icon(Icons.lock_outlined,
+                                    const Icon(Icons.lock_outlined,
                                         color: ColorResources.COLOR_WHITE, size: Dimensions.PADDING_SIZE_DEFAULT),
-                                    SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                                    Text(getTranslated(_isLoggedIn ? 'logout' : 'login', context),
+                                    const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                                    Text(getTranslated(isLoggedIn ? 'logout' : 'login', context),
                                         style: poppinsRegular.copyWith(
                                             fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
                                             color: ColorResources.COLOR_WHITE))
@@ -226,12 +208,12 @@ class _WebAppBarState extends State<WebAppBar> {
                                       builder: (context, splash, child) => FadeInImage.assetNetwork(
                                             placeholder: Images.placeholder_rectangle,
                                             image:
-                                                '${splash.baseUrls.restaurantImageUrl}/${splash.configModel.restaurantLogo}',
+                                                '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
                                             width: 120,
                                             height: 80,
                                             imageErrorBuilder: (c, o, s) => Image.asset(F.logo, width: 120, height: 80),
                                           ))
-                                  : SizedBox(),
+                                  : const SizedBox(),
                             ),
                           ],
                         ),
@@ -254,12 +236,11 @@ class _WebAppBarState extends State<WebAppBar> {
                           ),
                         );
                       }),
-
                       OnHover(
                         builder: (isHover) {
                           return InkWell(
                               onTap: () {
-                                if (_isLoggedIn) {
+                                if (isLoggedIn) {
                                   Navigator.pushNamed(context, Routes.getDashboardRoute('order'));
                                 } else {
                                   Navigator.pushNamed(context, Routes.getLoginRoute());
@@ -282,7 +263,7 @@ class _WebAppBarState extends State<WebAppBar> {
                         builder: (isHover) {
                           return InkWell(
                               onTap: () {
-                                if (_isLoggedIn) {
+                                if (isLoggedIn) {
                                   Navigator.pushNamed(context, Routes.getDashboardRoute('favourite'));
                                 } else {
                                   Navigator.pushNamed(context, Routes.getLoginRoute());
@@ -305,8 +286,9 @@ class _WebAppBarState extends State<WebAppBar> {
                         builder: (isHover) {
                           return InkWell(
                               onTap: () {
-                                if (_isLoggedIn) {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => HeartPointScreen()));
+                                if (isLoggedIn) {
+                                  Navigator.push(
+                                      context, MaterialPageRoute(builder: (context) => const HeartPointScreen()));
                                 } else {
                                   Navigator.pushNamed(context, Routes.getLoginRoute());
                                 }
@@ -324,14 +306,13 @@ class _WebAppBarState extends State<WebAppBar> {
                               ));
                         },
                       ),
-
                       OnHover(
                         builder: (isHover) {
                           return InkWell(
                               onTap: () {
-                                if (_isLoggedIn) {
+                                if (isLoggedIn) {
                                   Navigator.push(
-                                      context, MaterialPageRoute(builder: (context) => ReferAndEarnScreen()));
+                                      context, MaterialPageRoute(builder: (context) => const ReferAndEarnScreen()));
                                 } else {
                                   Navigator.pushNamed(context, Routes.getLoginRoute());
                                 }
@@ -349,72 +330,7 @@ class _WebAppBarState extends State<WebAppBar> {
                               ));
                         },
                       ),
-                      Spacer(),
-                      // Container(
-                      //   width: 450,
-                      //   decoration: BoxDecoration(
-                      //     borderRadius: BorderRadius.circular(2.0),
-                      //   ),
-                      //   child: Consumer<SearchProvider>(
-                      //     builder: (context,search,_) {
-                      //
-                      //       return Padding(
-                      //         padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 10),
-                      //         child: CustomTextField(
-                      //           hintText: getTranslated('search_items_here', context),
-                      //           isShowBorder: true,
-                      //           fillColor: Theme.of(context).canvasColor,
-                      //           isShowSuffixIcon: true,
-                      //           suffixIconUrl: search.searchController.text.length > 0? Images.close : Images.search,
-                      //           onChanged: (str){
-                      //             str.length = 0;
-                      //             search.getSearchText(str);
-                      //             // print('===>${search.searchController.text.toString()}');
-                      //
-                      //           },
-                      //
-                      //           onSuffixTap: () {
-                      //               // if (search.searchController.text.length > 0) {
-                      //               //   search.searchController.clear();
-                      //               //   search.getSearchText('');
-                      //               // }
-                      //             if(search.searchController.text.length > 0 && search.isSearch == true){
-                      //               // Provider.of<SearchProvider>(context,listen: false).saveSearchAddress(search.searchController.text);
-                      //               // Provider.of<SearchProvider>(context,listen: false).searchProduct(search.searchController.text, context);
-                      //               Navigator.pushNamed(context, Routes.getSearchResultRoute(search.searchController.text),
-                      //                  // arguments: SearchResultScreen(searchString: search.searchController.text),
-                      //               );
-                      //
-                      //               search.searchDone();
-                      //
-                      //             }
-                      //             else if (search.searchController.text.length > 0 && search.isSearch == false) {
-                      //               search.searchController.clear();
-                      //               search.getSearchText('');
-                      //
-                      //               search.searchDone();
-                      //             }
-                      //           },
-                      //           controller: search.searchController,
-                      //           inputAction: TextInputAction.search,
-                      //           isIcon: true,
-                      //           onSubmit: (text) {
-                      //               if (search.searchController.text.length > 0) {
-                      //                 // Provider.of<SearchProvider>(context,listen: false).saveSearchAddress(search.searchController.text);
-                      //                 // Provider.of<SearchProvider>(context,listen: false).searchProduct(search.searchController.text, context);
-                      //                 Navigator.pushNamed(context, Routes.getSearchResultRoute(search.searchController.text));
-                      //                 //Navigator.pushNamed(context, Routes.getSearchResultRoute(_searchController.text.replaceAll(' ', '-')));
-                      //
-                      //                 search.searchDone();
-                      //               }
-                      //
-                      //           },),
-                      //       );
-                      //
-                      //     }
-                      //   ),
-                      // ),
-
+                      const Spacer(),
                       InkWell(
                           onTap: () => Navigator.pushNamed(context, Routes.getDashboardRoute('cart')),
                           child: OnHover(builder: (isHover) {
@@ -430,7 +346,7 @@ class _WebAppBarState extends State<WebAppBar> {
                                   top: -7,
                                   right: -7,
                                   child: Container(
-                                    padding: EdgeInsets.all(4),
+                                    padding: const EdgeInsets.all(4),
                                     alignment: Alignment.center,
                                     decoration: BoxDecoration(shape: BoxShape.circle, color: F.appbarHeaderColor),
                                     child: Center(
@@ -451,8 +367,8 @@ class _WebAppBarState extends State<WebAppBar> {
                       OnHover(builder: (isHover) {
                         return InkWell(
                           onTap: () {
-                            print('-tapped');
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen()));
+                            debugPrint('-tapped');
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const MenuScreen()));
                           },
                           child: Icon(Icons.menu,
                               size: Dimensions.PADDING_SIZE_EXTRA_LARGE,
@@ -471,5 +387,5 @@ class _WebAppBarState extends State<WebAppBar> {
 
   @override
   // ignore: override_on_non_overriding_member
-  Size get preferredSize => Size(double.maxFinite, 50);
+  Size get preferredSize => const Size(double.maxFinite, 50);
 }

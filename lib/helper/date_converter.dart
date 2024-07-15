@@ -50,29 +50,30 @@ class DateConverter {
     return DateFormat(_timeFormatter(context)).format(DateFormat('HH:mm').parse(time));
   }
 
-  static bool isAvailable(String start, String end, BuildContext context, {DateTime time}) {
-    DateTime _currentTime;
+  static bool isAvailable(String? start, String? end, BuildContext context, {DateTime? time}) {
+    DateTime currentTime;
+    if (start == null || end == null) return false;
     if (time != null) {
-      _currentTime = time;
+      currentTime = time;
     } else {
-      _currentTime = Provider.of<SplashProvider>(context, listen: false).currentTime;
+      currentTime = Provider.of<SplashProvider>(context, listen: false).currentTime;
     }
-    DateTime _start = DateFormat('hh:mm:ss').parse(start);
-    DateTime _end = DateFormat('hh:mm:ss').parse(end);
-    DateTime _startTime =
-        DateTime(_currentTime.year, _currentTime.month, _currentTime.day, _start.hour, _start.minute, _start.second);
-    DateTime _endTime =
-        DateTime(_currentTime.year, _currentTime.month, _currentTime.day, _end.hour, _end.minute, _end.second);
-    if (_endTime.isBefore(_startTime)) {
-      _endTime = _endTime.add(Duration(days: 1));
+    DateTime start0 = DateFormat('hh:mm:ss').parse(start);
+    DateTime end0 = DateFormat('hh:mm:ss').parse(end);
+    DateTime startTime =
+        DateTime(currentTime.year, currentTime.month, currentTime.day, start0.hour, start0.minute, start0.second);
+    DateTime endTime =
+        DateTime(currentTime.year, currentTime.month, currentTime.day, end0.hour, end0.minute, end0.second);
+    if (endTime.isBefore(startTime)) {
+      endTime = endTime.add(const Duration(days: 1));
     }
-    return _currentTime.isAfter(_startTime) && _currentTime.isBefore(_endTime);
+    return currentTime.isAfter(startTime) && currentTime.isBefore(endTime);
   }
 
   static String convertTimeRange(String start, String end) {
-    DateTime _startTime = DateFormat('HH:mm:ss').parse(start);
-    DateTime _endTime = DateFormat('HH:mm:ss').parse(end);
-    return '${DateFormat('hh:mm aa').format(_startTime)} - ${DateFormat('hh:mm aa').format(_endTime)}';
+    DateTime startTime = DateFormat('HH:mm:ss').parse(start);
+    DateTime endTime = DateFormat('HH:mm:ss').parse(end);
+    return '${DateFormat('hh:mm aa').format(startTime)} - ${DateFormat('hh:mm aa').format(endTime)}';
   }
 
   static DateTime stringTimeToDateTime(String time) {
@@ -80,9 +81,9 @@ class DateConverter {
   }
 
   static String deliveryDateAndTimeToDate(String deliveryDate, String deliveryTime, BuildContext context) {
-    DateTime _date = DateFormat('yyyy-MM-dd').parse(deliveryDate);
-    DateTime _time = DateFormat('HH:mm').parse(deliveryTime);
-    return '${DateFormat('dd-MMM-yyyy').format(_date)} ${DateFormat(_timeFormatter(context)).format(_time)}';
+    DateTime date = DateFormat('yyyy-MM-dd').parse(deliveryDate);
+    DateTime time = DateFormat('HH:mm').parse(deliveryTime);
+    return '${DateFormat('dd-MMM-yyyy').format(date)} ${DateFormat(_timeFormatter(context)).format(time)}';
   }
 
   static DateTime convertStringTimeToDate(String time) {
@@ -94,42 +95,35 @@ class DateConverter {
   }
 
   static String _timeFormatter(BuildContext context) {
-    return Provider.of<SplashProvider>(context, listen: false).configModel.timeFormat == '24' ? 'HH:mm' : 'hh:mm a';
+    return Provider.of<SplashProvider>(context, listen: false).configModel!.timeFormat == '24' ? 'HH:mm' : 'hh:mm a';
   }
 
   static String getWeekName(String index) {
-    String _weekName;
     switch (index) {
       case '0':
-        _weekName = 'Sunday';
-        break;
+        return 'Sunday';
       case '1':
-        _weekName = 'Monday';
-        break;
+        return 'Monday';
       case '2':
-        _weekName = 'Tuesday';
-        break;
+        return 'Tuesday';
       case '3':
-        _weekName = 'Wednesday';
-        break;
+        return 'Wednesday';
       case '4':
-        _weekName = 'Thursday';
-        break;
+        return 'Thursday';
       case '5':
-        _weekName = 'Friday';
-        break;
+        return 'Friday';
       case '6':
-        _weekName = 'Saturday';
-        break;
+        return 'Saturday';
+      default:
+        return 'ERROR';
     }
-    return _weekName;
   }
 
-  static getTime(String time) {
+  static getTime(String? time) {
     // TimeOfDay _startTime = TimeOfDay(
     //     hour: int.parse(time.split(":")[0]),
     //     minute: int.parse(time.split(":")[1]));
     // return "${_startTime.hourOfPeriod}:${_startTime.minute} ${_startTime.period == DayPeriod.pm ? "PM" : "AM"}";
-    return "${DateFormat.jm().format(DateFormat("hh:mm:ss").parse("${time ?? ''}:00"))}";
+    return DateFormat.jm().format(DateFormat("hh:mm:ss").parse("${time ?? ''}:00"));
   }
 }

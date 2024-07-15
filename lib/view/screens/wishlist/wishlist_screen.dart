@@ -15,15 +15,16 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/web/widget/p
 import 'package:provider/provider.dart';
 
 class WishListScreen extends StatefulWidget {
+  const WishListScreen({super.key});
+
   @override
-  _WishListScreenState createState() => _WishListScreenState();
+  State<WishListScreen> createState() => _WishListScreenState();
 }
 
 class _WishListScreenState extends State<WishListScreen> {
   bool _isLoggedIn = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _isLoggedIn = Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
     if (_isLoggedIn) {
@@ -36,11 +37,11 @@ class _WishListScreenState extends State<WishListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
+    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : CustomAppBar(
               context: context,
               title: getTranslated('my_favourite', context),
@@ -49,7 +50,7 @@ class _WishListScreenState extends State<WishListScreen> {
           ? Consumer<WishListProvider>(
               builder: (context, wishlistProvider, child) {
                 return !wishlistProvider.isLoading
-                    ? !wishlistProvider.isLoading && wishlistProvider.wishIdList.length > 0
+                    ? !wishlistProvider.isLoading && wishlistProvider.wishIdList.isNotEmpty
                         ? RefreshIndicator(
                             onRefresh: () async {
                               await Provider.of<WishListProvider>(context, listen: false).initWishList(
@@ -65,9 +66,9 @@ class _WishListScreenState extends State<WishListScreen> {
                                     Center(
                                       child: ConstrainedBox(
                                         constraints: BoxConstraints(
-                                            minHeight: !ResponsiveHelper.isDesktop(context) && _height < 600
-                                                ? _height
-                                                : _height - 400),
+                                            minHeight: !ResponsiveHelper.isDesktop(context) && height < 600
+                                                ? height
+                                                : height - 400),
                                         child: Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 1, vertical: Dimensions.PADDING_SIZE_DEFAULT),
@@ -75,7 +76,7 @@ class _WishListScreenState extends State<WishListScreen> {
                                               width: 1170,
                                               child: GridView.builder(
                                                 gridDelegate: ResponsiveHelper.isDesktop(context)
-                                                    ? SliverGridDelegateWithMaxCrossAxisExtent(
+                                                    ? const SliverGridDelegateWithMaxCrossAxisExtent(
                                                         maxCrossAxisExtent: 195, mainAxisExtent: 250)
                                                     : SliverGridDelegateWithFixedCrossAxisCount(
                                                         crossAxisSpacing: 5,
@@ -83,9 +84,9 @@ class _WishListScreenState extends State<WishListScreen> {
                                                         childAspectRatio: 4,
                                                         crossAxisCount: ResponsiveHelper.isTab(context) ? 2 : 1),
                                                 itemCount: wishlistProvider.wishList.length,
-                                                padding:
-                                                    EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
-                                                physics: NeverScrollableScrollPhysics(),
+                                                padding: const EdgeInsets.symmetric(
+                                                    horizontal: Dimensions.PADDING_SIZE_SMALL),
+                                                physics: const NeverScrollableScrollPhysics(),
                                                 shrinkWrap: true,
                                                 itemBuilder: (BuildContext context, int index) {
                                                   return ResponsiveHelper.isDesktop(context)
@@ -100,21 +101,21 @@ class _WishListScreenState extends State<WishListScreen> {
                                         ),
                                       ),
                                     ),
-                                    if (ResponsiveHelper.isDesktop(context)) FooterView(),
+                                    if (ResponsiveHelper.isDesktop(context)) const FooterView(),
                                   ],
                                 ),
                               ),
                             ),
                           )
-                        : NoDataScreen(
+                        : const NoDataScreen(
                             isFavourite: true,
                           )
                     : Center(
                         child: CircularProgressIndicator(
-                            valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)));
+                            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)));
               },
             )
-          : NotLoggedInScreen(),
+          : const NotLoggedInScreen(),
     );
   }
 }

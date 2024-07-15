@@ -15,22 +15,20 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_text_field.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/footer_view.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 
 import 'package:masked_text/masked_text.dart';
 import 'package:provider/provider.dart';
 
-import '../../../utill/app_constants.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 
 class CreateAccountScreen extends StatefulWidget {
-  final String email;
-  final String referalCode;
+  final String? referalCode;
 
-  CreateAccountScreen({@required this.email, this.referalCode});
+  const CreateAccountScreen({super.key, this.referalCode});
 
   @override
-  _CreateAccountScreenState createState() => _CreateAccountScreenState();
+  State<CreateAccountScreen> createState() => _CreateAccountScreenState();
 }
 
 class _CreateAccountScreenState extends State<CreateAccountScreen> {
@@ -40,15 +38,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
 
-  final FocusNode _referTextFocus = FocusNode();
-
-  final FocusNode _confirmPasswordFocus = FocusNode();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
   final TextEditingController _referTextController = TextEditingController();
 
   final upper = RegExp(r'(?=.*[A-Z])\w+');
@@ -60,38 +54,44 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   @override
   void initState() {
     super.initState();
-
-    // _numberController.text=widget.email.replaceAll('+1', '');
-    _referTextController.text = widget.referalCode;
-
+    _referTextController.text = widget.referalCode ?? '';
     debugPrint('number --${_numberController.text}');
-    // _countryDialCode = CountryCode.fromCountryCode(Provider.of<SplashProvider>(context, listen: false).configModel.countryCode).dialCode;
   }
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-
+    final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(
+              preferredSize: Size.fromHeight(100),
+              child: WebAppBar(),
+            )
           : null,
       body: Consumer<AuthProvider>(
         builder: (context, authProvider, child) => SafeArea(
           child: Scrollbar(
             child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               child: Padding(
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
                 child: Center(
                   child: Container(
-                    width: _width > 700 ? 700 : _width,
-                    padding: _width > 700 ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
-                    decoration: _width > 700
+                    width: width > 700 ? 700 : width,
+                    padding: width > 700
+                        ? const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT)
+                        : null,
+                    decoration: width > 700
                         ? BoxDecoration(
                             color: Theme.of(context).cardColor,
                             borderRadius: BorderRadius.circular(10),
-                            boxShadow: [BoxShadow(color: Colors.grey[300], blurRadius: 5, spreadRadius: 1)],
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade300,
+                                blurRadius: 5,
+                                spreadRadius: 1,
+                              )
+                            ],
                           )
                         : null,
                     child: Column(
@@ -103,40 +103,58 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           getTranslated('create_account', context),
                           style: Theme.of(context)
                               .textTheme
-                              .headline3
-                              .copyWith(fontSize: 24, color: ColorResources.getGreyBunkerColor(context)),
+                              .headlineMedium
+                              ?.copyWith(
+                                fontSize: 24,
+                                color:
+                                    ColorResources.getGreyBunkerColor(context),
+                              ),
                         )),
                         SizedBox(height: isCodeSent ? 20 : 120),
                         Text(
                           getTranslated('mobile_number', context),
                           style: Theme.of(context)
                               .textTheme
-                              .headline2
-                              .copyWith(color: ColorResources.getHintColor(context)),
+                              .displayMedium
+                              ?.copyWith(
+                                  color: ColorResources.getHintColor(context)),
                         ),
-                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                        const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
                         MaskedTextField(
                             mask: AppConstants.phone_form,
                             controller: _numberController,
-                            style: Theme.of(context).textTheme.headline2.copyWith(
-                                color: Theme.of(context).textTheme.bodyText1.color,
-                                fontSize: Dimensions.FONT_SIZE_LARGE),
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.color,
+                                    fontSize: Dimensions.FONT_SIZE_LARGE),
                             keyboardType: TextInputType.number,
                             focusNode: _numberFocus,
                             decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 22),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 16, horizontal: 22),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
-                                borderSide: BorderSide(style: BorderStyle.none, width: 0),
+                                borderSide: const BorderSide(
+                                    style: BorderStyle.none, width: 0),
                               ),
                               isDense: true,
                               hintText: AppConstants.phone_form_hint,
                               fillColor: Theme.of(context).cardColor,
-                              hintStyle: Theme.of(context).textTheme.headline2.copyWith(
-                                  fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.COLOR_GREY_CHATEAU),
+                              hintStyle: Theme.of(context)
+                                  .textTheme
+                                  .displayMedium
+                                  ?.copyWith(
+                                      fontSize: Dimensions.FONT_SIZE_SMALL,
+                                      color: ColorResources.COLOR_GREY_CHATEAU),
                               filled: true,
-                              prefixIconConstraints: BoxConstraints(minWidth: 23, maxHeight: 20),
+                              prefixIconConstraints: const BoxConstraints(
+                                  minWidth: 23, maxHeight: 20),
                               suffixIcon: InkWell(
                                   onTap: () {
                                     _emailController.clear();
@@ -145,23 +163,27 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     // isChecked=false;
                                     isCodeSent = false;
 
-                                    FocusScope.of(context).requestFocus(_numberFocus);
+                                    FocusScope.of(context)
+                                        .requestFocus(_numberFocus);
                                   },
                                   child: Icon(
                                     Icons.close,
-                                    color: ColorResources.getGreyBunkerColor(context),
+                                    color: ColorResources.getGreyBunkerColor(
+                                        context),
                                   )),
                             ),
                             onChanged: (number) {
                               if (_numberController.text.trim().length == 14) {
                                 _numberFocus.unfocus();
-                                FocusScope.of(context).requestFocus(_passwordFocus);
+                                FocusScope.of(context)
+                                    .requestFocus(_passwordFocus);
                                 isCodeSent = true;
 
                                 authProvider
                                     .checkPhone(
                                         AppConstants.country_code +
-                                            _numberController.text.replaceAll(RegExp('[()\\-\\s]'), ''),
+                                            _numberController.text.replaceAll(
+                                                RegExp('[()\\-\\s]'), ''),
                                         context)
                                     .then((value) async {
                                   if (value.isSuccess) {
@@ -170,88 +192,83 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 });
                               }
                             }),
-                        SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                        // Row(children: [
-                        //  Expanded(child:  IntlPhoneField(
-                        //
-                        //    decoration: InputDecoration(
-                        //      labelText: 'Phone Number',
-                        //      border:InputBorder.none,
-                        //      fillColor: ColorResources.COLOR_WHITE
-                        //        ,filled: true
-                        //    ),
-                        //    initialCountryCode: 'US',
-                        //    style:  Theme.of(context).textTheme.headline2.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.COLOR_BLACK),
-                        //
-                        //    onChanged: (phone) {
-                        //      print(phone.completeNumber);
-                        //      _emailController.text=phone.completeNumber;
-                        //    },
-                        //  ),),
-                        //
-                        // ]),
+                        const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                         isCodeSent == true
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                  const SizedBox(
+                                      height: Dimensions.PADDING_SIZE_LARGE),
                                   Text(
                                     'Enter the code we sent you',
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline2
-                                        .copyWith(color: ColorResources.getHintColor(context)),
+                                        .displayMedium
+                                        ?.copyWith(
+                                            color: ColorResources.getHintColor(
+                                                context)),
                                   ),
-                                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                  const SizedBox(
+                                      height: Dimensions.PADDING_SIZE_SMALL),
                                   MaskedTextField(
                                     maxLength: 4,
                                     controller: _passwordController,
-                                    style: Theme.of(context).textTheme.headline2.copyWith(
-                                        color: Theme.of(context).textTheme.bodyText1.color,
-                                        fontSize: Dimensions.FONT_SIZE_LARGE),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium
+                                        ?.copyWith(
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.color,
+                                            fontSize:
+                                                Dimensions.FONT_SIZE_LARGE),
                                     keyboardType: TextInputType.number,
                                     focusNode: _passwordFocus,
                                     decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 22),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 16, horizontal: 22),
                                       border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10.0),
-                                        borderSide: BorderSide(style: BorderStyle.none, width: 0),
+                                        borderRadius:
+                                            BorderRadius.circular(10.0),
+                                        borderSide: const BorderSide(
+                                            style: BorderStyle.none, width: 0),
                                       ),
                                       isDense: true,
                                       hintText: '0000',
                                       fillColor: Theme.of(context).cardColor,
-                                      hintStyle: Theme.of(context).textTheme.headline2.copyWith(
-                                          fontSize: Dimensions.FONT_SIZE_SMALL,
-                                          color: ColorResources.COLOR_GREY_CHATEAU),
+                                      hintStyle: Theme.of(context)
+                                          .textTheme
+                                          .displayMedium
+                                          ?.copyWith(
+                                              fontSize:
+                                                  Dimensions.FONT_SIZE_SMALL,
+                                              color: ColorResources
+                                                  .COLOR_GREY_CHATEAU),
                                       filled: true,
-                                      prefixIconConstraints: BoxConstraints(minWidth: 23, maxHeight: 20),
+                                      prefixIconConstraints:
+                                          const BoxConstraints(
+                                              minWidth: 23, maxHeight: 20),
                                     ),
                                     onChanged: (otp) {
                                       _passwordFocus.unfocus();
                                     },
                                   ),
 
-                                  // CustomTextField(
-                                  //   hintText: getTranslated(
-                                  //       'password_hint', context),
-                                  //   isShowBorder: true,
-                                  //   isPassword: true,
-                                  //   isShowSuffixIcon: true,
-                                  //   focusNode: _passwordFocus,
-                                  //
-                                  //   controller: _passwordController,
-                                  //   inputAction: TextInputAction.done,
-                                  // ),
-                                  SizedBox(height: 22),
+                                  const SizedBox(height: 22),
                                   // for first name section
                                   Text(
                                     getTranslated('first_name', context),
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline2
-                                        .copyWith(color: ColorResources.getHintColor(context)),
+                                        .displayMedium
+                                        ?.copyWith(
+                                            color: ColorResources.getHintColor(
+                                                context)),
                                   ),
-                                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                  const SizedBox(
+                                      height: Dimensions.PADDING_SIZE_SMALL),
                                   CustomTextField(
                                     hintText: 'first name',
                                     isShowBorder: true,
@@ -261,18 +278,26 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     inputType: TextInputType.name,
                                     capitalization: TextCapitalization.words,
                                   ),
-                                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                  const SizedBox(
+                                      height: Dimensions.PADDING_SIZE_LARGE),
 
                                   // for last name section
                                   Text(
                                     getTranslated('last_name', context),
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline2
-                                        .copyWith(color: ColorResources.getHintColor(context)),
+                                        .displayMedium
+                                        ?.copyWith(
+                                            color: ColorResources.getHintColor(
+                                                context)),
                                   ),
-                                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                  Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification
+                                  const SizedBox(
+                                      height: Dimensions.PADDING_SIZE_SMALL),
+                                  Provider.of<SplashProvider>(context,
+                                                  listen: false)
+                                              .configModel
+                                              ?.emailVerification ??
+                                          false
                                       ? CustomTextField(
                                           hintText: 'Doe',
                                           isShowBorder: true,
@@ -280,7 +305,8 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                           focusNode: _lastNameFocus,
                                           nextFocus: _emailFocus,
                                           inputType: TextInputType.name,
-                                          capitalization: TextCapitalization.words,
+                                          capitalization:
+                                              TextCapitalization.words,
                                         )
                                       : CustomTextField(
                                           hintText: 'last name',
@@ -289,9 +315,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                           focusNode: _lastNameFocus,
                                           nextFocus: _emailFocus,
                                           inputType: TextInputType.name,
-                                          capitalization: TextCapitalization.words,
+                                          capitalization:
+                                              TextCapitalization.words,
                                         ),
-                                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                  const SizedBox(
+                                      height: Dimensions.PADDING_SIZE_LARGE),
 
                                   // for email section
 
@@ -299,10 +327,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     getTranslated('email', context),
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline2
-                                        .copyWith(color: ColorResources.getHintColor(context)),
+                                        .displayMedium
+                                        ?.copyWith(
+                                            color: ColorResources.getHintColor(
+                                                context)),
                                   ),
-                                  SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                  const SizedBox(
+                                      height: Dimensions.PADDING_SIZE_SMALL),
                                   CustomTextField(
                                     hintText: 'Enter your email',
                                     isShowBorder: true,
@@ -311,148 +342,17 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     nextFocus: _passwordFocus,
                                     inputType: TextInputType.emailAddress,
                                   ),
-                                  SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-                                  //  Provider.of<SplashProvider>(context, listen: false).configModel.phoneVerification?
-
-                                  //             Text(
-                                  //               getTranslated('mobile_number', context),
-                                  //               style: Theme.of(context).textTheme.headline2.copyWith(color: ColorResources.getHintColor(context)),
-                                  //             ),
-                                  // SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                  //             MaskedTextField(
-                                  //               mask:AppConstants.phone_form ,
-                                  //               controller: _numberController,
-                                  //               style: Theme.of(context).textTheme.headline2.copyWith(color: Theme.of(context).textTheme.bodyText1.color, fontSize: Dimensions.FONT_SIZE_LARGE),
-                                  //               keyboardType: TextInputType.number,
-                                  //               readOnly: true,
-                                  //
-                                  //               decoration: InputDecoration(
-                                  //                 contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 22),
-                                  //                 border: OutlineInputBorder(
-                                  //                   borderRadius: BorderRadius.circular(10.0),
-                                  //                   borderSide: BorderSide(style: BorderStyle.none, width: 0),
-                                  //                 ),
-                                  //                 isDense: true,
-                                  //                 hintText: AppConstants.phone_form_hint,
-                                  //                 fillColor: Theme.of(context).cardColor,
-                                  //
-                                  //                 hintStyle: Theme.of(context).textTheme.headline2.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE, color: ColorResources.COLOR_GREY_CHATEAU),
-                                  //                 filled: true,
-                                  //
-                                  //
-                                  //                 prefixIconConstraints: BoxConstraints(minWidth: 23, maxHeight: 20),
-                                  //
-                                  //
-                                  //               ),
-                                  //             ) ,
-                                  // // Row(children: [
-                                  // //               // Expanded(child:  IntlPhoneField(
-                                  // //               //
-                                  // //               //   decoration: InputDecoration(
-                                  // //               //       labelText: 'Phone Number',
-                                  // //               //       border:InputBorder.none,
-                                  // //               //       fillColor: ColorResources.COLOR_WHITE
-                                  // //               //       ,filled: true
-                                  // //               //   ),
-                                  // //               //   initialCountryCode: 'IN',
-                                  // //               //   onChanged: (phone) {
-                                  // //               //     print(phone.completeNumber);
-                                  // //               //     _emailController.text=phone.completeNumber;
-                                  // //               //   },
-                                  // //               // ),),
-                                  // //               Expanded(child: CustomTextField(
-                                  // //                 hintText: getTranslated('number_hint', context),
-                                  // //                 isShowBorder: true,
-                                  // //                 isReadOnly: true,
-                                  // //                 controller: _numberController,
-                                  // //                 focusNode: _numberFocus,
-                                  // //                 nextFocus: _passwordFocus,
-                                  // //                 inputType: TextInputType.phone,
-                                  // //               )),
-                                  // //             ]),
-                                  //
-                                  // SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                  //             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                  //               Text(
-                                  //                 'Refer Code (Optional)',
-                                  //                 style: Theme.of(context).textTheme.headline2.copyWith(color: ColorResources.getHintColor(context)),
-                                  //               ),
-                                  //               SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                  //
-                                  //               CustomTextField(
-                                  //                 hintText: 'referal code',
-                                  //                 isShowBorder: true,
-                                  //                 controller: _referTextController,
-                                  //                 focusNode: _referTextFocus,
-                                  //                 nextFocus: _passwordFocus,
-                                  //                 inputType: TextInputType.text,
-                                  //               ),
-                                  //               SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                                  //
-                                  //             ],),
-                                  //
-                                  //             SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                  //
-                                  //
-                                  //             // for password section
-                                  //             Text(
-                                  //               getTranslated('password', context),
-                                  //               style: Theme.of(context).textTheme.headline2.copyWith(color: ColorResources.getHintColor(context)),
-                                  //             ),
-                                  //             SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                  //             CustomTextField(
-                                  //               hintText: getTranslated('password_hint', context),
-                                  //               isShowBorder: true,
-                                  //               isPassword: true,
-                                  //               controller: _passwordController,
-                                  //               focusNode: _passwordFocus,
-                                  //               nextFocus: _confirmPasswordFocus,
-                                  //               isShowSuffixIcon: true,
-                                  //             ),
-                                  //             SizedBox(height: 22),
-                                  //
-                                  //             // for confirm password section
-                                  //             Text(
-                                  //               getTranslated('confirm_password', context),
-                                  //               style: Theme.of(context).textTheme.headline2.copyWith(color: ColorResources.getHintColor(context)),
-                                  //             ),
-                                  //             SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                  //             CustomTextField(
-                                  //               hintText: getTranslated('password_hint', context),
-                                  //               isShowBorder: true,
-                                  //               isPassword: true,
-                                  //               controller: _confirmPasswordController,
-                                  //               focusNode: _confirmPasswordFocus,
-                                  //               isShowSuffixIcon: true,
-                                  //               inputAction: TextInputAction.done,
-                                  //             ),
-
-                                  // Row(
-                                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                                  //   children: [
-                                  //     authProvider.registrationErrorMessage.length > 0
-                                  //         ? CircleAvatar(backgroundColor: Theme.of(context).primaryColor, radius: 5)
-                                  //         : SizedBox.shrink(),
-                                  //     SizedBox(width: 8),
-                                  //     Expanded(
-                                  //       child: Text(
-                                  //         authProvider.registrationErrorMessage ?? "",
-                                  //         style: Theme.of(context).textTheme.headline2.copyWith(
-                                  //               fontSize: Dimensions.FONT_SIZE_SMALL,
-                                  //               color: Theme.of(context).primaryColor,
-                                  //             ),
-                                  //       ),
-                                  //     )
-                                  //   ],
-                                  // ),
-
+                                  const SizedBox(
+                                      height: Dimensions.PADDING_SIZE_LARGE),
                                   CheckboxListTile(
                                     dense: true,
                                     contentPadding: EdgeInsets.zero,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
                                     activeColor: Theme.of(context).primaryColor,
-                                    controlAffinity: ListTileControlAffinity.leading,
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
                                     value: isChecked,
                                     onChanged: (val) {
                                       setState(() {
@@ -462,38 +362,47 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     title: Padding(
                                       padding: const EdgeInsets.only(top: 5.0),
                                       child: RichText(
-                                        text: new TextSpan(
+                                        text: TextSpan(
                                           children: [
-                                            new TextSpan(
-                                              text: 'By creating an account, you agree to our ',
-                                              style: new TextStyle(color: Theme.of(context).primaryColor),
+                                            TextSpan(
+                                              text:
+                                                  'By creating an account, you agree to our ',
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
                                             ),
-                                            new TextSpan(
+                                            TextSpan(
                                               text: 'terms & conditions',
-                                              style: new TextStyle(
-                                                  color: ColorResources.getHintColor(context),
-                                                  decoration: TextDecoration.underline,
+                                              style: TextStyle(
+                                                  color: ColorResources
+                                                      .getHintColor(context),
+                                                  decoration:
+                                                      TextDecoration.underline,
                                                   fontWeight: FontWeight.w500),
-                                              recognizer: new TapGestureRecognizer()
+                                              recognizer: TapGestureRecognizer()
                                                 ..onTap = () {
-                                                  Navigator.pushNamed(context, Routes.getTermsRoute());
-
-                                                  //launch('http://cafescale.com/terms-and-conditions');
+                                                  Navigator.pushNamed(context,
+                                                      Routes.getTermsRoute());
                                                 },
                                             ),
-                                            new TextSpan(
+                                            TextSpan(
                                               text: ' and ',
-                                              style: new TextStyle(color: Theme.of(context).primaryColor),
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
                                             ),
-                                            new TextSpan(
+                                            TextSpan(
                                               text: 'privacy policy.',
-                                              style: new TextStyle(
-                                                  color: ColorResources.getHintColor(context),
-                                                  decoration: TextDecoration.underline,
+                                              style: TextStyle(
+                                                  color: ColorResources
+                                                      .getHintColor(context),
+                                                  decoration:
+                                                      TextDecoration.underline,
                                                   fontWeight: FontWeight.w500),
-                                              recognizer: new TapGestureRecognizer()
+                                              recognizer: TapGestureRecognizer()
                                                 ..onTap = () {
-                                                  Navigator.pushNamed(context, Routes.getPolicyRoute());
+                                                  Navigator.pushNamed(context,
+                                                      Routes.getPolicyRoute());
                                                   // launch('http://cafescale.com/privacy-policy');
                                                 },
                                             ),
@@ -504,56 +413,78 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   ),
                                 ],
                               )
-                            : SizedBox.shrink(),
+                            : const SizedBox.shrink(),
 
                         // for signup button
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         !authProvider.isLoading
                             ? CustomButton(
                                 btnTxt: getTranslated('signup', context),
                                 onTap: () {
-                                  String _firstName = _firstNameController.text.trim();
-                                  String _lastName = _lastNameController.text.trim();
-                                  String _number = _numberController.text.trim();
-                                  String _email = _emailController.text.trim();
-                                  String _password = _passwordController.text.trim();
+                                  String firstName =
+                                      _firstNameController.text.trim();
+                                  String lastName =
+                                      _lastNameController.text.trim();
+                                  String number = _numberController.text.trim();
+                                  String email = _emailController.text.trim();
+                                  String password =
+                                      _passwordController.text.trim();
 
-                                  if (_firstName.isEmpty) {
-                                    showCustomSnackBar(getTranslated('enter_first_name', context), context);
-                                  } else if (_lastName.isEmpty) {
-                                    showCustomSnackBar(getTranslated('enter_last_name', context), context);
-                                  } else if (_number.isEmpty) {
-                                    showCustomSnackBar(getTranslated('enter_phone_number', context), context);
-                                  } else if (_email.isEmpty) {
-                                    showCustomSnackBar(getTranslated('enter_phone_number', context), context);
-                                  } else if (_password.isEmpty) {
+                                  if (firstName.isEmpty) {
+                                    showCustomSnackBar(
+                                        getTranslated(
+                                            'enter_first_name', context),
+                                        context);
+                                  } else if (lastName.isEmpty) {
+                                    showCustomSnackBar(
+                                        getTranslated(
+                                            'enter_last_name', context),
+                                        context);
+                                  } else if (number.isEmpty) {
+                                    showCustomSnackBar(
+                                        getTranslated(
+                                            'enter_phone_number', context),
+                                        context);
+                                  } else if (email.isEmpty) {
+                                    showCustomSnackBar(
+                                        getTranslated(
+                                            'enter_phone_number', context),
+                                        context);
+                                  } else if (password.isEmpty) {
                                     showCustomSnackBar('Enter otp', context);
                                   } else if (isChecked == false) {
                                     debugPrint('-=not');
-                                    showCustomSnackBar('Accept terms and conditions', context);
+                                    showCustomSnackBar(
+                                        'Accept terms and conditions', context);
                                   } else {
                                     SignUpModel signUpModel = SignUpModel(
-                                        fName: _firstName,
-                                        lName: _lastName,
-                                        email: _email,
+                                        fName: firstName,
+                                        lName: lastName,
+                                        email: email,
                                         restaurantId: F.restaurantId,
                                         referralCode: _referTextController.text,
+                                        password: _passwordController.text,
                                         platform: kIsWeb
                                             ? 'Web'
                                             : Platform.isAndroid
                                                 ? 'Android'
                                                 : 'iOS',
-                                        phone: AppConstants.country_code + _number.replaceAll(RegExp('[()\\-\\s]'), ''),
-                                        token: _password,
+                                        phone: AppConstants.country_code +
+                                            number.replaceAll(
+                                                RegExp('[()\\-\\s]'), ''),
+                                        token: password,
                                         isMobile: 'true');
-                                    authProvider.verifyOtp(signUpModel, context).then((status) async {
+                                    authProvider
+                                        .verifyOtp(signUpModel, context)
+                                        .then((status) async {
                                       if (status.isSuccess) {
                                         Navigator.pushNamedAndRemoveUntil(
                                             context,
-                                            Provider.of<SplashProvider>(context, listen: false)
+                                            Provider.of<SplashProvider>(context,
+                                                            listen: false)
                                                         .configModel
-                                                        .branches
-                                                        .length ==
+                                                        ?.branches
+                                                        ?.length ==
                                                     1
                                                 ? Routes.getMainRoute()
                                                 : Routes.getBranchListScreen(),
@@ -565,14 +496,16 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               )
                             : Center(
                                 child: CircularProgressIndicator(
-                                valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Theme.of(context).primaryColor),
                               )),
 
                         // for already an account
-                        SizedBox(height: 11),
+                        const SizedBox(height: 11),
                         InkWell(
                           onTap: () {
-                            Navigator.pushReplacementNamed(context, Routes.getLoginRoute());
+                            Navigator.pushReplacementNamed(
+                                context, Routes.getLoginRoute());
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -580,17 +513,28 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  getTranslated('already_have_account', context),
-                                  style: Theme.of(context).textTheme.headline2.copyWith(
-                                      fontSize: Dimensions.FONT_SIZE_SMALL,
-                                      color: ColorResources.getGreyColor(context)),
+                                  getTranslated(
+                                      'already_have_account', context),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium
+                                      ?.copyWith(
+                                          fontSize: Dimensions.FONT_SIZE_SMALL,
+                                          color: ColorResources.getGreyColor(
+                                              context)),
                                 ),
-                                SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                                const SizedBox(
+                                    width: Dimensions.PADDING_SIZE_SMALL),
                                 Text(
                                   getTranslated('login', context),
-                                  style: Theme.of(context).textTheme.headline3.copyWith(
-                                      fontSize: Dimensions.FONT_SIZE_SMALL,
-                                      color: ColorResources.getGreyBunkerColor(context)),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .displaySmall
+                                      ?.copyWith(
+                                          fontSize: Dimensions.FONT_SIZE_SMALL,
+                                          color:
+                                              ColorResources.getGreyBunkerColor(
+                                                  context)),
                                 ),
                               ],
                             ),

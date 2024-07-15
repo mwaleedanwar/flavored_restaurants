@@ -13,23 +13,28 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/order/widget/orde
 import 'package:provider/provider.dart';
 
 class OrderScreen extends StatefulWidget {
+  const OrderScreen({super.key});
+
   @override
-  _OrderScreenState createState() => _OrderScreenState();
+  State<OrderScreen> createState() => _OrderScreenState();
 }
 
 class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin {
-  TabController _tabController;
-  bool _isLoggedIn;
-
+  late TabController _tabController;
+  bool _isLoggedIn = false;
+  bool loading = true;
   @override
   void initState() {
     super.initState();
 
-    _isLoggedIn = Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
-    if (_isLoggedIn) {
-      _tabController = TabController(length: 2, initialIndex: 0, vsync: this);
-      Provider.of<OrderProvider>(context, listen: false).getOrderList(context);
-    }
+    setState(() {
+      _isLoggedIn = Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
+      if (_isLoggedIn) {
+        _tabController = TabController(length: 2, initialIndex: 0, vsync: this);
+        Provider.of<OrderProvider>(context, listen: false).getOrderList(context);
+      }
+      loading = false;
+    });
   }
 
   @override
@@ -37,46 +42,50 @@ class _OrderScreenState extends State<OrderScreen> with TickerProviderStateMixin
     return Scaffold(
       backgroundColor: Theme.of(context).cardColor,
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : CustomAppBar(
               context: context,
               title: getTranslated('my_order', context),
               isBackButtonExist: !ResponsiveHelper.isMobile(context)),
-      body: _isLoggedIn
-          ? Consumer<OrderProvider>(
-              builder: (context, order, child) {
-                return Column(children: [
-                  Center(
-                    child: Container(
-                      width: 1170,
-                      color: Theme.of(context).cardColor,
-                      child: TabBar(
-                        controller: _tabController,
-                        labelColor: Theme.of(context).textTheme.bodyText1.color,
-                        indicatorColor: Theme.of(context).primaryColor,
-                        indicatorWeight: 3,
-                        unselectedLabelStyle: rubikRegular.copyWith(
-                            color: ColorResources.COLOR_HINT, fontSize: Dimensions.FONT_SIZE_SMALL),
-                        labelStyle: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL),
-                        tabs: [
-                          Tab(text: getTranslated('running', context)),
-                          Tab(text: getTranslated('history', context)),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                      child: TabBarView(
-                    controller: _tabController,
-                    children: [
-                      OrderView(isRunning: true),
-                      OrderView(isRunning: false),
-                    ],
-                  )),
-                ]);
-              },
+      body: loading
+          ? const Center(
+              child: CircularProgressIndicator.adaptive(),
             )
-          : NotLoggedInScreen(),
+          : _isLoggedIn
+              ? Consumer<OrderProvider>(
+                  builder: (context, order, child) {
+                    return Column(children: [
+                      Center(
+                        child: Container(
+                          width: 1170,
+                          color: Theme.of(context).cardColor,
+                          child: TabBar(
+                            controller: _tabController,
+                            labelColor: Theme.of(context).textTheme.bodyLarge?.color,
+                            indicatorColor: Theme.of(context).primaryColor,
+                            indicatorWeight: 3,
+                            unselectedLabelStyle: rubikRegular.copyWith(
+                                color: ColorResources.COLOR_HINT, fontSize: Dimensions.FONT_SIZE_SMALL),
+                            labelStyle: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL),
+                            tabs: [
+                              Tab(text: getTranslated('running', context)),
+                              Tab(text: getTranslated('history', context)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                          child: TabBarView(
+                        controller: _tabController,
+                        children: const [
+                          OrderView(isRunning: true),
+                          OrderView(isRunning: false),
+                        ],
+                      )),
+                    ]);
+                  },
+                )
+              : const NotLoggedInScreen(),
     );
   }
 }

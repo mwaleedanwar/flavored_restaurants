@@ -14,42 +14,37 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
 
-import '../../../utill/app_constants.dart';
-
 class VerificationScreen extends StatefulWidget {
   final String emailAddress;
   final bool fromSignUp;
-  VerificationScreen({@required this.emailAddress, this.fromSignUp = false});
+  const VerificationScreen({super.key, required this.emailAddress, this.fromSignUp = false});
 
   @override
   State<VerificationScreen> createState() => _VerificationScreenState();
 }
 
 class _VerificationScreenState extends State<VerificationScreen> {
-  Timer _timer;
+  // ignore: unused_field
+  Timer _timer = Timer(const Duration(seconds: 0), () {});
   int _start = 60;
   void startTimer() {
     _start = 60;
-    print('--call');
-
-    const oneSec = const Duration(seconds: 1);
-    _timer = new Timer.periodic(
-      oneSec,
-      (Timer timer) => setState(
-        () {
-          if (_start < 1) {
-            timer.cancel();
-          } else {
-            _start = _start - 1;
-          }
-        },
-      ),
-    );
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+        oneSec,
+        (Timer timer) => setState(
+              () {
+                if (_start < 1) {
+                  timer.cancel();
+                } else {
+                  _start = _start - 1;
+                }
+              },
+            ));
   }
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     startTimer();
   }
@@ -59,14 +54,14 @@ class _VerificationScreenState extends State<VerificationScreen> {
     return Scaffold(
       appBar: CustomAppBar(
         context: context,
-        title: Provider.of<SplashProvider>(context).configModel.phoneVerification
+        title: Provider.of<SplashProvider>(context).configModel!.phoneVerification
             ? getTranslated('verify_phone', context)
             : getTranslated('verify_email', context),
       ),
       body: SafeArea(
         child: Scrollbar(
           child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Center(
               child: SizedBox(
                 width: 1170,
@@ -74,8 +69,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   builder: (context, authProvider, child) => Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 55),
-                      Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification
+                      const SizedBox(height: 55),
+                      Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification
                           ? Image.asset(
                               Images.email_with_background,
                               width: 142,
@@ -86,7 +81,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                               size: 50,
                               color: Theme.of(context).primaryColor,
                             ),
-                      SizedBox(height: 40),
+                      const SizedBox(height: 40),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 50),
                         child: Center(
@@ -95,13 +90,13 @@ class _VerificationScreenState extends State<VerificationScreen> {
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
                               .textTheme
-                              .headline2
-                              .copyWith(color: ColorResources.getHintColor(context)),
+                              .displayMedium
+                              ?.copyWith(color: ColorResources.getHintColor(context)),
                         )),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 39, vertical: 35),
-                        child: Container(
+                        child: SizedBox(
                           width: 400,
                           child: PinCodeTextField(
                             length: 4,
@@ -122,7 +117,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                               activeColor: ColorResources.colorMap[400],
                               activeFillColor: ColorResources.getSearchBg(context),
                             ),
-                            animationDuration: Duration(milliseconds: 300),
+                            animationDuration: const Duration(milliseconds: 300),
                             backgroundColor: Colors.transparent,
                             enableActiveFill: true,
                             onChanged: authProvider.updateVerificationCode,
@@ -135,7 +130,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       Center(
                           child: Text(
                         _start != 0 ? 'If you did\'t receive the code in $_start seconds' : 'I did\'t receive the code',
-                        style: Theme.of(context).textTheme.headline2.copyWith(
+                        style: Theme.of(context).textTheme.displayMedium?.copyWith(
                               color: ColorResources.getGreyBunkerColor(context),
                             ),
                       )),
@@ -145,7 +140,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                             if (_start != 0) {
                             } else {
                               if (widget.fromSignUp) {
-                                Provider.of<SplashProvider>(context, listen: false).configModel.emailVerification
+                                Provider.of<SplashProvider>(context, listen: false).configModel!.emailVerification
                                     ? Provider.of<AuthProvider>(context, listen: false)
                                         .checkEmail(widget.emailAddress)
                                         .then((value) {
@@ -184,17 +179,17 @@ class _VerificationScreenState extends State<VerificationScreen> {
                             }
                           },
                           child: Padding(
-                            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                            padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
                             child: Text(
                               getTranslated('resend_code', context),
-                              style: Theme.of(context).textTheme.headline3.copyWith(
+                              style: Theme.of(context).textTheme.displaySmall?.copyWith(
                                     color: _start != 0 ? Colors.grey : ColorResources.getGreyBunkerColor(context),
                                   ),
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(height: 48),
+                      const SizedBox(height: 48),
                       authProvider.isEnableVerificationCode
                           ? !authProvider.isPhoneNumberVerificationButtonLoading
                               ? Padding(
@@ -202,22 +197,22 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                   child: CustomButton(
                                     btnTxt: getTranslated('verify', context),
                                     onTap: () {
-                                      String _mail = Provider.of<SplashProvider>(context, listen: false)
-                                              .configModel
+                                      String mail = Provider.of<SplashProvider>(context, listen: false)
+                                              .configModel!
                                               .phoneVerification
                                           ? widget.emailAddress.contains('+')
                                               ? widget.emailAddress
-                                              : '+' + widget.emailAddress.trim()
+                                              : '+${widget.emailAddress.trim()}'
                                           : widget.emailAddress;
-                                      print('number is : ${widget.emailAddress}');
+                                      debugPrint('number is : ${widget.emailAddress}');
                                       if (widget.fromSignUp) {
                                         debugPrint('--from signup ');
 
                                         Provider.of<SplashProvider>(context, listen: false)
-                                                .configModel
+                                                .configModel!
                                                 .emailVerification
                                             ? Provider.of<AuthProvider>(context, listen: false)
-                                                .verifyEmail(_mail)
+                                                .verifyEmail(mail)
                                                 .then((value) {
                                                 if (value.isSuccess) {
                                                   debugPrint('--value success ');
@@ -229,28 +224,25 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                                 }
                                               })
                                             : Provider.of<AuthProvider>(context, listen: false)
-                                                .verifyPhone(_mail)
+                                                .verifyPhone(mail)
                                                 .then((value) {
                                                 if (value.isSuccess) {
-                                                  debugPrint('--value success 2 ${value.message}   ${_mail}');
-                                                  debugPrint('number here is${widget.emailAddress}   ${_mail}');
-
+                                                  debugPrint('--value success 2 ${value.message}   $mail');
+                                                  debugPrint('number here is${widget.emailAddress}   $mail');
                                                   Navigator.pushNamed(context, Routes.getCreateAccountRoute());
                                                 } else {
                                                   debugPrint('--value failure 2 ');
-
                                                   showCustomSnackBar(value.message, context);
                                                 }
                                               });
                                       } else {
-                                        print('mail num is : $_mail');
-
+                                        debugPrint('mail num is : $mail');
                                         Provider.of<AuthProvider>(context, listen: false)
-                                            .verifyToken(_mail)
+                                            .verifyToken(mail)
                                             .then((value) {
                                           if (value.isSuccess) {
                                             Navigator.pushNamed(
-                                                context, Routes.getNewPassRoute(_mail, authProvider.verificationCode));
+                                                context, Routes.getNewPassRoute(mail, authProvider.verificationCode));
                                           } else {
                                             showCustomSnackBar(value.message, context);
                                           }
@@ -262,7 +254,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                               : Center(
                                   child: CircularProgressIndicator(
                                       valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)))
-                          : SizedBox.shrink()
+                          : const SizedBox.shrink()
                     ],
                   ),
                 ),

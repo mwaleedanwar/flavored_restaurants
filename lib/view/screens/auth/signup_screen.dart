@@ -11,69 +11,65 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_text_field.dart';
-import 'package:intl_phone_field_with_validator/intl_phone_field.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/footer_view.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 import 'package:masked_text/masked_text.dart';
 import 'package:provider/provider.dart';
 
-import '../../../utill/app_constants.dart';
-
 class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  TextEditingController _emailController;
-  TextEditingController _numberController;
-  final FocusNode _numberFocus = FocusNode();
-  final FocusNode _emailFocus = FocusNode();
-  String _countryDialCode;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _numberController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _emailController = TextEditingController();
-    _numberController = TextEditingController();
     Provider.of<AuthProvider>(context, listen: false).clearVerificationMessage();
-    // _countryDialCode = CountryCode.fromCountryCode(Provider.of<SplashProvider>(context, listen: false).configModel.countryCode).dialCode;
   }
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
+    double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(
+              preferredSize: Size.fromHeight(100),
+              child: WebAppBar(),
+            )
           : null,
       body: SafeArea(
         child: Center(
           child: Scrollbar(
             child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                    padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
                     child: Center(
                       child: Container(
-                        width: _width > 700 ? 700 : _width,
-                        padding: _width > 700 ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
-                        decoration: _width > 700
+                        width: width > 700 ? 700 : width,
+                        padding: width > 700 ? const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
+                        decoration: width > 700
                             ? BoxDecoration(
                                 color: Theme.of(context).cardColor,
                                 borderRadius: BorderRadius.circular(10),
-                                boxShadow: [BoxShadow(color: Colors.grey[300], blurRadius: 5, spreadRadius: 1)],
+                                boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 5, spreadRadius: 1)],
                               )
                             : null,
                         child: Consumer<AuthProvider>(
                           builder: (context, authProvider, child) => Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: 30),
+                              const SizedBox(height: 30),
                               Center(
                                 child: Padding(
                                   padding: const EdgeInsets.all(15.0),
@@ -83,7 +79,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                             placeholder: Images.placeholder_rectangle,
                                             height: MediaQuery.of(context).size.height / 4.5,
                                             image: splash.baseUrls != null
-                                                ? '${splash.baseUrls.restaurantImageUrl}/${splash.configModel.restaurantLogo}'
+                                                ? '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}'
                                                 : '',
                                             imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_rectangle,
                                                 height: MediaQuery.of(context).size.height / 4.5),
@@ -96,80 +92,60 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         ),
                                 ),
                               ),
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
                               Center(
                                   child: Text(
                                 getTranslated('signup', context),
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline3
-                                    .copyWith(fontSize: 24, color: ColorResources.getGreyBunkerColor(context)),
+                                    .displaySmall
+                                    ?.copyWith(fontSize: 24, color: ColorResources.getGreyBunkerColor(context)),
                               )),
-                              SizedBox(height: 35),
+                              const SizedBox(height: 35),
 
                               Text(
                                 getTranslated('mobile_number', context),
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline2
-                                    .copyWith(color: ColorResources.getHintColor(context)),
+                                    .displayMedium
+                                    ?.copyWith(color: ColorResources.getHintColor(context)),
                               ),
-                              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                              const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
                               MaskedTextField(
                                 mask: AppConstants.phone_form,
                                 controller: _numberController,
-                                style: Theme.of(context).textTheme.headline2.copyWith(
-                                    color: Theme.of(context).textTheme.bodyText1.color,
+                                style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                    color: Theme.of(context).textTheme.bodyLarge?.color,
                                     fontSize: Dimensions.FONT_SIZE_LARGE),
                                 keyboardType: TextInputType.number,
                                 decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 22),
+                                  contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
-                                    borderSide: BorderSide(style: BorderStyle.none, width: 0),
+                                    borderSide: const BorderSide(style: BorderStyle.none, width: 0),
                                   ),
                                   isDense: true,
                                   hintText: AppConstants.phone_form_hint,
                                   fillColor: Theme.of(context).cardColor,
-                                  hintStyle: Theme.of(context).textTheme.headline2.copyWith(
+                                  hintStyle: Theme.of(context).textTheme.displayMedium?.copyWith(
                                       fontSize: Dimensions.FONT_SIZE_LARGE, color: ColorResources.COLOR_GREY_CHATEAU),
                                   filled: true,
-                                  prefixIconConstraints: BoxConstraints(minWidth: 23, maxHeight: 20),
+                                  prefixIconConstraints: const BoxConstraints(minWidth: 23, maxHeight: 20),
                                 ),
                               ),
-                              // Row(children: [
-                              //   Expanded(child:  IntlPhoneField(
-                              //
-                              //     decoration: InputDecoration(
-                              //         labelText: 'Phone Number',
-                              //         border:InputBorder.none,
-                              //         fillColor: ColorResources.COLOR_WHITE
-                              //         ,filled: true,
-                              //     ),
-                              //     initialCountryCode: 'US',
-                              //     style:  Theme.of(context).textTheme.headline2.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.COLOR_GREY_CHATEAU),
-                              //
-                              //     onChanged: (phone) {
-                              //       print(phone.completeNumber);
-                              //       _numberController.text=phone.completeNumber;
-                              //     },
-                              //   ),),
-                              //
-                              // ]),
-
-                              SizedBox(height: 6),
+                              const SizedBox(height: 6),
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  authProvider.verificationMessage.length > 0
+                                  authProvider.verificationMessage?.isNotEmpty ?? false
                                       ? CircleAvatar(backgroundColor: Theme.of(context).primaryColor, radius: 5)
-                                      : SizedBox.shrink(),
-                                  SizedBox(width: 8),
+                                      : const SizedBox.shrink(),
+                                  const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
                                       authProvider.verificationMessage ?? "",
-                                      style: Theme.of(context).textTheme.headline2.copyWith(
+                                      style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                             fontSize: Dimensions.FONT_SIZE_SMALL,
                                             color: Theme.of(context).primaryColor,
                                           ),
@@ -178,28 +154,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 ],
                               ),
                               // for continue button
-                              SizedBox(height: 12),
+                              const SizedBox(height: 12),
                               !authProvider.isPhoneNumberVerificationButtonLoading
                                   ? CustomButton(
                                       btnTxt: getTranslated('continue', context),
                                       onTap: () {
                                         if (Provider.of<SplashProvider>(context, listen: false)
-                                            .configModel
+                                            .configModel!
                                             .emailVerification) {
                                           // String countryCode;
-                                          String _email = _emailController.text.trim();
+                                          String email = _emailController.text.trim();
 
-                                          if (_email.isEmpty) {
+                                          if (email.isEmpty) {
                                             showCustomSnackBar(getTranslated('enter_email_address', context), context);
-                                          } else if (EmailChecker.isNotValid(_email)) {
+                                          } else if (EmailChecker.isNotValid(email)) {
                                             showCustomSnackBar(getTranslated('enter_valid_email', context), context);
                                           } else {
-                                            authProvider.checkEmail(_email).then((value) async {
+                                            authProvider.checkEmail(email).then((value) async {
                                               if (value.isSuccess) {
-                                                authProvider.updateEmail(_email);
+                                                authProvider.updateEmail(email);
                                                 if (value.message == 'active') {
-                                                  Navigator.pushNamed(
-                                                      context, Routes.getVerifyRoute('sign-up', _email));
+                                                  Navigator.pushNamed(context, Routes.getVerifyRoute('sign-up', email));
                                                 } else {
                                                   Navigator.pushNamed(context, Routes.getCreateAccountRoute());
                                                 }
@@ -208,11 +183,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           }
                                         } else {
                                           // String countryCode;
-                                          String _number = AppConstants.country_code + _numberController.text
-                                            ..replaceAll(RegExp('[()\\-\\s]'), '').trim();
-                                          String _numberChk = _numberController.text.trim();
+                                          String numberChk = _numberController.text.trim();
 
-                                          if (_numberChk.isEmpty) {
+                                          if (numberChk.isEmpty) {
                                             showCustomSnackBar(getTranslated('enter_phone_number', context), context);
                                           } else {
                                             // authProvider.verifyOtp(phone, otp, context)
@@ -222,11 +195,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     )
                                   : Center(
                                       child: CircularProgressIndicator(
-                                      valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                                      valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                                     )),
 
                               // for create an account
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                               InkWell(
                                 onTap: () {
                                   Navigator.pushReplacementNamed(context, Routes.getLoginRoute());
@@ -238,14 +211,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     children: [
                                       Text(
                                         getTranslated('already_have_account', context),
-                                        style: Theme.of(context).textTheme.headline2.copyWith(
+                                        style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                             fontSize: Dimensions.FONT_SIZE_SMALL,
                                             color: ColorResources.getGreyColor(context)),
                                       ),
-                                      SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                                      const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                                       Text(
                                         getTranslated('login', context),
-                                        style: Theme.of(context).textTheme.headline3.copyWith(
+                                        style: Theme.of(context).textTheme.displaySmall?.copyWith(
                                             fontSize: Dimensions.FONT_SIZE_SMALL,
                                             color: ColorResources.getGreyBunkerColor(context)),
                                       ),
@@ -259,7 +232,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  if (ResponsiveHelper.isDesktop(context)) FooterView(),
+                  if (ResponsiveHelper.isDesktop(context)) const FooterView(),
                 ],
               ),
             ),

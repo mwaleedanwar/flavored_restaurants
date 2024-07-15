@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/address_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/config_model.dart';
@@ -20,27 +22,26 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/footer_view.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/address/select_location_screen.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/address/widget/location_search_dialog.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/coupon_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/address/widget/permission_dialog.dart';
 import 'package:provider/provider.dart';
-
-import '../../../provider/coupon_provider.dart';
-import 'widget/permission_dialog.dart';
-import 'package:google_maps_webservice/places.dart';
 
 class AddNewAddressScreen extends StatefulWidget {
   final bool isEnableUpdate;
   final bool fromCheckout;
   final bool isFromCart;
   final double amount;
-  final AddressModel address;
-  AddNewAddressScreen(
-      {this.isEnableUpdate = false,
-      this.address,
-      this.fromCheckout = false,
-      this.isFromCart = false,
-      this.amount = 0.0});
+  final AddressModel? address;
+  const AddNewAddressScreen({
+    super.key,
+    this.isEnableUpdate = false,
+    this.address,
+    this.fromCheckout = false,
+    this.isFromCart = false,
+    this.amount = 0.0,
+  });
 
   @override
   State<AddNewAddressScreen> createState() => _AddNewAddressScreenState();
@@ -52,10 +53,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
   final TextEditingController _locationTextController = TextEditingController();
   final TextEditingController _buildingController = TextEditingController();
   final TextEditingController _floorController = TextEditingController();
-  final TextEditingController _searchController = TextEditingController();
-  final TextEditingController _florNumberController = TextEditingController();
 
-  final FocusNode _addressNode = FocusNode();
   final FocusNode _nameNode = FocusNode();
   final FocusNode _numberNode = FocusNode();
   final FocusNode _stateNode = FocusNode();
@@ -63,41 +61,42 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
   final FocusNode _floorNode = FocusNode();
 
   final List<Branches> _branches = [];
-  GoogleMapController _controller;
-  CameraPosition _cameraPosition;
+  GoogleMapController? _controller;
+  late CameraPosition _cameraPosition;
   bool _updateAddress = true;
 
   _initLoading() async {
-    final _userModel = Provider.of<ProfileProvider>(context, listen: false).userInfoModel;
-    _branches.addAll(Provider.of<SplashProvider>(context, listen: false).configModel.branches);
-    Provider.of<LocationProvider>(context, listen: false).initializeAllAddressType(context: context);
+    final userModel = Provider.of<ProfileProvider>(context, listen: false).userInfoModel;
+    _branches.addAll(Provider.of<SplashProvider>(context, listen: false).configModel?.branches ?? []);
+    Provider.of<LocationProvider>(context, listen: false).initializeAllAddressType();
     Provider.of<LocationProvider>(context, listen: false).updateAddressStatusMessage(message: '');
     Provider.of<LocationProvider>(context, listen: false).updateErrorMessage(message: '');
     if (widget.isEnableUpdate && widget.address != null) {
       _updateAddress = false;
       Provider.of<LocationProvider>(context, listen: false).updatePosition(
-          CameraPosition(target: LatLng(double.parse(widget.address.latitude), double.parse(widget.address.longitude))),
-          true,
-          widget.address.address,
-          context,
-          false);
-      _contactPersonNameController.text = '${widget.address.contactPersonName}';
-      _contactPersonNumberController.text = '${widget.address.contactPersonNumber}';
-      _buildingController.text = '${widget.address.buildingNumber ?? ''}';
-      _floorController.text = '${widget.address.floorNumber ?? ''}';
-      if (widget.address.addressType == 'Home') {
+        CameraPosition(
+            target: LatLng(double.parse(widget.address!.latitude!), double.parse(widget.address!.longitude!))),
+        true,
+        context,
+        false,
+      );
+      _contactPersonNameController.text = widget.address!.contactPersonName ?? '';
+      _contactPersonNumberController.text = widget.address!.contactPersonNumber ?? '';
+      _buildingController.text = widget.address?.buildingNumber ?? '';
+      _floorController.text = widget.address?.floorNumber ?? '';
+      if (widget.address?.addressType == 'Home') {
         Provider.of<LocationProvider>(context, listen: false).updateAddressIndex(0, false);
-      } else if (widget.address.addressType == 'Workplace') {
+      } else if (widget.address!.addressType == 'Workplace') {
         Provider.of<LocationProvider>(context, listen: false).updateAddressIndex(1, false);
       } else {
         Provider.of<LocationProvider>(context, listen: false).updateAddressIndex(2, false);
       }
     } else {
-      _contactPersonNameController.text = '${_userModel.fName ?? ''}'
-          ' ${_userModel.lName ?? ''}';
-      _contactPersonNumberController.text = _userModel.phone ?? '';
-      _buildingController.text = '${widget.address.buildingNumber ?? ''}';
-      _floorController.text = '${widget.address.floorNumber ?? ''}';
+      _contactPersonNameController.text = '${userModel?.fName ?? ''}'
+          ' ${userModel?.lName ?? ''}';
+      _contactPersonNumberController.text = userModel?.phone ?? '';
+      _buildingController.text = widget.address?.buildingNumber ?? '';
+      _floorController.text = widget.address?.floorNumber ?? '';
     }
   }
 
@@ -106,16 +105,15 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
     super.initState();
     _initLoading();
     if (widget.address != null && !widget.fromCheckout) {
-      _locationTextController.text = widget.address.address;
+      _locationTextController.text = widget.address!.address ?? '';
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : CustomAppBar(
               context: context,
               title: widget.isEnableUpdate
@@ -133,9 +131,11 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                         ConstrainedBox(
                           constraints: BoxConstraints(
                               minHeight:
-                                  !ResponsiveHelper.isDesktop(context) && _height < 600 ? _height : _height - 400),
+                                  !ResponsiveHelper.isDesktop(context) && MediaQuery.of(context).size.height < 600
+                                      ? MediaQuery.of(context).size.height
+                                      : MediaQuery.of(context).size.height - 400),
                           child: Padding(
-                            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                            padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
                             child: Center(
                               child: SizedBox(
                                 width: 1170,
@@ -153,7 +153,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                                               flex: 6,
                                               child: mapWidget(context),
                                             ),
-                                            SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
+                                            const SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
                                             Expanded(
                                               flex: 4,
                                               child: detailsWidget(context),
@@ -167,7 +167,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                             ),
                           ),
                         ),
-                        if (ResponsiveHelper.isDesktop(context)) FooterView(),
+                        if (ResponsiveHelper.isDesktop(context)) const FooterView(),
                       ],
                     ),
                   ),
@@ -180,17 +180,17 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                         ? Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              locationProvider.addressStatusMessage.length > 0
-                                  ? CircleAvatar(backgroundColor: Colors.green, radius: 5)
-                                  : SizedBox.shrink(),
-                              SizedBox(width: 8),
+                              (locationProvider.addressStatusMessage ?? '').isNotEmpty
+                                  ? const CircleAvatar(backgroundColor: Colors.green, radius: 5)
+                                  : const SizedBox.shrink(),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   locationProvider.addressStatusMessage ?? "",
                                   style: Theme.of(context)
                                       .textTheme
-                                      .headline2
-                                      .copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: Colors.green, height: 1),
+                                      .displayMedium
+                                      ?.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: Colors.green, height: 1),
                                 ),
                               )
                             ],
@@ -198,14 +198,14 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                         : Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              locationProvider.errorMessage.length > 0
+                              locationProvider.errorMessage?.isNotEmpty ?? false
                                   ? CircleAvatar(backgroundColor: Theme.of(context).primaryColor, radius: 5)
-                                  : SizedBox.shrink(),
-                              SizedBox(width: 8),
+                                  : const SizedBox.shrink(),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
                                   locationProvider.errorMessage ?? "",
-                                  style: Theme.of(context).textTheme.headline2.copyWith(
+                                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                       fontSize: Dimensions.FONT_SIZE_SMALL,
                                       color: Theme.of(context).primaryColor,
                                       height: 1),
@@ -213,7 +213,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                               )
                             ],
                           ),
-                    SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                    const SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
                     if (!ResponsiveHelper.isDesktop(context)) saveButtonWidget(context),
                   ],
                 )
@@ -227,9 +227,9 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
   Widget saveButtonWidget(BuildContext context) {
     return Consumer<LocationProvider>(builder: (context, locationProvider, _) {
       return Padding(
-        padding: EdgeInsets.symmetric(
+        padding: const EdgeInsets.symmetric(
             vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-        child: Container(
+        child: SizedBox(
           height: 50.0,
           width: 1170,
           child: !locationProvider.isLoading
@@ -240,53 +240,51 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                   onTap: locationProvider.loading
                       ? null
                       : () {
-                          List<Branches> _branches =
-                              Provider.of<SplashProvider>(context, listen: false).configModel.branches;
-                          bool _isAvailable =
-                              _branches.length == 1 && (_branches[0].latitude == null || _branches[0].latitude.isEmpty);
-                          if (!_isAvailable) {
-                            for (Branches branch in _branches) {
-                              double _distance = Geolocator.distanceBetween(
+                          List<Branches>? branches =
+                              Provider.of<SplashProvider>(context, listen: false).configModel!.branches;
+                          bool isAvailable =
+                              branches?.length == 1 && (branches?[0].latitude == null || branches![0].latitude.isEmpty);
+                          if (!isAvailable) {
+                            for (Branches branch in branches!) {
+                              double distance = Geolocator.distanceBetween(
                                     double.parse(branch.latitude),
                                     double.parse(branch.longitude),
-                                    locationProvider.position.latitude,
-                                    locationProvider.position.longitude,
+                                    locationProvider.position!.latitude,
+                                    locationProvider.position!.longitude,
                                   ) /
                                   1000;
-                              print('===distance:${_distance} ${branch.coverage}');
-                              if (_distance < branch.coverage) {
-                                _isAvailable = true;
+                              debugPrint('===distance:$distance ${branch.coverage}');
+                              if (distance < branch.coverage) {
+                                isAvailable = true;
                                 break;
                               }
                             }
                           }
-                          if (!_isAvailable) {
+                          if (!isAvailable) {
                             showCustomSnackBar(getTranslated('service_is_not_available', context), context);
                           } else {
                             AddressModel addressModel = AddressModel(
                               addressType: locationProvider.getAllAddressType[locationProvider.selectAddressIndex],
-                              contactPersonName: _contactPersonNameController.text ?? '',
-                              contactPersonNumber: _contactPersonNumberController.text ?? '',
-                              address: _locationTextController.text ?? '',
-                              latitude: widget.isEnableUpdate
-                                  ? locationProvider.position.latitude.toString() ?? widget.address.latitude
-                                  : locationProvider.position.latitude.toString() ?? '',
-                              longitude: locationProvider.position.longitude.toString() ?? '',
-                              floorNumber: _floorController.text ?? '',
-                              buildingNumber: _buildingController.text ?? '',
+                              contactPersonName: _contactPersonNameController.text,
+                              contactPersonNumber: _contactPersonNumberController.text,
+                              address: _locationTextController.text,
+                              latitude: locationProvider.position!.latitude.toString(),
+                              longitude: locationProvider.position!.longitude.toString(),
+                              floorNumber: _floorController.text,
+                              buildingNumber: _buildingController.text,
                             );
 
                             if (widget.isEnableUpdate) {
-                              addressModel.id = widget.address.id;
-                              addressModel.userId = widget.address.userId;
+                              addressModel.id = widget.address?.id;
+                              addressModel.userId = widget.address?.userId;
                               addressModel.method = 'put';
                               locationProvider
-                                  .updateAddress(context, addressModel: addressModel, addressId: addressModel.id)
+                                  .updateAddress(context, addressModel: addressModel, addressId: addressModel.id!)
                                   .then((value) {
-                                print('===sucess');
+                                debugPrint('===success');
                               });
                             } else {
-                              locationProvider.addAddress(addressModel, context).then((value) {
+                              locationProvider.addAddress(context, addressModel).then((value) {
                                 if (value.isSuccess) {
                                   if (widget.fromCheckout) {
                                     Provider.of<LocationProvider>(context, listen: false).initAddressList(context);
@@ -315,7 +313,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                 )
               : Center(
                   child: CircularProgressIndicator(
-                  valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                  valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                 )),
         ),
       );
@@ -331,16 +329,17 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                 blurRadius: 10,
               )
             ])
-          : BoxDecoration(),
+          : const BoxDecoration(),
       //margin: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL,vertical: Dimensions.PADDING_SIZE_LARGE),
       padding: ResponsiveHelper.isDesktop(context)
-          ? EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE, vertical: Dimensions.PADDING_SIZE_LARGE)
+          ? const EdgeInsets.symmetric(
+              horizontal: Dimensions.PADDING_SIZE_LARGE, vertical: Dimensions.PADDING_SIZE_LARGE)
           : EdgeInsets.zero,
       child: Consumer<LocationProvider>(builder: (context, locationProvider, _) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            SizedBox(
               height: ResponsiveHelper.isMobile(context) ? 130 : 250,
               width: MediaQuery.of(context).size.width,
               child: ClipRRect(
@@ -352,35 +351,38 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                       mapType: MapType.normal,
                       initialCameraPosition: CameraPosition(
                         target: widget.isEnableUpdate
-                            ? LatLng(double.parse(widget.address.latitude) ?? double.parse(_branches[0].latitude),
-                                double.parse(widget.address.longitude) ?? double.parse(_branches[0].longitude))
+                            ? LatLng(
+                                double.tryParse((widget.address?.latitude).toString()) ??
+                                    double.parse(_branches[0].latitude),
+                                double.tryParse((widget.address?.longitude).toString()) ??
+                                    double.parse(_branches[0].longitude))
                             : LatLng(
-                                locationProvider.position.latitude == 0.0
+                                locationProvider.position?.latitude == 0.0
                                     ? double.parse(_branches[0].latitude)
-                                    : locationProvider.position.latitude,
-                                locationProvider.position.longitude == 0.0
+                                    : locationProvider.position!.latitude,
+                                locationProvider.position?.longitude == 0.0
                                     ? double.parse(_branches[0].longitude)
-                                    : locationProvider.position.longitude),
+                                    : locationProvider.position!.longitude),
                         zoom: 8,
                       ),
                       zoomControlsEnabled: false,
                       compassEnabled: false,
                       indoorViewEnabled: true,
                       mapToolbarEnabled: false,
-                      minMaxZoomPreference: MinMaxZoomPreference(0, 16),
+                      minMaxZoomPreference: const MinMaxZoomPreference(0, 16),
                       onCameraIdle: () {
                         if (widget.address != null && !widget.fromCheckout) {
-                          locationProvider.updatePosition(_cameraPosition, true, null, context, true);
+                          locationProvider.updatePosition(_cameraPosition, true, context, true);
                           _updateAddress = true;
                         } else {
                           if (_updateAddress) {
-                            locationProvider.updatePosition(_cameraPosition, true, null, context, true);
+                            locationProvider.updatePosition(_cameraPosition, true, context, true);
                           } else {
                             _updateAddress = true;
                           }
                         }
                       },
-                      onCameraMove: ((_position) => _cameraPosition = _position),
+                      onCameraMove: ((position) => _cameraPosition = position),
                       onMapCreated: (GoogleMapController controller) {
                         _controller = controller;
                         if (!widget.isEnableUpdate && _controller != null) {
@@ -394,7 +396,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                         ? Center(
                             child: CircularProgressIndicator(
                                 valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)))
-                        : SizedBox(),
+                        : const SizedBox(),
                     Container(
                         width: MediaQuery.of(context).size.width,
                         alignment: Alignment.center,
@@ -414,7 +416,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                         child: Container(
                           width: 30,
                           height: 30,
-                          margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
+                          margin: const EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL),
                             color: ColorResources.COLOR_WHITE,
@@ -436,7 +438,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                         child: Container(
                           width: 30,
                           height: 30,
-                          margin: EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
+                          margin: const EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL),
                             color: ColorResources.COLOR_WHITE,
@@ -457,10 +459,10 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
               padding: const EdgeInsets.only(top: 10),
               child: InkWell(
                 onTap: () => Navigator.pushNamed(context, Routes.getSelectLocationRoute(),
-                    arguments: SelectLocationScreen(googleMapController: _controller)),
+                    arguments: const SelectLocationScreen()),
                 child: Center(
                     child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     border: Border.all(color: ColorResources.getGreyBunkerColor(context), width: 1.5),
                     borderRadius: BorderRadius.circular(
@@ -469,7 +471,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                   ),
                   child: Text(
                     'Adjust pin',
-                    style: Theme.of(context).textTheme.headline2.copyWith(
+                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
                         color: ColorResources.getGreyBunkerColor(context),
                         fontSize: Dimensions.FONT_SIZE_SMALL,
                         fontWeight: FontWeight.w500),
@@ -483,11 +485,11 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                 getTranslated('label_us', context),
                 style: Theme.of(context)
                     .textTheme
-                    .headline3
-                    .copyWith(color: ColorResources.getGreyBunkerColor(context), fontSize: Dimensions.FONT_SIZE_LARGE),
+                    .displaySmall
+                    ?.copyWith(color: ColorResources.getGreyBunkerColor(context), fontSize: Dimensions.FONT_SIZE_LARGE),
               ),
             ),
-            Container(
+            SizedBox(
               height: 50,
               child: ListView.builder(
                 shrinkWrap: true,
@@ -499,9 +501,9 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                     locationProvider.updateAddressIndex(index, true);
                   },
                   child: Container(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                         vertical: Dimensions.PADDING_SIZE_DEFAULT, horizontal: Dimensions.PADDING_SIZE_LARGE),
-                    margin: EdgeInsets.only(right: 17),
+                    margin: const EdgeInsets.only(right: 17),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(
                           Dimensions.PADDING_SIZE_SMALL,
@@ -515,7 +517,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                             : ColorResources.SEARCH_BG),
                     child: Text(
                       getTranslated(locationProvider.getAllAddressType[index].toLowerCase(), context),
-                      style: Theme.of(context).textTheme.headline2.copyWith(
+                      style: Theme.of(context).textTheme.displayMedium?.copyWith(
                           color: locationProvider.selectAddressIndex == index
                               ? ColorResources.COLOR_WHITE
                               : ColorResources.COLOR_BLACK),
@@ -530,13 +532,13 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
     );
   }
 
-  void _openSearchDialog(BuildContext context, GoogleMapController mapController) async {
-    showDialog(context: context, builder: (context) => LocationSearchDialog(mapController: mapController));
+  void _openSearchDialog(BuildContext context) async {
+    showDialog(context: context, builder: (context) => const LocationSearchDialog());
   }
 
   Widget detailsWidget(BuildContext context) {
     return Consumer<LocationProvider>(builder: (context, locationProvider, _) {
-      _locationTextController.text = locationProvider.address;
+      _locationTextController.text = locationProvider.address ?? '';
       return Container(
         decoration: ResponsiveHelper.isDesktop(context)
             ? BoxDecoration(color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(10), boxShadow: [
@@ -545,9 +547,9 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                   blurRadius: 10,
                 )
               ])
-            : BoxDecoration(),
+            : const BoxDecoration(),
         padding: ResponsiveHelper.isDesktop(context)
-            ? EdgeInsets.symmetric(
+            ? const EdgeInsets.symmetric(
                 horizontal: Dimensions.PADDING_SIZE_LARGE,
                 vertical: Dimensions.PADDING_SIZE_SMALL,
               )
@@ -561,20 +563,20 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                 getTranslated('delivery_address', context),
                 style: Theme.of(context)
                     .textTheme
-                    .headline3
-                    .copyWith(color: ColorResources.getGreyBunkerColor(context), fontSize: Dimensions.FONT_SIZE_LARGE),
+                    .displaySmall
+                    ?.copyWith(color: ColorResources.getGreyBunkerColor(context), fontSize: Dimensions.FONT_SIZE_LARGE),
               ),
             ),
 
             // for Address Field
             Text(
               getTranslated('address_line_01', context),
-              style: Theme.of(context).textTheme.headline2.copyWith(color: ColorResources.getHintColor(context)),
+              style: Theme.of(context).textTheme.displayMedium?.copyWith(color: ColorResources.getHintColor(context)),
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-            locationProvider.pickAddress != null
+            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+            locationProvider.pickAddress != null && _controller != null
                 ? InkWell(
-                    onTap: () => _openSearchDialog(context, _controller),
+                    onTap: () => _openSearchDialog(context),
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE, vertical: 18.0),
@@ -584,105 +586,31 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                         borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL),
                       ),
                       child: Builder(builder: (context) {
-                        _locationTextController.text = locationProvider.pickAddress;
-                        // if(locationProvider.pickAddress.name != null && ResponsiveHelper.isMobilePhone()) {
-                        //   locationProvider.locationController.text = '${locationProvider.pickAddress.name ?? ''} ${locationProvider.pickAddress.subAdministrativeArea ?? ''} ${locationProvider.pickAddress.isoCountryCode ?? ''}';
-                        // }
+                        _locationTextController.text = locationProvider.pickAddress ?? '';
 
                         return Row(children: [
                           Expanded(
                               child: Text(
                                   locationProvider.pickAddress == null || locationProvider.pickAddress == ''
-                                      ? locationProvider.address == '' || locationProvider.address == ''
+                                      ? locationProvider.address == ''
                                           ? 'Enter address Manually'
-                                          : locationProvider.address
-                                      : locationProvider.pickAddress
-                                  // locationProvider.pickAddress.name != null
-                                  // ? '${locationProvider.pickAddress.name ?? ''} ${locationProvider.pickAddress.subAdministrativeArea ?? ''} ${locationProvider.pickAddress.isoCountryCode ?? ''}'
-                                  ,
+                                          : locationProvider.address!
+                                      : locationProvider.pickAddress!,
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis)),
-                          Icon(Icons.search, size: 20),
+                          const Icon(Icons.search, size: 20),
                         ]);
                       }),
                     ),
                   )
-                : SizedBox.shrink(),
-            // Material(
-            //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            //   child: SizedBox(width: 1170, child: TypeAheadField(
-            //     textFieldConfiguration: TextFieldConfiguration(
-            //       controller: _locationTextController,
-            //       textInputAction: TextInputAction.search,
-            //       autofocus: true,
-            //       textCapitalization: TextCapitalization.words,
-            //       keyboardType: TextInputType.streetAddress,
-            //       decoration: InputDecoration(
-            //         hintText: getTranslated('search_location', context),
-            //         border: OutlineInputBorder(
-            //           borderRadius: BorderRadius.circular(10),
-            //           borderSide: BorderSide(style: BorderStyle.none, width: 0),
-            //         ),
-            //         hintStyle: Theme.of(context).textTheme.headline2.copyWith(
-            //           fontSize: Dimensions.FONT_SIZE_DEFAULT, color: Theme.of(context).disabledColor,
-            //         ),
-            //         filled: true, fillColor: Theme.of(context).cardColor,
-            //       ),
-            //       style: Theme.of(context).textTheme.headline2.copyWith(
-            //         color: Theme.of(context).textTheme.bodyText1.color, fontSize: Dimensions.FONT_SIZE_LARGE,
-            //       ),
-            //     ),
-            //     suggestionsCallback: (pattern) async {
-            //       return await Provider.of<LocationProvider>(context, listen: false).searchLocation(context, pattern);
-            //     },
-            //     itemBuilder: (context, Prediction suggestion) {
-            //       return Padding(
-            //         padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-            //         child: Row(children: [
-            //           Icon(Icons.location_on),
-            //           Expanded(
-            //             child: Text(suggestion.description, maxLines: 1, overflow: TextOverflow.ellipsis, style: Theme.of(context).textTheme.headline2.copyWith(
-            //               color: Theme.of(context).textTheme.bodyText1.color, fontSize: Dimensions.FONT_SIZE_LARGE,
-            //             )),
-            //           ),
-            //         ]),
-            //       );
-            //     },
-            //     onSuggestionSelected: (Prediction suggestion) {
-            //       Provider.of<LocationProvider>(context, listen: false).setLocation(suggestion.placeId, suggestion.description, _controller).then((val){
-            //         setState(() {
-            //
-            //           _locationTextController.text=suggestion.description;
-            //
-            //         });
-            //       });
-            //      // Navigator.pop(context);
-            //
-            //     },
-            //   )),
-            // ),
+                : const SizedBox.shrink(),
 
-            // Container(
-            //   child: CustomTextField(
-            //     hintText: 'Enter your address manually',
-            //     isShowBorder: true,
-            //     onTap: () => Navigator.pushNamed(context, Routes.getSelectLocationRoute(), arguments: SelectLocationScreen(googleMapController: _controller)),
-            //
-            //
-            //     inputType: TextInputType.streetAddress,
-            //     isReadOnly: true,
-            //     inputAction: TextInputAction.next,
-            //     focusNode: _addressNode,
-            //     nextFocus: _nameNode,
-            //     controller: _locationTextController,
-            //   ),
-            // ),
-            SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
             Text(
               'Apt / Suite / Floor',
               style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
             CustomTextField(
               hintText: getTranslated('ex_2', context),
               isShowBorder: true,
@@ -690,14 +618,14 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
               inputAction: TextInputAction.next,
               focusNode: _houseNode,
               nextFocus: _floorNode,
-              controller: _floorController ?? '',
+              controller: _floorController,
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
             Text(
               'Business / Building Name',
               style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
             CustomTextField(
               hintText: 'Ex: hotel, school etc.',
@@ -706,16 +634,16 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
               inputAction: TextInputAction.next,
               focusNode: _stateNode,
               nextFocus: _houseNode,
-              controller: _buildingController ?? '',
+              controller: _buildingController,
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
             // for Contact Person Name
             Text(
               getTranslated('contact_person_name', context),
-              style: Theme.of(context).textTheme.headline2.copyWith(color: ColorResources.getHintColor(context)),
+              style: Theme.of(context).textTheme.displayMedium?.copyWith(color: ColorResources.getHintColor(context)),
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
             CustomTextField(
               hintText: getTranslated('enter_contact_person_name', context),
               isShowBorder: true,
@@ -726,14 +654,14 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
               inputAction: TextInputAction.next,
               capitalization: TextCapitalization.words,
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
             // for Contact Person Number
             Text(
               getTranslated('contact_person_number', context),
-              style: Theme.of(context).textTheme.headline2.copyWith(color: ColorResources.getHintColor(context)),
+              style: Theme.of(context).textTheme.displayMedium?.copyWith(color: ColorResources.getHintColor(context)),
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
             CustomTextField(
               hintText: getTranslated('enter_contact_person_number', context),
               isShowBorder: true,
@@ -742,9 +670,9 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
               focusNode: _numberNode,
               controller: _contactPersonNumberController,
             ),
-            SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
-            SizedBox(
+            const SizedBox(
               height: Dimensions.PADDING_SIZE_DEFAULT,
             ),
             if (ResponsiveHelper.isDesktop(context)) saveButtonWidget(context),
@@ -761,7 +689,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
       permission = await Geolocator.requestPermission();
     } else if (permission == LocationPermission.deniedForever) {
       _locationTextController.text = '';
-      showDialog(context: context, barrierDismissible: false, builder: (context) => PermissionDialog());
+      showDialog(context: context, barrierDismissible: false, builder: (context) => const PermissionDialog());
     } else {
       callback();
     }

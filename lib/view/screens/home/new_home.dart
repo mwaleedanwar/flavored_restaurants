@@ -1,45 +1,32 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/cart_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/category_product_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_model.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/price_converter.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/category_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/product_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/theme_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
-
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/web/widget/product_widget_web.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/cart_bottom_sheet.dart';
-
 import 'package:provider/provider.dart';
 import 'package:scrollable_list_tabview/scrollable_list_tabview.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-
-import '../../../helper/responsive_helper.dart';
-import '../../../provider/cart_provider.dart';
-import '../../../utill/dimensions.dart';
-import '../../../utill/routes.dart';
-import '../../base/custom_app_bar.dart';
-import '../../base/custom_button.dart';
-import '../../base/product_widget.dart';
-import '../../base/web_app_bar.dart';
-import 'dart:developer';
+import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_app_bar.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/product_widget.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title, this.selectedIndex = 0}) : super(key: key);
-
-  final String title;
-  final int selectedIndex;
+  const MyHomePage({super.key});
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -50,186 +37,72 @@ class _MyHomePageState extends State<MyHomePage> {
         body: Consumer<AllCategoryProvider>(builder: (context, category, child) {
           Provider.of<CartProvider>(context).setFalse();
 
-// print('==is :${category.categoryList.length}');
-// print('==is :${category.categoryList.where((element) => element.products.length!=0).toList()}');
-
           return category.isLoading
               ? Center(
                   child: CircularProgressIndicator(
-                  valueColor: new AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                  valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                 ))
               : ScrollableListTabView(
                   tabHeight: 48,
                   bodyAnimationDuration: const Duration(milliseconds: 150),
                   tabAnimationCurve: Curves.easeOut,
-                  // selectedIndex:widget.selectedIndex ,
                   tabAnimationDuration: const Duration(milliseconds: 200),
                   tabs: List.generate(
-                      category.categoryList.length,
-                      (index) => ScrollableListTab(
-                            tab: ListTab(
-                                borderColor: Colors.transparent,
-                                activeBackgroundColor: Theme.of(context).primaryColor,
-                                label: Text(category.categoryList[index].name),
-                                // icon: Icon(Icons.group),
-                                showIconOnList: false),
-                            body: GridView.builder(
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisSpacing: ResponsiveHelper.isMobile(context) ? 8 : 5,
-                                mainAxisSpacing: 5,
-                                childAspectRatio: ResponsiveHelper.isMobile(context) ? 2.1 : 4.5,
-                                crossAxisCount: ResponsiveHelper.isTab(context) ? 1 : 1,
-                              ),
-                              itemCount: category.categoryList[index].products.length,
-                              padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemBuilder: (BuildContext context, int ind) {
-                                return ProductWidget(
-                                  product: category.categoryList[index].products[ind],
-                                );
-                              },
-                            ),
-
-                            // ListView.builder(
-                            //   shrinkWrap: true,
-                            //   physics: NeverScrollableScrollPhysics(),
-                            //   padding: EdgeInsets.symmetric(horizontal: 10),
-                            //   itemCount: category.categoryList[index].products.length,
-                            //
-                            //   itemBuilder: (_, ind) => SizedBox(
-                            //       height: 100,
-                            //       child: ProductWidget(product:category.categoryList[index].products[ind])),
-                            // )
-                          )).toList(),
+                    category.categoryList.length,
+                    (index) => ScrollableListTab(
+                      tab: ListTab(
+                          borderColor: Colors.transparent,
+                          activeBackgroundColor: Theme.of(context).primaryColor,
+                          label: Text(category.categoryList[index].name),
+                          // icon: Icon(Icons.group),
+                          showIconOnList: false),
+                      body: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisSpacing: ResponsiveHelper.isMobile(context) ? 8 : 5,
+                          mainAxisSpacing: 5,
+                          childAspectRatio: ResponsiveHelper.isMobile(context) ? 2.1 : 4.5,
+                          crossAxisCount: ResponsiveHelper.isTab(context) ? 1 : 1,
+                        ),
+                        itemCount: category.categoryList[index].products.length,
+                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext context, int ind) {
+                          return ProductWidget(
+                            product: category.categoryList[index].products[ind],
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                 );
         }),
         bottomNavigationBar: Consumer<CartProvider>(builder: (context, cart, child) {
           return cart.isFromCategory == true
               ? Container(
                   width: 1170,
-                  padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                   child: CustomButton(
                       btnTxt: 'View in cart',
                       onTap: () {
                         Navigator.pushNamed(context, Routes.getDashboardRoute('cart'));
                       }),
                 )
-              : SizedBox.shrink();
+              : const SizedBox.shrink();
         }));
   }
 }
 
-/// old code
-
-// class MyHomePage extends StatefulWidget {
-//   MyHomePage({Key key, this.title,this.selectedIndex}) : super(key: key);
-//
-//   final String title;
-//   final int selectedIndex;
-//
-//   @override
-//   _MyHomePageState createState() => _MyHomePageState();
-// }
-//
-// class _MyHomePageState extends State<MyHomePage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//         appBar: ResponsiveHelper.isDesktop(context)
-//             ? PreferredSize(
-//             child: WebAppBar(), preferredSize: Size.fromHeight(100))
-//             : CustomAppBar(
-//             context: context,
-//             title: 'Food Menu',
-//             isBackButtonExist: true),
-//         body: Consumer<AllCategoryProvider>(
-//             builder: (context, category, child) {
-// // print('==is :${category.categoryList.length}');
-// // print('==is :${category.categoryList.where((element) => element.products.length!=0).toList()}');
-//
-//               return category.isLoading?Center(
-//                   child: CircularProgressIndicator(
-//                     valueColor: new AlwaysStoppedAnimation<Color>(
-//                         Theme.of(context).primaryColor),
-//                   )): ScrollableListTabView(
-//                 tabHeight: 48,
-//                 bodyAnimationDuration: const Duration(milliseconds: 150),
-//                 tabAnimationCurve: Curves.easeOut,
-//                 seletedIndex:widget.selectedIndex ,
-//                 tabAnimationDuration: const Duration(milliseconds: 200),
-//                 tabs:List.generate(category.categoryList.length, (index) =>     ScrollableListTab(
-//                   tab: ListTab(
-//                       borderColor: Colors.transparent,
-//                       activeBackgroundColor:  Theme.of(context).primaryColor,
-//
-//
-//
-//                       label: Text(category.categoryList[index].name),
-//                       // icon: Icon(Icons.group),
-//                       showIconOnList: false),
-//                   body:
-//                   GridView.builder(
-//                     gridDelegate: ResponsiveHelper.isDesktop(context)
-//                         ? SliverGridDelegateWithMaxCrossAxisExtent(
-//                         maxCrossAxisExtent: 195, mainAxisExtent: 250)
-//                         : SliverGridDelegateWithFixedCrossAxisCount(
-//                       crossAxisSpacing:
-//                       ResponsiveHelper.isMobile(context) ? 8 : 5,
-//                       mainAxisSpacing: 5,
-//                       childAspectRatio:
-//                       ResponsiveHelper.isMobile(context) ? 2.1 : 4.5,
-//                       crossAxisCount:
-//                       ResponsiveHelper.isTab(context) ? 2 : 2,
-//                     ),
-//                     itemCount:  category.categoryList[index].products.length,
-//                     padding: EdgeInsets.symmetric(
-//                         horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-//                     physics: NeverScrollableScrollPhysics(),
-//                     shrinkWrap: true,
-//                     itemBuilder: (BuildContext context, int ind) {
-//                       return ResponsiveHelper.isDesktop(context)
-//                           ? Padding(
-//                         padding: const EdgeInsets.all(5.0),
-//                         child: ProductWidgetWeb(
-//                             product:  category.categoryList[index].products[ind]),
-//                       )
-//                           : ProductWidget(
-//                         product: category.categoryList[index].products[ind],
-//                       );
-//                     },
-//                   ),
-//
-//                   // ListView.builder(
-//                   //   shrinkWrap: true,
-//                   //   physics: NeverScrollableScrollPhysics(),
-//                   //   padding: EdgeInsets.symmetric(horizontal: 10),
-//                   //   itemCount: category.categoryList[index].products.length,
-//                   //
-//                   //   itemBuilder: (_, ind) => SizedBox(
-//                   //       height: 100,
-//                   //       child: ProductWidget(product:category.categoryList[index].products[ind])),
-//                   // )
-//
-//
-//                 )).toList()
-//                 ,
-//               );
-//             })
-//     );
-//   }
-// }
-
 class TestMenuScreen extends StatefulWidget {
-  const TestMenuScreen({Key key}) : super(key: key);
+  const TestMenuScreen({super.key});
 
   @override
   State<TestMenuScreen> createState() => _TestMenuScreenState();
 }
 
 class _TestMenuScreenState extends State<TestMenuScreen> with TickerProviderStateMixin {
-  TabController _categoryTabController;
-  final List _tabInfoList = <GlobalKey>[];
+  late TabController _categoryTabController;
+  final _tabInfoList = <GlobalKey>[];
   bool loading = true;
   void _initTabList() {
     final categories = Provider.of<AllCategoryProvider>(context).categoryList;
@@ -250,7 +123,7 @@ class _TestMenuScreenState extends State<TestMenuScreen> with TickerProviderStat
       builder: (context, provider, _) {
         if (_tabInfoList.isEmpty) {
           _initTabList();
-          _categoryTabController = TabController(length: _tabInfoList.length, vsync: this);
+          _categoryTabController = TabController(initialIndex: 0, length: _tabInfoList.length, vsync: this);
           final productProvider = Provider.of<ProductProvider>(context, listen: false);
           if (productProvider.popularProductList == null) {
             productProvider.getPopularProductList(
@@ -262,7 +135,7 @@ class _TestMenuScreenState extends State<TestMenuScreen> with TickerProviderStat
           loading = false;
         }
         return loading
-            ? Center(
+            ? const Center(
                 child: CircularProgressIndicator.adaptive(),
               )
             : Scaffold(
@@ -279,7 +152,7 @@ class _TestMenuScreenState extends State<TestMenuScreen> with TickerProviderStat
                       pinned: true,
                     ),
                     SliverPadding(
-                      padding: EdgeInsets.fromLTRB(10, 5, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(10, 10, 0, 0),
                       sliver: SliverToBoxAdapter(
                         child: Text(
                           'Popular Items',
@@ -292,7 +165,7 @@ class _TestMenuScreenState extends State<TestMenuScreen> with TickerProviderStat
                       ),
                     ),
                     SliverPadding(
-                      padding: EdgeInsets.only(top: 15),
+                      padding: const EdgeInsets.only(top: 15),
                       sliver: SliverToBoxAdapter(
                         child: SizedBox(
                           height: ResponsiveHelper.isTab(context) ? 300 : 200,
@@ -304,7 +177,7 @@ class _TestMenuScreenState extends State<TestMenuScreen> with TickerProviderStat
                       ),
                     ),
                     SliverPadding(
-                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                       sliver: SliverToBoxAdapter(
                         child: SingleChildScrollView(
                           child: Column(
@@ -374,16 +247,15 @@ class _CategoryTabBarDelegate extends SliverPersistentHeaderDelegate {
         controller: controller,
         data: data,
         keys: keys,
-        overlapsContent: shrinkOffset / maxExtent > 0,
       ),
     );
   }
 
   @override
-  double get maxExtent => 87.5;
+  double get maxExtent => 90;
 
   @override
-  double get minExtent => 87.5;
+  double get minExtent => 90;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
@@ -395,14 +267,12 @@ class CategoryTabBar extends StatefulWidget {
   final TabController controller;
   final List<CategoryProductModel> data;
   final List<GlobalKey> keys;
-  final bool overlapsContent;
   const CategoryTabBar({
-    Key key,
-    this.controller,
-    this.data,
-    this.keys,
-    this.overlapsContent,
-  }) : super(key: key);
+    super.key,
+    required this.controller,
+    required this.data,
+    required this.keys,
+  });
 
   @override
   State<CategoryTabBar> createState() => _CategoryTabBarState();
@@ -417,20 +287,21 @@ class _CategoryTabBarState extends State<CategoryTabBar> {
       shadowColor: Colors.black38,
       child: LayoutBuilder(
         builder: (context, constraints) => TabBar(
-          indicatorColor: Colors.transparent,
+          indicatorColor: F.appbarHeaderColor,
           controller: widget.controller,
           isScrollable: true,
           labelPadding: EdgeInsets.zero,
           indicatorSize: TabBarIndicatorSize.tab,
-          onTap: (index) {
-            print('==index:$index');
+          tabAlignment: TabAlignment.start,
+          onTap: (index) async {
             currentIndex = index;
-            setState(() {});
+
             GlobalKey globalKey = widget.keys[index];
-            Scrollable.ensureVisible(
-              globalKey.currentContext,
+            await Scrollable.ensureVisible(
+              globalKey.currentContext!,
               duration: const Duration(milliseconds: 150),
             );
+            setState(() {});
           },
           tabs: List.generate(widget.data.length, (index) {
             return Column(
@@ -439,14 +310,15 @@ class _CategoryTabBarState extends State<CategoryTabBar> {
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: ClipOval(
                     child: FadeInImage.assetNetwork(
-                      placeholder: Images.placeholder_image, width: currentIndex == index ? 70 : 65,
-                      height: currentIndex == index ? 70 : 65, fit: BoxFit.cover,
+                      placeholder: Images.placeholder_image,
+                      width: currentIndex == index ? 70 : 65,
+                      height: currentIndex == index ? 70 : 65,
+                      fit: BoxFit.cover,
                       image: Provider.of<SplashProvider>(context, listen: false).baseUrls != null
-                          ? '${Provider.of<SplashProvider>(context, listen: false).baseUrls.categoryImageUrl}/${widget.data[index].image}'
+                          ? '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.categoryImageUrl}/${widget.data[index].image}'
                           : '',
                       imageErrorBuilder: (c, o, s) =>
                           Image.asset(Images.placeholder_image, width: 65, height: 65, fit: BoxFit.cover),
-                      // width: 100, height: 100, fit: BoxFit.cover,
                     ),
                   ),
                 ),
@@ -455,7 +327,7 @@ class _CategoryTabBarState extends State<CategoryTabBar> {
                   style: rubikMedium.copyWith(
                     fontSize: Dimensions.FONT_SIZE_SMALL,
                     fontWeight: currentIndex != index ? FontWeight.w500 : FontWeight.w700,
-                    color: Provider.of<ThemeProvider>(context).darkTheme ? null : Colors.black,
+                    color: Provider.of<ThemeProvider>(context).darkTheme ? Colors.white : Colors.black,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -470,8 +342,8 @@ class _CategoryTabBarState extends State<CategoryTabBar> {
 }
 
 class PopularProductCarousel extends StatefulWidget {
-  final List<Product> products;
-  const PopularProductCarousel({Key key, this.products}) : super(key: key);
+  final List<Product>? products;
+  const PopularProductCarousel({super.key, this.products});
 
   @override
   State<PopularProductCarousel> createState() => _PopularProductCarouselState();
@@ -488,9 +360,9 @@ class _PopularProductCarouselState extends State<PopularProductCarousel> {
               child: CarouselSlider(
                 carouselController: controller,
                 items: List.generate(
-                  widget.products.length,
+                  widget.products!.length,
                   (index) => PopularProductCard(
-                    product: widget.products[index],
+                    product: widget.products![index],
                     rank: index,
                   ),
                 ),
@@ -503,11 +375,11 @@ class _PopularProductCarouselState extends State<PopularProductCarousel> {
                 ),
               ),
             )
-          : SizedBox.shrink(),
+          : const SizedBox.shrink(),
       Align(
         alignment: Alignment.centerLeft,
         child: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_circle_left_outlined,
             color: Colors.white,
             size: 35,
@@ -519,7 +391,7 @@ class _PopularProductCarouselState extends State<PopularProductCarousel> {
       Align(
         alignment: Alignment.centerRight,
         child: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_circle_right_outlined,
             color: Colors.white,
             size: 35,
@@ -537,12 +409,12 @@ class PopularProductCard extends StatelessWidget {
   final Product product;
 
   const PopularProductCard({
-    Key key,
-    this.product,
-    this.rank,
-  }) : super(key: key);
+    super.key,
+    required this.product,
+    required this.rank,
+  });
 
-  TextStyle get style => TextStyle(
+  TextStyle get style => const TextStyle(
         color: Colors.white,
         shadows: <Shadow>[Shadow(color: Colors.black, blurRadius: 7.5)],
       );
@@ -559,9 +431,6 @@ class PopularProductCard extends StatelessWidget {
           builder: (con) => CartBottomSheet(
             product: product,
             cart: null,
-            callback: (CartModel cartModel) {
-              showCustomSnackBar(getTranslated('added_to_cart', context), context, isError: false);
-            },
           ),
         ),
         child: Stack(
@@ -572,7 +441,7 @@ class PopularProductCard extends StatelessWidget {
                 child: FadeInImage.assetNetwork(
                   placeholder: Images.placeholder_rectangle,
                   image:
-                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls.productImageUrl}/${product.image}',
+                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${product.image}',
                   fit: BoxFit.cover,
                   width: MediaQuery.of(context).size.width,
                   height: ResponsiveHelper.isTab(context) ? 350 : 200,
@@ -580,7 +449,7 @@ class PopularProductCard extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -593,12 +462,12 @@ class PopularProductCard extends StatelessWidget {
                           fontSize: ResponsiveHelper.isTab(context) ? Dimensions.FONT_SIZE_EXTRA_LARGE : null)),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.add_circle_outline,
                         color: Colors.white,
                         shadows: [Shadow(color: Colors.black)],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 5,
                       ),
                       Text(PriceConverter.convertPrice(context, product.price),

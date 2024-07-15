@@ -13,27 +13,29 @@ class NoDataScreen extends StatelessWidget {
   final bool isFooter;
   final bool isAddress;
   final bool isFavourite;
-  NoDataScreen(
-      {this.isCart = false,
-      this.isNothing = false,
-      this.isOrder = false,
-      this.isFooter = true,
-      this.isAddress = false,
-      this.isFavourite = false});
+  const NoDataScreen({
+    super.key,
+    this.isCart = false,
+    this.isNothing = false,
+    this.isOrder = false,
+    this.isFooter = true,
+    this.isAddress = false,
+    this.isFavourite = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
+    final height = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       child: Column(
         children: [
           ConstrainedBox(
-            constraints: BoxConstraints(
-                minHeight: !ResponsiveHelper.isDesktop(context) && _height < 600 ? _height : _height - 400),
+            constraints:
+                BoxConstraints(minHeight: !ResponsiveHelper.isDesktop(context) && height < 600 ? height : height - 400),
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
                   child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -65,7 +67,7 @@ class NoDataScreen extends StatelessWidget {
                               fontSize: MediaQuery.of(context).size.height * 0.023),
                           textAlign: TextAlign.center,
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         Text(
                           isOrder
                               ? getTranslated('buy_something_to_see', context)
@@ -80,7 +82,7 @@ class NoDataScreen extends StatelessWidget {
               ],
             ),
           ),
-          if (ResponsiveHelper.isDesktop(context) && isFooter) FooterView()
+          if (ResponsiveHelper.isDesktop(context) && isFooter) const FooterView()
         ],
       ),
     );

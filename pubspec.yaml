@@ -16,7 +16,7 @@ dependencies:
   shared_preferences: ^2.0.5
   dio: ^4.0.6
   image_picker: ^0.8.4+4
-  pin_code_fields: ^7.0.0
+  pin_code_fields: ^8.0.1
   google_maps_flutter_web: ^0.4.0+3
   google_maps_flutter: ^2.0.7
   flutter_google_places: ^0.3.0
@@ -50,7 +50,6 @@ dependencies:
   scroll_to_index: ^3.0.1
   scrollable_list_tabview:
   universal_html: ^2.0.8
-  anchor_tabs: ^0.0.7
   image: ^3.0.2
   flutter_widget_from_html_core: ^0.8.5+1
   phone_numbers_parser:
@@ -72,10 +71,9 @@ dependencies:
   google_maps_webservice: ^0.0.20-nullsafety.5
 
 dev_dependencies:
-  flutter_flavorizr:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
 
 flutter:
   uses-material-design: true
@@ -104,31 +102,3 @@ flutter:
       fonts:
         - asset: assets/fonts/Roboto-Regular.ttf
           weight: 400
-
-flavorizr:
-  flavors:
-    Nopal-Dos:
-      app:
-        name: "Nopal Dos"
-      android:
-        applicationId: "com.nopal.app"
-        firebase:
-          config: "./android/app/src/Nopal-Dos/google-services.json"
-      ios:
-        bundleId: ""
-    Maa-Kitchen:
-      app:
-        name: "Maa Kitchen"
-      android:
-        applicationId: "com.fasttech.maakitchen"
-        firebase:
-          config: "./android/app/src/Maa-Kitchen/google-services.json"
-      ios:
-        bundleId: ""
-  instructions:
-    - android:androidManifest
-    - android:buildGradle
-    - android:icons
-    - flutter:flavors
-    - flutter:app
-    - flutter:targets

@@ -12,7 +12,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 class CategoryRepo {
   final HttpClient httpClient;
 
-  CategoryRepo({@required this.httpClient});
+  CategoryRepo({required this.httpClient});
 
   Future<ApiResponse> getCategoryList(String languageCode) async {
     try {
@@ -29,29 +29,27 @@ class CategoryRepo {
 
   Future<ApiResponse> getAllCategoryProductList(String languageCode) async {
     try {
-      //appToast(text: ' getAllCategoryProductList started');
-
       final response = await httpClient.get(
         '${AppConstants.ALL_PRODUCTS}&branch_id=${Provider.of<BranchProvider>(Get.context, listen: false).branch}',
         options: Options(headers: {'X-localization': languageCode}),
       );
-
-      //  appToast(text: ' getAllCategoryProductList :${response.body}');
-
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
     }
   }
 
-  Future<ApiResponse> getSubCategoryList(String parentID, String languageCode) async {
+  Future<ApiResponse> getSubCategoryList(
+    String parentID,
+    String languageCode,
+  ) async {
     debugPrint('-----getSubCategoryList');
     try {
       final response = await httpClient.get(
         '${AppConstants.SUB_CATEGORY_URI}$parentID?restaurant_id=${F.restaurantId}',
         options: Options(headers: {'X-localization': languageCode}),
       );
-      debugPrint('-----getSubCategoryList response: ${response}');
+      debugPrint('-----getSubCategoryList response: $response');
 
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -59,7 +57,8 @@ class CategoryRepo {
     }
   }
 
-  Future<ApiResponse> getCategoryProductList(String categoryID, String languageCode, String type) async {
+  Future<ApiResponse> getCategoryProductList(
+      String categoryID, String languageCode, String type) async {
     debugPrint(
         '-----getCategoryProductList url:${F.BASE_URL + AppConstants.CATEGORY_PRODUCT_URI}$categoryID?product_type=$type');
 

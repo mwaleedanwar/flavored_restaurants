@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_string_interpolations
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/date_converter.dart';
@@ -19,37 +21,41 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 import 'package:provider/provider.dart';
 
 class CouponScreen extends StatefulWidget {
+  const CouponScreen({super.key});
+
   @override
   State<CouponScreen> createState() => _CouponScreenState();
 }
 
-bool _isLoggedIn;
-
 class _CouponScreenState extends State<CouponScreen> {
+  late bool _isLoggedIn;
+  bool loading = true;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _isLoggedIn = Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
     if (_isLoggedIn) {
       Provider.of<CouponProvider>(context, listen: false).getCouponList(context);
     }
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-    final _height = MediaQuery.of(context).size.height;
-
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : CustomAppBar(context: context, title: getTranslated('coupon', context)),
-      body: _isLoggedIn
-          ? Consumer<CouponProvider>(
-              builder: (context, coupon, child) {
-                return coupon.couponList != null
-                    ? coupon.couponList.length > 0
+      body: loading
+          ? const Center(
+              child: CircularProgressIndicator.adaptive(),
+            )
+          : _isLoggedIn
+              ? Consumer<CouponProvider>(
+                  builder: (context, coupon, child) {
+                    return coupon.couponList.isNotEmpty
                         ? RefreshIndicator(
                             onRefresh: () async {
                               await Provider.of<CouponProvider>(context, listen: false).getCouponList(context);
@@ -62,34 +68,39 @@ class _CouponScreenState extends State<CouponScreen> {
                                     Center(
                                       child: ConstrainedBox(
                                         constraints: BoxConstraints(
-                                            minHeight: !ResponsiveHelper.isDesktop(context) && _height < 600
-                                                ? _height
-                                                : _height - 400),
+                                            minHeight: !ResponsiveHelper.isDesktop(context) &&
+                                                    MediaQuery.of(context).size.height < 600
+                                                ? MediaQuery.of(context).size.height
+                                                : MediaQuery.of(context).size.height - 400),
                                         child: Container(
-                                          padding: _width > 700
-                                              ? EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE)
+                                          padding: MediaQuery.of(context).size.width > 700
+                                              ? const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE)
                                               : EdgeInsets.zero,
                                           child: Container(
-                                            width: _width > 700 ? 700 : _width,
-                                            padding:
-                                                _width > 700 ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
-                                            decoration: _width > 700
+                                            width: MediaQuery.of(context).size.width > 700
+                                                ? 700
+                                                : MediaQuery.of(context).size.width,
+                                            padding: MediaQuery.of(context).size.width > 700
+                                                ? const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT)
+                                                : null,
+                                            decoration: MediaQuery.of(context).size.width > 700
                                                 ? BoxDecoration(
                                                     color: Theme.of(context).cardColor,
                                                     borderRadius: BorderRadius.circular(10),
                                                     boxShadow: [
-                                                      BoxShadow(color: Colors.grey[300], blurRadius: 5, spreadRadius: 1)
+                                                      BoxShadow(
+                                                          color: Colors.grey.shade300, blurRadius: 5, spreadRadius: 1)
                                                     ],
                                                   )
                                                 : null,
                                             child: ListView.builder(
                                               itemCount: coupon.couponList.length,
                                               shrinkWrap: true,
-                                              physics: NeverScrollableScrollPhysics(),
-                                              padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                                              physics: const NeverScrollableScrollPhysics(),
+                                              padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
                                               itemBuilder: (context, index) {
                                                 return Padding(
-                                                  padding: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_LARGE),
+                                                  padding: const EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_LARGE),
                                                   child: InkWell(
                                                     onTap: () {
                                                       coupon.couponList[index].isExpired == true
@@ -115,10 +126,10 @@ class _CouponScreenState extends State<CouponScreen> {
                                                         height: 100,
                                                         alignment: Alignment.center,
                                                         child: Row(children: [
-                                                          SizedBox(width: 50),
+                                                          const SizedBox(width: 50),
                                                           Image.asset(Images.percentage, height: 50, width: 50),
                                                           Padding(
-                                                            padding: EdgeInsets.symmetric(
+                                                            padding: const EdgeInsets.symmetric(
                                                                 horizontal: Dimensions.PADDING_SIZE_LARGE,
                                                                 vertical: Dimensions.PADDING_SIZE_SMALL),
                                                             child: Image.asset(Images.line, height: 100, width: 5),
@@ -135,29 +146,32 @@ class _CouponScreenState extends State<CouponScreen> {
                                                                       fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE,
                                                                     ),
                                                                   ),
-                                                                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                                  const SizedBox(
+                                                                      height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                                                   SelectableText(
                                                                     coupon.couponList[index].code,
                                                                     style: rubikRegular.copyWith(
                                                                         color: ColorResources.COLOR_WHITE),
                                                                   ),
-                                                                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                                  const SizedBox(
+                                                                      height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                                                   coupon.couponList[index].discountType == 'product'
                                                                       ? Text(
-                                                                          '${coupon.couponList[index].product.name}',
+                                                                          '${coupon.couponList[index].product!.name}',
                                                                           style: rubikMedium.copyWith(
                                                                               color: ColorResources.COLOR_WHITE,
                                                                               fontSize:
                                                                                   Dimensions.FONT_SIZE_EXTRA_LARGE),
                                                                         )
                                                                       : Text(
-                                                                          '${coupon.couponList[index].discount}${coupon.couponList[index].discountType == 'percent' ? '%' : Provider.of<SplashProvider>(context, listen: false).configModel.currencySymbol} off',
+                                                                          '${coupon.couponList[index].discount}${coupon.couponList[index].discountType == 'percent' ? '%' : Provider.of<SplashProvider>(context, listen: false).configModel!.currencySymbol} off',
                                                                           style: rubikMedium.copyWith(
                                                                               color: ColorResources.COLOR_WHITE,
                                                                               fontSize:
                                                                                   Dimensions.FONT_SIZE_EXTRA_LARGE),
                                                                         ),
-                                                                  SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                                                  const SizedBox(
+                                                                      height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                                                   Text(
                                                                     '${getTranslated('valid_until', context)} ${DateConverter.isoStringToLocalDateOnly(coupon.couponList[index].expireDate)}',
                                                                     style: rubikRegular.copyWith(
@@ -177,19 +191,16 @@ class _CouponScreenState extends State<CouponScreen> {
                                         ),
                                       ),
                                     ),
-                                    if (ResponsiveHelper.isDesktop(context)) FooterView()
+                                    if (ResponsiveHelper.isDesktop(context)) const FooterView()
                                   ],
                                 ),
                               ),
                             ),
                           )
-                        : NoDataScreen()
-                    : Center(
-                        child: CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)));
-              },
-            )
-          : NotLoggedInScreen(),
+                        : const NoDataScreen();
+                  },
+                )
+              : const NotLoggedInScreen(),
     );
   }
 }

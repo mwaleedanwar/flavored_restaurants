@@ -7,28 +7,37 @@ class SocialLoginModel {
   String firstName;
   String lastName;
 
-  SocialLoginModel({this.token, this.uniqueId, this.medium, this.email,this.restaurantId,this.firstName,this.lastName});
+  SocialLoginModel({
+    required this.token,
+    required this.uniqueId,
+    required this.medium,
+    required this.email,
+    required this.restaurantId,
+    required this.firstName,
+    required this.lastName,
+  });
 
-  SocialLoginModel.fromJson(Map<String, dynamic> json) {
-    token = json['token'];
-    uniqueId = json['unique_id'];
-    medium = json['medium'];
-    email = json['email'];
-    firstName=json['first_name'];
-    firstName=json['last_name'];
-    firstName=json['restaurant_id'];
-
+  factory SocialLoginModel.fromJson(Map<String, dynamic> json) {
+    return SocialLoginModel(
+      token: json['token'],
+      uniqueId: json['unique_id'],
+      medium: json['medium'],
+      email: json['email'],
+      firstName: json['first_name'],
+      lastName: json['last_name'],
+      restaurantId: json['restaurant_id'],
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['token'] = this.token;
-    data['unique_id'] = this.uniqueId;
-    data['medium'] = this.medium;
-    data['email'] = this.email;
-    data['first_name'] = this.firstName;
-    data['last_name'] = this.lastName;
-    data['restaurant_id'] = this.restaurantId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['token'] = token;
+    data['unique_id'] = uniqueId;
+    data['medium'] = medium;
+    data['email'] = email;
+    data['first_name'] = firstName;
+    data['last_name'] = lastName;
+    data['restaurant_id'] = restaurantId;
     return data;
   }
 }

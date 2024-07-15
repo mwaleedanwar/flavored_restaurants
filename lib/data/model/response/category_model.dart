@@ -10,27 +10,29 @@ class CategoryModel {
   String bannerImage;
 
   CategoryModel({
-    this.id,
-    this.name,
-    this.parentId,
-    this.position,
-    this.status,
-    this.createdAt,
-    this.updatedAt,
-    this.image,
-    this.bannerImage,
+    required this.id,
+    required this.name,
+    required this.parentId,
+    required this.position,
+    required this.status,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.image,
+    required this.bannerImage,
   });
 
-  CategoryModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'] ?? 0;
-    name = json['name'] ?? '';
-    parentId = json['parent_id'] ?? 0;
-    position = json['position'] ?? 0;
-    status = json['status'] ?? 0;
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    image = json['image'] ?? '';
-    bannerImage = json['banner_image'] ?? '';
+  factory CategoryModel.fromJson(Map<String, dynamic> json) {
+    return CategoryModel(
+      id: json['id'] ?? 0,
+      name: json['name'] ?? '',
+      parentId: json['parent_id'] ?? 0,
+      position: json['position'] ?? 0,
+      status: json['status'] ?? 0,
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      image: json['image'] ?? '',
+      bannerImage: json['banner_image'] ?? '',
+    );
   }
 
   Map<String, dynamic> toJson() {

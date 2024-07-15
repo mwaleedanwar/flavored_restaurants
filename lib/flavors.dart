@@ -19,7 +19,7 @@ enum Flavor {
 }
 
 class F {
-  static Flavor appFlavor;
+  static Flavor appFlavor = Flavor.nopalDos;
 
   static String get appName {
     switch (appFlavor) {
@@ -52,6 +52,7 @@ class F {
     }
   }
 
+  // ignore: non_constant_identifier_names
   static String get BASE_URL {
     switch (appFlavor) {
       case Flavor.nopalDos:

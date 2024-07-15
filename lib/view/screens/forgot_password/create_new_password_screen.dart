@@ -12,20 +12,30 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_text_field.dart';
 import 'package:provider/provider.dart';
 
-class CreateNewPasswordScreen extends StatelessWidget {
+class CreateNewPasswordScreen extends StatefulWidget {
   final String resetToken;
   final String email;
-  CreateNewPasswordScreen({@required this.resetToken, @required this.email});
+  const CreateNewPasswordScreen({
+    super.key,
+    required this.resetToken,
+    required this.email,
+  });
 
+  @override
+  State<CreateNewPasswordScreen> createState() => _CreateNewPasswordScreenState();
+}
+
+class _CreateNewPasswordScreenState extends State<CreateNewPasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
+
   final TextEditingController _confirmPasswordController = TextEditingController();
+
   final FocusNode _passwordFocus = FocusNode();
+
   final FocusNode _confirmPasswordFocus = FocusNode();
 
   @override
   Widget build(BuildContext context) {
-    double _width = MediaQuery.of(context).size.width;
-
     return Scaffold(
       appBar: CustomAppBar(context: context, title: getTranslated('create_new_password', context)),
       body: Consumer<AuthProvider>(
@@ -33,22 +43,24 @@ class CreateNewPasswordScreen extends StatelessWidget {
           return Center(
             child: Scrollbar(
               child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 child: Center(
                   child: Container(
-                    width: _width > 700 ? 700 : _width,
-                    padding: _width > 700 ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
-                    decoration: _width > 700
+                    width: MediaQuery.of(context).size.width > 700 ? 700 : MediaQuery.of(context).size.width,
+                    padding: MediaQuery.of(context).size.width > 700
+                        ? const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT)
+                        : null,
+                    decoration: MediaQuery.of(context).size.width > 700
                         ? BoxDecoration(
                             color: Theme.of(context).cardColor,
                             borderRadius: BorderRadius.circular(10),
-                            boxShadow: [BoxShadow(color: Colors.grey[300], blurRadius: 5, spreadRadius: 1)],
+                            boxShadow: [BoxShadow(color: Colors.grey.shade300, blurRadius: 5, spreadRadius: 1)],
                           )
                         : null,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 55),
+                        const SizedBox(height: 55),
                         Center(
                           child: Image.asset(
                             Images.open_lock,
@@ -56,32 +68,30 @@ class CreateNewPasswordScreen extends StatelessWidget {
                             height: 142,
                           ),
                         ),
-                        SizedBox(height: 40),
+                        const SizedBox(height: 40),
                         Center(
                             child: Text(
                           getTranslated('enter_password_to_create', context),
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
                               .textTheme
-                              .headline2
-                              .copyWith(color: ColorResources.getHintColor(context)),
+                              .displayMedium
+                              ?.copyWith(color: ColorResources.getHintColor(context)),
                         )),
                         Padding(
                           padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // for password section
-
-                              SizedBox(height: 60),
+                              const SizedBox(height: 60),
                               Text(
                                 getTranslated('new_password', context),
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline2
-                                    .copyWith(color: ColorResources.getHintColor(context)),
+                                    .displayMedium
+                                    ?.copyWith(color: ColorResources.getHintColor(context)),
                               ),
-                              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                              const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                               CustomTextField(
                                 hintText: getTranslated('password_hint', context),
                                 isShowBorder: true,
@@ -92,16 +102,16 @@ class CreateNewPasswordScreen extends StatelessWidget {
                                 inputAction: TextInputAction.next,
                                 controller: _passwordController,
                               ),
-                              SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                              const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                               // for confirm password section
                               Text(
                                 getTranslated('confirm_password', context),
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline2
-                                    .copyWith(color: ColorResources.getHintColor(context)),
+                                    .displayMedium
+                                    ?.copyWith(color: ColorResources.getHintColor(context)),
                               ),
-                              SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                              const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                               CustomTextField(
                                 hintText: getTranslated('password_hint', context),
                                 isShowBorder: true,
@@ -112,7 +122,7 @@ class CreateNewPasswordScreen extends StatelessWidget {
                                 inputAction: TextInputAction.done,
                               ),
 
-                              SizedBox(height: 24),
+                              const SizedBox(height: 24),
                               !auth.isForgotPasswordLoading
                                   ? CustomButton(
                                       btnTxt: getTranslated('save', context),
@@ -126,23 +136,19 @@ class CreateNewPasswordScreen extends StatelessWidget {
                                         } else if (_passwordController.text != _confirmPasswordController.text) {
                                           showCustomSnackBar(getTranslated('password_did_not_match', context), context);
                                         } else {
-                                          String _mail = Provider.of<SplashProvider>(context, listen: false)
-                                                  .configModel
-                                                  .phoneVerification
-                                              ? '+' + email.trim()
-                                              : email;
+                                          String mail = Provider.of<SplashProvider>(context, listen: false)
+                                                      .configModel
+                                                      ?.phoneVerification ??
+                                                  false
+                                              ? '+${widget.email.trim()}'
+                                              : widget.email;
                                           auth
-                                              .resetPassword(_mail, resetToken, _passwordController.text,
+                                              .resetPassword(mail, widget.resetToken, _passwordController.text,
                                                   _confirmPasswordController.text)
                                               .then((value) {
                                             if (value.isSuccess) {
-                                              // auth.login(email, _passwordController.text).then((value) async {
-                                              //
-                                              //   Navigator.pushNamedAndRemoveUntil(context, Routes.getMainRoute(), (route) => false);
-                                              // });
                                               showCustomSnackBar('Password changed successfully', context,
                                                   isError: false);
-
                                               Navigator.pushNamedAndRemoveUntil(
                                                   context, Routes.getLoginRoute(), (route) => false);
                                             } else {

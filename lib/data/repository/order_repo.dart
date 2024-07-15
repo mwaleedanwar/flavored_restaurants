@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/datasource/remote/dio/dio_client.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/datasource/remote/exception/api_error_handler.dart';
@@ -13,7 +12,7 @@ import 'package:http/http.dart' as http;
 class OrderRepo {
   final HttpClient httpClient;
   final SharedPreferences sharedPreferences;
-  OrderRepo({@required this.httpClient, @required this.sharedPreferences});
+  OrderRepo({required this.httpClient, required this.sharedPreferences});
 
   Future<ApiResponse> getOrderList() async {
     try {
@@ -35,7 +34,7 @@ class OrderRepo {
 
   Future<ApiResponse> cancelOrder(String orderID) async {
     try {
-      Map<String, dynamic> data = Map<String, dynamic>();
+      Map<String, dynamic> data = <String, dynamic>{};
       data['order_id'] = orderID;
       data['_method'] = 'put';
       final response = await httpClient.post(AppConstants.ORDER_CANCEL_URI, data: data);
@@ -47,7 +46,7 @@ class OrderRepo {
 
   Future<ApiResponse> updatePaymentMethod(String orderID) async {
     try {
-      Map<String, dynamic> data = Map<String, dynamic>();
+      Map<String, dynamic> data = <String, dynamic>{};
       data['order_id'] = orderID;
       data['_method'] = 'put';
       data['payment_method'] = 'cash_on_delivery';
@@ -90,7 +89,7 @@ class OrderRepo {
       'customer_name': name,
       'customer_email': email,
     };
-    print('==pyment model:$data');
+    debugPrint('==payment model: $data');
     try {
       final response = await httpClient.post(AppConstants.STRIPE_PAYMENT_URI, data: data);
       debugPrint('--makePayment APi  response: ${response.body}');
@@ -116,7 +115,7 @@ class OrderRepo {
           '?origin_lat=${originLatLng.latitude}&origin_lng=${originLatLng.longitude}'
           '&destination_lat=${destinationLatLng.latitude}&destination_lng=${destinationLatLng.longitude}&restaurant_id=${F.restaurantId}');
 
-      debugPrint('======== getDistanceInMeter response:${response}');
+      debugPrint('======== getDistanceInMeter response:$response');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));

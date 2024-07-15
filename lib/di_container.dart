@@ -14,7 +14,7 @@ final sl = GetIt.instance;
 
 Future<void> init() async {
   // Core
-  sl.registerLazySingleton(() => HttpClient(F.BASE_URL, sl(),
+  sl.registerLazySingleton(() => HttpClient(F.BASE_URL,
       loggingInterceptor: sl(), sharedPreferences: sl()));
 
   // Repository

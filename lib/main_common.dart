@@ -7,7 +7,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
-import 'package:get/get.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/language_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/notification_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
@@ -20,14 +20,15 @@ import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'di_container.dart' as di;
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
-AndroidNotificationChannel channel;
+late AndroidNotificationChannel channel;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> mainCommon() async {
   if (ResponsiveHelper.isMobilePhone()) {
-    HttpOverrides.global = new MyHttpOverrides();
+    HttpOverrides.global = MyHttpOverrides();
   }
   setPathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +43,7 @@ Future<void> mainCommon() async {
     await Firebase.initializeApp(options: F.options);
   }
   await di.init();
-  int orderID;
+  int? orderID;
   try {
     if (!kIsWeb) {
       channel = const AndroidNotificationChannel(
@@ -51,17 +52,21 @@ Future<void> mainCommon() async {
         importance: Importance.high,
       );
     }
-    final RemoteMessage remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
-    if (remoteMessage != null) {
-      orderID =
-          remoteMessage.notification.titleLocKey != null ? int.parse(remoteMessage.notification.titleLocKey) : null;
-    }
+    final RemoteMessage? remoteMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+    orderID = remoteMessage?.notification?.titleLocKey != null
+        ? int.parse(remoteMessage!.notification!.titleLocKey!)
+        : null;
+
     await NotificationHelper.initialize(flutterLocalNotificationsPlugin);
     FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
     await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
-  } catch (e) {}
+  } catch (e) {
+    debugPrint('ERROR IN MAIN $e');
+  }
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (context) => di.sl<ThemeProvider>()),
@@ -72,18 +77,22 @@ Future<void> mainCommon() async {
       ChangeNotifierProvider(create: (context) => di.sl<AllCategoryProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<BannerProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<ProductProvider>()),
-      ChangeNotifierProvider(create: (context) => di.sl<LoyalityPointsProvider>()),
-      ChangeNotifierProvider(create: (context) => di.sl<LocalizationProvider>()),
+      ChangeNotifierProvider(
+          create: (context) => di.sl<LoyalityPointsProvider>()),
+      ChangeNotifierProvider(
+          create: (context) => di.sl<LocalizationProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<AuthProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<LocationProvider>()),
-      ChangeNotifierProvider(create: (context) => di.sl<LocalizationProvider>()),
+      ChangeNotifierProvider(
+          create: (context) => di.sl<LocalizationProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<CartProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<OrderProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<PaymentProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<ChatProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<SetMenuProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<ProfileProvider>()),
-      ChangeNotifierProvider(create: (context) => di.sl<NotificationProvider>()),
+      ChangeNotifierProvider(
+          create: (context) => di.sl<NotificationProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<CouponProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<WishListProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<SearchProvider>()),
@@ -96,7 +105,7 @@ Future<void> mainCommon() async {
 }
 
 class MyApp extends StatefulWidget {
-  final int orderId;
+  final int? orderId;
   final bool isWeb;
 
   const MyApp({super.key, required this.orderId, required this.isWeb});
@@ -114,10 +123,12 @@ class MyAppState extends State<MyApp> {
     if (kIsWeb) {
       Provider.of<SplashProvider>(context, listen: false).initSharedData();
       Provider.of<CartProvider>(context, listen: false).getCartData();
-      Provider.of<SplashProvider>(context, listen: false).getPolicyPage(context);
+      Provider.of<SplashProvider>(context, listen: false)
+          .getPolicyPage(context);
 
       if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
-        Provider.of<ProfileProvider>(context, listen: false).getUserInfo(context);
+        Provider.of<ProfileProvider>(context, listen: false)
+            .getUserInfo(context);
       }
 
       _route();
@@ -131,14 +142,20 @@ class MyAppState extends State<MyApp> {
   }
 
   void _route() {
-    Provider.of<SplashProvider>(context, listen: false).initConfig(context).then((bool isSuccess) {
+    Provider.of<SplashProvider>(context, listen: false)
+        .initConfig(context)
+        .then((bool isSuccess) {
       if (isSuccess) {
-        Timer(Duration(seconds: ResponsiveHelper.isMobilePhone() ? 1 : 0), () async {
+        Timer(Duration(seconds: ResponsiveHelper.isMobilePhone() ? 1 : 0),
+            () async {
           if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
             Provider.of<AuthProvider>(context, listen: false).updateToken();
-            await Provider.of<WishListProvider>(context, listen: false).initWishList(
+            await Provider.of<WishListProvider>(context, listen: false)
+                .initWishList(
               context,
-              Provider.of<LocalizationProvider>(context, listen: false).locale.languageCode,
+              Provider.of<LocalizationProvider>(context, listen: false)
+                  .locale
+                  .languageCode,
             );
           }
         });
@@ -149,27 +166,34 @@ class MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     List<Locale> locals = [];
-    AppConstants.languages.forEach((language) {
+    for (LanguageModel language in AppConstants.languages) {
       locals.add(Locale(language.languageCode, language.countryCode));
-    });
+    }
 
     return Consumer<SplashProvider>(
       builder: (context, splashProvider, child) {
         return (kIsWeb && splashProvider.configModel == null)
             ? const SizedBox()
             : MaterialApp(
-                initialRoute: ResponsiveHelper.isMobilePhone() ? Routes.getSplashRoute() : Routes.getMainRoute(),
+                initialRoute: ResponsiveHelper.isMobilePhone()
+                    ? Routes.getSplashRoute()
+                    : Routes.getMainRoute(),
                 onGenerateRoute: RouterHelper.router.generator,
-                title: splashProvider.configModel != null ? splashProvider.configModel.restaurantName ?? '' : F.appName,
+                title: splashProvider.configModel != null
+                    ? splashProvider.configModel!.restaurantName
+                    : F.appName,
                 debugShowCheckedModeBanner: false,
                 navigatorKey: navigatorKey,
-                theme: Provider.of<ThemeProvider>(context).darkTheme ? F.themeDark : F.themeLight,
+                theme: Provider.of<ThemeProvider>(context).darkTheme
+                    ? F.themeDark
+                    : F.themeLight,
                 locale: Provider.of<LocalizationProvider>(context).locale,
-                localizationsDelegates: [
+                localizationsDelegates: const [
                   AppLocalization.delegate,
                 ],
                 supportedLocales: locals,
-                scrollBehavior: MaterialScrollBehavior().copyWith(dragDevices: {
+                scrollBehavior:
+                    const MaterialScrollBehavior().copyWith(dragDevices: {
                   PointerDeviceKind.mouse,
                   PointerDeviceKind.touch,
                   PointerDeviceKind.stylus,
@@ -183,9 +207,10 @@ class MyAppState extends State<MyApp> {
 
 class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context) {
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }
 

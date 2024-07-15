@@ -1,12 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
-import 'package:get/get.dart';
 import 'package:timelines/timelines.dart';
 
 class ProgressTimeline extends StatelessWidget {
   final double points;
-  const ProgressTimeline(this.points, {Key key}) : super(key: key);
+  const ProgressTimeline(this.points, {super.key});
 
   static const _tiers = [25, 100, 200, 300, 400];
   static const double _indicatorSize = 15;
@@ -14,6 +13,7 @@ class ProgressTimeline extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 45,
+      width: MediaQuery.of(context).size.width,
       child: Timeline.tileBuilder(
         theme: TimelineThemeData(
           direction: Axis.horizontal,
@@ -23,7 +23,7 @@ class ProgressTimeline extends StatelessWidget {
         builder: TimelineTileBuilder.connected(
           connectionDirection: ConnectionDirection.after,
           itemCount: _tiers.length,
-          itemExtent: Get.width / 5,
+          itemExtent: (MediaQuery.of(context).size.width - 32) / 5,
           contentsBuilder: (context, index) => Text(
             _tiers[index].toString(),
             style: rubikMedium.copyWith(
@@ -48,11 +48,11 @@ class ProgressTimeline extends StatelessWidget {
                   width: _indicatorSize,
                   height: _indicatorSize,
                   child: Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.white,
                       shape: BoxShape.circle,
                     ),
-                    margin: EdgeInsets.all(1),
+                    margin: const EdgeInsets.all(1),
                   ),
                 ),
           firstConnectorBuilder: (context) => MyLPI(
@@ -84,10 +84,15 @@ class ProgressTimeline extends StatelessWidget {
 }
 
 class MyLPI extends StatelessWidget {
-  final points;
+  final double points;
   final double min;
   final double max;
-  const MyLPI({Key key, this.points, this.min, this.max}) : super(key: key);
+  const MyLPI({
+    super.key,
+    required this.points,
+    required this.min,
+    required this.max,
+  });
 
   @override
   Widget build(BuildContext context) {

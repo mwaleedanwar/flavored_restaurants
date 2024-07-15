@@ -8,7 +8,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 
 class BannerRepo {
   final HttpClient httpClient;
-  BannerRepo({@required this.httpClient});
+  BannerRepo({required this.httpClient});
 
   Future<ApiResponse> getBannerList() async {
     debugPrint('---getBannerList--');
@@ -22,7 +22,8 @@ class BannerRepo {
     }
   }
 
-  Future<ApiResponse> getProductDetails(String productID, String languageCode) async {
+  Future<ApiResponse> getProductDetails(
+      String productID, String languageCode) async {
     try {
       final response = await httpClient.get(
           '${AppConstants.PRODUCT_DETAILS_URI}$productID&restaurant_id=${F.restaurantId}',

@@ -6,10 +6,6 @@ class LoggingInterceptor extends InterceptorsWrapper {
 
   @override
   Future onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
-    // print("--> ${options.method} ${options.path}");
-    // print("Headers: ${options.headers.toString()}");
-    // print("<-- END HTTP");
-
     return super.onRequest(options, handler);
   }
 

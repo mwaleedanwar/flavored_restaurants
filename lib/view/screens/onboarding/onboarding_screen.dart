@@ -7,52 +7,70 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
 import 'package:provider/provider.dart';
 
-class OnBoardingScreen extends StatelessWidget {
+class OnBoardingScreen extends StatefulWidget {
+  const OnBoardingScreen({super.key});
+
+  @override
+  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
+}
+
+class _OnBoardingScreenState extends State<OnBoardingScreen> {
   final PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<OnBoardingProvider>(context, listen: false).initBoardingList(context);
+    Provider.of<OnBoardingProvider>(context, listen: false)
+        .initBoardingList(context);
 
     return Scaffold(
       body: Consumer<OnBoardingProvider>(
-        builder: (context, onBoardingList, child) => onBoardingList.onBoardingList.length > 0
+        builder: (context, onBoardingList, child) => onBoardingList
+                .onBoardingList.isNotEmpty
             ? SafeArea(
                 child: Scrollbar(
                   child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     child: Center(
                       child: SizedBox(
                         width: 1170,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            onBoardingList.selectedIndex != onBoardingList.onBoardingList.length - 1
+                            onBoardingList.selectedIndex !=
+                                    onBoardingList.onBoardingList.length - 1
                                 ? Align(
                                     alignment: Alignment.topRight,
                                     child: TextButton(
                                         onPressed: () {
-                                          Navigator.pushReplacementNamed(context, Routes.getWelcomeRoute());
+                                          Navigator.pushReplacementNamed(
+                                              context,
+                                              Routes.getWelcomeRoute());
                                         },
                                         child: Text(
                                           getTranslated('skip', context),
                                           style: Theme.of(context)
                                               .textTheme
-                                              .headline3
-                                              .copyWith(color: Theme.of(context).textTheme.bodyText1.color),
+                                              .displaySmall
+                                              ?.copyWith(
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyLarge
+                                                      ?.color),
                                         )),
                                   )
-                                : SizedBox(),
+                                : const SizedBox(),
                             SizedBox(
                               height: 360,
                               child: PageView.builder(
                                 itemCount: onBoardingList.onBoardingList.length,
                                 controller: _pageController,
-                                physics: BouncingScrollPhysics(),
+                                physics: const BouncingScrollPhysics(),
                                 itemBuilder: (context, index) {
                                   return Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 30),
-                                    child: Image.asset(onBoardingList.onBoardingList[index].imageUrl),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 30),
+                                    child: Image.asset(onBoardingList
+                                        .onBoardingList[index].imageUrl),
                                   );
                                 },
                                 onPageChanged: (index) {
@@ -64,81 +82,102 @@ class OnBoardingScreen extends StatelessWidget {
                               children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: _pageIndicators(onBoardingList.onBoardingList, context),
+                                  children: _pageIndicators(
+                                      onBoardingList.onBoardingList, context),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 60, right: 60, top: 22, bottom: 22),
+                                  padding: const EdgeInsets.only(
+                                      left: 60, right: 60, top: 22, bottom: 22),
                                   child: Text(
                                     onBoardingList.selectedIndex == 0
                                         ? onBoardingList.onBoardingList[0].title
                                         : onBoardingList.selectedIndex == 1
-                                            ? onBoardingList.onBoardingList[1].title
-                                            : onBoardingList.onBoardingList[2].title,
+                                            ? onBoardingList
+                                                .onBoardingList[1].title
+                                            : onBoardingList
+                                                .onBoardingList[2].title,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline3
-                                        .copyWith(fontSize: 24.0, color: Theme.of(context).textTheme.bodyText1.color),
+                                        .displaySmall
+                                        ?.copyWith(
+                                            fontSize: 24.0,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyLarge
+                                                ?.color),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal:
+                                          Dimensions.PADDING_SIZE_LARGE),
                                   child: Text(
                                     onBoardingList.selectedIndex == 0
-                                        ? onBoardingList.onBoardingList[0].description
+                                        ? onBoardingList
+                                            .onBoardingList[0].description
                                         : onBoardingList.selectedIndex == 1
-                                            ? onBoardingList.onBoardingList[1].description
-                                            : onBoardingList.onBoardingList[2].description,
-                                    style: Theme.of(context).textTheme.headline2.copyWith(
+                                            ? onBoardingList
+                                                .onBoardingList[1].description
+                                            : onBoardingList
+                                                .onBoardingList[2].description,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .displayMedium
+                                        ?.copyWith(
                                           fontSize: Dimensions.FONT_SIZE_LARGE,
-                                          color: ColorResources.getGrayColor(context),
+                                          color: ColorResources.getGrayColor(
+                                              context),
                                         ),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
                                 Container(
-                                  padding: EdgeInsets.all(onBoardingList.selectedIndex == 2 ? 0 : 22),
+                                  padding: EdgeInsets.all(
+                                      onBoardingList.selectedIndex == 2
+                                          ? 0
+                                          : 22),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      // onBoardingList.selectedIndex == 0 || onBoardingList.selectedIndex == 2
-                                      //     ? SizedBox.shrink()
-                                      //     : TextButton(
-                                      //         onPressed: () {
-                                      //           _pageController.previousPage(duration: Duration(seconds: 1), curve: Curves.ease);
-                                      //         },
-                                      //         child: Text(
-                                      //           getTranslated('previous', context),
-                                      //           style: Theme.of(context).textTheme.headline3.copyWith(color: ColorResources.getGrayColor(context)),
-                                      //         )),
-                                      SizedBox.shrink(),
+                                      const SizedBox.shrink(),
                                       onBoardingList.selectedIndex == 1
-                                          ? SizedBox.shrink()
+                                          ? const SizedBox.shrink()
                                           : TextButton(
                                               onPressed: () {
                                                 _pageController.nextPage(
-                                                    duration: Duration(seconds: 1), curve: Curves.ease);
+                                                    duration: const Duration(
+                                                        seconds: 1),
+                                                    curve: Curves.ease);
                                               },
                                               child: Text(
                                                 getTranslated('next', context),
                                                 style: Theme.of(context)
                                                     .textTheme
-                                                    .headline3
-                                                    .copyWith(color: ColorResources.getGrayColor(context)),
+                                                    .displaySmall
+                                                    ?.copyWith(
+                                                        color: ColorResources
+                                                            .getGrayColor(
+                                                                context)),
                                               )),
                                     ],
                                   ),
                                 ),
                                 onBoardingList.selectedIndex == 1
                                     ? Padding(
-                                        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+                                        padding: const EdgeInsets.all(
+                                            Dimensions.PADDING_SIZE_LARGE),
                                         child: CustomButton(
-                                          btnTxt: getTranslated('lets_start', context),
+                                          btnTxt: getTranslated(
+                                              'lets_start', context),
                                           onTap: () {
-                                            Navigator.pushReplacementNamed(context, Routes.getWelcomeRoute());
+                                            Navigator.pushReplacementNamed(
+                                                context,
+                                                Routes.getWelcomeRoute());
                                           },
                                         ))
-                                    : SizedBox.shrink()
+                                    : const SizedBox.shrink()
                               ],
                             ),
                           ],
@@ -148,31 +187,33 @@ class OnBoardingScreen extends StatelessWidget {
                   ),
                 ),
               )
-            : SizedBox(),
+            : const SizedBox(),
       ),
     );
   }
 
   List<Widget> _pageIndicators(var onBoardingList, BuildContext context) {
-    List<Container> _indicators = [];
-
+    List<Container> indicators = [];
     for (int i = 0; i < onBoardingList.length; i++) {
-      _indicators.add(
+      indicators.add(
         Container(
-          width: i == Provider.of<OnBoardingProvider>(context).selectedIndex ? 16 : 7,
+          width: i == Provider.of<OnBoardingProvider>(context).selectedIndex
+              ? 16
+              : 7,
           height: 7,
-          margin: EdgeInsets.only(right: 5),
+          margin: const EdgeInsets.only(right: 5),
           decoration: BoxDecoration(
             color: i == Provider.of<OnBoardingProvider>(context).selectedIndex
                 ? Theme.of(context).primaryColor
                 : ColorResources.getGrayColor(context),
-            borderRadius: i == Provider.of<OnBoardingProvider>(context).selectedIndex
-                ? BorderRadius.circular(50)
-                : BorderRadius.circular(25),
+            borderRadius:
+                i == Provider.of<OnBoardingProvider>(context).selectedIndex
+                    ? BorderRadius.circular(50)
+                    : BorderRadius.circular(25),
           ),
         ),
       );
     }
-    return _indicators;
+    return indicators;
   }
 }

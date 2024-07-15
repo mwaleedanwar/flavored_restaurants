@@ -6,8 +6,8 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/on_hover.dart';
 
 class AddButtonView extends StatelessWidget {
-  final Function onTap;
-  const AddButtonView({Key key, @required this.onTap}) : super(key: key);
+  final void Function() onTap;
+  const AddButtonView({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +21,12 @@ class AddButtonView extends StatelessWidget {
           child: Container(
             width: 110.0,
             decoration: BoxDecoration(color: Theme.of(context).primaryColor, borderRadius: BorderRadius.circular(30.0)),
-            padding: EdgeInsets.symmetric(
+            padding: const EdgeInsets.symmetric(
                 horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
             child: Row(
               children: [
-                Icon(Icons.add_circle, color: ColorResources.COLOR_WHITE),
-                SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                const Icon(Icons.add_circle, color: ColorResources.COLOR_WHITE),
+                const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                 Text(getTranslated('add_new', context), style: rubikRegular.copyWith(color: ColorResources.COLOR_WHITE))
               ],
             ),

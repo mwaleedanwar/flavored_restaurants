@@ -3,28 +3,20 @@ import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/main.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/auth_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/profile_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_app_bar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/footer_view.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/not_logged_in_screen.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/refer_and_earn/widget/refer_hint_view.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/helper/dynamic_link.dart';
 import 'package:provider/provider.dart';
-import 'package:share_plus/share_plus.dart';
-
-import '../../../helper/dynamic_link.dart';
 
 class ReferAndEarnScreen extends StatefulWidget {
-  const ReferAndEarnScreen({Key key}) : super(key: key);
+  const ReferAndEarnScreen({super.key});
 
   @override
   State<ReferAndEarnScreen> createState() => _ReferAndEarnScreenState();
@@ -48,14 +40,14 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: CustomAppBar(context: context, title: 'Refer & Earn'),
       body: _isLoggedIn
           ? Center(
               child: ExpandableBottomSheet(
               background: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(
+                padding: const EdgeInsets.symmetric(
                   horizontal: Dimensions.PADDING_SIZE_DEFAULT,
                   vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL,
                 ),
@@ -67,8 +59,8 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                         return profileProvider.userInfoModel != null
                             ? Column(
                                 children: [
-                                  Image.asset(Images.refer_banner, height: _size.height * 0.3),
-                                  SizedBox(
+                                  Image.asset(Images.refer_banner, height: size.height * 0.3),
+                                  const SizedBox(
                                     height: Dimensions.PADDING_SIZE_DEFAULT,
                                   ),
                                   Text(
@@ -76,10 +68,10 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                                     textAlign: TextAlign.center,
                                     style: rubikMedium.copyWith(
                                       fontSize: Dimensions.FONT_SIZE_OVER_LARGE,
-                                      color: Theme.of(context).textTheme.bodyLarge.color,
+                                      color: Theme.of(context).textTheme.bodyLarge?.color,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: Dimensions.PADDING_SIZE_SMALL,
                                   ),
                                   Text(
@@ -89,7 +81,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                                       fontSize: Dimensions.FONT_SIZE_DEFAULT,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: Dimensions.PADDING_SIZE_DEFAULT,
                                   ),
                                   Text(
@@ -101,14 +93,14 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                                       color: Theme.of(context).hintColor,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: Dimensions.PADDING_SIZE_LARGE,
                                   ),
                                   DottedBorder(
-                                    padding: EdgeInsets.all(4),
+                                    padding: const EdgeInsets.all(4),
                                     borderType: BorderType.RRect,
-                                    radius: Radius.circular(20),
-                                    dashPattern: [5, 5],
+                                    radius: const Radius.circular(20),
+                                    dashPattern: const [5, 5],
                                     color: Theme.of(context).primaryColor.withOpacity(0.5),
                                     strokeWidth: 2,
                                     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
@@ -116,18 +108,19 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                                         padding:
                                             const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
                                         child: Text(
-                                          '${profileProvider.userInfoModel.referCode ?? 'referal code'}',
+                                          profileProvider.userInfoModel?.referCode ?? 'referal code',
                                           style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
                                         ),
                                       ),
                                       InkWell(
                                         borderRadius: BorderRadius.circular(10),
                                         onTap: () {
-                                          if (profileProvider.userInfoModel.referCode != null &&
-                                              profileProvider.userInfoModel.referCode != '') {
+                                          if (profileProvider.userInfoModel?.referCode != null &&
+                                              profileProvider.userInfoModel?.referCode != '') {
                                             Clipboard.setData(ClipboardData(
-                                                text:
-                                                    '${profileProvider.userInfoModel != null ? profileProvider.userInfoModel.referCode : ''}'));
+                                                text: profileProvider.userInfoModel != null
+                                                    ? profileProvider.userInfoModel!.referCode!
+                                                    : ''));
                                             showCustomSnackBar('Referral Code Copied', context, isError: false);
                                           }
                                         },
@@ -148,14 +141,14 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                                       ),
                                     ]),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: Dimensions.PADDING_SIZE_EXTRA_LARGE,
                                   ),
                                   Text(
                                     'OR SHARE',
                                     style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: Dimensions.PADDING_SIZE_EXTRA_LARGE,
                                   ),
                                   SingleChildScrollView(
@@ -163,21 +156,21 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: shareItem
-                                          .map((_item) => InkWell(
+                                          .map((item) => InkWell(
                                                 borderRadius: BorderRadius.circular(10),
                                                 onTap: () {
                                                   DynamicLinkHelp().buildDynamicLinks(
                                                     F.appName,
-                                                    profileProvider.userInfoModel.referCode,
-                                                    'Signup on ${F.appName} restaurant mobile app and get \$5.Use ${profileProvider.userInfoModel.fName} referral code to activate coupon at signup. Enjoy!\n \nReferral code: ${profileProvider.userInfoModel.referCode} ',
+                                                    profileProvider.userInfoModel!.referCode!,
+                                                    'Signup on ${F.appName} restaurant mobile app and get \$5.Use ${profileProvider.userInfoModel!.fName} referral code to activate coupon at signup. Enjoy!\n \nReferral code: ${profileProvider.userInfoModel!.referCode} ',
                                                   );
                                                 },
                                                 //   onTap: () => Share.share('Download ${AppConstants.APP_NAME} restaurant mobile app and get \$5. Use my referral code: ${profileProvider.userInfoModel.referCode} to activate coupon at signup. Enjoy!'),
                                                 child: Container(
-                                                  margin: EdgeInsets.symmetric(
+                                                  margin: const EdgeInsets.symmetric(
                                                       horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                                   child: Image.asset(
-                                                    Images.getShareIcon(_item),
+                                                    Images.getShareIcon(item),
                                                     height: 50,
                                                     width: 50,
                                                   ),
@@ -188,7 +181,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
                                   ),
                                 ],
                               )
-                            : SizedBox();
+                            : const SizedBox();
                       }),
                     ),
 
@@ -199,7 +192,7 @@ class _ReferAndEarnScreenState extends State<ReferAndEarnScreen> {
               persistentContentHeight: MediaQuery.of(context).size.height * 0.2,
               expandableContent: ReferHintView(hintList: hintList),
             ))
-          : NotLoggedInScreen(),
+          : const NotLoggedInScreen(),
     );
   }
 }

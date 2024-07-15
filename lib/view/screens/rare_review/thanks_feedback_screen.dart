@@ -9,14 +9,16 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 
 class ThanksFeedbackScreen extends StatelessWidget {
+  const ThanksFeedbackScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : null,
       body: Center(
-        child: Container(
+        child: SizedBox(
           width: 1170,
           child: Center(
             child: Column(
@@ -27,23 +29,23 @@ class ThanksFeedbackScreen extends StatelessWidget {
                   width: 100,
                   height: 100,
                 ),
-                SizedBox(height: 60),
+                const SizedBox(height: 60),
                 Text(
                   'Thanks for your Feedback',
-                  style: Theme.of(context).textTheme.headline3.copyWith(
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
                         fontSize: Dimensions.FONT_SIZE_LARGE,
                         color: ColorResources.getGreyBunkerColor(context),
                       ),
                 ),
-                SizedBox(height: 23),
+                const SizedBox(height: 23),
                 Text(
                   getTranslated('it_will_helps_to_improve', context),
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headline2.copyWith(
+                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
                         color: ColorResources.getGreyBunkerColor(context).withOpacity(.75),
                       ),
                 ),
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 14),
                   child: CustomButton(

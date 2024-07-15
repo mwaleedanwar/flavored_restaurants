@@ -8,7 +8,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 class WishListRepo {
   final HttpClient httpClient;
 
-  WishListRepo({@required this.httpClient});
+  WishListRepo({required this.httpClient});
 
   Future<ApiResponse> getWishList(String languageCode) async {
     try {
@@ -23,9 +23,10 @@ class WishListRepo {
   }
 
   Future<ApiResponse> addWishList(int productID) async {
-    print('---add to whish');
+    debugPrint('---add to whish');
     try {
-      final response = await httpClient.post(AppConstants.ADD_WISH_LIST_URI, data: {'product_id': productID});
+      final response = await httpClient.post(AppConstants.ADD_WISH_LIST_URI,
+          data: {'product_id': productID});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -33,12 +34,12 @@ class WishListRepo {
   }
 
   Future<ApiResponse> removeWishList(int productID) async {
-    print('---remove to whish');
+    debugPrint('---remove to whish');
 
-    print('product id : $productID');
+    debugPrint('product id : $productID');
     try {
-      final response = await httpClient
-          .post(AppConstants.REMOVE_WISH_LIST_URI, data: {'product_id': productID, '_method': 'delete'});
+      final response = await httpClient.post(AppConstants.REMOVE_WISH_LIST_URI,
+          data: {'product_id': productID, '_method': 'delete'});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));

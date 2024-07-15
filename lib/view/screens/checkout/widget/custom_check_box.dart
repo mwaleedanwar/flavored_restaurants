@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class CustomCheckBox extends StatelessWidget {
   final String title;
   final int index;
-  CustomCheckBox({@required this.title, @required this.index});
+  const CustomCheckBox({super.key, required this.title, required this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -18,15 +18,15 @@ class CustomCheckBox extends StatelessWidget {
           child: Row(children: [
             Checkbox(
               value: order.paymentMethodIndex == index,
-              shape: CircleBorder(),
+              shape: const CircleBorder(),
               activeColor: Theme.of(context).primaryColor,
-              onChanged: (bool isChecked) => order.setPaymentMethod(index),
+              onChanged: (isChecked) => order.setPaymentMethod(index),
             ),
             Expanded(
               child: Text(title,
                   style: rubikRegular.copyWith(
                     color: order.paymentMethodIndex == index
-                        ? Theme.of(context).textTheme.bodyText1.color
+                        ? Theme.of(context).textTheme.displayLarge?.color
                         : ColorResources.getGreyColor(context),
                   )),
             ),

@@ -6,7 +6,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 
 class MessageBubbleShimmer extends StatelessWidget {
   final bool isMe;
-  const MessageBubbleShimmer({Key key, @required this.isMe}) : super(key: key);
+  const MessageBubbleShimmer({super.key, required this.isMe});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class MessageBubbleShimmer extends StatelessWidget {
           Flexible(
             child: Shimmer(
               duration: const Duration(seconds: 2),
-              enabled: Provider.of<ChatProvider>(context).messageList == null,
+              enabled: Provider.of<ChatProvider>(context).messageList.isEmpty,
               child: Container(
                 height: 30,
                 width: MediaQuery.of(context).size.width,

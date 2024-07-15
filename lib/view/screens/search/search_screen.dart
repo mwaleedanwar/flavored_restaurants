@@ -12,12 +12,14 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/search/search_res
 import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
+  const SearchScreen({super.key});
+
   @override
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -30,45 +32,61 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(
+              preferredSize: Size.fromHeight(100), child: WebAppBar())
           : null,
       body: SafeArea(
         child: Center(
-          child: Container(
+          child: SizedBox(
             width: 1170,
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: Dimensions.PADDING_SIZE_LARGE),
                 child: Consumer<SearchProvider>(
                   builder: (context, searchProvider, child) => Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       Row(
                         children: [
                           Expanded(
                             child: CustomTextField(
-                              hintText: getTranslated('search_items_here', context),
+                              hintText:
+                                  getTranslated('search_items_here', context),
                               isShowBorder: true,
                               isShowSuffixIcon: true,
                               suffixIconUrl: Images.search,
                               onSuffixTap: () {
-                                if (_searchController.text.length > 0) {
-                                  searchProvider.saveSearchAddress(_searchController.text);
-                                  searchProvider.searchProduct(_searchController.text, context);
-                                  Navigator.pushNamed(context, Routes.getSearchResultRoute(_searchController.text),
-                                      arguments: SearchResultScreen(searchString: _searchController.text));
-                                  // Navigator.pushNamed(context, Routes.getSearchResultRoute(_searchController.text.replaceAll(' ', '-')));
+                                if (_searchController.text.isNotEmpty) {
+                                  searchProvider.saveSearchAddress(
+                                      _searchController.text);
+                                  searchProvider.searchProduct(
+                                      _searchController.text, context);
+                                  Navigator.pushNamed(
+                                      context,
+                                      Routes.getSearchResultRoute(
+                                          _searchController.text),
+                                      arguments: SearchResultScreen(
+                                          searchString:
+                                              _searchController.text));
                                 }
                               },
                               controller: _searchController,
                               inputAction: TextInputAction.search,
                               isIcon: true,
                               onSubmit: (text) {
-                                if (_searchController.text.length > 0) {
-                                  searchProvider.saveSearchAddress(_searchController.text);
-                                  searchProvider.searchProduct(_searchController.text, context);
-                                  Navigator.pushNamed(context, Routes.getSearchResultRoute(_searchController.text),
-                                      arguments: SearchResultScreen(searchString: _searchController.text));
+                                if (_searchController.text.isNotEmpty) {
+                                  searchProvider.saveSearchAddress(
+                                      _searchController.text);
+                                  searchProvider.searchProduct(
+                                      _searchController.text, context);
+                                  Navigator.pushNamed(
+                                      context,
+                                      Routes.getSearchResultRoute(
+                                          _searchController.text),
+                                      arguments: SearchResultScreen(
+                                          searchString:
+                                              _searchController.text));
                                   //Navigator.pushNamed(context, Routes.getSearchResultRoute(_searchController.text.replaceAll(' ', '-')));
                                 }
                               },
@@ -82,32 +100,40 @@ class _SearchScreenState extends State<SearchScreen> {
                                 getTranslated('cancel', context),
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline2
-                                    .copyWith(color: ColorResources.getGreyBunkerColor(context)),
+                                    .displayMedium
+                                    ?.copyWith(
+                                        color:
+                                            ColorResources.getGreyBunkerColor(
+                                                context)),
                               ))
                         ],
                       ),
                       // for resent search section
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             getTranslated('recent_search', context),
-                            style:
-                                Theme.of(context).textTheme.headline3.copyWith(color: ColorResources.COLOR_GREY_BUNKER),
+                            style: Theme.of(context)
+                                .textTheme
+                                .displaySmall
+                                ?.copyWith(
+                                    color: ColorResources.COLOR_GREY_BUNKER),
                           ),
-                          searchProvider.historyList.length > 0
+                          searchProvider.historyList.isNotEmpty
                               ? TextButton(
                                   onPressed: searchProvider.clearSearchAddress,
                                   child: Text(
                                     getTranslated('remove_all', context),
                                     style: Theme.of(context)
                                         .textTheme
-                                        .headline2
-                                        .copyWith(color: ColorResources.COLOR_GREY_BUNKER),
+                                        .displayMedium
+                                        ?.copyWith(
+                                            color: ColorResources
+                                                .COLOR_GREY_BUNKER),
                                   ))
-                              : SizedBox.shrink(),
+                              : const SizedBox.shrink(),
                         ],
                       ),
 
@@ -115,33 +141,48 @@ class _SearchScreenState extends State<SearchScreen> {
                       Expanded(
                         child: ListView.builder(
                             itemCount: searchProvider.historyList.length,
-                            physics: BouncingScrollPhysics(),
+                            physics: const BouncingScrollPhysics(),
                             itemBuilder: (context, index) => InkWell(
                                   onTap: () {
-                                    searchProvider.searchProduct(searchProvider.historyList[index], context);
+                                    searchProvider.searchProduct(
+                                        searchProvider.historyList[index],
+                                        context);
                                     Navigator.pushNamed(
                                         context,
                                         Routes.getSearchResultRoute(
-                                            searchProvider.historyList[index].replaceAll(' ', '-')));
+                                            searchProvider.historyList[index]
+                                                .replaceAll(' ', '-')));
                                   },
                                   child: Padding(
-                                    padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                                    padding: const EdgeInsets.all(
+                                        Dimensions.PADDING_SIZE_SMALL),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(
                                           children: [
-                                            Icon(Icons.history, size: 16, color: ColorResources.COLOR_HINT),
-                                            SizedBox(width: 13),
+                                            const Icon(Icons.history,
+                                                size: 16,
+                                                color:
+                                                    ColorResources.COLOR_HINT),
+                                            const SizedBox(width: 13),
                                             Text(
                                               searchProvider.historyList[index],
-                                              style: Theme.of(context).textTheme.headline2.copyWith(
-                                                  color: ColorResources.COLOR_HINT,
-                                                  fontSize: Dimensions.FONT_SIZE_SMALL),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .displayMedium
+                                                  ?.copyWith(
+                                                      color: ColorResources
+                                                          .COLOR_HINT,
+                                                      fontSize: Dimensions
+                                                          .FONT_SIZE_SMALL),
                                             )
                                           ],
                                         ),
-                                        Icon(Icons.arrow_upward, size: 16, color: ColorResources.COLOR_HINT),
+                                        const Icon(Icons.arrow_upward,
+                                            size: 16,
+                                            color: ColorResources.COLOR_HINT),
                                       ],
                                     ),
                                   ),

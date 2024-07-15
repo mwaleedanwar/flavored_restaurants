@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -7,27 +9,26 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_mo
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/repository/category_repo.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/api_checker.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
-
-import '../data/model/response/category_product_model.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/category_product_model.dart';
 
 class CategoryProvider extends ChangeNotifier {
   final CategoryRepo categoryRepo;
 
-  CategoryProvider({@required this.categoryRepo});
+  CategoryProvider({required this.categoryRepo});
 
-  List<CategoryModel> _categoryList;
-  List<CategoryModel> _subCategoryList;
-  List<Product> _categoryProductList;
+  List<CategoryModel>? _categoryList;
+  List<CategoryModel>? _subCategoryList;
+  List<Product>? _categoryProductList;
   bool _pageFirstIndex = true;
   bool _pageLastIndex = false;
   bool _isLoading = false;
-  String _selectedSubCategoryId;
+  String? _selectedSubCategoryId;
 
-  List<CategoryModel> get categoryList => _categoryList;
+  List<CategoryModel> get categoryList => _categoryList ?? [];
 
-  List<CategoryModel> get subCategoryList => _subCategoryList;
+  List<CategoryModel> get subCategoryList => _subCategoryList ?? [];
 
-  List<Product> get categoryProductList => _categoryProductList;
+  List<Product> get categoryProductList => _categoryProductList ?? [];
 
   bool get pageFirstIndex => _pageFirstIndex;
 
@@ -35,17 +36,17 @@ class CategoryProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  String get selectedSubCategoryId => _selectedSubCategoryId;
+  String get selectedSubCategoryId => _selectedSubCategoryId ?? '';
 
   Future<void> getCategoryList(BuildContext context, bool reload, String languageCode) async {
     _subCategoryList = null;
     if (_categoryList == null || reload) {
       _isLoading = true;
       ApiResponse apiResponse = await categoryRepo.getCategoryList(languageCode);
-      if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
         _categoryList = [];
-        jsonDecode(apiResponse.response.body)
-            .forEach((category) => _categoryList.add(CategoryModel.fromJson(category)));
+        jsonDecode(apiResponse.response!.body)
+            .forEach((category) => _categoryList!.add(CategoryModel.fromJson(category)));
       } else {
         ApiChecker.checkApi(context, apiResponse);
       }
@@ -58,10 +59,10 @@ class CategoryProvider extends ChangeNotifier {
     _subCategoryList = null;
     _isLoading = true;
     ApiResponse apiResponse = await categoryRepo.getSubCategoryList(categoryID, languageCode);
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       _subCategoryList = [];
-      jsonDecode(apiResponse.response.body)
-          .forEach((category) => _subCategoryList.add(CategoryModel.fromJson(category)));
+      jsonDecode(apiResponse.response!.body)
+          .forEach((category) => _subCategoryList!.add(CategoryModel.fromJson(category)));
       getCategoryProductList(context, categoryID, languageCode);
     } else {
       ApiChecker.checkApi(context, apiResponse);
@@ -76,9 +77,10 @@ class CategoryProvider extends ChangeNotifier {
     _selectedSubCategoryId = categoryID;
     notifyListeners();
     ApiResponse apiResponse = await categoryRepo.getCategoryProductList(categoryID, languageCode, type);
-    if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       _categoryProductList = [];
-      jsonDecode(apiResponse.response.body).forEach((category) => _categoryProductList.add(Product.fromJson(category)));
+      jsonDecode(apiResponse.response!.body)
+          .forEach((category) => _categoryProductList!.add(Product.fromJson(category)));
       notifyListeners();
     } else {
       showCustomSnackBar(apiResponse.error.toString(), context);
@@ -115,39 +117,31 @@ class CategoryProvider extends ChangeNotifier {
 class AllCategoryProvider extends ChangeNotifier {
   final CategoryRepo categoryRepo;
   double catHeight = 110.0;
-  bool _lister = true;
   double proHeight = 55.0;
   List<TabCat> tabs = [];
-  TabController tabController;
   ScrollController scrollController = ScrollController();
 
-  AllCategoryProvider({@required this.categoryRepo});
+  AllCategoryProvider({required this.categoryRepo});
 
   List<CategoryProductModel> categoryList = [];
 
   List<ProductItem> categoryProductList = [];
-  bool _pageFirstIndex = true;
-  bool _pageLastIndex = false;
+  final bool _pageFirstIndex = true;
+  final bool _pageLastIndex = false;
   bool _isLoading = false;
-  String _selectedSubCategoryId;
-
-  // List<CategoryProductModel> get categoryList => _categoryList;
-
   bool get pageFirstIndex => _pageFirstIndex;
 
   bool get pageLastIndex => _pageLastIndex;
 
   bool get isLoading => _isLoading;
 
-  String get selectedSubCategoryId => _selectedSubCategoryId;
-
   Future<void> getCategoryList(BuildContext context, bool reload, String languageCode) async {
     if (categoryList.isEmpty || reload) {
       _isLoading = true;
       ApiResponse apiResponse = await categoryRepo.getAllCategoryProductList(languageCode);
-      if (apiResponse.response != null && apiResponse.response.statusCode == 200) {
-        debugPrint('====new response:${apiResponse.response.body}');
-        jsonDecode(apiResponse.response.body).forEach((category) {
+      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+        debugPrint('====new response:${apiResponse.response!.body}');
+        jsonDecode(apiResponse.response!.body).forEach((category) {
           debugPrint(
               '====new response:${CategoryProductModel.fromJson(category).name}:${CategoryProductModel.fromJson(category).products.length}');
           if (CategoryProductModel.fromJson(category).products.isNotEmpty) {
@@ -155,7 +149,7 @@ class AllCategoryProvider extends ChangeNotifier {
           }
         });
 
-        print('==new list:${categoryList}');
+        debugPrint('==new list:$categoryList');
       } else {
         ApiChecker.checkApi(context, apiResponse);
       }
@@ -165,7 +159,7 @@ class AllCategoryProvider extends ChangeNotifier {
   }
 
   void init(TickerProvider tickerProvider) {
-    print('==tabs init ');
+    debugPrint('==tabs init ');
     double offsetFrom = 0.0;
     double offsetTo = 0.0;
 
@@ -182,34 +176,24 @@ class AllCategoryProvider extends ChangeNotifier {
       }
       tabs.add(
         TabCat(
-            categoryProductModel: category, selected: (i == 0), offset: catHeight * i + offsetFrom, offsetTo: offsetTo),
+          categoryProductModel: category,
+          selected: (i == 0),
+          offset: catHeight * i + offsetFrom,
+          offsetTo: offsetTo,
+        ),
       );
       for (int j = 0; j < category.products.length; j++) {
         final product = category.products[j];
-
-        categoryProductList.add(ProductItem(product: product, categoryProductModel: category));
-      }
-    }
-
-    tabController = TabController(length: tabs.length, vsync: tickerProvider);
-    scrollController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (_lister) {
-      for (int i = 0; i < tabs.length; i++) {
-        final _tab = tabs[i];
-        if (scrollController.offset >= _tab.offset && scrollController.offset <= _tab.offsetTo && !_tab.selected) {
-          onCategorySelected(i, animationRequired: false);
-          tabController.animateTo(i);
-          break;
-        }
+        categoryProductList.add(ProductItem(
+          product: product,
+          categoryProductModel: category,
+        ));
       }
     }
   }
 
   void onCategorySelected(int index, {animationRequired = true}) async {
-    print('==selected index:${index}');
+    debugPrint('==selected index:$index');
     final selected = tabs[index];
     for (int i = 0; i < tabs.length; i++) {
       final condition = selected.categoryProductModel.name == tabs[i].categoryProductModel.name;
@@ -217,9 +201,11 @@ class AllCategoryProvider extends ChangeNotifier {
     }
     notifyListeners();
     if (animationRequired) {
-      _lister = false;
-      await scrollController.animateTo(selected.offset, duration: Duration(milliseconds: 500), curve: Curves.linear);
-      _lister = true;
+      await scrollController.animateTo(
+        selected.offset,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.linear,
+      );
     }
   }
 
@@ -227,8 +213,6 @@ class AllCategoryProvider extends ChangeNotifier {
   void dispose() {
     scrollController.removeListener(() {});
     scrollController.dispose();
-    tabController.dispose();
-    // TODO: implement dispose
     super.dispose();
   }
 }
@@ -239,15 +223,20 @@ class TabCat {
   double offset;
   double offsetTo;
 
-  TabCat({this.categoryProductModel, this.selected, this.offset, this.offsetTo});
+  TabCat({
+    required this.categoryProductModel,
+    required this.selected,
+    required this.offset,
+    required this.offsetTo,
+  });
 
   TabCat copyWith(bool selected) =>
       TabCat(categoryProductModel: categoryProductModel, selected: selected, offset: offset, offsetTo: offsetTo);
 }
 
 class ProductItem {
-  CategoryProductModel categoryProductModel;
-  Product product;
+  CategoryProductModel? categoryProductModel;
+  Product? product;
 
   ProductItem({this.categoryProductModel, this.product});
 

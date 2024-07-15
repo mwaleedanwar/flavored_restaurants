@@ -1,29 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/auth_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/coupon_model.dart';
-
-import '../../provider/coupon_provider.dart';
-import '../../utill/images.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/coupon_provider.dart';
 
 class GiftDialog extends StatelessWidget {
-  CouponModel couponModel;
+  final CouponModel couponModel;
 
-  GiftDialog({this.couponModel});
+  const GiftDialog({super.key, required this.couponModel});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Container(
+      child: SizedBox(
         width: 320,
         height: couponModel.discountType == 'product' ? 320 : 300,
         child: Consumer<AuthProvider>(builder: (context, auth, child) {
@@ -36,7 +29,7 @@ class GiftDialog extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Padding(
@@ -51,9 +44,9 @@ class GiftDialog extends StatelessWidget {
                                   height: 40,
                                   width: 40,
                                 ),
-                                Expanded(
+                                const Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(top: 8.0),
+                                    padding: EdgeInsets.only(top: 8.0),
                                     child: Text(
                                       'WELCOME GIFT',
                                       style: TextStyle(
@@ -69,14 +62,14 @@ class GiftDialog extends StatelessWidget {
                               ],
                             )),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 8.0),
                         child: Text(
                           couponModel.discountType == 'product'
-                              ? 'Get one ${couponModel.product.name} free'
+                              ? 'Get one ${couponModel.product!.name} free'
                               : '\$${couponModel.discount} Discount',
                           style: TextStyle(
                             fontFamily: 'Rubik',
@@ -87,7 +80,7 @@ class GiftDialog extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
@@ -100,10 +93,10 @@ class GiftDialog extends StatelessWidget {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 8,
                       ),
-                      Text(
+                      const Text(
                         'Discount in Amount',
                         style: TextStyle(
                           fontFamily: 'Rubik',
@@ -113,15 +106,15 @@ class GiftDialog extends StatelessWidget {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       InkWell(
                         onTap: () {
-                          Clipboard.setData(ClipboardData(text: '${couponModel.code}')).then((value) {
+                          Clipboard.setData(ClipboardData(text: couponModel.code)).then((value) {
                             //only if ->
                             final snackBar = SnackBar(
-                              content: Text('Copied to Clipboard'),
+                              content: const Text('Copied to Clipboard'),
                               action: SnackBarAction(
                                 label: 'Undo',
                                 onPressed: () {},
@@ -131,19 +124,20 @@ class GiftDialog extends StatelessWidget {
                           });
                         },
                         child: Container(
-                          padding: EdgeInsets.fromLTRB(10, 8, 10, 8),
-                          decoration: BoxDecoration(color: Color(0xFF042448), borderRadius: BorderRadius.circular(5)),
-                          child: Text(
+                          padding: const EdgeInsets.fromLTRB(10, 8, 10, 8),
+                          decoration:
+                              BoxDecoration(color: const Color(0xFF042448), borderRadius: BorderRadius.circular(5)),
+                          child: const Text(
                             'Copy Coupon Code',
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 10.0),
                         child: Text(
                           'Note: This Coupon is applicable  for your first order. Use it within next 2 days',
                           style: TextStyle(
@@ -163,16 +157,16 @@ class GiftDialog extends StatelessWidget {
                   Row(
                     children: [
                       Container(
-                        margin: EdgeInsets.only(left: 30),
+                        margin: const EdgeInsets.only(left: 30),
                         width: 10,
-                        color: Color(0xFF042448),
+                        color: const Color(0xFF042448),
                       ),
                       Container(
                         width: 80,
                         decoration: BoxDecoration(
                             color: Theme.of(context).primaryColor,
-                            borderRadius:
-                                BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10))),
+                            borderRadius: const BorderRadius.only(
+                                topRight: Radius.circular(10), bottomRight: Radius.circular(10))),
                       )
                     ],
                   ),
@@ -180,7 +174,7 @@ class GiftDialog extends StatelessWidget {
                     left: -8,
                     child: CircleAvatar(
                       radius: 52,
-                      backgroundColor: Color(0xFF042448),
+                      backgroundColor: const Color(0xFF042448),
                       child: CircleAvatar(
                         radius: 50,
                         backgroundColor: Colors.white,
@@ -189,9 +183,9 @@ class GiftDialog extends StatelessWidget {
                           children: [
                             Text(
                               couponModel.discountType == 'product'
-                                  ? '\$${couponModel.product.price}'
+                                  ? '\$${couponModel.product!.price}'
                                   : '\$${couponModel.discount}',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: 'Rubik',
                                 fontSize: 22,
                                 color: Color(0xFF042448),
@@ -199,10 +193,10 @@ class GiftDialog extends StatelessWidget {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 5,
                             ),
-                            Text(
+                            const Text(
                               'off',
                               style: TextStyle(
                                 fontSize: 22,
@@ -224,7 +218,7 @@ class GiftDialog extends StatelessWidget {
                         Navigator.pop(context);
                         Provider.of<CouponProvider>(context, listen: false).gift = null;
                       },
-                      child: CircleAvatar(
+                      child: const CircleAvatar(
                         radius: 15,
                         backgroundColor: Colors.white,
                         child: Icon(
@@ -245,13 +239,13 @@ class GiftDialog extends StatelessWidget {
 }
 
 class WelcomeMessageDialog extends StatelessWidget {
-  WelcomeMessageDialog();
+  const WelcomeMessageDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Container(
+      child: SizedBox(
         width: 320,
         // height:  300,
         child: Consumer<AuthProvider>(builder: (context, auth, child) {
@@ -264,7 +258,7 @@ class WelcomeMessageDialog extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Align(
@@ -274,7 +268,7 @@ class WelcomeMessageDialog extends StatelessWidget {
                           height: 80,
                           width: 80,
                         )),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Padding(
@@ -303,8 +297,8 @@ class WelcomeMessageDialog extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12.0, right: 12, top: 5),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 12.0, right: 12, top: 5),
                       child: Text(
                         'Keep any eye out for welcome message in inbox',
                         style: TextStyle(
@@ -315,7 +309,7 @@ class WelcomeMessageDialog extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Align(
@@ -325,7 +319,7 @@ class WelcomeMessageDialog extends StatelessWidget {
                           height: 80,
                           width: 80,
                         )),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                   ]),
@@ -340,7 +334,7 @@ class WelcomeMessageDialog extends StatelessWidget {
                   child: CircleAvatar(
                     radius: 15,
                     backgroundColor: Theme.of(context).primaryColor,
-                    child: Icon(
+                    child: const Icon(
                       Icons.close,
                       color: Colors.white,
                     ),

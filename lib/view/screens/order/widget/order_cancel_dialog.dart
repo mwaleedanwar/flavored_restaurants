@@ -9,19 +9,22 @@ import 'package:provider/provider.dart';
 class OrderCancelDialog extends StatelessWidget {
   final String orderID;
   final Function callback;
-  OrderCancelDialog({@required this.orderID, @required this.callback});
+  const OrderCancelDialog({super.key, required this.orderID, required this.callback});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      child: Container(
+      child: SizedBox(
         width: 300,
         child: Consumer<OrderProvider>(
           builder: (context, order, child) {
             return Column(mainAxisSize: MainAxisSize.min, children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE, vertical: 50),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.PADDING_SIZE_LARGE,
+                  vertical: 50,
+                ),
                 child: Text(getTranslated('are_you_sure_to_cancel', context),
                     style: rubikBold, textAlign: TextAlign.center),
               ),
@@ -38,9 +41,10 @@ class OrderCancelDialog extends StatelessWidget {
                           });
                         },
                         child: Container(
-                          padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                          padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                           alignment: Alignment.center,
-                          decoration: BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10))),
+                          decoration:
+                              const BoxDecoration(borderRadius: BorderRadius.only(bottomLeft: Radius.circular(10))),
                           child: Text(getTranslated('yes', context),
                               style: rubikBold.copyWith(color: Theme.of(context).primaryColor)),
                         ),
@@ -49,18 +53,18 @@ class OrderCancelDialog extends StatelessWidget {
                           child: InkWell(
                         onTap: () => Navigator.pop(context),
                         child: Container(
-                          padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                          padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                               color: Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.only(bottomRight: Radius.circular(10))),
+                              borderRadius: const BorderRadius.only(bottomRight: Radius.circular(10))),
                           child: Text(getTranslated('no', context), style: rubikBold.copyWith(color: Colors.white)),
                         ),
                       )),
                     ])
                   : Center(
                       child: Padding(
-                      padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                      padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                       child: CircularProgressIndicator(
                           valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)),
                     )),

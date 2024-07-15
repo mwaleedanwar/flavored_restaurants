@@ -5,24 +5,24 @@ import 'package:provider/provider.dart';
 class OnHover extends StatefulWidget {
   final Widget Function(bool isHovered) builder;
 
-  const OnHover({Key key, @required this.builder}) : super(key: key);
+  const OnHover({super.key, required this.builder});
 
   @override
-  _OnHoverState createState() => _OnHoverState();
+  State<OnHover> createState() => _OnHoverState();
 }
 
 class _OnHoverState extends State<OnHover> {
   bool isHovered = false;
   @override
   Widget build(BuildContext context) {
-    final _isLtr = Provider.of<LocalizationProvider>(context).isLtr;
+    final isLtr = Provider.of<LocalizationProvider>(context).isLtr;
     // on hover animation movement matrix translation
-    final _matrixLtr = Matrix4.identity()..translate(2, 0, 0);
-    final _matrixRtl = Matrix4.identity()..translate(-2, 0, 0);
+    final matrixLtr = Matrix4.identity()..translate(2, 0, 0);
+    final matrixRtl = Matrix4.identity()..translate(-2, 0, 0);
     final transform = isHovered
-        ? _isLtr
-            ? _matrixLtr
-            : _matrixRtl
+        ? isLtr
+            ? matrixLtr
+            : matrixRtl
         : Matrix4.identity();
 
     // when user enter the mouse pointer onEnter method will work
@@ -37,7 +37,7 @@ class _OnHoverState extends State<OnHover> {
         // debugPrint('On Exit hover');
       },
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         transform: transform, // animation transformation hovered.
         child: widget.builder(
           isHovered,

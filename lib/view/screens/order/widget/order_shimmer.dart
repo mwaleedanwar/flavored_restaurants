@@ -6,23 +6,25 @@ import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 class OrderShimmer extends StatelessWidget {
+  const OrderShimmer({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: 10,
-      padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-      physics: BouncingScrollPhysics(),
+      padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+      physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {
         return Center(
           child: Container(
             width: 1170,
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-            margin: EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
+            padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+            margin: const EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_SMALL),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 300],
+                  color: Provider.of<ThemeProvider>(context).darkTheme ? Colors.grey.shade700 : Colors.grey.shade300,
                   spreadRadius: 1,
                   blurRadius: 5,
                 )
@@ -30,39 +32,39 @@ class OrderShimmer extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Shimmer(
-              duration: Duration(seconds: 2),
+              duration: const Duration(seconds: 2),
               enabled: Provider.of<OrderProvider>(context).runningOrderList == null,
               child: Column(children: [
                 Row(children: [
                   Container(
                     height: 70,
                     width: 80,
-                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.grey[300]),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.grey.shade300),
                   ),
-                  SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
+                  const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                   Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Container(height: 15, width: 150, color: Colors.grey[300]),
-                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                    Container(height: 15, width: 100, color: Colors.grey[300]),
-                    SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                    Container(height: 15, width: 130, color: Colors.grey[300]),
+                    Container(height: 15, width: 150, color: Colors.grey.shade300),
+                    const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    Container(height: 15, width: 100, color: Colors.grey.shade300),
+                    const SizedBox(height: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                    Container(height: 15, width: 130, color: Colors.grey.shade300),
                   ]),
                 ]),
-                SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                 Row(children: [
                   Expanded(
                       child: Container(
                     height: 50,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Colors.grey.shade300,
                       borderRadius: BorderRadius.circular(10),
                     ),
                   )),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   Expanded(
                       child: Container(
                     height: 50,
-                    decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(10)),
                   )),
                 ]),
               ]),

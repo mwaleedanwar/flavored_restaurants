@@ -12,12 +12,12 @@ import 'package:provider/provider.dart';
 
 class FilterWidget extends StatelessWidget {
   final double maxValue;
-  FilterWidget({@required this.maxValue});
+  const FilterWidget({super.key, required this.maxValue});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+      padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
       child: Consumer<SearchProvider>(
         builder: (context, searchProvider, child) => SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -37,7 +37,7 @@ class FilterWidget extends StatelessWidget {
                     child: Text(
                       getTranslated('filter', context),
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headline3.copyWith(
+                      style: Theme.of(context).textTheme.displaySmall?.copyWith(
                             fontSize: Dimensions.FONT_SIZE_LARGE,
                             color: ColorResources.getGreyBunkerColor(context),
                           ),
@@ -51,7 +51,7 @@ class FilterWidget extends StatelessWidget {
                     },
                     child: Text(
                       getTranslated('reset', context),
-                      style: Theme.of(context).textTheme.headline2.copyWith(color: Theme.of(context).primaryColor),
+                      style: Theme.of(context).textTheme.displayMedium?.copyWith(color: Theme.of(context).primaryColor),
                     ),
                   )
                 ],
@@ -59,7 +59,7 @@ class FilterWidget extends StatelessWidget {
 
               Text(
                 getTranslated('price', context),
-                style: Theme.of(context).textTheme.headline3,
+                style: Theme.of(context).textTheme.displaySmall,
               ),
 
               // price range
@@ -76,11 +76,11 @@ class FilterWidget extends StatelessWidget {
 
               Text(
                 getTranslated('rating', context),
-                style: Theme.of(context).textTheme.headline3,
+                style: Theme.of(context).textTheme.displaySmall,
               ),
 
               Center(
-                child: Container(
+                child: SizedBox(
                   height: 30,
                   child: ListView.builder(
                     itemCount: 5,
@@ -101,20 +101,20 @@ class FilterWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               Text(
                 getTranslated('category', context),
-                style: Theme.of(context).textTheme.headline3,
+                style: Theme.of(context).textTheme.displaySmall,
               ),
-              SizedBox(height: 13),
+              const SizedBox(height: 13),
 
               Consumer<CategoryProvider>(
                 builder: (context, category, child) {
-                  return category.categoryList != null
+                  return category.categoryList.isNotEmpty
                       ? GridView.builder(
                           itemCount: category.categoryList.length,
-                          padding: EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
-                          physics: BouncingScrollPhysics(),
+                          padding: const EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
+                          physics: const BouncingScrollPhysics(),
                           shrinkWrap: true,
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: ResponsiveHelper.isDesktop(context) ? 4 : 3,
@@ -128,7 +128,7 @@ class FilterWidget extends StatelessWidget {
                               },
                               child: Container(
                                 alignment: Alignment.center,
-                                padding: EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
+                                padding: const EdgeInsets.only(right: Dimensions.PADDING_SIZE_SMALL),
                                 decoration: BoxDecoration(
                                     border: Border.all(
                                         color: category.selectCategory == index
@@ -155,10 +155,10 @@ class FilterWidget extends StatelessWidget {
                             );
                           },
                         )
-                      : CategoryShimmer();
+                      : const CategoryShimmer();
                 },
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
 
               CustomButton(
                 btnTxt: getTranslated('apply', context),

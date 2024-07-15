@@ -2,23 +2,33 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MessageBody {
   String id;
-  int orderId;
+  int? orderId;
   String senderId;
   String receiverId;
   String message;
   DateTime time;
   List<String> imageUrls;
 
-  MessageBody({this.id, this.orderId, this.senderId, this.receiverId, this.message, this.time, this.imageUrls});
+  MessageBody({
+    required this.id,
+    required this.orderId,
+    required this.senderId,
+    required this.receiverId,
+    required this.message,
+    required this.time,
+    required this.imageUrls,
+  });
 
-  MessageBody.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    orderId = json['order_id'];
-    senderId = json['sender_id'];
-    receiverId = json['receiver_id'];
-    message = json['message'];
-    time = json['time'] != null ? json['time'].toDate() : DateTime.now();
-    imageUrls = json['image_urls'].cast<String>();
+  factory MessageBody.fromJson(Map<String, dynamic> json) {
+    return MessageBody(
+      id: json['id'],
+      orderId: json['order_id'],
+      senderId: json['sender_id'],
+      receiverId: json['receiver_id'],
+      message: json['message'],
+      time: json['time'] != null ? json['time'].toDate() : DateTime.now(),
+      imageUrls: json['image_urls'].cast<String>(),
+    );
   }
 
   Map<String, dynamic> toJson() {

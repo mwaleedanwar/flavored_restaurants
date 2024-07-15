@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_final_fields
+
 class ResponseModel {
   bool _isSuccess;
   String _message;
@@ -7,12 +9,11 @@ class ResponseModel {
   bool get isSuccess => _isSuccess;
 }
 
-
 class OTPResponseModel {
   bool _isSuccess;
   bool _isExist;
   String _message;
-  OTPResponseModel(this._isSuccess, this._message,this._isExist);
+  OTPResponseModel(this._isSuccess, this._message, this._isExist);
 
   String get message => _message;
   bool get isSuccess => _isSuccess;

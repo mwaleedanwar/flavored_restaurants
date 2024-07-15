@@ -12,79 +12,80 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:fwfh_selectable_text/fwfh_selectable_text.dart';
 import 'package:provider/provider.dart';
-import 'package:universal_html/html.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
 
 class HtmlViewerScreen extends StatelessWidget {
   final HtmlType htmlType;
-  HtmlViewerScreen({@required this.htmlType});
+  const HtmlViewerScreen({super.key, required this.htmlType});
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
-    final _configModel = Provider.of<SplashProvider>(context, listen: false).configModel;
-    final _policyModel = Provider.of<SplashProvider>(context, listen: false).policyModel;
-    String _data = 'no_data_found';
-    String _appBarText = '';
+    final height = MediaQuery.of(context).size.height;
+    final configModel = Provider.of<SplashProvider>(context, listen: false).configModel;
+    final policyModel = Provider.of<SplashProvider>(context, listen: false).policyModel;
+    String data = 'no_data_found';
+    String appBarText = '';
 
     switch (htmlType) {
       case HtmlType.TERMS_AND_CONDITION:
-        _data = _configModel.termsAndConditions ?? '';
-        _appBarText = 'terms_and_condition';
+        data = configModel?.termsAndConditions ?? '';
+        appBarText = 'terms_and_condition';
         break;
       case HtmlType.ABOUT_US:
-        _data = _configModel.aboutUs ?? '';
-        _appBarText = 'about_us';
+        data = configModel?.aboutUs ?? '';
+        appBarText = 'about_us';
         break;
       case HtmlType.PRIVACY_POLICY:
-        _data = _configModel.privacyPolicy ?? '';
-        _appBarText = 'privacy_policy';
+        data = configModel?.privacyPolicy ?? '';
+        appBarText = 'privacy_policy';
         break;
       case HtmlType.CANCELLATION_POLICY:
-        _data = _policyModel.cancellationPage.content ?? '';
-        _appBarText = 'cancellation_policy';
+        data = policyModel?.cancellationPage?.content ?? '';
+        appBarText = 'cancellation_policy';
         break;
       case HtmlType.REFUND_POLICY:
-        _data = _policyModel.refundPage.content ?? '';
-        _appBarText = 'refund_policy';
+        data = policyModel?.refundPage?.content ?? '';
+        appBarText = 'refund_policy';
         break;
       case HtmlType.RETURN_POLICY:
-        _data = _policyModel.returnPage.content ?? '';
-        _appBarText = 'return_policy';
+        data = policyModel?.returnPage?.content ?? '';
+        appBarText = 'return_policy';
         break;
     }
 
-    if (_data != null && _data.isNotEmpty) {
-      _data = _data.replaceAll('href=', 'target="_blank" href=');
+    if (data.isNotEmpty) {
+      data = data.replaceAll('href=', 'target="_blank" href=');
     }
 
-    String _viewID = htmlType.toString();
-    if (ResponsiveHelper.isWeb()) {
-      try {
-        platformViewRegistry.registerViewFactory(_viewID, (int viewId) {
-          html.IFrameElement _ife = html.IFrameElement();
-          _ife.width = '1170';
-          _ife.height = MediaQuery.of(context).size.height.toString();
-          _ife.srcdoc = _data;
-          _ife.contentEditable = 'false';
-          _ife.style.border = 'none';
-          _ife.allowFullscreen = true;
-          return _ife;
-        });
-      } catch (e) {}
-    }
+    // String viewID = htmlType.toString();
+    // if (ResponsiveHelper.isWeb()) {
+    //   try {
+    //     PlatformViewRegistry().registerViewFactory(viewID, (int viewId) {
+    //       html.IFrameElement ife = html.IFrameElement();
+    //       ife.width = '1170';
+    //       ife.height = MediaQuery.of(context).size.height.toString();
+    //       ife.srcdoc = data;
+    //       ife.contentEditable = 'false';
+    //       ife.style.border = 'none';
+    //       ife.allowFullscreen = true;
+    //       return ife;
+    //     });
+    //   } catch (e) {
+    //     debugPrint('ERROR HTML VIEWER $e');
+    //   }
+    // }
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? WebAppBar()
+          ? const WebAppBar()
           : CustomAppBar(
-              title: getTranslated(_appBarText, context),
+              title: getTranslated(appBarText, context),
               context: context,
             ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Center(
-              child: Container(
+              child: SizedBox(
                 width: 1170,
                 child: ResponsiveHelper.isDesktop(context)
                     ? Column(
@@ -93,17 +94,17 @@ class HtmlViewerScreen extends StatelessWidget {
                             height: 100,
                             alignment: Alignment.center,
                             child: SelectableText(
-                              getTranslated(_appBarText, context),
+                              getTranslated(appBarText, context),
                               style: rubikBold.copyWith(
                                   fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE,
                                   color: ColorResources.getWhiteAndBlack(context)),
                             ),
                           ),
-                          SizedBox(height: 30),
+                          const SizedBox(height: 30),
                           ConstrainedBox(
-                            constraints: BoxConstraints(minHeight: _height < 600 ? _height : _height - 400),
+                            constraints: BoxConstraints(minHeight: height < 600 ? height : height - 400),
                             child: HtmlWidget(
-                              _data ?? '',
+                              data,
                               factoryBuilder: () => MyWidgetFactory(),
                               key: Key(htmlType.toString()),
                               onTapUrl: (String url) {
@@ -111,14 +112,14 @@ class HtmlViewerScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          SizedBox(height: 30),
+                          const SizedBox(height: 30),
                         ],
                       )
                     : SingleChildScrollView(
-                        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                        physics: BouncingScrollPhysics(),
+                        padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                        physics: const BouncingScrollPhysics(),
                         child: HtmlWidget(
-                          _data,
+                          data,
                           key: Key(htmlType.toString()),
                           onTapUrl: (String url) {
                             return launchUrl(Uri.parse(url));
@@ -127,7 +128,7 @@ class HtmlViewerScreen extends StatelessWidget {
                       ),
               ),
             ),
-            if (ResponsiveHelper.isDesktop(context)) FooterView()
+            if (ResponsiveHelper.isDesktop(context)) const FooterView()
           ],
         ),
       ),

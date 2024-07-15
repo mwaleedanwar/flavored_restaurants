@@ -20,13 +20,13 @@ import '../../tip_view/tip_view.dart';
 import '../thanks_feedback_screen.dart';
 
 class DeliveryManReviewWidget extends StatefulWidget {
-  final DeliveryMan deliveryMan;
+  final DeliveryMan? deliveryMan;
   final String orderID;
 
-  DeliveryManReviewWidget({@required this.deliveryMan, @required this.orderID});
+  const DeliveryManReviewWidget({super.key, required this.deliveryMan, required this.orderID});
 
   @override
-  _DeliveryManReviewWidgetState createState() => _DeliveryManReviewWidgetState();
+  State<DeliveryManReviewWidget> createState() => _DeliveryManReviewWidgetState();
 }
 
 class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
@@ -41,8 +41,8 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
       builder: (context, productProvider, child) {
         return Scrollbar(
           child: SingleChildScrollView(
-            padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-            physics: BouncingScrollPhysics(),
+            padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+            physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
                 Center(
@@ -54,16 +54,20 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                     child: SizedBox(
                       width: 1170,
                       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                        widget.deliveryMan != null ? DeliveryManWidget(deliveryMan: widget.deliveryMan) : SizedBox(),
-                        SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                        widget.deliveryMan != null
+                            ? DeliveryManWidget(deliveryMan: widget.deliveryMan!)
+                            : const SizedBox(),
+                        const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                         Container(
-                          padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                          padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                           decoration: BoxDecoration(
                             color: Theme.of(context).cardColor,
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey[Provider.of<ThemeProvider>(context).darkTheme ? 700 : 300],
+                                color: Provider.of<ThemeProvider>(context).darkTheme
+                                    ? Colors.grey.shade700
+                                    : Colors.grey.shade300,
                                 blurRadius: 5,
                                 spreadRadius: 1,
                               )
@@ -75,7 +79,7 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                               style: rubikMedium.copyWith(color: ColorResources.getGreyBunkerColor(context)),
                               overflow: TextOverflow.ellipsis,
                             ),
-                            SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
                             SizedBox(
                               height: 30,
@@ -102,15 +106,15 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                                 },
                               ),
                             ),
-                            SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                            TipView(),
+                            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                            const TipView(),
 
                             Text(
                               getTranslated('share_your_opinion', context),
                               style: rubikMedium.copyWith(color: ColorResources.getGreyBunkerColor(context)),
                               overflow: TextOverflow.ellipsis,
                             ),
-                            SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                             CustomTextField(
                               maxLines: 5,
                               capitalization: TextCapitalization.sentences,
@@ -119,11 +123,11 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                               fillColor: ColorResources.getSearchBg(context),
                             ),
 
-                            SizedBox(height: 40),
+                            const SizedBox(height: 40),
 
                             // Submit button
                             Padding(
-                              padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+                              padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
                               child: Column(
                                 children: [
                                   !productProvider.isLoading
@@ -143,7 +147,7 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                                                       currentFocus.unfocus();
                                                     }
                                                     ReviewBody reviewBody = ReviewBody(
-                                                        deliveryManId: widget.deliveryMan.id.toString(),
+                                                        deliveryManId: widget.deliveryMan?.id.toString(),
                                                         rating: productProvider.deliveryManRating.toString(),
                                                         comment: _controller.text,
                                                         orderId: widget.orderID,
@@ -151,7 +155,7 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                                                             ? null
                                                             : Get.put(TipController()).tip.value);
 
-                                                    print('--body:${reviewBody.orderTip}');
+                                                    debugPrint('--body:${reviewBody.orderTip}');
                                                     productProvider
                                                         .submitDeliveryManReview(reviewBody, context)
                                                         .then((value) {
@@ -160,7 +164,7 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                                                         Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                                builder: (context) => ThanksFeedbackScreen()));
+                                                                builder: (context) => const ThanksFeedbackScreen()));
 
                                                         _controller.text = '';
                                                       } else {
@@ -184,8 +188,8 @@ class _DeliveryManReviewWidgetState extends State<DeliveryManReviewWidget> {
                   ),
                 ),
                 if (ResponsiveHelper.isDesktop(context))
-                  Padding(
-                    padding: const EdgeInsets.only(top: Dimensions.PADDING_SIZE_DEFAULT),
+                  const Padding(
+                    padding: EdgeInsets.only(top: Dimensions.PADDING_SIZE_DEFAULT),
                     child: FooterView(),
                   ),
               ],

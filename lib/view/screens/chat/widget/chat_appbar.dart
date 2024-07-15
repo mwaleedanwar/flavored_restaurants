@@ -1,24 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/order_model.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/menu_bar.dart';
 import 'package:provider/provider.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool isBackButtonExist;
-  final Function onBackPressed;
+  final Function? onBackPressed;
   final BuildContext context;
-  final OrderModel orderModel;
-  ChatAppBar({this.isBackButtonExist = true, this.onBackPressed, @required this.context, @required this.orderModel});
+  final OrderModel? orderModel;
+  const ChatAppBar({
+    super.key,
+    this.isBackButtonExist = true,
+    this.onBackPressed,
+    required this.context,
+    this.orderModel,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final _splashProvider = Provider.of<SplashProvider>(context, listen: false);
+    final splashProvider = Provider.of<SplashProvider>(context, listen: false);
     return ResponsiveHelper.isDesktop(context)
         ? Center(
             child: Container(
@@ -31,21 +37,20 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onTap: () => Navigator.pushNamed(context, Routes.getMainRoute()),
-                        child: _splashProvider.baseUrls != null
+                        child: splashProvider.baseUrls != null
                             ? Consumer<SplashProvider>(
                                 builder: (context, splash, child) => FadeInImage.assetNetwork(
                                       placeholder: Images.placeholder_rectangle,
                                       image:
-                                          '${splash.baseUrls.restaurantImageUrl}/${splash.configModel.restaurantLogo}',
+                                          '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
                                       width: 120,
                                       height: 80,
                                       imageErrorBuilder: (c, o, s) =>
                                           Image.asset(Images.placeholder_rectangle, width: 120, height: 80),
                                     ))
-                            : SizedBox(),
+                            : const SizedBox(),
                       ),
                     ),
-                    // MenuBar(true),
                   ],
                 )),
           )
@@ -55,18 +60,18 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
               children: [
                 Text(
                     orderModel != null
-                        ? '${orderModel.deliveryMan.fName} ${orderModel.deliveryMan.lName}'
-                        : _splashProvider.configModel.restaurantName,
+                        ? '${orderModel!.deliveryMan?.fName} ${orderModel!.deliveryMan?.lName}'
+                        : splashProvider.configModel?.restaurantName ?? F.appName,
                     style: rubikMedium.copyWith(
-                        fontSize: Dimensions.FONT_SIZE_LARGE, color: Theme.of(context).textTheme.bodyText1.color)),
+                        fontSize: Dimensions.FONT_SIZE_LARGE, color: Theme.of(context).textTheme.bodyLarge?.color)),
                 orderModel == null
                     ? Padding(
                         padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
                         child: CircleAvatar(
                           radius: Dimensions.PADDING_SIZE_DEFAULT,
                           child: ClipRRect(
-                            child: Image.asset(Images.placeholder_user),
                             borderRadius: BorderRadius.circular(50.0),
+                            child: Image.asset(Images.placeholder_user),
                           ),
                         ),
                       )
@@ -75,16 +80,16 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                         child: CircleAvatar(
                           radius: Dimensions.PADDING_SIZE_DEFAULT,
                           child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50.0),
                             child: FadeInImage.assetNetwork(
                               placeholder: Images.placeholder_user,
                               fit: BoxFit.cover,
                               height: 40.0,
                               width: 40.0,
                               image:
-                                  '${Provider.of<SplashProvider>(context, listen: false).baseUrls.deliveryManImageUrl}/${orderModel.deliveryMan.image ?? ''}',
+                                  '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.deliveryManImageUrl}/${orderModel!.deliveryMan?.image ?? ''}',
                               imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_user, fit: BoxFit.cover),
                             ),
-                            borderRadius: BorderRadius.circular(50.0),
                             // child: Image.asset(Images.placeholder_user), borderRadius: BorderRadius.circular(50.0),
                           ),
                         ),
@@ -93,11 +98,11 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
             leading: isBackButtonExist
                 ? IconButton(
-                    icon: Icon(Icons.arrow_back_ios),
-                    color: Theme.of(context).textTheme.bodyText1.color,
-                    onPressed: () => onBackPressed != null ? onBackPressed() : Navigator.pop(context),
+                    icon: const Icon(Icons.arrow_back_ios),
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                    onPressed: () => onBackPressed != null ? onBackPressed!() : Navigator.pop(context),
                   )
-                : SizedBox(),
+                : const SizedBox(),
             backgroundColor: Theme.of(context).cardColor,
             elevation: 0,
             titleSpacing: 0,

@@ -12,7 +12,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/order/order_detai
 
 class NotificationPopUpDialog extends StatefulWidget {
   final PayloadModel payloadModel;
-  NotificationPopUpDialog(this.payloadModel);
+  const NotificationPopUpDialog(this.payloadModel, {super.key});
 
   @override
   State<NotificationPopUpDialog> createState() => _NewRequestDialogState();
@@ -27,50 +27,47 @@ class _NewRequestDialogState extends State<NotificationPopUpDialog> {
   }
 
   void _startAlarm() async {
-    AudioCache _audio = AudioCache();
-    _audio.play('notification.wav');
+    AudioCache audio = AudioCache();
+    audio.play('notification.wav');
   }
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimensions.RADIUS_DEFAULT)),
-      //insetPadding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
       child: Container(
         width: 500,
-        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_LARGE),
+        padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_LARGE),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Icon(Icons.notifications_active, size: 60, color: Theme.of(context).primaryColor),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+            padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
             child: Text(
               '${widget.payloadModel.title} ${widget.payloadModel.orderId != '' ? '(${widget.payloadModel.orderId})' : ''}',
               textAlign: TextAlign.center,
               style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
             ),
           ),
-          SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+          const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
+            padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE),
             child: Column(
               children: [
                 Text(
-                  widget.payloadModel.body,
+                  widget.payloadModel.body ?? '',
                   textAlign: TextAlign.center,
                   style: poppinsRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
                 ),
                 if (widget.payloadModel.image != 'null')
-                  SizedBox(
+                  const SizedBox(
                     height: Dimensions.PADDING_SIZE_EXTRA_SMALL,
                   ),
                 if (widget.payloadModel.image != 'null')
                   Builder(builder: (context) {
-                    print('image :${widget.payloadModel.image}');
-                    print('type : ${widget.payloadModel.image.runtimeType}');
                     return ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: FadeInImage.assetNetwork(
-                        image: widget.payloadModel.image,
+                        image: widget.payloadModel.image!,
                         height: 100,
                         width: 500,
                         placeholder: Images.placeholder_image,
@@ -82,7 +79,7 @@ class _NewRequestDialogState extends State<NotificationPopUpDialog> {
               ],
             ),
           ),
-          SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+          const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Flexible(
               child: SizedBox(
@@ -98,11 +95,11 @@ class _NewRequestDialogState extends State<NotificationPopUpDialog> {
                     child: Text(
                       getTranslated('cancel', context),
                       textAlign: TextAlign.center,
-                      style: poppinsRegular.copyWith(color: Theme.of(context).textTheme.bodyText1.color),
+                      style: poppinsRegular.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color),
                     ),
                   )),
             ),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             if (widget.payloadModel.orderId != null || widget.payloadModel.type == 'message')
               Flexible(
                 child: SizedBox(
@@ -113,7 +110,8 @@ class _NewRequestDialogState extends State<NotificationPopUpDialog> {
                     btnTxt: getTranslated('go', context),
                     onTap: () {
                       Navigator.pop(context);
-                      print('order id : ${widget.payloadModel.orderId} && ${widget.payloadModel.orderId.runtimeType}');
+                      debugPrint(
+                          'order id : ${widget.payloadModel.orderId} && ${widget.payloadModel.orderId.runtimeType}');
 
                       try {
                         if (widget.payloadModel.orderId == null ||
@@ -124,11 +122,13 @@ class _NewRequestDialogState extends State<NotificationPopUpDialog> {
                           Get.navigator.push(MaterialPageRoute(
                             builder: (context) => OrderDetailsScreen(
                               orderModel: null,
-                              orderId: int.tryParse(widget.payloadModel.orderId),
+                              orderId: int.tryParse(widget.payloadModel.orderId!),
                             ),
                           ));
                         }
-                      } catch (e) {}
+                      } catch (e) {
+                        debugPrint('ERROR NOTIF POPUP DIALOG $e');
+                      }
                     },
                   ),
                 ),

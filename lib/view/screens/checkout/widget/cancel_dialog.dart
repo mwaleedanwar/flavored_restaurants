@@ -6,15 +6,15 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
 
 class CancelDialog extends StatelessWidget {
-  final int orderID;
-  CancelDialog({@required this.orderID});
+  final int? orderID;
+  const CancelDialog({super.key, required this.orderID});
 
   @override
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
-        padding: EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
+        padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_LARGE),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Container(
             height: 70,
@@ -40,28 +40,32 @@ class CancelDialog extends StatelessWidget {
           orderID != null
               ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Text('${getTranslated('order_id', context)}:',
-                      style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL)),
-                  SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                  Text(orderID.toString(), style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL)),
+                      style: rubikRegular.copyWith(
+                          fontSize: Dimensions.FONT_SIZE_SMALL)),
+                  const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  Text(orderID.toString(),
+                      style: rubikMedium.copyWith(
+                          fontSize: Dimensions.FONT_SIZE_SMALL)),
                 ])
-              : SizedBox(),
-          SizedBox(height: 30),
+              : const SizedBox(),
+          const SizedBox(height: 30),
 
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             Icon(Icons.info, color: Theme.of(context).primaryColor),
             Text(
               getTranslated('payment_failed', context),
-              style: rubikMedium.copyWith(color: Theme.of(context).primaryColor),
+              style:
+                  rubikMedium.copyWith(color: Theme.of(context).primaryColor),
             ),
           ]),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
 
           Text(
             getTranslated('payment_process_is_interrupted', context),
             style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 30),
+          const SizedBox(height: 30),
 
           Row(children: [
             Expanded(
@@ -69,18 +73,21 @@ class CancelDialog extends StatelessWidget {
               height: 50,
               child: TextButton(
                 onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(context, Routes.getMainRoute(), (route) => false);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.getMainRoute(), (route) => false);
                 },
                 style: TextButton.styleFrom(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
-                      side: BorderSide(width: 2, color: Theme.of(context).primaryColor)),
+                      side: BorderSide(
+                          width: 2, color: Theme.of(context).primaryColor)),
                 ),
                 child: Text(getTranslated('maybe_later', context),
-                    style: rubikBold.copyWith(color: Theme.of(context).primaryColor)),
+                    style: rubikBold.copyWith(
+                        color: Theme.of(context).primaryColor)),
               ),
             )),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Expanded(
                 child: CustomButton(
                     btnTxt: 'Order Details',

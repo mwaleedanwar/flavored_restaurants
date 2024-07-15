@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/category_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
@@ -7,18 +9,18 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/on_hover.dart';
 
 class CategoryHoverWidget extends StatelessWidget {
   final List<CategoryModel> categoryList;
-  const CategoryHoverWidget({Key key, @required this.categoryList}) : super(key: key);
+  const CategoryHoverWidget({super.key, required this.categoryList});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).cardColor,
-      padding: EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+      padding: const EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
       child: Column(
           children: categoryList
               .map((category) => InkWell(
                     onTap: () async {
-                      Future.delayed(Duration(milliseconds: 100)).then((value) async {
+                      Future.delayed(const Duration(milliseconds: 100)).then((value) async {
                         await Navigator.pushNamed(
                           context,
                           Routes.getCategoryRoute(0),
@@ -32,7 +34,7 @@ class CategoryHoverWidget extends StatelessWidget {
                     },
                     child: OnHover(builder: (isHover) {
                       String name = '';
-                      category.name.length > 25 ? name = category.name.substring(0, 25) + ' ...' : name = category.name;
+                      category.name.length > 25 ? name = '${category.name.substring(0, 25)} ...' : name = category.name;
                       return Container(
                         padding: const EdgeInsets.symmetric(
                             vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL, horizontal: Dimensions.PADDING_SIZE_DEFAULT),
@@ -46,7 +48,7 @@ class CategoryHoverWidget extends StatelessWidget {
                             FittedBox(
                               child: Text(name, overflow: TextOverflow.ellipsis),
                             ),
-                            Icon(Icons.chevron_right, size: Dimensions.PADDING_SIZE_DEFAULT),
+                            const Icon(Icons.chevron_right, size: Dimensions.PADDING_SIZE_DEFAULT),
                           ],
                         ),
                       );

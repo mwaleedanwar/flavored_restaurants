@@ -1,17 +1,17 @@
 class AddressModel {
-  int id;
-  String addressType;
-  String contactPersonNumber;
-  String address;
-  String latitude;
-  String longitude;
-  String createdAt;
-  String updatedAt;
-  int userId;
-  String method;
-  String contactPersonName;
-  String buildingNumber;
-  String floorNumber;
+  int? id;
+  String? addressType;
+  String? contactPersonNumber;
+  String? address;
+  String? latitude;
+  String? longitude;
+  String? createdAt;
+  String? updatedAt;
+  int? userId;
+  String? method;
+  String? contactPersonName;
+  String? buildingNumber;
+  String? floorNumber;
 
   AddressModel({
     this.id,
@@ -29,20 +29,22 @@ class AddressModel {
     this.buildingNumber,
   });
 
-  AddressModel.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    addressType = json['address_type'];
-    contactPersonNumber = json['contact_person_number'];
-    address = json['address'];
-    latitude = json['latitude'];
-    longitude = json['longitude'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    userId = json['user_id'];
-    method = json['_method'];
-    contactPersonName = json['contact_person_name'];
-    buildingNumber = json['road'];
-    floorNumber = json['house'];
+  factory AddressModel.fromJson(Map<String, dynamic> json) {
+    return AddressModel(
+      id: json['id'],
+      addressType: json['address_type'],
+      address: json['address'],
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+      createdAt: json['created_at'],
+      updatedAt: json['updated_at'],
+      userId: json['user_id'],
+      method: json['_method'],
+      contactPersonNumber: json['contact_person_number'],
+      contactPersonName: json['contact_person_name'],
+      buildingNumber: json['road'],
+      floorNumber: json['house'],
+    );
   }
 
   Map<String, dynamic> toJson() {

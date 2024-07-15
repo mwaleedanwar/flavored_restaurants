@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 class Images {
   static const String home = 'assets/image/home_icon.png';
   static const String maintenance = 'assets/image/maintenance.png';

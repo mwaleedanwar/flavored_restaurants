@@ -17,12 +17,14 @@ import 'package:provider/provider.dart';
 import 'widget/add_button_view.dart';
 
 class AddressScreen extends StatefulWidget {
+  const AddressScreen({super.key});
+
   @override
   State<AddressScreen> createState() => _AddressScreenState();
 }
 
 class _AddressScreenState extends State<AddressScreen> {
-  bool _isLoggedIn;
+  bool _isLoggedIn = false;
 
   @override
   void initState() {
@@ -36,20 +38,19 @@ class _AddressScreenState extends State<AddressScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : CustomAppBar(context: context, title: getTranslated('address', context)),
       floatingActionButton: _isLoggedIn
           ? Padding(
               padding: EdgeInsets.only(top: ResponsiveHelper.isDesktop(context) ? Dimensions.PADDING_SIZE_LARGE : 0),
               child: !ResponsiveHelper.isDesktop(context)
                   ? FloatingActionButton(
-                      child: Icon(Icons.add, color: Colors.white),
                       backgroundColor: Theme.of(context).primaryColor,
                       onPressed: () => Navigator.pushNamed(
                           context, Routes.getAddAddressRoute('address', 'add', AddressModel(), amount: 0.0)),
+                      child: const Icon(Icons.add, color: Colors.white),
                     )
                   : null,
             )
@@ -58,7 +59,7 @@ class _AddressScreenState extends State<AddressScreen> {
           ? Consumer<LocationProvider>(
               builder: (context, locationProvider, child) {
                 return locationProvider.addressList != null
-                    ? locationProvider.addressList.length > 0
+                    ? locationProvider.addressList!.isNotEmpty
                         ? RefreshIndicator(
                             onRefresh: () async {
                               await Provider.of<LocationProvider>(context, listen: false).initAddressList(context);
@@ -71,9 +72,10 @@ class _AddressScreenState extends State<AddressScreen> {
                                     Center(
                                       child: ConstrainedBox(
                                         constraints: BoxConstraints(
-                                            minHeight: !ResponsiveHelper.isDesktop(context) && _height < 600
-                                                ? _height
-                                                : _height - 400),
+                                            minHeight: !ResponsiveHelper.isDesktop(context) &&
+                                                    MediaQuery.of(context).size.height < 600
+                                                ? MediaQuery.of(context).size.height
+                                                : MediaQuery.of(context).size.height - 400),
                                         child: SizedBox(
                                           width: 1170,
                                           child: ResponsiveHelper.isDesktop(context)
@@ -86,35 +88,35 @@ class _AddressScreenState extends State<AddressScreen> {
                                                             Routes.getAddAddressRoute('address', 'add', AddressModel(),
                                                                 amount: 0.0))),
                                                     GridView.builder(
-                                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                                                           crossAxisCount: 2,
                                                           crossAxisSpacing: Dimensions.PADDING_SIZE_DEFAULT,
                                                           childAspectRatio: 4),
-                                                      padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                                                      itemCount: locationProvider.addressList.length,
-                                                      physics: NeverScrollableScrollPhysics(),
+                                                      padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                                                      itemCount: locationProvider.addressList!.length,
+                                                      physics: const NeverScrollableScrollPhysics(),
                                                       shrinkWrap: true,
                                                       itemBuilder: (context, index) => AddressWidget(
-                                                        addressModel: locationProvider.addressList[index],
+                                                        addressModel: locationProvider.addressList![index],
                                                         index: index,
                                                       ),
                                                     ),
                                                   ],
                                                 )
                                               : ListView.builder(
-                                                  physics: NeverScrollableScrollPhysics(),
+                                                  physics: const NeverScrollableScrollPhysics(),
                                                   shrinkWrap: true,
-                                                  padding: EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                                                  itemCount: locationProvider.addressList.length,
+                                                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                                                  itemCount: locationProvider.addressList!.length,
                                                   itemBuilder: (context, index) => AddressWidget(
-                                                    addressModel: locationProvider.addressList[index],
+                                                    addressModel: locationProvider.addressList![index],
                                                     index: index,
                                                   ),
                                                 ),
                                         ),
                                       ),
                                     ),
-                                    if (ResponsiveHelper.isDesktop(context)) FooterView(),
+                                    if (ResponsiveHelper.isDesktop(context)) const FooterView(),
                                   ],
                                 ),
                               ),
@@ -126,9 +128,10 @@ class _AddressScreenState extends State<AddressScreen> {
                                 Center(
                                   child: Container(
                                     constraints: BoxConstraints(
-                                        minHeight: !ResponsiveHelper.isDesktop(context) && _height < 600
-                                            ? _height
-                                            : _height - 400),
+                                        minHeight: !ResponsiveHelper.isDesktop(context) &&
+                                                MediaQuery.of(context).size.height < 600
+                                            ? MediaQuery.of(context).size.height
+                                            : MediaQuery.of(context).size.height - 400),
                                     width: 1177,
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.end,
@@ -137,12 +140,12 @@ class _AddressScreenState extends State<AddressScreen> {
                                           AddButtonView(
                                               onTap: () => Navigator.pushNamed(context,
                                                   Routes.getAddAddressRoute('address', 'add', AddressModel()))),
-                                        NoDataScreen(isFooter: false, isAddress: true),
+                                        const NoDataScreen(isFooter: false, isAddress: true),
                                       ],
                                     ),
                                   ),
                                 ),
-                                if (ResponsiveHelper.isDesktop(context)) FooterView(),
+                                if (ResponsiveHelper.isDesktop(context)) const FooterView(),
                               ],
                             ),
                           )
@@ -151,7 +154,7 @@ class _AddressScreenState extends State<AddressScreen> {
                             valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor)));
               },
             )
-          : NotLoggedInScreen(),
+          : const NotLoggedInScreen(),
     );
   }
 }

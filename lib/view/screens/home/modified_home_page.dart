@@ -3,29 +3,23 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/auth_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/localization_provider.dart';
-
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/profile_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/wishlist_provider.dart';
-
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
-
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-
-import '../../../data/model/response/config_model.dart';
-import '../../../helper/salutations_function.dart';
-import '../../../localization/language_constrants.dart';
-import '../../base/custom_button.dart';
-import '../heart_points/widgets/progress_with_dots.dart';
-import '../menu/menu_screen.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/config_model.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/helper/salutations_function.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/heart_points/widgets/progress_with_dots.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/menu/menu_screen.dart';
 
 class ModifiedHomePage extends StatefulWidget {
-  const ModifiedHomePage({Key key}) : super(key: key);
+  const ModifiedHomePage({super.key});
 
   @override
   State<ModifiedHomePage> createState() => _ModifiedHomePageState();
@@ -33,7 +27,6 @@ class ModifiedHomePage extends StatefulWidget {
 
 class _ModifiedHomePageState extends State<ModifiedHomePage> {
   final GlobalKey<ScaffoldState> drawerGlobalKey = GlobalKey();
-  final ScrollController _scrollController = ScrollController();
   bool _isLoggedIn = false;
   double points = 0;
 
@@ -44,8 +37,8 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
 
       if (_isLoggedIn) {
         Provider.of<ProfileProvider>(context, listen: false).getUserInfo(context).then((value) {
-          if (Provider.of<ProfileProvider>(context, listen: false).userInfoModel.point != null) {
-            points = Provider.of<ProfileProvider>(context, listen: false).userInfoModel.point.toDouble();
+          if (Provider.of<ProfileProvider>(context, listen: false).userInfoModel?.point != null) {
+            points = Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.point!.toDouble();
             setState(() {});
           }
         });
@@ -55,7 +48,6 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadData(context, false);
   }
@@ -67,8 +59,8 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
           elevation: 0.5,
           leading: ResponsiveHelper.isTab(context)
               ? IconButton(
-                  onPressed: () => drawerGlobalKey.currentState.openDrawer(),
-                  icon: Icon(Icons.menu, color: Theme.of(context).textTheme.bodyText1.color),
+                  onPressed: () => drawerGlobalKey.currentState?.openDrawer(),
+                  icon: Icon(Icons.menu, color: Theme.of(context).textTheme.bodyLarge?.color),
                 )
               : null,
           backgroundColor: Theme.of(context).cardColor,
@@ -83,24 +75,24 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                                 height: 40,
                                 width: 40,
                                 image: splash.baseUrls != null
-                                    ? '${splash.baseUrls.restaurantImageUrl}/${splash.configModel.restaurantLogo}'
+                                    ? '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}'
                                     : '',
                                 imageErrorBuilder: (c, o, s) =>
                                     Image.asset(Images.placeholder_rectangle, height: 40, width: 40),
                               )
                             : Image.asset(F.logo, width: 40, height: 40),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         _isLoggedIn && profile.userInfoModel != null
                             ? Expanded(
                                 child: Row(
                                   children: [
                                     Text(
-                                      '${getGreetingMessage()}, ${Provider.of<ProfileProvider>(context, listen: false).userInfoModel.fName ?? ''}',
+                                      '${getGreetingMessage()}, ${Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.fName ?? ''}',
                                       style: rubikBold.copyWith(color: Theme.of(context).primaryColor),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     Image.asset(
@@ -110,16 +102,17 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                                   ],
                                 ),
                               )
-                            : SizedBox(),
+                            : const SizedBox(),
                       ],
                     );
                   })),
           actions: [
             ResponsiveHelper.isTab(context)
-                ? SizedBox()
+                ? const SizedBox()
                 : IconButton(
-                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MenuScreen())),
-                    icon: Icon(Icons.menu, color: Theme.of(context).textTheme.bodyText1.color),
+                    onPressed: () =>
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const MenuScreen())),
+                    icon: Icon(Icons.menu, color: Theme.of(context).textTheme.displayLarge?.color),
                   ),
             ResponsiveHelper.isTab(context)
                 ? IconButton(
@@ -127,14 +120,14 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                     icon: Stack(
                       clipBehavior: Clip.none,
                       children: [
-                        Icon(Icons.shopping_cart, color: Theme.of(context).textTheme.bodyText1.color),
+                        Icon(Icons.shopping_cart, color: Theme.of(context).textTheme.displayLarge?.color),
                         Positioned(
                           top: -10,
                           right: -10,
                           child: Container(
-                            padding: EdgeInsets.all(4),
+                            padding: const EdgeInsets.all(4),
                             alignment: Alignment.center,
-                            decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.red),
+                            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
                             child: Center(
                               child: Text(
                                 (Provider.of<CartProvider>(context).cartList.length +
@@ -149,7 +142,7 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                       ],
                     ),
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ],
         ),
         body: Consumer<SplashProvider>(builder: (context, config, child) {
@@ -170,9 +163,9 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Text('${profile.points.toStringAsFixed(1)}',
+                                      Text(profile.points.toStringAsFixed(1),
                                           style: rubikMedium.copyWith(fontSize: 22)),
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 5,
                                       ),
                                       Icon(
@@ -190,7 +183,7 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(5),
                                       side: BorderSide(width: 2, color: Theme.of(context).primaryColor)),
-                                  minimumSize: Size(150, 30),
+                                  minimumSize: const Size(150, 30),
                                 ),
                                 onPressed: () {
                                   Navigator.pushReplacementNamed(context, Routes.getDashboardRoute('menu'));
@@ -205,7 +198,7 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                         : Column(
                             children: [
                               SizedBox(
-                                width: Get.width,
+                                width: MediaQuery.of(context).size.width,
                                 height: 40,
                                 child: CustomButton(
                                     btnTxt: 'Sign Up',
@@ -213,11 +206,11 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                                       Navigator.pushNamed(context, Routes.getLoginRoute());
                                     }),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 10,
                               ),
                               SizedBox(
-                                width: Get.width,
+                                width: MediaQuery.of(context).size.width,
                                 height: 40,
                                 child: CustomButton(
                                     btnTxt: getTranslated('login', context),
@@ -228,19 +221,19 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                             ],
                           ),
                     ProgressTimeline(points),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Text('Let\'s Get Started', style: rubikMedium.copyWith(fontSize: 14)),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     ListView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: config.configModel.bannerForRestaurantWebApp.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: (config.configModel?.bannerForRestaurantWebApp ?? []).length,
                         itemBuilder: (context, index) {
-                          var banner = config.configModel.bannerForRestaurantWebApp[index];
+                          var banner = config.configModel!.bannerForRestaurantWebApp![index];
                           bool isRight = (banner.bannerType == 'catering' ||
                                   banner.bannerType == 'product' ||
                                   banner.bannerType == 'simple') &&
@@ -248,9 +241,9 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                           return isRight
                               ? HomeBannerCard(
                                   bannerForRestaurantWebApp: banner,
-                                  imageBaseUrl: config.baseUrls.bannerImageUrl,
+                                  imageBaseUrl: config.baseUrls!.bannerImageUrl,
                                 )
-                              : SizedBox();
+                              : const SizedBox();
                         })
                   ],
                 ),
@@ -262,10 +255,10 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
 }
 
 class HomeBannerCard extends StatefulWidget {
-  BannerForRestaurantWebApp bannerForRestaurantWebApp;
-  String imageBaseUrl;
+  final BannerForRestaurantWebApp bannerForRestaurantWebApp;
+  final String imageBaseUrl;
 
-  HomeBannerCard({Key key, this.bannerForRestaurantWebApp, this.imageBaseUrl}) : super(key: key);
+  const HomeBannerCard({super.key, required this.bannerForRestaurantWebApp, required this.imageBaseUrl});
 
   @override
   State<HomeBannerCard> createState() => _HomeBannerCardState();
@@ -274,7 +267,6 @@ class HomeBannerCard extends StatefulWidget {
 class _HomeBannerCardState extends State<HomeBannerCard> {
   @override
   Widget build(BuildContext context) {
-    print('${widget.imageBaseUrl}/${widget.bannerForRestaurantWebApp.image[0]}');
     return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -285,30 +277,30 @@ class _HomeBannerCardState extends State<HomeBannerCard> {
               placeholder: Images.placeholder_rectangle,
               fit: BoxFit.cover,
               height: 150,
-              width: Get.width,
+              width: MediaQuery.of(context).size.width,
               image: '${widget.imageBaseUrl}/${widget.bannerForRestaurantWebApp.image[0]}',
-              imageErrorBuilder: (c, o, s) =>
-                  Image.asset(Images.placeholder_rectangle, fit: BoxFit.cover, height: 150, width: Get.width),
+              imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_rectangle,
+                  fit: BoxFit.cover, height: 150, width: MediaQuery.of(context).size.width),
             ),
           ),
           if (widget.bannerForRestaurantWebApp.bannerType != 'catering') ...[
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Text('${widget.bannerForRestaurantWebApp.title}', style: rubikMedium.copyWith(fontSize: 16))
+            Text(widget.bannerForRestaurantWebApp.title, style: rubikMedium.copyWith(fontSize: 16))
                 .marginSymmetric(horizontal: 6),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Text(
-              '${widget.bannerForRestaurantWebApp.description ?? ''}',
+              widget.bannerForRestaurantWebApp.description ?? '',
               style: rubikRegular.copyWith(
                 fontSize: 14,
               ),
               maxLines: 2,
             ).marginSymmetric(horizontal: 6),
           ],
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           widget.bannerForRestaurantWebApp.buttonText != null
@@ -317,13 +309,10 @@ class _HomeBannerCardState extends State<HomeBannerCard> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                         side: BorderSide(width: 2, color: Theme.of(context).primaryColor)),
-                    minimumSize: Size(150, 30),
+                    minimumSize: const Size(150, 30),
                   ),
                   onPressed: () {
-                    print('===moving1');
-
                     if (widget.bannerForRestaurantWebApp.buttonText == 'Order Now') {
-                      print('===moving');
                       Navigator.pushReplacementNamed(context, Routes.getDashboardRoute('food_menu'));
                     } else {
                       Navigator.pushNamed(context, Routes.getSupportRoute());
@@ -334,8 +323,8 @@ class _HomeBannerCardState extends State<HomeBannerCard> {
                         fontSize: Dimensions.FONT_SIZE_LARGE,
                       )),
                 ).marginSymmetric(horizontal: 4)
-              : SizedBox.shrink(),
-          SizedBox(
+              : const SizedBox.shrink(),
+          const SizedBox(
             height: 10,
           ),
         ],

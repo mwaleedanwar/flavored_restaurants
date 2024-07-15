@@ -2,18 +2,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/language_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 
 class AppLocalization {
+  final Locale locale;
+  late Map<String, String> _localizedValues;
+
   AppLocalization(this.locale);
 
-  final Locale locale;
-
-  static AppLocalization of(BuildContext context) {
-    return Localizations.of<AppLocalization>(context, AppLocalization);
-  }
-
-  Map<String, String> _localizedValues;
+  static AppLocalization of(BuildContext context) => Localizations.of<AppLocalization>(context, AppLocalization)!;
 
   Future<void> load() async {
     String jsonStringValues = await rootBundle.loadString('assets/language/${locale.languageCode}.json');
@@ -22,7 +20,7 @@ class AppLocalization {
   }
 
   String translate(String key) {
-    return _localizedValues[key];
+    return _localizedValues[key]!;
   }
 
   static const LocalizationsDelegate<AppLocalization> delegate = _DemoLocalizationsDelegate();
@@ -33,16 +31,16 @@ class _DemoLocalizationsDelegate extends LocalizationsDelegate<AppLocalization> 
 
   @override
   bool isSupported(Locale locale) {
-    List<String> _languageString = [];
-    AppConstants.languages.forEach((language) {
-      _languageString.add(language.languageCode);
-    });
-    return _languageString.contains(locale.languageCode);
+    List<String> languageString = [];
+    for (LanguageModel language in AppConstants.languages) {
+      languageString.add(language.languageCode);
+    }
+    return languageString.contains(locale.languageCode);
   }
 
   @override
   Future<AppLocalization> load(Locale locale) async {
-    AppLocalization localization = new AppLocalization(locale);
+    AppLocalization localization = AppLocalization(locale);
     await localization.load();
     return localization;
   }

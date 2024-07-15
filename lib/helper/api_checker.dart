@@ -8,21 +8,24 @@ import 'package:provider/provider.dart';
 
 class ApiChecker {
   static void checkApi(BuildContext context, ApiResponse apiResponse) {
-    String _message;
+    String message;
     if (apiResponse.error is String) {
-      _message = apiResponse.error;
+      message = apiResponse.error;
     } else {
-      _message = ErrorResponse.fromJson(apiResponse.error).errors[0].message;
+      message = ErrorResponse.fromJson(apiResponse.error).errors?[0].message ??
+          ErrorResponse.fromJson(apiResponse.error).errors.toString();
     }
 
-    if (_message == 'Unauthorized.' ||
-        _message == 'Unauthenticated.' && ModalRoute.of(context).settings.name != Routes.getLoginRoute()) {
+    if (message == 'Unauthorized.' ||
+        message == 'Unauthenticated.' &&
+            ModalRoute.of(context)?.settings.name != Routes.getLoginRoute()) {
       Provider.of<SplashProvider>(context, listen: false).removeSharedData();
-      if (ModalRoute.of(context).settings.name != Routes.getLoginRoute()) {
-        Navigator.pushNamedAndRemoveUntil(context, Routes.getLoginRoute(), (route) => false);
+      if (ModalRoute.of(context)?.settings.name != Routes.getLoginRoute()) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.getLoginRoute(), (route) => false);
       }
     } else {
-      showCustomSnackBar(_message, context);
+      showCustomSnackBar(message, context);
     }
   }
 }

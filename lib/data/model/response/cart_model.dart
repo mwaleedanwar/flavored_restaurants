@@ -11,51 +11,56 @@ class CartModel {
   double discountAmount;
   int quantity;
   double taxAmount;
-  Product product;
   bool isGift;
-  List<Variation> variation;
-  List<AddOn> addOnIds;
+  Product? product;
+  List<Variation?>? variation;
+  List<AddOn>? addOnIds;
 
   CartModel({
     this.price = 0,
-    this.points,
-    this.discountedPrice,
-    this.discountAmount,
-    this.quantity,
-    this.specialInstruction,
-    this.taxAmount,
-    this.product,
-    this.isGift,
+    required this.points,
+    required this.discountedPrice,
+    required this.discountAmount,
+    required this.quantity,
+    required this.specialInstruction,
+    required this.taxAmount,
+    required this.isGift,
     this.isFree = false,
+    this.product,
     this.variation,
     this.addOnIds,
   });
 
-  CartModel.fromJson(Map<String, dynamic> json) {
-    price = json['price'].toDouble();
-    points = json['points'].toDouble();
-    discountedPrice = json['discounted_price'].toDouble();
+  factory CartModel.fromJson(Map<String, dynamic> json) {
+    final cart = CartModel(
+      price: json['price'].toDouble(),
+      points: json['points'].toDouble(),
+      discountedPrice: json['discounted_price'].toDouble(),
+      discountAmount: json['discount_amount'].toDouble(),
+      quantity: json['quantity'],
+      isGift: json['_isGift'],
+      specialInstruction: json['special_instructions'],
+      isFree: json['_isFree'],
+      taxAmount: json['tax_amount'].toDouble(),
+    );
     if (json['variation'] != null) {
-      variation = [];
+      final variation = <Variation>[];
       json['variation'].forEach((v) {
         variation.add(Variation.fromJson(v));
       });
+      cart.variation = variation;
     }
-    discountAmount = json['discount_amount'].toDouble();
-    quantity = json['quantity'];
-    isGift = json['_isGift'];
-    specialInstruction = json['special_instructions'];
-    isFree = json['_isFree'];
-    taxAmount = json['tax_amount'].toDouble();
     if (json['add_on_ids'] != null) {
-      addOnIds = [];
+      final addOnIds = <AddOn>[];
       json['add_on_ids'].forEach((v) {
         addOnIds.add(AddOn.fromJson(v));
       });
+      cart.addOnIds = addOnIds;
     }
     if (json['product'] != null) {
-      product = Product.fromJson(json['product']);
+      cart.product = Product.fromJson(json['product']);
     }
+    return cart;
   }
 
   Map<String, dynamic> toJson() {
@@ -69,12 +74,12 @@ class CartModel {
     data['_isGift'] = isGift;
     data['_isFree'] = isFree;
     data['tax_amount'] = taxAmount;
-    data['product'] = product.toJson();
+    data['product'] = product?.toJson();
     if (variation != null) {
-      data['variation'] = variation.map((v) => v.toJson()).toList();
+      data['variation'] = variation?.map((v) => v?.toJson()).toList();
     }
     if (addOnIds != null) {
-      data['add_on_ids'] = addOnIds.map((v) => v.toJson()).toList();
+      data['add_on_ids'] = addOnIds?.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -89,11 +94,10 @@ class AddOn {
   int id;
   int quantity;
 
-  AddOn({this.id, this.quantity});
+  AddOn({required this.id, required this.quantity});
 
-  AddOn.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    quantity = json['quantity'];
+  factory AddOn.fromJson(Map<String, dynamic> json) {
+    return AddOn(id: json['id'], quantity: json['quantity']);
   }
 
   Map<String, dynamic> toJson() {
@@ -109,27 +113,30 @@ class CateringCartModel {
 
   double discountedPrice;
 
-  double discountAmount;
+  double? discountAmount;
   int quantity;
 
-  SpecialOfferModel catering;
+  SpecialOfferModel? catering;
 
   CateringCartModel({
-    this.price,
-    this.discountedPrice,
+    required this.price,
+    required this.discountedPrice,
     this.discountAmount,
-    this.quantity,
+    required this.quantity,
     this.catering,
   });
 
-  CateringCartModel.fromJson(Map<String, dynamic> json) {
-    price = json['price'].toDouble();
-    discountedPrice = json['discounted_price'].toDouble();
-    discountAmount = json['discount_amount'].toDouble();
-    quantity = json['quantity'];
+  factory CateringCartModel.fromJson(Map<String, dynamic> json) {
+    final ccm = CateringCartModel(
+      price: json['price'].toDouble(),
+      discountedPrice: json['discounted_price'].toDouble(),
+      discountAmount: json['discount_amount'].toDouble(),
+      quantity: json['quantity'],
+    );
     if (json['catering'] != null) {
-      catering = SpecialOfferModel.fromJson(json['catering']);
+      ccm.catering = SpecialOfferModel.fromJson(json['catering']);
     }
+    return ccm;
   }
 
   Map<String, dynamic> toJson() {
@@ -138,7 +145,7 @@ class CateringCartModel {
     data['discounted_price'] = discountedPrice;
     data['discount_amount'] = discountAmount;
     data['quantity'] = quantity;
-    data['catering'] = catering.toJson();
+    data['catering'] = catering?.toJson();
     return data;
   }
 }
@@ -148,25 +155,28 @@ class DealCartModel {
   int quantity;
   double discountedPrice;
   double discountAmount;
-  DealsDataModel dealsDataModel;
+  DealsDataModel? dealsDataModel;
 
   DealCartModel({
-    this.price,
-    this.quantity,
-    this.discountedPrice,
-    this.discountAmount,
+    required this.price,
+    required this.quantity,
+    required this.discountedPrice,
+    required this.discountAmount,
     this.dealsDataModel,
   });
 
-  DealCartModel.fromJson(Map<String, dynamic> json) {
-    price = json['price'].toDouble();
-    discountedPrice = json['discounted_price'].toDouble();
-    discountAmount = json['discount_amount'].toDouble();
-    quantity = json['quantity'];
+  factory DealCartModel.fromJson(Map<String, dynamic> json) {
+    final dcm = DealCartModel(
+      price: json['price'].toDouble(),
+      discountedPrice: json['discounted_price'].toDouble(),
+      discountAmount: json['discount_amount'].toDouble(),
+      quantity: json['quantity'],
+    );
 
     if (json['catering'] != null) {
-      dealsDataModel = DealsDataModel.fromJson(json['deals']);
+      dcm.dealsDataModel = DealsDataModel.fromJson(json['deals']);
     }
+    return dcm;
   }
 
   Map<String, dynamic> toJson() {
@@ -175,7 +185,7 @@ class DealCartModel {
     data['discounted_price'] = discountedPrice;
     data['discount_amount'] = discountAmount;
     data['quantity'] = quantity;
-    data['deals'] = dealsDataModel.toJson();
+    data['deals'] = dealsDataModel?.toJson();
     return data;
   }
 }
@@ -184,22 +194,25 @@ class HappyHoursCartModel {
   double price;
   double discountAmount;
   int quantity;
-  OfferProduct happyHours;
+  OfferProduct? happyHours;
 
   HappyHoursCartModel({
-    this.price,
-    this.discountAmount,
-    this.quantity,
+    required this.price,
+    required this.discountAmount,
+    required this.quantity,
     this.happyHours,
   });
 
-  HappyHoursCartModel.fromJson(Map<String, dynamic> json) {
-    price = json['price'].toDouble();
-    discountAmount = json['discount_amount'].toDouble();
-    quantity = json['quantity'];
+  factory HappyHoursCartModel.fromJson(Map<String, dynamic> json) {
+    final hhcm = HappyHoursCartModel(
+      price: json['price'].toDouble(),
+      discountAmount: json['discount_amount'].toDouble(),
+      quantity: json['quantity'],
+    );
     if (json['happy_hours'] != null) {
-      happyHours = OfferProduct.fromJson(json['happy_hours']);
+      hhcm.happyHours = OfferProduct.fromJson(json['happy_hours']);
     }
+    return hhcm;
   }
 
   Map<String, dynamic> toJson() {
@@ -207,7 +220,7 @@ class HappyHoursCartModel {
     data['price'] = price;
     data['discount_amount'] = discountAmount;
     data['quantity'] = quantity;
-    data['happy_hours'] = happyHours.toJson();
+    data['happy_hours'] = happyHours?.toJson();
     return data;
   }
 }

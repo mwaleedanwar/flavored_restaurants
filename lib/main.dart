@@ -6,7 +6,6 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/notification_helper.dart';
@@ -22,7 +21,7 @@ import 'di_container.dart' as di;
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-AndroidNotificationChannel channel;
+late AndroidNotificationChannel channel;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
@@ -58,7 +57,7 @@ Future<void> main() async {
     // );
   }
   await di.init();
-  int orderID;
+  int? orderID;
   try {
     if (!kIsWeb) {
       channel = const AndroidNotificationChannel(
@@ -67,10 +66,11 @@ Future<void> main() async {
         importance: Importance.high,
       );
     }
-    final RemoteMessage remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
+    final RemoteMessage? remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (remoteMessage != null) {
-      orderID =
-          remoteMessage.notification.titleLocKey != null ? int.parse(remoteMessage.notification.titleLocKey) : null;
+      orderID = remoteMessage.notification?.titleLocKey != null
+          ? int.tryParse(remoteMessage.notification!.titleLocKey ?? '')
+          : null;
     }
     await NotificationHelper.initialize(flutterLocalNotificationsPlugin);
     FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
@@ -115,14 +115,13 @@ Future<void> main() async {
 }
 
 class MyApp extends StatefulWidget {
-  final int orderId;
+  final int? orderId;
   final bool isWeb;
 
-  const MyApp({Key key, @required this.orderId, @required this.isWeb}) : super(key: key);
+  const MyApp({super.key, required this.orderId, required this.isWeb});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -180,16 +179,13 @@ class _MyAppState extends State<MyApp> {
             : MaterialApp(
                 initialRoute: ResponsiveHelper.isMobilePhone() ? Routes.getSplashRoute() : Routes.getMainRoute(),
                 onGenerateRoute: RouterHelper.router.generator,
-                title: splashProvider.configModel != null ? splashProvider.configModel.restaurantName ?? '' : F.appName,
+                title: splashProvider.configModel != null ? splashProvider.configModel!.restaurantName : F.appName,
                 debugShowCheckedModeBanner: false,
                 navigatorKey: navigatorKey,
                 theme: Provider.of<ThemeProvider>(context).darkTheme ? F.themeDark : F.themeLight,
                 locale: Provider.of<LocalizationProvider>(context).locale,
                 localizationsDelegates: const [
                   AppLocalization.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
                 ],
                 supportedLocales: locals,
                 scrollBehavior: const MaterialScrollBehavior().copyWith(dragDevices: {
@@ -206,14 +202,14 @@ class _MyAppState extends State<MyApp> {
 
 class MyHttpOverrides extends HttpOverrides {
   @override
-  HttpClient createHttpClient(SecurityContext context) {
+  HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
       ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
   }
 }
 
 class Get {
-  static BuildContext get context => navigatorKey.currentContext;
+  static BuildContext get context => navigatorKey.currentContext!;
 
-  static NavigatorState get navigator => navigatorKey.currentState;
+  static NavigatorState get navigator => navigatorKey.currentState!;
 }

@@ -4,14 +4,12 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/datasource/remote/excepti
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/api_response.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 
-import '../model/response/PaymentCardModel.dart';
+import '../model/response/payment_card_model.dart';
 
 class PaymentRepo {
   final HttpClient httpClient;
 
-  PaymentRepo({
-    this.httpClient,
-  });
+  PaymentRepo({required this.httpClient});
 
   Future<ApiResponse> getAllCard() async {
     debugPrint('-----getAllCard Api');
@@ -26,12 +24,12 @@ class PaymentRepo {
   }
 
   Future<ApiResponse> removeCRD(String id) async {
-    debugPrint('-----removeAddressByID Api by id ${id} ');
+    debugPrint('-----removeAddressByID Api by id $id ');
 
     try {
-      final response = await httpClient.post('${AppConstants.DELETE_CARD}', data: {"payment_id": id});
+      final response = await httpClient.post(AppConstants.DELETE_CARD, data: {"payment_id": id});
 
-      debugPrint('-----removeAddressByID Api response:${response}');
+      debugPrint('-----removeAddressByID Api response:$response');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -39,12 +37,12 @@ class PaymentRepo {
   }
 
   Future<ApiResponse> setCardDefault(String id) async {
-    debugPrint('-----setCardDefault Api by id ${id} ');
+    debugPrint('-----setCardDefault Api by id $id ');
 
     try {
-      final response = await httpClient.post('${AppConstants.SET_DEFAULT_CARD}', data: {"payment_id": id.toString()});
+      final response = await httpClient.post(AppConstants.SET_DEFAULT_CARD, data: {"payment_id": id.toString()});
 
-      debugPrint('-----setCardDefault Api response:${response}');
+      debugPrint('-----setCardDefault Api response:$response');
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -59,7 +57,7 @@ class PaymentRepo {
         AppConstants.ADD_CARD,
         data: cardModel.toJson(),
       );
-      debugPrint('-----Add Card Api response:${response}');
+      debugPrint('-----Add Card Api response:$response');
 
       return ApiResponse.withSuccess(response);
     } catch (e) {

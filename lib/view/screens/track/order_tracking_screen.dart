@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/address_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
@@ -20,8 +22,9 @@ import 'widget/timer_view.dart';
 
 class OrderTrackingScreen extends StatefulWidget {
   final String orderID;
-  OrderTrackingScreen({
-    @required this.orderID,
+  const OrderTrackingScreen({
+    super.key,
+    required this.orderID,
   });
 
   @override
@@ -31,21 +34,20 @@ class OrderTrackingScreen extends StatefulWidget {
 class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Provider.of<LocationProvider>(context, listen: false).initAddressList(context);
     Provider.of<OrderProvider>(context, listen: false).getDeliveryManData(widget.orderID, context);
     Provider.of<OrderProvider>(context, listen: false).trackOrder(widget.orderID, null, context, true).whenComplete(
         () => Provider.of<TimerProvider>(context, listen: false)
-            .countDownTimer(Provider.of<OrderProvider>(context, listen: false).trackModel, context));
+            .countDownTimer(Provider.of<OrderProvider>(context, listen: false).trackModel!, context));
   }
 
   @override
   Widget build(BuildContext context) {
-    final double _width = MediaQuery.of(context).size.width;
-    final _height = MediaQuery.of(context).size.height;
+    final double width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
-    final List<String> _statusList = [
+    final List<String> statusList = [
       'pending',
       'confirmed',
       'processing',
@@ -58,14 +60,14 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
 
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? PreferredSize(child: WebAppBar(), preferredSize: Size.fromHeight(100))
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : CustomAppBar(context: context, title: getTranslated('order_tracking', context)),
       body: SingleChildScrollView(
         child: Column(
           children: [
             ConstrainedBox(
               constraints: BoxConstraints(
-                  minHeight: !ResponsiveHelper.isDesktop(context) && _height < 600 ? _height : _height - 400),
+                  minHeight: !ResponsiveHelper.isDesktop(context) && height < 600 ? height : height - 400),
               child: Padding(
                 padding: EdgeInsets.only(
                     left: Dimensions.PADDING_SIZE_LARGE,
@@ -75,19 +77,19 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                 child: Center(
                   child: Consumer<OrderProvider>(
                     builder: (context, order, child) {
-                      String _status;
+                      String? status;
                       if (order.trackModel != null) {
-                        _status = order.trackModel.orderStatus;
+                        status = order.trackModel!.orderStatus;
                       }
 
-                      if (_status != null && _status == _statusList[5] ||
-                          _status == _statusList[6] ||
-                          _status == _statusList[7]) {
+                      if (status != null && status == statusList[5] ||
+                          status == statusList[6] ||
+                          status == statusList[7]) {
                         return Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(_status),
-                            SizedBox(height: 50),
+                            Text(status!),
+                            const SizedBox(height: 50),
                             CustomButton(
                                 btnTxt: getTranslated('back_home', context),
                                 onTap: () {
@@ -95,11 +97,11 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                                 }),
                           ],
                         );
-                      } else if (order.responseModel != null && !order.responseModel.isSuccess) {
-                        return Center(child: Text(order.responseModel.message));
+                      } else if (order.responseModel != null && !order.responseModel!.isSuccess) {
+                        return Center(child: Text(order.responseModel!.message));
                       }
 
-                      return _status != null
+                      return status != null
                           ? RefreshIndicator(
                               onRefresh: () async {
                                 await Provider.of<OrderProvider>(context, listen: false)
@@ -113,13 +115,14 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                                   child: Center(
                                     child: Container(
                                       // width: _width > 700 ? 700 : _width,
-                                      padding: _width > 700 ? EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
-                                      decoration: _width > 700
+                                      padding:
+                                          width > 700 ? const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
+                                      decoration: width > 700
                                           ? BoxDecoration(
                                               color: Theme.of(context).cardColor,
                                               borderRadius: BorderRadius.circular(10),
                                               boxShadow: [
-                                                BoxShadow(color: Colors.grey[300], blurRadius: 5, spreadRadius: 1)
+                                                BoxShadow(color: Colors.grey.shade300, blurRadius: 5, spreadRadius: 1)
                                               ],
                                             )
                                           : null,
@@ -128,18 +131,20 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                                         child: Column(
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
-                                            if (_status == _statusList[0] ||
-                                                _status == _statusList[1] ||
-                                                _status == _statusList[2] ||
-                                                _status == _statusList[3])
-                                              TimerView(),
-                                            SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                                            if (status == statusList[0] ||
+                                                status == statusList[1] ||
+                                                status == statusList[2] ||
+                                                status == statusList[3])
+                                              const TimerView(),
+                                            const SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
 
-                                            order.trackModel.deliveryMan != null
-                                                ? DeliveryManWidget(deliveryMan: order.trackModel.deliveryMan)
-                                                : SizedBox(),
+                                            order.trackModel?.deliveryMan != null
+                                                ? DeliveryManWidget(deliveryMan: order.trackModel!.deliveryMan!)
+                                                : const SizedBox(),
 
-                                            order.trackModel.deliveryMan != null ? SizedBox(height: 30) : SizedBox(),
+                                            order.trackModel?.deliveryMan != null
+                                                ? const SizedBox(height: 30)
+                                                : const SizedBox(),
 
                                             CustomStepper(
                                               title: getTranslated('order_placed', context),
@@ -149,83 +154,85 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
 
                                             CustomStepper(
                                               title: getTranslated('preparing_food', context),
-                                              isActive: _status != _statusList[0],
+                                              isActive: status != statusList[0],
                                             ),
-                                            order.trackModel.orderType != 'take_away'
+                                            order.trackModel?.orderType != 'take_away'
                                                 ? CustomStepper(
                                                     title: getTranslated('food_in_the_way', context),
-                                                    isActive: _status != _statusList[0] &&
-                                                        _status != _statusList[1] &&
-                                                        _status != _statusList[2],
+                                                    isActive: status != statusList[0] &&
+                                                        status != statusList[1] &&
+                                                        status != statusList[2],
                                                   )
-                                                : SizedBox(),
+                                                : const SizedBox(),
 
                                             /// make it happen
 
-                                            order.trackModel.orderType != 'take_away'
+                                            order.trackModel?.orderType != 'take_away'
                                                 ? CustomStepper(
                                                     title: getTranslated('delivered_the_food', context),
-                                                    isActive: _status == _statusList[4],
-                                                    height: _status == _statusList[3] ? 240 : 30,
-                                                    child: _status == _statusList[3]
+                                                    isActive: status == statusList[4],
+                                                    height: status == statusList[3] ? 240 : 30,
+                                                    child: status == statusList[3]
                                                         ? Builder(builder: (context) {
-                                                            AddressModel _address;
+                                                            AddressModel? address;
                                                             for (int i = 0;
                                                                 i <
-                                                                    Provider.of<LocationProvider>(context,
-                                                                            listen: false)
-                                                                        .addressList
+                                                                    (Provider.of<LocationProvider>(context,
+                                                                                    listen: false)
+                                                                                .addressList ??
+                                                                            [])
                                                                         .length;
                                                                 i++) {
                                                               if (Provider.of<LocationProvider>(context, listen: false)
-                                                                      .addressList[i]
+                                                                      .addressList![i]
                                                                       .id ==
-                                                                  order.trackModel.deliveryAddressId) {
-                                                                _address = Provider.of<LocationProvider>(context,
+                                                                  order.trackModel!.deliveryAddressId) {
+                                                                address = Provider.of<LocationProvider>(context,
                                                                         listen: false)
-                                                                    .addressList[i];
+                                                                    .addressList![i];
                                                               }
                                                             }
                                                             return TrackingMapWidget(
                                                               deliveryManModel: order.deliveryManModel,
                                                               orderID: widget.orderID,
-                                                              addressModel: _address,
+                                                              addressModel: address,
                                                             );
                                                           })
                                                         : null,
                                                   )
                                                 : CustomStepper(
                                                     title: 'Ready for pickup',
-                                                    isActive: _status == _statusList[4],
-                                                    height: _status == _statusList[3] ? 240 : 30,
-                                                    child: _status == _statusList[3]
+                                                    isActive: status == statusList[4],
+                                                    height: status == statusList[3] ? 240 : 30,
+                                                    child: status == statusList[3]
                                                         ? Builder(builder: (context) {
-                                                            AddressModel _address;
+                                                            AddressModel? address;
                                                             for (int i = 0;
                                                                 i <
-                                                                    Provider.of<LocationProvider>(context,
-                                                                            listen: false)
-                                                                        .addressList
+                                                                    (Provider.of<LocationProvider>(context,
+                                                                                    listen: false)
+                                                                                .addressList ??
+                                                                            [])
                                                                         .length;
                                                                 i++) {
                                                               if (Provider.of<LocationProvider>(context, listen: false)
-                                                                      .addressList[i]
+                                                                      .addressList![i]
                                                                       .id ==
-                                                                  order.trackModel.deliveryAddressId) {
-                                                                _address = Provider.of<LocationProvider>(context,
+                                                                  order.trackModel!.deliveryAddressId) {
+                                                                address = Provider.of<LocationProvider>(context,
                                                                         listen: false)
-                                                                    .addressList[i];
+                                                                    .addressList![i];
                                                               }
                                                             }
                                                             return TrackingMapWidget(
                                                               deliveryManModel: order.deliveryManModel,
                                                               orderID: widget.orderID,
-                                                              addressModel: _address,
+                                                              addressModel: address,
                                                             );
                                                           })
                                                         : null,
                                                   ),
-                                            SizedBox(height: 50),
+                                            const SizedBox(height: 50),
 
                                             ResponsiveHelper.isDesktop(context)
                                                 ? Center(
@@ -261,7 +268,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                 ),
               ),
             ),
-            if (ResponsiveHelper.isDesktop(context)) FooterView(),
+            if (ResponsiveHelper.isDesktop(context)) const FooterView(),
           ],
         ),
       ),
