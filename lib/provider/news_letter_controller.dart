@@ -12,11 +12,12 @@ class NewsLetterProvider extends ChangeNotifier {
 
   Future<void> addToNewsLetter(BuildContext context, String email) async {
     ApiResponse apiResponse = await newsLetterRepo.addToNewsLetter(email);
-    if (apiResponse.response != null &&
-        apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       showCustomSnackBar(
-          getTranslated('successfully_subscribe', context), context,
-          isError: false);
+        getTranslated('successfully_subscribe', context),
+        context,
+        isError: false,
+      );
       notifyListeners();
     } else {
       showCustomSnackBar(getTranslated('mail_already_exist', context), context);

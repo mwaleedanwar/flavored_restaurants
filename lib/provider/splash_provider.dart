@@ -18,31 +18,25 @@ class SplashProvider extends ChangeNotifier {
 
   ConfigModel? _configModel;
   BaseUrls? _baseUrls;
-  final DateTime _currentTime = DateTime.now();
   PolicyModel? _policyModel;
 
   ConfigModel? get configModel => _configModel;
+
   BaseUrls? get baseUrls => _baseUrls;
-  DateTime get currentTime => _currentTime;
+
+  DateTime get currentTime => DateTime.now();
+
   PolicyModel? get policyModel => _policyModel;
 
   Future<bool> initConfig(BuildContext context) async {
     debugPrint('--config iniit');
     ApiResponse apiResponse = await splashRepo.getConfig();
-    //  appToast(text: 'here is response :${apiResponse.response.body}');
     bool isSuccess;
-    if (apiResponse.response != null &&
-        apiResponse.response!.statusCode == 200) {
-      _configModel =
-          ConfigModel.fromJson(jsonDecode(apiResponse.response!.body));
-      _baseUrls = ConfigModel.fromJson(jsonDecode(apiResponse.response!.body))
-          .baseUrls!;
-
-      debugPrint(
-          '====confige Model Response uri:${_baseUrls!.restaurantImageUrl}/${_configModel!.restaurantLogo}');
-      debugPrint(
-          '====confige Model Response:${_configModel!.termsAndConditions}');
-
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      _configModel = ConfigModel.fromJson(jsonDecode(apiResponse.response!.body));
+      _baseUrls = ConfigModel.fromJson(jsonDecode(apiResponse.response!.body)).baseUrls!;
+      debugPrint('====confige Model Response uri:${_baseUrls!.restaurantImageUrl}/${_configModel!.restaurantLogo}');
+      debugPrint('====confige Model Response:${_configModel!.termsAndConditions}');
       isSuccess = true;
       notifyListeners();
     } else {
@@ -77,11 +71,8 @@ class SplashProvider extends ChangeNotifier {
     if (weekday == 7) {
       weekday = 0;
     }
-    for (int index = 0;
-        index < _configModel!.restaurantScheduleTime.length;
-        index++) {
-      if (weekday.toString() ==
-          _configModel!.restaurantScheduleTime[index].day) {
+    for (int index = 0; index < _configModel!.restaurantScheduleTime.length; index++) {
+      if (weekday.toString() == _configModel!.restaurantScheduleTime[index].day) {
         return false;
       }
     }
@@ -96,11 +87,8 @@ class SplashProvider extends ChangeNotifier {
     if (weekday == 7) {
       weekday = 0;
     }
-    for (int index = 0;
-        index < _configModel!.restaurantScheduleTime.length;
-        index++) {
-      if (weekday.toString() ==
-              _configModel!.restaurantScheduleTime[index].day &&
+    for (int index = 0; index < _configModel!.restaurantScheduleTime.length; index++) {
+      if (weekday.toString() == _configModel!.restaurantScheduleTime[index].day &&
           DateConverter.isAvailable(
             _configModel!.restaurantScheduleTime[index].openingTime,
             _configModel!.restaurantScheduleTime[index].closingTime,
@@ -115,11 +103,9 @@ class SplashProvider extends ChangeNotifier {
   Future<bool> getPolicyPage(BuildContext context) async {
     ApiResponse apiResponse = await splashRepo.getPolicyPage();
     bool isSuccess;
-    if (apiResponse.response != null &&
-        apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       debugPrint('1--------${jsonDecode(apiResponse.response!.body)}');
-      _policyModel =
-          PolicyModel.fromJson(jsonDecode(apiResponse.response!.body));
+      _policyModel = PolicyModel.fromJson(jsonDecode(apiResponse.response!.body));
       isSuccess = true;
       notifyListeners();
     } else {

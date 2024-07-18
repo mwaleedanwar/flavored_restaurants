@@ -43,7 +43,6 @@ class OrderProvider extends ChangeNotifier {
   bool _isLoading = false;
   bool _showCancelled = false;
   DeliveryManModel? _deliveryManModel;
-
   String _orderType = 'delivery';
   int _branchIndex = 0;
   List<TimeSlotModel>? _timeSlots;
@@ -52,6 +51,7 @@ class OrderProvider extends ChangeNotifier {
   int _selectTimeSlot = 0;
   double _distance = -1;
   bool _isRestaurantCloseShow = true;
+
   late StripeIntentModel _stripeIntentModel;
 
   StripeIntentModel get stripeModel => _stripeIntentModel;
@@ -194,10 +194,7 @@ class OrderProvider extends ChangeNotifier {
 
   Future<ResponseModel?> makePayment(String token, double amount, String name, String email) async {
     _isLoading = true;
-
     ApiResponse apiResponse = await orderRepo.makePayment(token, amount, name, email);
-
-    // Handle the response from the backend
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       _stripeIntentModel = jsonDecode(apiResponse.response!.body);
       _responseModel = ResponseModel(true, 'Successful');

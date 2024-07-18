@@ -89,7 +89,6 @@ class _BranchListScreenState extends State<BranchListScreen> {
                     : CustomAppBar(
                         context: context,
                         title: 'Choose Store',
-                        isBackButtonExist: true,
                       ),
                 body: Center(
                     child: SizedBox(

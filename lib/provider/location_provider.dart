@@ -39,6 +39,27 @@ class LocationProvider with ChangeNotifier {
     required this.locationRepo,
   });
 
+  List<AddressModel>? _addressList = [];
+  final _markers = <Marker>[];
+  bool _loading = false;
+  bool _isAvailable = true;
+  String? _address = '';
+  String? _pickAddress = '';
+  Branches? currentBranch;
+  double distance = 0.0;
+  bool _buttonDisabled = true;
+  bool _changeAddress = true;
+  GoogleMapController? _mapController;
+  List<Prediction> _predictionList = [];
+  bool _updateAddAddressData = true;
+  String? _addressStatusMessage = '';
+  String? _errorMessage = '';
+  bool _isLoading = false;
+  // ignore: prefer_final_fields
+  bool _isAvailableLocation = false;
+  List<String> _getAllAddressType = [];
+  int _selectAddressIndex = 0;
+
   Position? _position = Position(
     longitude: 0,
     latitude: 0,
@@ -63,34 +84,38 @@ class LocationProvider with ChangeNotifier {
     altitudeAccuracy: 1,
     headingAccuracy: 1,
   );
-  bool _loading = false;
-  bool _isAvailable = true;
+
   bool get loading => _loading;
+
   Position? get position => _position;
+
   Position get pickPosition => _pickPosition;
-  String? _address = '';
-  String? _pickAddress = '';
-  Branches? currentBranch;
-  double distance = 0.0;
-  // ignore: prefer_final_fields
-  bool _isAvailableLocation = false;
+
+  List<AddressModel>? get addressList => _addressList;
 
   bool get isAvailableLocation => _isAvailableLocation;
+
   String? get address => _address;
+
   bool get isAvailable => _isAvailable;
+
   String? get pickAddress => _pickAddress;
-  final _markers = <Marker>[];
 
   List<Marker> get markers => _markers;
 
-  bool _buttonDisabled = true;
-  bool _changeAddress = true;
-  GoogleMapController? _mapController;
-  List<Prediction> _predictionList = [];
-  bool _updateAddAddressData = true;
-
   bool get buttonDisabled => _buttonDisabled;
+
   GoogleMapController? get mapController => _mapController;
+
+  bool get isLoading => _isLoading;
+
+  String? get errorMessage => _errorMessage;
+
+  String? get addressStatusMessage => _addressStatusMessage;
+
+  int get selectAddressIndex => _selectAddressIndex;
+
+  List<String> get getAllAddressType => _getAllAddressType;
 
   updateAddressStatusMessage({required String message}) {
     _addressStatusMessage = message;
@@ -100,7 +125,6 @@ class LocationProvider with ChangeNotifier {
     _pickAddress = '';
   }
 
-  // for get current location
   Future<Position> getCurrentLocation(BuildContext context, bool isUpdate, {GoogleMapController? mapController}) async {
     _loading = true;
     if (isUpdate) {
@@ -132,7 +156,6 @@ class LocationProvider with ChangeNotifier {
         CameraPosition(target: LatLng(myPosition.latitude, myPosition.longitude), zoom: 17),
       ));
     }
-    // String _myPlaceMark;
     _address = await getAddressFromGeocode(LatLng(myPosition.latitude, myPosition.longitude), context);
 
     debugPrint('===address: now:$_address');
@@ -141,7 +164,7 @@ class LocationProvider with ChangeNotifier {
     return myPosition;
   }
 
-  checkRadius() {
+  void checkRadius() {
     distance = FlutterMapMath().distanceBetween(
       double.parse(currentBranch!.latitude),
       double.parse(currentBranch!.longitude),
@@ -204,7 +227,6 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
-  // delete usser address
   void deleteUserAddressByID(int id, int index, Function callback) async {
     ApiResponse apiResponse = await locationRepo.removeAddressByID(id);
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
@@ -225,11 +247,6 @@ class LocationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // user address
-  List<AddressModel>? _addressList = [];
-
-  List<AddressModel>? get addressList => _addressList;
-
   Future<ResponseModel?> initAddressList(BuildContext context) async {
     ResponseModel? responseModel;
     ApiResponse apiResponse = await locationRepo.getAllAddress();
@@ -243,14 +260,6 @@ class LocationProvider with ChangeNotifier {
     notifyListeners();
     return responseModel;
   }
-
-  bool _isLoading = false;
-
-  bool get isLoading => _isLoading;
-  String? _errorMessage = '';
-  String? get errorMessage => _errorMessage;
-  String? _addressStatusMessage = '';
-  String? get addressStatusMessage => _addressStatusMessage;
 
   updateErrorMessage({required String message}) {
     _errorMessage = message;
@@ -293,9 +302,11 @@ class LocationProvider with ChangeNotifier {
     return responseModel;
   }
 
-  // for address update screen
-  Future<ResponseModel> updateAddress(BuildContext context,
-      {required AddressModel addressModel, required int addressId}) async {
+  Future<ResponseModel> updateAddress(
+    BuildContext context, {
+    required AddressModel addressModel,
+    required int addressId,
+  }) async {
     _isLoading = true;
     notifyListeners();
     _errorMessage = '';
@@ -326,7 +337,6 @@ class LocationProvider with ChangeNotifier {
     return responseModel;
   }
 
-  // for save user address Section
   Future<void> saveUserAddress({required Placemark address}) async {
     String userAddress = jsonEncode(address);
     try {
@@ -339,14 +349,6 @@ class LocationProvider with ChangeNotifier {
   String getUserAddress() {
     return sharedPreferences.getString(AppConstants.USER_ADDRESS) ?? "";
   }
-
-  // for Label Us
-  List<String> _getAllAddressType = [];
-
-  List<String> get getAllAddressType => _getAllAddressType;
-  int _selectAddressIndex = 0;
-
-  int get selectAddressIndex => _selectAddressIndex;
 
   updateAddressIndex(int index, bool notify) {
     _selectAddressIndex = index;
@@ -385,18 +387,9 @@ class LocationProvider with ChangeNotifier {
       headingAccuracy: 1,
     );
     checkRadius();
-
     _position = _pickPosition;
-
-    // _pickAddress = Placemark(name: address);
     _pickAddress = address;
     _changeAddress = false;
-
-    // if(mapController != null) {
-    //   mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: LatLng(
-    //     detail.result.geometry.location.lat, detail.result.geometry.location.lng,
-    //   ), zoom: 16)));
-    // }
     _loading = false;
     notifyListeners();
   }
@@ -409,7 +402,6 @@ class LocationProvider with ChangeNotifier {
   void setAddAddressData() {
     _position = _pickPosition;
     _address = _pickAddress ?? '';
-    // _address = placeMarkToAddress(_address);
     _updateAddAddressData = false;
     notifyListeners();
   }
@@ -430,16 +422,13 @@ class LocationProvider with ChangeNotifier {
     if (response.response != null &&
         response.response!.statusCode == 200 &&
         jsonDecode(response.response!.body)['status'] == 'OK') {
-      //_address = jsonDecode(response.response.body)['results'][0]['formatted_address'].toString();
       List add = jsonDecode(response.response!.body)['results'][0]['address_components'];
       List tempAddress = [];
-
       for (var address in add) {
         if (address['types'][0] != 'plus_code' && address['types'][0] != 'administrative_area_level_3') {
           tempAddress.add('${address['long_name']}');
         }
       }
-
       address = tempAddress.join(", ");
     } else {
       ApiChecker.checkApi(context, response);
@@ -449,8 +438,6 @@ class LocationProvider with ChangeNotifier {
 
   Future<List<Prediction>> searchLocation(BuildContext context, String? text) async {
     if (text != null && text.isNotEmpty) {
-      debugPrint('---location searching');
-
       ApiResponse response = await locationRepo.searchLocation(text);
       if (response.response != null &&
           response.response!.statusCode == 200 &&

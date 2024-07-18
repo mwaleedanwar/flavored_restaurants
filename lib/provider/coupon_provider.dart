@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/api_response.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/coupon_model.dart';
@@ -9,12 +8,11 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/repository/coupon_repo.da
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/api_checker.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/product_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/cart_model.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_model.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/helper/price_converter.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
-
-import '../data/model/response/cart_model.dart';
-import '../data/model/response/product_model.dart';
-import '../helper/price_converter.dart';
-import 'cart_provider.dart';
 import 'package:intl/intl.dart';
 
 class CouponProvider extends ChangeNotifier {

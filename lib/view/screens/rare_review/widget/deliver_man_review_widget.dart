@@ -5,6 +5,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart'
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/product_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/theme_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/tip_controller.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';

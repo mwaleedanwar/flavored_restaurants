@@ -12,8 +12,7 @@ import 'package:provider/provider.dart';
 class RateReviewScreen extends StatefulWidget {
   final List<OrderDetailsModel> orderDetailsList;
   final DeliveryMan deliveryMan;
-  const RateReviewScreen(
-      {super.key, required this.orderDetailsList, required this.deliveryMan});
+  const RateReviewScreen({super.key, required this.orderDetailsList, required this.deliveryMan});
 
   @override
   State<RateReviewScreen> createState() => _RateReviewScreenState();
@@ -24,8 +23,7 @@ class _RateReviewScreenState extends State<RateReviewScreen> {
   void initState() {
     super.initState();
 
-    Provider.of<ProductProvider>(context, listen: false)
-        .initRatingData(widget.orderDetailsList);
+    Provider.of<ProductProvider>(context, listen: false).initRatingData(widget.orderDetailsList);
     Provider.of<ProductProvider>(context, listen: false).updateSubmitted(false);
   }
 
@@ -33,13 +31,13 @@ class _RateReviewScreenState extends State<RateReviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? const PreferredSize(
-              preferredSize: Size.fromHeight(100), child: WebAppBar())
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : CustomAppBar(
-              context: context, title: getTranslated('rate_review', context)),
+              context: context,
+              title: getTranslated('rate_review', context),
+            ),
       body: DeliveryManReviewWidget(
-          deliveryMan: widget.deliveryMan,
-          orderID: widget.orderDetailsList[0].orderId.toString()),
+          deliveryMan: widget.deliveryMan, orderID: widget.orderDetailsList[0].orderId.toString()),
     );
   }
 }

@@ -24,13 +24,9 @@ class BannerProvider extends ChangeNotifier {
       ApiResponse apiResponse = await bannerRepo.getBannerList();
       if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
         bannerList = [];
-
         jsonDecode(apiResponse.response!.body).forEach((category) {
           BannerModel bannerModel = BannerModel.fromJson(category);
-          debugPrint('===getting details:${bannerModel.productId}');
-
           if (bannerModel.productId != null) {
-            debugPrint('===getting details');
             getProductDetails(
               context,
               bannerModel.productId.toString(),
@@ -38,7 +34,7 @@ class BannerProvider extends ChangeNotifier {
             );
           }
           bannerList!.add(bannerModel);
-          debugPrint('==banes: list:${bannerList!.length}');
+          debugPrint('==banner list length:${bannerList!.length}');
         });
         notifyListeners();
       } else {

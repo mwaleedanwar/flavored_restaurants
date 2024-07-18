@@ -17,8 +17,6 @@ class AppConstants {
   static String LOYALTY_POINTS_PRODUCTS = '/api/v1/products/loyalty-rewards?restaurant_id=${F.restaurantId}';
   static const String POPULAR_PRODUCT_URI = '/api/v1/products/popular';
   static String ALL_POPULAR_PRODUCT_URI = '/api/v1/products/allpopular?restaurant_id=${F.restaurantId}';
-
-  // static const String SEARCH_PRODUCT_URI = '/api/v1/products/details/';
   static const String NEW_WEB_URL = '/api/v1/customer/order/place-by-web-app';
   static const String SUB_CATEGORY_URI = '/api/v1/categories/childes/';
   static const String STRIPE_PAYMENT_URI = '/api/v1/customer/order/create-payment';
@@ -107,9 +105,6 @@ class AppConstants {
   static const String phone_form = "(###) ###-####";
   static const String phone_form_hint = '(111) 111-1111';
   static const String BRANCH = 'branch';
-
-  //kolachi :7
-  // lal haveli: 8
 
   static List<LanguageModel> languages = [
     LanguageModel(imageUrl: Images.united_kindom, languageName: 'English', countryCode: 'US', languageCode: 'en'),

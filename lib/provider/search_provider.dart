@@ -1,16 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/api_response.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/category_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/repository/search_repo.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/localization_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/api_checker.dart';
 import 'package:provider/provider.dart';
-
-import 'localization_provider.dart';
 
 class SearchProvider with ChangeNotifier {
   final SearchRepo searchRepo;
@@ -22,26 +19,34 @@ class SearchProvider with ChangeNotifier {
   double _upperValue = 0;
   List<String> _historyList = [];
   bool _isSearch = true;
+  List<Product>? _searchProductList;
+  List<Product>? _filterProductList;
+  bool _isClear = true;
+  String _searchText = '';
+  int _rating = -1;
+
+  int get rating => _rating;
+
+  List<Product>? get searchProductList => _searchProductList;
+
+  List<Product>? get filterProductList => _filterProductList;
+
+  bool get isClear => _isClear;
+
+  String get searchText => _searchText;
 
   int get filterIndex => _filterIndex;
+
   double get lowerValue => _lowerValue;
+
   double get upperValue => _upperValue;
 
   List<String> get historyList => _historyList;
-  TextEditingController _searchController = TextEditingController();
-  TextEditingController get searchController => _searchController;
-  int _searchLength = 0;
-  int get searchLength => _searchLength;
+
   bool get isSearch => _isSearch;
 
-  searchDone() {
+  void searchDone() {
     _isSearch = !_isSearch;
-    notifyListeners();
-  }
-
-  getSearchText(String searchText) {
-    _searchController = TextEditingController(text: searchText);
-    _searchLength = searchText.length;
     notifyListeners();
   }
 
@@ -60,8 +65,7 @@ class SearchProvider with ChangeNotifier {
     _searchProductList = [];
     _searchProductList?.addAll(_filterProductList ?? []);
     if (_upperValue > 0) {
-      _searchProductList?.removeWhere((product) =>
-          (product.price) <= _lowerValue || (product.price) >= _upperValue);
+      _searchProductList?.removeWhere((product) => (product.price) <= _lowerValue || (product.price) >= _upperValue);
     }
     if (categoryIndex != -1) {
       int categoryID = categoryList[categoryIndex].id;
@@ -75,25 +79,10 @@ class SearchProvider with ChangeNotifier {
     }
     if (_rating != -1) {
       _searchProductList?.removeWhere((product) =>
-          product.rating == null ||
-          product.rating!.isEmpty ||
-          double.parse(product.rating!.first.average) < _rating);
+          product.rating == null || product.rating!.isEmpty || double.parse(product.rating!.first.average) < _rating);
     }
     notifyListeners();
   }
-
-  List<Product>? _searchProductList;
-  List<Product>? _filterProductList;
-  bool _isClear = true;
-  String _searchText = '';
-
-  List<Product>? get searchProductList => _searchProductList;
-
-  List<Product>? get filterProductList => _filterProductList;
-
-  bool get isClear => _isClear;
-
-  String get searchText => _searchText;
 
   void setSearchText(String text) {
     _searchText = text;
@@ -123,26 +112,15 @@ class SearchProvider with ChangeNotifier {
     }
 
     ApiResponse apiResponse = await searchRepo.getSearchProductList(
-        query,
-        Provider.of<LocalizationProvider>(context, listen: false)
-            .locale
-            .languageCode,
-        type);
-    if (apiResponse.response != null &&
-        apiResponse.response!.statusCode == 200) {
+        query, Provider.of<LocalizationProvider>(context, listen: false).locale.languageCode, type);
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       if (query.isEmpty) {
         _searchProductList = [];
       } else {
         _searchProductList = [];
-        _searchProductList!.addAll(
-            ProductModel.fromJson(jsonDecode(apiResponse.response!.body))
-                    .products ??
-                []);
+        _searchProductList!.addAll(ProductModel.fromJson(jsonDecode(apiResponse.response!.body)).products ?? []);
         _filterProductList = [];
-        _filterProductList?.addAll(
-            ProductModel.fromJson(jsonDecode(apiResponse.response!.body))
-                    .products ??
-                []);
+        _filterProductList?.addAll(ProductModel.fromJson(jsonDecode(apiResponse.response!.body)).products ?? []);
       }
     } else {
       ApiChecker.checkApi(context, apiResponse);
@@ -159,7 +137,6 @@ class SearchProvider with ChangeNotifier {
     if (!_historyList.contains(searchAddress)) {
       _historyList.add(searchAddress);
       searchRepo.saveSearchAddress(searchAddress);
-      // notifyListeners();
     }
   }
 
@@ -168,10 +145,6 @@ class SearchProvider with ChangeNotifier {
     _historyList = [];
     notifyListeners();
   }
-
-  int _rating = -1;
-
-  int get rating => _rating;
 
   void setRating(int rate) {
     _rating = rate;

@@ -8,7 +8,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/response_m
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/userinfo_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/repository/profile_repo.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/api_checker.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileProvider with ChangeNotifier {
@@ -17,9 +17,12 @@ class ProfileProvider with ChangeNotifier {
   ProfileProvider({required this.profileRepo});
 
   UserInfoModel? _userInfoModel;
+  double points = 0.0;
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
 
   UserInfoModel? get userInfoModel => _userInfoModel;
-  double points = 0.0;
 
   Future<ResponseModel> getUserInfo(BuildContext context) async {
     ResponseModel? responseModel;
@@ -41,16 +44,13 @@ class ProfileProvider with ChangeNotifier {
     return responseModel;
   }
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-
   Future<ResponseModel> updateUserInfo(
       UserInfoModel updateUserModel, String password, File? file, XFile? data, String token) async {
     _isLoading = true;
     notifyListeners();
-    debugPrint('=====emil :${userInfoModel?.email}');
+    debugPrint('=====email :${userInfoModel?.email}');
     ResponseModel responseModel;
-    http.StreamedResponse response = await profileRepo.updateProfile(updateUserModel, password, file, data, token);
+    StreamedResponse response = await profileRepo.updateProfile(updateUserModel, password, file, data, token);
     _isLoading = false;
     if (response.statusCode == 200) {
       Map map = jsonDecode(await response.stream.bytesToString());

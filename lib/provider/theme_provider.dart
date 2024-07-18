@@ -4,11 +4,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ThemeProvider with ChangeNotifier {
   final SharedPreferences sharedPreferences;
+
   ThemeProvider({required this.sharedPreferences}) {
     _loadCurrentTheme();
   }
 
   bool _darkTheme = true;
+
   bool get darkTheme => _darkTheme;
 
   void toggleTheme() {

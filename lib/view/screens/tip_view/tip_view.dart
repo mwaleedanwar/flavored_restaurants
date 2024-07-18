@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/tip_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/product_provider.dart';

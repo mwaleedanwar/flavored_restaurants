@@ -233,10 +233,15 @@ class OptionsView extends StatelessWidget {
                               barrierDismissible: false,
                               builder: (context) => const SignOutConfirmationDialog());
                         },
-                        leading: Image.asset(Images.log_out,
-                            width: 20, height: 20, color: Theme.of(context).textTheme.bodyLarge?.color),
-                        title: Text(getTranslated('logout', context),
-                            style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE)),
+                        leading: Icon(
+                          Icons.logout,
+                          size: 20,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
+                        ),
+                        title: Text(
+                          getTranslated('logout', context),
+                          style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
+                        ),
                       ),
               ],
             ),

@@ -1,10 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:convert';
-
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/cart_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/order_details_model.dart';
-import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/body/review_body_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/api_response.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_model.dart';
@@ -14,19 +11,17 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constran
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/profile_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
-import 'package:get/get.dart';
-import 'package:provider/provider.dart';
-
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/deals_data_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/offer_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/localization_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ProductProvider extends ChangeNotifier {
   final ProductRepo productRepo;
 
   ProductProvider({required this.productRepo});
 
-  // Latest products
   List<Product>? _popularProductList;
   List<Product> _loyaltyPointsProducts = [];
   List<Product> _recommendedSidesList = [];
@@ -35,7 +30,6 @@ class ProductProvider extends ChangeNotifier {
   List<DealsDataModel> _dealList = [];
   List<int> checkedItems = [];
   List<String> checkedDrink = [];
-
   List<String> drinks = [
     'Coke',
     'Zero Coke',
@@ -69,11 +63,15 @@ class ProductProvider extends ChangeNotifier {
   List<Product> get relatedProducts => _relatedProducts;
 
   List<Product> get latestProductList => _latestProductList;
+
   List<Product> get recommendedSidesList => _recommendedSidesList;
+
   List<Product> get recommendedBeveragesList => _recommendedBeveragesList;
 
   List<Product> get loyaltyPointsProducts => _loyaltyPointsProducts;
+
   List<SpecialOfferModel> get specialofferList => _specialofferList;
+
   List<DealsDataModel> get dealsList => _dealList;
 
   bool get isLoading => _isLoading;
@@ -100,7 +98,12 @@ class ProductProvider extends ChangeNotifier {
 
   List<String> get productTypeList => _productTypeList;
 
-  Future<void> getLatestProductList(BuildContext context, bool reload, String offset, String languageCode) async {
+  Future<void> getLatestProductList(
+    BuildContext context,
+    bool reload,
+    String offset,
+    String languageCode,
+  ) async {
     if (reload || offset == '1') {
       latestOffset = 1;
       _offsetList = [];
@@ -129,8 +132,13 @@ class ProductProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> getPopularProductList(BuildContext context, bool reload, String offset,
-      {String type = 'all', bool isUpdate = false}) async {
+  Future<bool> getPopularProductList(
+    BuildContext context,
+    bool reload,
+    String offset, {
+    String type = 'all',
+    bool isUpdate = false,
+  }) async {
     bool apiSuccess = false;
     if (reload || offset == '1') {
       popularOffset = 1;
@@ -229,48 +237,33 @@ class ProductProvider extends ChangeNotifier {
     debugPrint('===getDealsList');
     bool apiSuccess = false;
     _isLoading = true;
-
     ApiResponse apiResponse = await productRepo.getDealsList();
     _isLoading = false;
-
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       debugPrint('===getDealsList: Response:${apiResponse.response!.body}');
-
       apiSuccess = true;
-
       _dealList = [];
       jsonDecode(apiResponse.response!.body).forEach((product) => _dealList.add(DealsDataModel.fromJson(product)));
       debugPrint('===getDealsList length:${_dealList.length}');
-
       _isLoading = false;
       notifyListeners();
     } else {
       showCustomSnackBar(apiResponse.error.toString(), context);
     }
     _isLoading = false;
-
     return apiSuccess;
   }
 
   Future<void> getLoyaltyProductList(BuildContext context) async {
-    if (5 == 5) {
-      ApiResponse apiResponse = await productRepo.getPointsProductList();
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-        debugPrint('${jsonDecode(apiResponse.response!.body)}');
-        _loyaltyPointsProducts = [];
-
-        _loyaltyPointsProducts.addAll(ProductModel.fromJson(jsonDecode(apiResponse.response!.body)).products ?? []);
-
-        _isLoading = false;
-        notifyListeners();
-      } else {
-        showCustomSnackBar(apiResponse.error.toString(), context);
-      }
+    ApiResponse apiResponse = await productRepo.getPointsProductList();
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      debugPrint('${jsonDecode(apiResponse.response!.body)}');
+      _loyaltyPointsProducts = [];
+      _loyaltyPointsProducts.addAll(ProductModel.fromJson(jsonDecode(apiResponse.response!.body)).products ?? []);
+      _isLoading = false;
+      notifyListeners();
     } else {
-      if (isLoading) {
-        _isLoading = false;
-        notifyListeners();
-      }
+      showCustomSnackBar(apiResponse.error.toString(), context);
     }
   }
 
@@ -279,15 +272,12 @@ class ProductProvider extends ChangeNotifier {
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       debugPrint('${jsonDecode(apiResponse.response!.body)}');
       _recommendedSidesList = [];
-
       _recommendedSidesList.addAll(ProductModel.fromJson(jsonDecode(apiResponse.response!.body)).products ?? []);
-
       _isLoading = false;
       notifyListeners();
     } else {
       showCustomSnackBar(apiResponse.error.toString(), context);
     }
-
     if (isLoading) {
       _isLoading = false;
       notifyListeners();
@@ -299,13 +289,9 @@ class ProductProvider extends ChangeNotifier {
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       debugPrint('${jsonDecode(apiResponse.response!.body)}');
       _recommendedBeveragesList = [];
-
       _recommendedBeveragesList.addAll(ProductModel.fromJson(jsonDecode(apiResponse.response!.body)).products ?? []);
-
       _isLoading = false;
       notifyListeners();
-    } else {
-      //  showCustomSnackBar(apiResponse.error.toString(), context);
     }
 
     if (isLoading) {
@@ -597,53 +583,5 @@ class ProductProvider extends ChangeNotifier {
 
   updateSubmitted(bool value) {
     _isReviewSubmitted = value;
-  }
-}
-
-class TipController extends GetxController {
-  List tipsAmountList = ['1', '2', '3', 'Other'].obs;
-  List tipPercentList = ['10', '15', '20', 'Other'].obs;
-  List selectedTip = [].obs;
-  final TextEditingController controller = TextEditingController();
-  var tip = 0.0.obs;
-  var isNotTip = false.obs;
-
-  initialData(isFromCart, {required double orderAmount}) {
-    selectedTip.clear();
-    tip.value = 0.0;
-    if (isFromCart) {
-      selectedTip.add('15');
-
-      double temp = (double.parse(selectedTip[0].toString()) / 100) * orderAmount;
-      debugPrint('===init tip:$temp');
-      tip.value = temp;
-    } else {
-      selectedTip.add('2');
-      tip.value = double.parse(selectedTip[0].toString());
-    }
-  }
-
-  void updateTip(int index, isPercent, {required double orderAmount}) {
-    selectedTip.clear();
-    if (isPercent) {
-      selectedTip.add(tipPercentList[index]);
-
-      if (index != 3) {
-        double temp = (double.parse(selectedTip[0].toString()) / 100) * orderAmount;
-        tip.value = temp;
-      } else {
-        tip.value = 0.0;
-      }
-    } else {
-      selectedTip.add(tipsAmountList[index]);
-
-      if (index != 3) {
-        tip.value = double.parse(selectedTip[0].toString());
-      } else {
-        tip.value = 0.0;
-      }
-    }
-
-    update();
   }
 }

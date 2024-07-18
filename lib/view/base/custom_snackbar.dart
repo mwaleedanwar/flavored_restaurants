@@ -9,7 +9,8 @@ void showCustomSnackBar(
 }) {
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()
-    ..showSnackBar(SnackBar(
+    ..showSnackBar(
+      SnackBar(
         content: Text(message),
         margin: ResponsiveHelper.isDesktop(context)
             ? EdgeInsets.only(
@@ -18,5 +19,7 @@ void showCustomSnackBar(
                 left: Dimensions.PADDING_SIZE_EXTRA_SMALL)
             : EdgeInsets.zero,
         behavior: SnackBarBehavior.floating,
-        backgroundColor: isError ? Colors.red : Colors.green));
+        backgroundColor: isError ? Colors.red : Colors.green,
+      ),
+    );
 }

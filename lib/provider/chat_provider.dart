@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/chat_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/repository/chat_repo.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 class ChatProvider extends ChangeNotifier {
   final ChatRepo chatRepo;
@@ -19,7 +19,6 @@ class ChatProvider extends ChangeNotifier {
 
   final List<bool> _showDate = [];
   List<XFile> _imageFiles = [];
-  // XFile _imageFile;
   bool _isSendButtonActive = false;
   final bool _isSeen = false;
   final bool _isSend = true;
@@ -29,7 +28,6 @@ class ChatProvider extends ChangeNotifier {
 
   List<bool> get showDate => _showDate;
   List<XFile> get imageFiles => _imageFiles;
-  // XFile get imageFile => _imageFile;
   bool get isSendButtonActive => _isSendButtonActive;
   bool get isSeen => _isSeen;
   bool get isSend => _isSend;
@@ -48,7 +46,6 @@ class ChatProvider extends ChangeNotifier {
     if (isFirst) {
       _messageList = [];
     }
-    //
     if (orderId == null) {
       apiResponse = await chatRepo.getAdminMessage(offset);
     } else {
@@ -82,10 +79,9 @@ class ChatProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<http.StreamedResponse> sendMessage(
-      String message, BuildContext context, String token, OrderModel? order) async {
+  Future<StreamedResponse> sendMessage(String message, BuildContext context, String token, OrderModel? order) async {
     debugPrint('is order null ${order == null}');
-    http.StreamedResponse response;
+    StreamedResponse response;
     _isLoading = true;
     if (order == null) {
       response = await chatRepo.sendMessageToAdmin(message, _chatImage, token);

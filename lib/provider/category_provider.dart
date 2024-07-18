@@ -23,6 +23,7 @@ class CategoryProvider extends ChangeNotifier {
   bool _pageLastIndex = false;
   bool _isLoading = false;
   String? _selectedSubCategoryId;
+  int _selectCategory = -1;
 
   List<CategoryModel> get categoryList => _categoryList ?? [];
 
@@ -37,6 +38,8 @@ class CategoryProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
 
   String get selectedSubCategoryId => _selectedSubCategoryId ?? '';
+
+  int get selectCategory => _selectCategory;
 
   Future<void> getCategoryList(BuildContext context, bool reload, String languageCode) async {
     _subCategoryList = null;
@@ -86,10 +89,6 @@ class CategoryProvider extends ChangeNotifier {
       showCustomSnackBar(apiResponse.error.toString(), context);
     }
   }
-
-  int _selectCategory = -1;
-
-  int get selectCategory => _selectCategory;
 
   updateSelectCategory(int index) {
     _selectCategory = index;

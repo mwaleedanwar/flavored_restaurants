@@ -8,7 +8,6 @@ export 'package:noapl_dos_maa_kitchen_flavor_test/provider/coupon_provider.dart'
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/language_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/localization_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/location_provider.dart';
-export 'package:noapl_dos_maa_kitchen_flavor_test/provider/loyality_points_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/news_letter_controller.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/notification_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/onboarding_provider.dart';

@@ -17,10 +17,12 @@ class OnBoardingProvider with ChangeNotifier {
 
   final _onBoardingList = <OnBoardingModel>[];
   bool _showOnBoardingStatus = false;
+  int _selectedIndex = 0;
+
   bool get showOnBoardingStatus => _showOnBoardingStatus;
+
   List<OnBoardingModel> get onBoardingList => _onBoardingList;
 
-  int _selectedIndex = 0;
   int get selectedIndex => _selectedIndex;
 
   changeSelectIndex(int index) {
@@ -29,8 +31,7 @@ class OnBoardingProvider with ChangeNotifier {
   }
 
   void _loadShowOnBoardingStatus() async {
-    _showOnBoardingStatus =
-        sharedPreferences.getBool(AppConstants.ON_BOARDING_SKIP) ?? true;
+    _showOnBoardingStatus = sharedPreferences.getBool(AppConstants.ON_BOARDING_SKIP) ?? false;
   }
 
   void toggleShowOnBoardingStatus() {

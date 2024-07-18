@@ -30,7 +30,7 @@ class PaymentProvider with ChangeNotifier {
 
   List<PyamentCardModel>? get cardsList => _cardsList;
 
-  getCardsList(BuildContext context) async {
+  Future<void> getCardsList(BuildContext context) async {
     _isLoading = true;
     ApiResponse apiResponse = await paymentRepo.getAllCard();
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
@@ -56,22 +56,16 @@ class PaymentProvider with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     _errorMessage = '';
-    // _addressStatusMessage = null;
     ApiResponse apiResponse = await paymentRepo.addCard(cardModel);
     _isLoading = false;
     ResponseModel responseModel;
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       debugPrint('======card success');
-
-      //Map map = jsonDecode(apiResponse.response.body);
-      //initAddressList(context);
-      getCardsList(context);
+      await getCardsList(context);
       String message = 'Card added successfully';
       responseModel = ResponseModel(true, message);
-      //_addressStatusMessage = message;
     } else {
       _isLoading = false;
-
       debugPrint('======card error');
       String errorMessage = apiResponse.error.toString();
       if (apiResponse.error is String) {
@@ -93,24 +87,17 @@ class PaymentProvider with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     _errorMessage = '';
-    // _addressStatusMessage = null;
     ApiResponse apiResponse = await paymentRepo.setCardDefault(id);
     _isLoading = false;
     ResponseModel responseModel;
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       debugPrint('======card default success');
-
-      //  Map map = jsonDecode(apiResponse.response.body);
-      getCardsList(context);
-      //initAddressList(context);
-      //  String message = map["message"];
+      await getCardsList(context);
       String message = 'Payment Cards Set to Default Successfully';
       responseModel = ResponseModel(true, message);
-      //_addressStatusMessage = message;
     } else {
-      _isLoading = false;
-
       debugPrint('======card error');
+      _isLoading = false;
       String errorMessage = apiResponse.error.toString();
       if (apiResponse.error is String) {
         debugPrint(apiResponse.error.toString());
@@ -131,24 +118,17 @@ class PaymentProvider with ChangeNotifier {
     _isLoading = true;
     notifyListeners();
     _errorMessage = '';
-    // _addressStatusMessage = null;
     ApiResponse apiResponse = await paymentRepo.removeCRD(id);
     _isLoading = false;
     ResponseModel responseModel;
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       debugPrint('======card default success');
-
-      //  Map map = jsonDecode(apiResponse.response.body);
-      getCardsList(context);
-      //initAddressList(context);
-      //  String message = map["message"];
+      await getCardsList(context);
       String message = 'Payment Cards Set to Default Successfully';
       responseModel = ResponseModel(true, message);
-      //_addressStatusMessage = message;
     } else {
-      _isLoading = false;
-
       debugPrint('======card error');
+      _isLoading = false;
       String errorMessage = apiResponse.error.toString();
       if (apiResponse.error is String) {
         debugPrint(apiResponse.error.toString());

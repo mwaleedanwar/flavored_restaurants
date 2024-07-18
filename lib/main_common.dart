@@ -20,8 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'di_container.dart' as di;
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 late AndroidNotificationChannel channel;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -52,17 +51,14 @@ Future<void> mainCommon() async {
         importance: Importance.high,
       );
     }
-    final RemoteMessage? remoteMessage =
-        await FirebaseMessaging.instance.getInitialMessage();
-    orderID = remoteMessage?.notification?.titleLocKey != null
-        ? int.parse(remoteMessage!.notification!.titleLocKey!)
-        : null;
+    final RemoteMessage? remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
+    orderID =
+        remoteMessage?.notification?.titleLocKey != null ? int.parse(remoteMessage!.notification!.titleLocKey!) : null;
 
     await NotificationHelper.initialize(flutterLocalNotificationsPlugin);
     FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
     await flutterLocalNotificationsPlugin
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
   } catch (e) {
     debugPrint('ERROR IN MAIN $e');
@@ -77,22 +73,17 @@ Future<void> mainCommon() async {
       ChangeNotifierProvider(create: (context) => di.sl<AllCategoryProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<BannerProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<ProductProvider>()),
-      ChangeNotifierProvider(
-          create: (context) => di.sl<LoyalityPointsProvider>()),
-      ChangeNotifierProvider(
-          create: (context) => di.sl<LocalizationProvider>()),
+      ChangeNotifierProvider(create: (context) => di.sl<LocalizationProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<AuthProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<LocationProvider>()),
-      ChangeNotifierProvider(
-          create: (context) => di.sl<LocalizationProvider>()),
+      ChangeNotifierProvider(create: (context) => di.sl<LocalizationProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<CartProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<OrderProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<PaymentProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<ChatProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<SetMenuProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<ProfileProvider>()),
-      ChangeNotifierProvider(
-          create: (context) => di.sl<NotificationProvider>()),
+      ChangeNotifierProvider(create: (context) => di.sl<NotificationProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<CouponProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<WishListProvider>()),
       ChangeNotifierProvider(create: (context) => di.sl<SearchProvider>()),
@@ -123,12 +114,10 @@ class MyAppState extends State<MyApp> {
     if (kIsWeb) {
       Provider.of<SplashProvider>(context, listen: false).initSharedData();
       Provider.of<CartProvider>(context, listen: false).getCartData();
-      Provider.of<SplashProvider>(context, listen: false)
-          .getPolicyPage(context);
+      Provider.of<SplashProvider>(context, listen: false).getPolicyPage(context);
 
       if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
-        Provider.of<ProfileProvider>(context, listen: false)
-            .getUserInfo(context);
+        Provider.of<ProfileProvider>(context, listen: false).getUserInfo(context);
       }
 
       _route();
@@ -142,20 +131,14 @@ class MyAppState extends State<MyApp> {
   }
 
   void _route() {
-    Provider.of<SplashProvider>(context, listen: false)
-        .initConfig(context)
-        .then((bool isSuccess) {
+    Provider.of<SplashProvider>(context, listen: false).initConfig(context).then((bool isSuccess) {
       if (isSuccess) {
-        Timer(Duration(seconds: ResponsiveHelper.isMobilePhone() ? 1 : 0),
-            () async {
+        Timer(Duration(seconds: ResponsiveHelper.isMobilePhone() ? 1 : 0), () async {
           if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
             Provider.of<AuthProvider>(context, listen: false).updateToken();
-            await Provider.of<WishListProvider>(context, listen: false)
-                .initWishList(
+            await Provider.of<WishListProvider>(context, listen: false).initWishList(
               context,
-              Provider.of<LocalizationProvider>(context, listen: false)
-                  .locale
-                  .languageCode,
+              Provider.of<LocalizationProvider>(context, listen: false).locale.languageCode,
             );
           }
         });
@@ -175,25 +158,18 @@ class MyAppState extends State<MyApp> {
         return (kIsWeb && splashProvider.configModel == null)
             ? const SizedBox()
             : MaterialApp(
-                initialRoute: ResponsiveHelper.isMobilePhone()
-                    ? Routes.getSplashRoute()
-                    : Routes.getMainRoute(),
+                initialRoute: ResponsiveHelper.isMobilePhone() ? Routes.getSplashRoute() : Routes.getMainRoute(),
                 onGenerateRoute: RouterHelper.router.generator,
-                title: splashProvider.configModel != null
-                    ? splashProvider.configModel!.restaurantName
-                    : F.appName,
+                title: splashProvider.configModel != null ? splashProvider.configModel!.restaurantName : F.appName,
                 debugShowCheckedModeBanner: false,
                 navigatorKey: navigatorKey,
-                theme: Provider.of<ThemeProvider>(context).darkTheme
-                    ? F.themeDark
-                    : F.themeLight,
+                theme: Provider.of<ThemeProvider>(context).darkTheme ? F.themeDark : F.themeLight,
                 locale: Provider.of<LocalizationProvider>(context).locale,
                 localizationsDelegates: const [
                   AppLocalization.delegate,
                 ],
                 supportedLocales: locals,
-                scrollBehavior:
-                    const MaterialScrollBehavior().copyWith(dragDevices: {
+                scrollBehavior: const MaterialScrollBehavior().copyWith(dragDevices: {
                   PointerDeviceKind.mouse,
                   PointerDeviceKind.touch,
                   PointerDeviceKind.stylus,
@@ -209,8 +185,7 @@ class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
     return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
   }
 }
 

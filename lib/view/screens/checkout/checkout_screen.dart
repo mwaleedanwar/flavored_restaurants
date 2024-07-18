@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:masked_text/masked_text.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/provider_barrel.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/tip_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/body/place_order_body.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/cart_model.dart';
@@ -213,7 +214,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                                                                             color: Theme.of(context).primaryColor,
                                                                             borderRadius: BorderRadius.circular(10),
                                                                           ),
-                                                                          child: const BranchButtonView(isRow: true),
+                                                                          child: const BranchButtonView(),
                                                                         ),
                                                                       ],
                                                                     ),

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/address_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/auth_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/location_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/payment_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_app_bar.dart';
@@ -11,18 +10,19 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/footer_view.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/no_data_screen.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/not_logged_in_screen.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/address/widget/address_widget.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/AddCardScreen/add_card.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/AddCardScreen/components/card_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/address/widget/add_button_view.dart';
 import 'package:provider/provider.dart';
 
-class AddressScreen extends StatefulWidget {
-  const AddressScreen({super.key});
+class MyPaymentMethodScreen extends StatefulWidget {
+  const MyPaymentMethodScreen({super.key});
 
   @override
-  State<AddressScreen> createState() => _AddressScreenState();
+  State<MyPaymentMethodScreen> createState() => _MyPaymentMethodScreenState();
 }
 
-class _AddressScreenState extends State<AddressScreen> {
+class _MyPaymentMethodScreenState extends State<MyPaymentMethodScreen> {
   bool _isLoggedIn = false;
 
   @override
@@ -31,7 +31,7 @@ class _AddressScreenState extends State<AddressScreen> {
 
     _isLoggedIn = Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
     if (_isLoggedIn) {
-      Provider.of<LocationProvider>(context, listen: false).initAddressList(context);
+      Provider.of<PaymentProvider>(context, listen: false).getCardsList(context);
     }
   }
 
@@ -39,29 +39,33 @@ class _AddressScreenState extends State<AddressScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
-          : CustomAppBar(context: context, title: getTranslated('address', context)),
+          ? const PreferredSize(
+              preferredSize: Size.fromHeight(100),
+              child: WebAppBar(),
+            )
+          : CustomAppBar(context: context, title: 'Wallet'),
       floatingActionButton: _isLoggedIn
           ? Padding(
               padding: EdgeInsets.only(top: ResponsiveHelper.isDesktop(context) ? Dimensions.PADDING_SIZE_LARGE : 0),
               child: !ResponsiveHelper.isDesktop(context)
                   ? FloatingActionButton(
                       backgroundColor: Theme.of(context).primaryColor,
-                      onPressed: () => Navigator.pushNamed(
-                          context, Routes.getAddAddressRoute('address', 'add', AddressModel(), amount: 0.0)),
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const AddCard()));
+                      },
                       child: const Icon(Icons.add, color: Colors.white),
                     )
                   : null,
             )
           : null,
       body: _isLoggedIn
-          ? Consumer<LocationProvider>(
-              builder: (context, locationProvider, child) {
-                return locationProvider.addressList != null
-                    ? locationProvider.addressList!.isNotEmpty
+          ? Consumer<PaymentProvider>(
+              builder: (context, paymentProvider, child) {
+                return paymentProvider.cardsList != null
+                    ? paymentProvider.cardsList!.isNotEmpty
                         ? RefreshIndicator(
                             onRefresh: () async {
-                              await Provider.of<LocationProvider>(context, listen: false).initAddressList(context);
+                              await Provider.of<PaymentProvider>(context, listen: false).getCardsList(context);
                             },
                             backgroundColor: Theme.of(context).primaryColor,
                             child: Scrollbar(
@@ -92,11 +96,11 @@ class _AddressScreenState extends State<AddressScreen> {
                                                           crossAxisSpacing: Dimensions.PADDING_SIZE_DEFAULT,
                                                           childAspectRatio: 4),
                                                       padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                                                      itemCount: locationProvider.addressList!.length,
+                                                      itemCount: paymentProvider.cardsList!.length,
                                                       physics: const NeverScrollableScrollPhysics(),
                                                       shrinkWrap: true,
-                                                      itemBuilder: (context, index) => AddressWidget(
-                                                        addressModel: locationProvider.addressList![index],
+                                                      itemBuilder: (context, index) => CardWidget(
+                                                        paymentModel: paymentProvider.cardsList![index],
                                                         index: index,
                                                       ),
                                                     ),
@@ -106,9 +110,9 @@ class _AddressScreenState extends State<AddressScreen> {
                                                   physics: const NeverScrollableScrollPhysics(),
                                                   shrinkWrap: true,
                                                   padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                                                  itemCount: locationProvider.addressList!.length,
-                                                  itemBuilder: (context, index) => AddressWidget(
-                                                    addressModel: locationProvider.addressList![index],
+                                                  itemCount: paymentProvider.cardsList!.length,
+                                                  itemBuilder: (context, index) => CardWidget(
+                                                    paymentModel: paymentProvider.cardsList![index],
                                                     index: index,
                                                   ),
                                                 ),

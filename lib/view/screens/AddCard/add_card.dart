@@ -1,9 +1,9 @@
 // ignore_for_file: unnecessary_this
 
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/order_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/paymet_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/payment_provider.dart';
 import 'package:provider/provider.dart';
 
 class AddCard extends StatefulWidget {

@@ -1,9 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-// import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/api_response.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/error_response.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/coupon_model.dart';
@@ -16,12 +14,12 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart'
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/main_common.dart';
 import 'package:provider/provider.dart';
-import '../helper/api_checker.dart';
-import '../localization/language_constrants.dart';
-import '../utill/app_toast.dart';
-import '../view/base/custom_snackbar.dart';
-import '../view/screens/auth/login_screen.dart';
-import 'coupon_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/helper/api_checker.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_toast.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/auth/login_screen.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/coupon_provider.dart';
 
 class AuthProvider with ChangeNotifier {
   final AuthRepo authRepo;
@@ -29,17 +27,45 @@ class AuthProvider with ChangeNotifier {
   GoogleSignInAccount? googleAccount;
   AuthProvider({required this.authRepo});
 
-  // for registration section
-  bool _isLoading = false;
-  bool _isSignUp = false;
-
-  bool get isLoading => _isLoading;
-  bool get isSignUp => _isSignUp;
-  String _registrationErrorMessage = '';
-
   final _googleSignIn = GoogleSignIn();
 
+  String _loginErrorMessage = '';
+  bool _isForgotPasswordLoading = false;
+  String _email = '';
+  String _phone = '';
+  bool _isLoading = false;
+  bool _isSignUp = false;
+  String? _verificationMsg = '';
+  String _registrationErrorMessage = '';
+  String _verificationCode = '';
+  bool _isEnableVerificationCode = false;
+  bool _isActiveRememberMe = false;
+
+  bool get isLoading => _isLoading;
+
+  bool get isSignUp => _isSignUp;
+
   String get registrationErrorMessage => _registrationErrorMessage;
+
+  String get loginErrorMessage => _loginErrorMessage;
+
+  bool get isForgotPasswordLoading => _isForgotPasswordLoading;
+
+  bool _isPhoneNumberVerificationButtonLoading = false;
+
+  bool get isPhoneNumberVerificationButtonLoading => _isPhoneNumberVerificationButtonLoading;
+
+  String? get verificationMessage => _verificationMsg;
+
+  String get email => _email;
+
+  String get phone => _phone;
+
+  String get verificationCode => _verificationCode;
+
+  bool get isEnableVerificationCode => _isEnableVerificationCode;
+
+  bool get isActiveRememberMe => _isActiveRememberMe;
 
   void resetSignUp() {
     _isSignUp = false;
@@ -49,7 +75,7 @@ class AuthProvider with ChangeNotifier {
     _isSignUp = true;
   }
 
-  updateRegistrationErrorMessage(String message) {
+  void updateRegistrationErrorMessage(String message) {
     _registrationErrorMessage = message;
     notifyListeners();
   }
@@ -104,11 +130,6 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
     return responseModel;
   }
-
-  // for login section
-  String _loginErrorMessage = '';
-
-  String get loginErrorMessage => _loginErrorMessage;
 
   Future<ResponseModel> login(String email, String password, context) async {
     _isLoading = true;
@@ -186,11 +207,6 @@ class AuthProvider with ChangeNotifier {
     return responseModel;
   }
 
-  // for forgot password
-  bool _isForgotPasswordLoading = false;
-
-  bool get isForgotPasswordLoading => _isForgotPasswordLoading;
-
   Future<ResponseModel> forgetPassword(String email) async {
     debugPrint('====forgetPassword');
     _isForgotPasswordLoading = true;
@@ -234,7 +250,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<ResponseModel> verifyToken(String email) async {
-    debugPrint('varify number : $email');
+    debugPrint('verify number : $email');
     _isPhoneNumberVerificationButtonLoading = true;
     notifyListeners();
     ApiResponse apiResponse = await authRepo.verifyToken(email, _verificationCode);
@@ -281,20 +297,6 @@ class AuthProvider with ChangeNotifier {
     }
     return responseModel;
   }
-
-  // for phone verification
-  bool _isPhoneNumberVerificationButtonLoading = false;
-
-  bool get isPhoneNumberVerificationButtonLoading => _isPhoneNumberVerificationButtonLoading;
-  String? _verificationMsg = '';
-
-  String? get verificationMessage => _verificationMsg;
-  String _email = '';
-  String _phone = '';
-
-  String get email => _email;
-
-  String get phone => _phone;
 
   updateEmail(String email) {
     _email = email;
@@ -364,7 +366,6 @@ class AuthProvider with ChangeNotifier {
     return responseModel;
   }
 
-  //phone
   Future<OTPResponseModel> checkPhone(String phone, context) async {
     _isPhoneNumberVerificationButtonLoading = true;
     _verificationMsg = '';
@@ -375,23 +376,23 @@ class AuthProvider with ChangeNotifier {
     OTPResponseModel responseModel;
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       if (jsonDecode(apiResponse.response!.body)['coupon'] != null) {
-        debugPrint('====coupon data:${CouponModel.fromJson(jsonDecode(apiResponse.response!.body)['coupon'])}');
-        Provider.of<CouponProvider>(context, listen: false)
-            .giftCoupon(CouponModel.fromJson(jsonDecode(apiResponse.response!.body)['coupon']));
+        Provider.of<CouponProvider>(context, listen: false).giftCoupon(
+          CouponModel.fromJson(jsonDecode(apiResponse.response!.body)['coupon']),
+        );
       }
       responseModel = OTPResponseModel(
-          true, jsonDecode(apiResponse.response!.body)["token"], jsonDecode(apiResponse.response!.body)["user_exists"]);
+        true,
+        jsonDecode(apiResponse.response!.body)["token"],
+        jsonDecode(apiResponse.response!.body)["user_exists"],
+      );
     } else {
       if (apiResponse.response!.statusCode == 403) {
-        // appToast(text: 'The phone has already been taken.',toastColor: Colors.red);
         showCustomSnackBar(
           'The phone has already been taken.',
           Get.context,
           isError: true,
         );
       }
-      //debugPrint('==check phone esle${responseModel.message}');
-
       String errorMessage;
       if (apiResponse.error is String) {
         debugPrint(apiResponse.error.toString());
@@ -443,14 +444,6 @@ class AuthProvider with ChangeNotifier {
     return responseModel;
   }
 
-  // for verification Code
-  String _verificationCode = '';
-
-  String get verificationCode => _verificationCode;
-  bool _isEnableVerificationCode = false;
-
-  bool get isEnableVerificationCode => _isEnableVerificationCode;
-
   updateVerificationCode(String query) {
     if (query.length == 4) {
       _isEnableVerificationCode = true;
@@ -460,12 +453,6 @@ class AuthProvider with ChangeNotifier {
     _verificationCode = query;
     notifyListeners();
   }
-
-  // for Remember Me Section
-
-  bool _isActiveRememberMe = false;
-
-  bool get isActiveRememberMe => _isActiveRememberMe;
 
   toggleRememberMe() {
     _isActiveRememberMe = !_isActiveRememberMe;
@@ -507,7 +494,7 @@ class AuthProvider with ChangeNotifier {
     return authRepo.getUserToken();
   }
 
-  Future deleteUser(BuildContext context) async {
+  Future<void> deleteUser(BuildContext context) async {
     _isLoading = true;
     notifyListeners();
     ApiResponse response = await authRepo.deleteUser();
@@ -528,7 +515,7 @@ class AuthProvider with ChangeNotifier {
     return await googleAccount?.authentication;
   }
 
-  Future socialLogin(SocialLoginModel socialLogin, Function callback) async {
+  Future<void> socialLogin(SocialLoginModel socialLogin, Function callback) async {
     debugPrint('============== start social login ==========');
     debugPrint(socialLogin.token);
     debugPrint(socialLogin.email);

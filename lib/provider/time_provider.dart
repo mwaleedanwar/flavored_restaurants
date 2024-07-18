@@ -9,26 +9,21 @@ import 'package:provider/provider.dart';
 class TimerProvider with ChangeNotifier {
   Duration? _duration;
   Timer? _timer;
+
   Duration? get duration => _duration;
 
   Future<void> countDownTimer(OrderModel order, BuildContext context) async {
     DateTime orderTime;
-    if (Provider.of<SplashProvider>(context, listen: false)
-            .configModel!
-            .timeFormat ==
-        '12') {
-      orderTime = DateFormat("yyyy-MM-dd HH:mm")
-          .parse('${order.deliveryDate} ${order.deliveryTime}');
+    if (Provider.of<SplashProvider>(context, listen: false).configModel!.timeFormat == '12') {
+      orderTime = DateFormat("yyyy-MM-dd HH:mm").parse('${order.deliveryDate} ${order.deliveryTime}');
     } else {
-      orderTime = DateFormat("yyyy-MM-dd HH:mm")
-          .parse('${order.deliveryDate} ${order.deliveryTime}');
+      orderTime = DateFormat("yyyy-MM-dd HH:mm").parse('${order.deliveryDate} ${order.deliveryTime}');
     }
 
-    DateTime endTime =
-        orderTime.add(Duration(minutes: int.parse(order.preparationTime)));
-    debugPrint('object === $endTime');
-
-    // _duration = DateTime.now().difference(endTime);
+    DateTime endTime = orderTime.add(
+      Duration(minutes: int.parse(order.preparationTime)),
+    );
+    debugPrint('endtime: $endTime');
     _duration = endTime.difference(DateTime.now());
     debugPrint('duration === ${_duration?.inMinutes}');
     _timer?.cancel();

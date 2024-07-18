@@ -8,17 +8,16 @@ class LanguageProvider with ChangeNotifier {
   LanguageProvider({required this.languageRepo});
 
   int _selectIndex = 0;
+  List<LanguageModel> _languages = [];
 
   int get selectIndex => _selectIndex;
+
+  List<LanguageModel> get languages => _languages;
 
   void setSelectIndex(int index) {
     _selectIndex = index;
     notifyListeners();
   }
-
-  List<LanguageModel> _languages = [];
-
-  List<LanguageModel> get languages => _languages;
 
   void searchLanguage(String query) {
     if (query.isEmpty) {

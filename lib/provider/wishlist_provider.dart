@@ -15,11 +15,12 @@ class WishListProvider extends ChangeNotifier {
 
   List<Product> _wishList = [];
   List<int> _wishIdList = [];
+  bool _isLoading = false;
 
   List<Product> get wishList => _wishList;
+
   List<int> get wishIdList => _wishIdList;
 
-  bool _isLoading = false;
   bool get isLoading => _isLoading;
 
   void addToWishList(Product product, BuildContext context) async {
@@ -27,8 +28,7 @@ class WishListProvider extends ChangeNotifier {
     _wishIdList.add(product.id);
     notifyListeners();
     ApiResponse apiResponse = await wishListRepo.addWishList(product.id);
-    if (apiResponse.response != null &&
-        apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       Map map = jsonDecode(apiResponse.response!.body);
       String message = map['message'];
       showCustomSnackBar(message, context, isError: false);
@@ -45,8 +45,7 @@ class WishListProvider extends ChangeNotifier {
     _wishIdList.remove(product.id);
     notifyListeners();
     ApiResponse apiResponse = await wishListRepo.removeWishList(product.id);
-    if (apiResponse.response != null &&
-        apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       Map map = jsonDecode(apiResponse.response!.body);
       String message = map['message'];
       showCustomSnackBar(message, context, isError: false);
@@ -63,14 +62,10 @@ class WishListProvider extends ChangeNotifier {
     _wishList = [];
     _wishIdList = [];
     ApiResponse apiResponse = await wishListRepo.getWishList(languageCode);
-    if (apiResponse.response != null &&
-        apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
       _wishList = [];
       _wishIdList = [];
-      _wishList.addAll(
-          ProductModel.fromJson(jsonDecode(apiResponse.response!.body))
-                  .products ??
-              []);
+      _wishList.addAll(ProductModel.fromJson(jsonDecode(apiResponse.response!.body)).products ?? []);
       for (int i = 0; i < _wishList.length; i++) {
         _wishIdList.add(_wishList[i].id);
       }

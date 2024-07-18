@@ -7,6 +7,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/helper/price_converter.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/tip_controller.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/product_view.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/product_type.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/coupon_provider.dart';

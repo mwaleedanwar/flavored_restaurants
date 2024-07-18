@@ -106,9 +106,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
       ),
       child: Scaffold(
         appBar: CustomAppBar(
-            context: context,
-            title: getTranslated('PAYMENT', context),
-            onBackPressed: () => CancelDialog(orderID: widget.orderModel!.id)),
+          context: context,
+          title: getTranslated('PAYMENT', context),
+          onBackPressed: () => CancelDialog(orderID: widget.orderModel!.id),
+        ),
         body: Center(
           child: loading
               ? const CircularProgressIndicator.adaptive()

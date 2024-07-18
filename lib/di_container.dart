@@ -14,12 +14,10 @@ final sl = GetIt.instance;
 
 Future<void> init() async {
   // Core
-  sl.registerLazySingleton(() => HttpClient(F.BASE_URL,
-      loggingInterceptor: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(() => HttpClient(F.BASE_URL, loggingInterceptor: sl(), sharedPreferences: sl()));
 
   // Repository
-  sl.registerLazySingleton(
-      () => SplashRepo(sharedPreferences: sl(), httpClient: sl()));
+  sl.registerLazySingleton(() => SplashRepo(sharedPreferences: sl(), httpClient: sl()));
   sl.registerLazySingleton(() => CategoryRepo(httpClient: sl()));
   sl.registerLazySingleton(() => BannerRepo(httpClient: sl()));
   sl.registerLazySingleton(() => ProductRepo(httpClient: sl()));
@@ -28,19 +26,13 @@ Future<void> init() async {
   sl.registerLazySingleton(() => LanguageRepo());
   sl.registerLazySingleton(() => OnBoardingRepo(httpClient: sl()));
   sl.registerLazySingleton(() => CartRepo(sharedPreferences: sl()));
-  sl.registerLazySingleton(
-      () => OrderRepo(httpClient: sl(), sharedPreferences: sl()));
-  sl.registerLazySingleton(
-      () => ChatRepo(httpClient: sl(), sharedPreferences: sl()));
-  sl.registerLazySingleton(
-      () => AuthRepo(httpClient: sl(), sharedPreferences: sl()));
-  sl.registerLazySingleton(
-      () => LocationRepo(httpClient: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(() => OrderRepo(httpClient: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(() => ChatRepo(httpClient: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(() => AuthRepo(httpClient: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(() => LocationRepo(httpClient: sl(), sharedPreferences: sl()));
   sl.registerLazySingleton(() => SetMenuRepo(httpClient: sl()));
-  sl.registerLazySingleton(
-      () => ProfileRepo(httpClient: sl(), sharedPreferences: sl()));
-  sl.registerLazySingleton(
-      () => SearchRepo(httpClient: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(() => ProfileRepo(httpClient: sl(), sharedPreferences: sl()));
+  sl.registerLazySingleton(() => SearchRepo(httpClient: sl(), sharedPreferences: sl()));
   sl.registerLazySingleton(() => NotificationRepo(httpClient: sl()));
   sl.registerLazySingleton(() => CouponRepo(httpClient: sl()));
   sl.registerLazySingleton(() => WishListRepo(httpClient: sl()));
@@ -51,24 +43,19 @@ Future<void> init() async {
   sl.registerFactory(() => SplashProvider(splashRepo: sl()));
   sl.registerFactory(() => LocalizationProvider(sharedPreferences: sl()));
   sl.registerFactory(() => LanguageProvider(languageRepo: sl()));
-  sl.registerFactory(
-      () => OnBoardingProvider(onboardingRepo: sl(), sharedPreferences: sl()));
+  sl.registerFactory(() => OnBoardingProvider(onboardingRepo: sl(), sharedPreferences: sl()));
   sl.registerFactory(() => CategoryProvider(categoryRepo: sl()));
   sl.registerFactory(() => AllCategoryProvider(categoryRepo: sl()));
   sl.registerFactory(() => BannerProvider(bannerRepo: sl()));
   sl.registerFactory(() => ProductProvider(productRepo: sl()));
-  sl.registerFactory(() => LoyalityPointsProvider(loyalityPointsRepo: sl()));
   sl.registerFactory(() => CartProvider(cartRepo: sl()));
-  sl.registerFactory(
-      () => OrderProvider(orderRepo: sl(), sharedPreferences: sl()));
+  sl.registerFactory(() => OrderProvider(orderRepo: sl(), sharedPreferences: sl()));
   sl.registerFactory(() => PaymentProvider(
         paymentRepo: sl(),
       ));
-  sl.registerFactory(
-      () => ChatProvider(chatRepo: sl(), notificationRepo: sl()));
+  sl.registerFactory(() => ChatProvider(chatRepo: sl(), notificationRepo: sl()));
   sl.registerFactory(() => AuthProvider(authRepo: sl()));
-  sl.registerFactory(
-      () => LocationProvider(sharedPreferences: sl(), locationRepo: sl()));
+  sl.registerFactory(() => LocationProvider(sharedPreferences: sl(), locationRepo: sl()));
   sl.registerFactory(() => ProfileProvider(profileRepo: sl()));
   sl.registerFactory(() => NotificationProvider(notificationRepo: sl()));
   sl.registerFactory(() => SetMenuProvider(setMenuRepo: sl()));

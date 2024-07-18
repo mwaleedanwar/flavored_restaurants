@@ -9,12 +9,11 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/footer_view.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/no_data_screen.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/not_logged_in_screen.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/payment_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/AddCard/components/card_widget.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/address/widget/add_button_view.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/AddCard/View/add_card.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../provider/paymet_provider.dart';
-import '../../address/widget/add_button_view.dart';
-import 'add_card.dart';
-import 'components/card_widget.dart';
 
 class MyPaymentMethodScreen extends StatefulWidget {
   const MyPaymentMethodScreen({super.key});

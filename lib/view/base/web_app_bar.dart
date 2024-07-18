@@ -142,7 +142,7 @@ class _WebAppBarState extends State<WebAppBar> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            const BranchButtonView(isRow: true),
+                            const BranchButtonView(),
                             const SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
