@@ -18,6 +18,7 @@ class CartModel {
 
   CartModel({
     this.price = 0,
+    this.isFree = false,
     required this.points,
     required this.discountedPrice,
     required this.discountAmount,
@@ -25,7 +26,6 @@ class CartModel {
     required this.specialInstruction,
     required this.taxAmount,
     required this.isGift,
-    this.isFree = false,
     this.product,
     this.variation,
     this.addOnIds,

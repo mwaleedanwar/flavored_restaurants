@@ -11,10 +11,10 @@ class BannerModel {
     required this.id,
     required this.title,
     required this.image,
-    this.productId,
     required this.createdAt,
     required this.updatedAt,
     required this.categoryId,
+    this.productId,
   });
 
   factory BannerModel.fromJson(Map<String, dynamic> json) {

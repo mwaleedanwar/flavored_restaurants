@@ -14,31 +14,31 @@ dependencies:
   timelines:
   provider: ^6.0.2
   shared_preferences: ^2.0.5
-  dio: ^4.0.6
-  image_picker: ^0.8.4+4
+  dio: ^5.5.0+1
+  image_picker: ^1.1.2
   pin_code_fields: ^8.0.1
-  google_maps_flutter_web: ^0.4.0+3
+  google_maps_flutter_web: ^0.5.8
   google_maps_flutter: ^2.0.7
   flutter_google_places: ^0.3.0
-  geocoding: ^2.0.0
-  firebase_dynamic_links: ^5.2.0
-  geolocator: ^9.0.2
+  geocoding: ^3.0.0
+  firebase_dynamic_links: ^6.0.3
+  geolocator: ^12.0.0
   shimmer_animation: ^2.0.0
   url_launcher: ^6.0.2
-  webview_flutter: ^3.0.0
+  webview_flutter: ^4.8.0
   easy_stepper:
   percent_indicator:
-  flutter_stripe: ^9.4.0
+  flutter_stripe: ^10.2.0
   fluttertoast: ^8.2.1
-  firebase_core: ^2.13.1
+  firebase_core: ^3.2.0
   firebase_auth:
   masked_text: ^1.1.2
-  firebase_messaging: ^14.1.0
+  firebase_messaging: ^15.0.3
   dotted_border: ^2.0.0+3
-  share_plus: ^6.3.0
-  flutter_local_notifications: ^12.0.3
+  share_plus: ^9.0.0
+  flutter_local_notifications: ^17.2.1+2
   path_provider: ^2.0.1
-  connectivity_plus: ^3.0.2
+  connectivity_plus: ^6.0.3
   visibility_detector: ^0.4.0+2
   cached_network_image: ^3.2.3
   expandable_bottom_sheet: ^1.1.1+1
@@ -50,25 +50,26 @@ dependencies:
   scroll_to_index: ^3.0.1
   scrollable_list_tabview:
   universal_html: ^2.0.8
-  image: ^3.0.2
+  image: ^4.2.0
   flutter_widget_from_html_core: ^0.8.5+1
   phone_numbers_parser:
-  flutter_typeahead: ^4.0.0
-  cloud_firestore: ^4.0.5
+  flutter_typeahead: ^5.2.0
+  cloud_firestore: ^5.1.0
   fwfh_selectable_text: ^0.8.3+1
   circular_countdown_timer: ^0.2.1
   timezone: ^0.9.0
   marquee: ^2.2.1
-  flutter_inappwebview: ^5.4.3+7
+  flutter_inappwebview: ^6.0.0
   google_api_headers: ^1.3.0
-  audioplayers: ^0.20.1
-  google_sign_in: ^5.4.2
+  audioplayers: ^6.0.0
+  google_sign_in: ^6.2.1
   http: ^0.13.5
-  csslib: 0.17.0
+  csslib: ^0.17.3
   http_parser: ^4.0.2
   path: ^1.8.2
-  intl: ^0.17.0
+  intl: ^0.19.0
   google_maps_webservice: ^0.0.20-nullsafety.5
+  flutter_map_math: ^0.1.7
 
 dev_dependencies:
   flutter_test:

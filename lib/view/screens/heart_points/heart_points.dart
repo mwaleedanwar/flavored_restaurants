@@ -114,9 +114,6 @@ class _HeartPointScreenState extends State<HeartPointScreen> {
                                         const SizedBox(
                                           height: 20,
                                         ),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
                                       ],
                                     )
                                   : Center(

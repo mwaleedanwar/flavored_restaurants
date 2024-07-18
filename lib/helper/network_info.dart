@@ -7,21 +7,16 @@ class NetworkInfo {
   NetworkInfo(this.connectivity);
 
   Future<bool> get isConnected async {
-    ConnectivityResult result = await connectivity.checkConnectivity();
-    return result != ConnectivityResult.none;
+    List<ConnectivityResult> result = await connectivity.checkConnectivity();
+    return result.first != ConnectivityResult.none;
   }
 
   static void checkConnectivity(GlobalKey<ScaffoldMessengerState> globalKey) {
     bool firstTime = true;
-    Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) async {
+    Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> result) async {
       if (!firstTime) {
-        bool isNotConnected = result != ConnectivityResult.wifi &&
-            result != ConnectivityResult.mobile;
-        isNotConnected
-            ? const SizedBox()
-            : globalKey.currentState?.hideCurrentSnackBar();
+        bool isNotConnected = result.first != ConnectivityResult.wifi && result.first != ConnectivityResult.mobile;
+        isNotConnected ? const SizedBox() : globalKey.currentState?.hideCurrentSnackBar();
         globalKey.currentState?.showSnackBar(SnackBar(
           backgroundColor: isNotConnected ? Colors.red : Colors.green,
           duration: Duration(seconds: isNotConnected ? 6000 : 3),

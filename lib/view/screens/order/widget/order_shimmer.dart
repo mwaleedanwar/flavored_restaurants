@@ -11,7 +11,7 @@ class OrderShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 10,
+      itemCount: 5,
       padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
       physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) {

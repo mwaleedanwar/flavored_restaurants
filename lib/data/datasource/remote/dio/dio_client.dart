@@ -38,17 +38,14 @@ class HttpClient {
     }
     dio
       ..options.baseUrl = baseUrl
-      ..options.connectTimeout =
-          ResponsiveHelper.isMobilePhone() ? 30000 : 60 * 30000
-      ..options.receiveTimeout =
-          ResponsiveHelper.isMobilePhone() ? 30000 : 60 * 30000
+      ..options.connectTimeout = Duration(milliseconds: ResponsiveHelper.isMobilePhone() ? 30000 : 60 * 30000)
+      ..options.receiveTimeout = Duration(milliseconds: ResponsiveHelper.isMobilePhone() ? 30000 : 60 * 30000)
       ..httpClientAdapter
       ..options.headers = {
         'Content-Type': 'application/json; charset=UTF-8',
         'branch-id': '${sharedPreferences?.getInt(AppConstants.BRANCH)}',
         'X-localization':
-            sharedPreferences?.getString(AppConstants.LANGUAGE_CODE) ??
-                AppConstants.languages[0].languageCode,
+            sharedPreferences?.getString(AppConstants.LANGUAGE_CODE) ?? AppConstants.languages[0].languageCode,
         'Authorization': 'Bearer ${getToken ?? token}',
       };
     dio.interceptors.add(loggingInterceptor!);
@@ -106,10 +103,7 @@ class HttpClient {
       var response = await http.post(
         url,
         body: jsonEncode(data),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $token'
-        },
+        headers: {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer $token'},
       );
       debugPrint('=====$uri response :${response.body}');
       debugPrint('=====$uri response :${response.statusCode}');
@@ -138,10 +132,7 @@ class HttpClient {
       var response = await http.put(
         url,
         body: data,
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'Authorization': 'Bearer $token'
-        },
+        headers: {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer $token'},
       );
       return response;
     } on FormatException catch (_) {

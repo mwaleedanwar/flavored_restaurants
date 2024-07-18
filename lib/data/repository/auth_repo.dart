@@ -11,8 +11,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/social_log
 import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
-
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 class AuthRepo {
   final HttpClient httpClient;
@@ -22,7 +21,7 @@ class AuthRepo {
 
   Future<ApiResponse> registration(SignUpModel signUpModel, context) async {
     try {
-      http.Response response = await httpClient.post(
+      Response response = await httpClient.post(
         AppConstants.REGISTER_URI,
         data: signUpModel.toJson(),
       );
@@ -47,10 +46,12 @@ class AuthRepo {
     try {
       var url = AppConstants.LOGIN_URI;
 
-      http.Response response = await httpClient.post(
-        url,
-        data: {"email_or_phone": email, "email": email, "password": password, "restaurant_id": F.restaurantId},
-      );
+      Response response = await httpClient.post(url, data: {
+        "email_or_phone": email,
+        "email": email,
+        "password": password,
+        "restaurant_id": F.restaurantId,
+      });
       debugPrint('--login body:$email ,$password}');
 
       return ApiResponse.withSuccess(response);
@@ -63,7 +64,7 @@ class AuthRepo {
     try {
       var url = AppConstants.VERIFY_OTP_URI;
 
-      http.Response response = await httpClient.post(
+      Response response = await httpClient.post(
         url,
         data: signUpModel.toJson(),
       );
@@ -78,10 +79,10 @@ class AuthRepo {
     try {
       var url = AppConstants.SEND_OTP_URI;
 
-      http.Response response = await httpClient.post(
-        url,
-        data: {"phone": phone, "restaurant_id": F.restaurantId},
-      );
+      Response response = await httpClient.post(url, data: {
+        "phone": phone,
+        "restaurant_id": F.restaurantId,
+      });
 
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -95,7 +96,11 @@ class AuthRepo {
       String deviceToken = '@';
 
       if (defaultTargetPlatform == TargetPlatform.iOS) {
-        FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true, badge: true, sound: true);
+        FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
         NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
           alert: true,
           announcement: false,
@@ -118,7 +123,7 @@ class AuthRepo {
       debugPrint('---app token  fb $deviceToken');
       debugPrint('---app token  url ${AppConstants.TOKEN_URI}');
 
-      http.Response response = await httpClient.post(
+      Response response = await httpClient.post(
         AppConstants.TOKEN_URI,
         data: {
           "_method": "put",
@@ -144,20 +149,23 @@ class AuthRepo {
     } catch (error) {
       debugPrint('error is: $error');
     }
-    if (deviceToken != null) {
+    if (deviceToken == null) {
       debugPrint('--------Device Token---------- $deviceToken');
       throw Exception('Null device token');
     }
     debugPrint('--------Device Token---------- $deviceToken');
 
-    return deviceToken!;
+    return deviceToken;
   }
 
   // for forgot password
   Future<ApiResponse> forgetPassword(String email) async {
     try {
-      http.Response response = await httpClient.post(AppConstants.FORGET_PASSWORD_URI,
-          data: {"email_or_phone": email, "email": email, "restaurant_id": F.restaurantId});
+      Response response = await httpClient.post(AppConstants.FORGET_PASSWORD_URI, data: {
+        "email_or_phone": email,
+        "email": email,
+        "restaurant_id": F.restaurantId,
+      });
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -169,8 +177,11 @@ class AuthRepo {
       debugPrint({"email_or_phone": email, "reset_token": token}.toString());
       debugPrint('url for order track :${AppConstants.VERIFY_EMAIL_URI}');
 
-      http.Response response = await httpClient
-          .post(AppConstants.VERIFY_TOKEN_URI, data: {"email_or_phone": email, "email": email, "reset_token": token});
+      Response response = await httpClient.post(AppConstants.VERIFY_TOKEN_URI, data: {
+        "email_or_phone": email,
+        "email": email,
+        "reset_token": token,
+      });
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -186,17 +197,14 @@ class AuthRepo {
         "confirm_password": confirmPassword,
         "email_or_phone": mail
       }.toString());
-      http.Response response = await httpClient.post(
-        AppConstants.RESET_PASSWORD_URI,
-        data: {
-          "_method": "put",
-          "reset_token": resetToken,
-          "password": password,
-          "confirm_password": confirmPassword,
-          "email_or_phone": mail,
-          "email": mail
-        },
-      );
+      Response response = await httpClient.post(AppConstants.RESET_PASSWORD_URI, data: {
+        "_method": "put",
+        "reset_token": resetToken,
+        "password": password,
+        "confirm_password": confirmPassword,
+        "email_or_phone": mail,
+        "email": mail
+      });
       debugPrint('url reset Password :${F.BASE_URL + AppConstants.RESET_PASSWORD_URI}');
       return ApiResponse.withSuccess(response);
     } catch (e) {
@@ -207,7 +215,7 @@ class AuthRepo {
   // for verify email number
   Future<ApiResponse> checkEmail(String email) async {
     try {
-      http.Response response = await httpClient.post(AppConstants.CHECK_EMAIL_URI, data: {"email": email});
+      Response response = await httpClient.post(AppConstants.CHECK_EMAIL_URI, data: {"email": email});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -216,8 +224,7 @@ class AuthRepo {
 
   Future<ApiResponse> verifyEmail(String email, String token) async {
     try {
-      http.Response response =
-          await httpClient.post(AppConstants.VERIFY_EMAIL_URI, data: {"email": email, "token": token});
+      Response response = await httpClient.post(AppConstants.VERIFY_EMAIL_URI, data: {"email": email, "token": token});
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -228,7 +235,7 @@ class AuthRepo {
 
   Future<ApiResponse> checkPhone(String phone) async {
     try {
-      http.Response response =
+      Response response =
           await httpClient.post(AppConstants.CHECK_PHONE_URI, data: {"phone": phone, "restaurant_id": F.restaurantId});
 
       if (response.statusCode == 403) {
@@ -244,13 +251,10 @@ class AuthRepo {
 
   Future<ApiResponse> sendOtp(String phone) async {
     try {
-      http.Response response =
-          await httpClient.post(AppConstants.SEND_OTP_URI, data: {"phone": phone, "restaurant_id": F.restaurantId});
-
-      if (response.statusCode == 403) {
-        //  appToast(text: jsonDecode(response.body)['errors'][0]['message']);
-      }
-
+      Response response = await httpClient.post(AppConstants.SEND_OTP_URI, data: {
+        "phone": phone,
+        "restaurant_id": F.restaurantId,
+      });
       return ApiResponse.withSuccess(response);
     } catch (e) {
       debugPrint('error ---phone here');
@@ -261,7 +265,7 @@ class AuthRepo {
   Future<ApiResponse> verifyPhone(String phone, String token) async {
     try {
       var url = AppConstants.VERIFY_PHONE_URI;
-      http.Response response = await httpClient.post(url,
+      Response response = await httpClient.post(url,
           queryParameters: {"phone": phone.replaceAll(RegExp('[()\\-\\s]'), ''), "token": token},
           data: {'phone': phone.replaceAll(RegExp('[()\\-\\s]'), ''), 'token': token});
 
@@ -275,8 +279,6 @@ class AuthRepo {
   // for  user token
   Future<void> saveUserToken(String? token) async {
     httpClient.token = token;
-    //httpClient.dio.options.headers = {'Content-Type': 'application/json; charset=UTF-8', 'Authorization': 'Bearer $token'};
-
     if (token != null) {
       debugPrint('----setting token');
       await sharedPreferences.setString(AppConstants.TOKEN, token);
@@ -335,7 +337,7 @@ class AuthRepo {
 
   Future<ApiResponse> deleteUser() async {
     try {
-      http.Response response = await httpClient.delete(AppConstants.CUSTOMER_REMOVE);
+      Response response = await httpClient.delete(AppConstants.CUSTOMER_REMOVE);
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));
@@ -348,7 +350,7 @@ class AuthRepo {
     debugPrint('------social body -- > $socialLogin');
 
     try {
-      http.Response response = await httpClient.post(
+      Response response = await httpClient.post(
         AppConstants.SOCIAL_LOGIN,
         data: socialLogin.toJson(),
       );

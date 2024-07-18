@@ -190,7 +190,6 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                           ? null
                                           : () {
                                               if (widget.googleMapController != null) {
-                                                widget.googleMapController!.setMapStyle('[]');
                                                 widget.googleMapController!
                                                     .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
                                                         target: LatLng(

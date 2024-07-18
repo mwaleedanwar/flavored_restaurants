@@ -43,7 +43,6 @@ class CategoryRepo {
     String parentID,
     String languageCode,
   ) async {
-    debugPrint('-----getSubCategoryList');
     try {
       final response = await httpClient.get(
         '${AppConstants.SUB_CATEGORY_URI}$parentID?restaurant_id=${F.restaurantId}',
@@ -58,17 +57,18 @@ class CategoryRepo {
   }
 
   Future<ApiResponse> getCategoryProductList(
-      String categoryID, String languageCode, String type) async {
-    debugPrint(
-        '-----getCategoryProductList url:${F.BASE_URL + AppConstants.CATEGORY_PRODUCT_URI}$categoryID?product_type=$type');
-
+    String categoryID,
+    String languageCode,
+    String type,
+  ) async {
+    debugPrint('-----getCategoryProductList------');
+    debugPrint(' url:${F.BASE_URL + AppConstants.CATEGORY_PRODUCT_URI}$categoryID?product_type=$type');
     try {
       final response = await httpClient.get(
         '${AppConstants.CATEGORY_PRODUCT_URI}$categoryID?product_type=$type&restaurant_id=${F.restaurantId}',
         options: Options(headers: {'X-localization': languageCode}),
       );
       debugPrint('-----getCategoryProductList response: ${response.body}');
-
       return ApiResponse.withSuccess(response);
     } catch (e) {
       return ApiResponse.withError(ApiErrorHandler.getMessage(e));

@@ -26,12 +26,11 @@ class _LocationSearchDialogState extends State<LocationSearchDialog> {
           itemCount: 1,
           itemBuilder: (context, index) {
             return Material(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               child: SizedBox(
                   width: 1170,
                   child: TypeAheadField(
-                    textFieldConfiguration: TextFieldConfiguration(
+                    builder: (context, controller, node) => TextFormField(
                       controller: controller,
                       textInputAction: TextInputAction.search,
                       autofocus: true,
@@ -41,58 +40,44 @@ class _LocationSearchDialogState extends State<LocationSearchDialog> {
                         hintText: getTranslated('search_location', context),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(
-                              style: BorderStyle.none, width: 0),
+                          borderSide: const BorderSide(style: BorderStyle.none, width: 0),
                         ),
-                        hintStyle:
-                            Theme.of(context).textTheme.displayMedium?.copyWith(
-                                  fontSize: Dimensions.FONT_SIZE_DEFAULT,
-                                  color: Theme.of(context).disabledColor,
-                                ),
+                        hintStyle: Theme.of(context).textTheme.displayMedium?.copyWith(
+                              fontSize: Dimensions.FONT_SIZE_DEFAULT,
+                              color: Theme.of(context).disabledColor,
+                            ),
                         filled: true,
                         fillColor: Theme.of(context).cardColor,
                       ),
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium
-                          ?.copyWith(
+                      style: Theme.of(context).textTheme.displayMedium?.copyWith(
                             color: Theme.of(context).textTheme.bodyLarge?.color,
                             fontSize: Dimensions.FONT_SIZE_LARGE,
                           ),
                     ),
                     suggestionsCallback: (pattern) async {
-                      return await Provider.of<LocationProvider>(context,
-                              listen: false)
+                      return await Provider.of<LocationProvider>(context, listen: false)
                           .searchLocation(context, pattern);
                     },
                     itemBuilder: (context, Prediction suggestion) {
                       return Padding(
-                        padding:
-                            const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                        padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                         child: Row(children: [
                           const Icon(Icons.location_on),
                           Expanded(
                             child: Text(suggestion.description ?? '',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .displayMedium
-                                    ?.copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge
-                                          ?.color,
+                                style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                      color: Theme.of(context).textTheme.bodyLarge?.color,
                                       fontSize: Dimensions.FONT_SIZE_LARGE,
                                     )),
                           ),
                         ]),
                       );
                     },
-                    onSuggestionSelected: (Prediction suggestion) {
+                    onSelected: (Prediction suggestion) {
                       Provider.of<LocationProvider>(context, listen: false)
-                          .setLocation(
-                              suggestion.placeId!, suggestion.description!);
+                          .setLocation(suggestion.placeId!, suggestion.description!);
                       Navigator.pop(context);
                     },
                   )),

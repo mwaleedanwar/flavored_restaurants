@@ -6,8 +6,7 @@ import 'dart:convert';
 
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_model.dart';
 
-CouponModel couponModelFromJson(String str) =>
-    CouponModel.fromJson(json.decode(str));
+CouponModel couponModelFromJson(String str) => CouponModel.fromJson(json.decode(str));
 
 String couponModelToJson(CouponModel data) => json.encode(data.toJson());
 
@@ -40,8 +39,6 @@ class CouponModel {
     required this.code,
     required this.startDate,
     required this.expireDate,
-    this.minPurchase,
-    this.maxDiscount,
     required this.discount,
     required this.discountType,
     required this.status,
@@ -55,6 +52,8 @@ class CouponModel {
     required this.userEmail,
     required this.isExpired,
     required this.productId,
+    this.minPurchase,
+    this.maxDiscount,
     this.product,
   });
 
@@ -80,8 +79,7 @@ class CouponModel {
       isExpired: json["is_expired"],
       userEmail: json["user_email"],
       productId: json["product_id"],
-      product:
-          json["product"] == null ? null : Product.fromJson(json["product"]),
+      product: json["product"] == null ? null : Product.fromJson(json["product"]),
     );
   }
 

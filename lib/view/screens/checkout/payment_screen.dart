@@ -53,16 +53,18 @@ class _PaymentScreenState extends State<PaymentScreen> {
     // browser = MyInAppBrowser(context, widget.placeOrderBody,
     //     orderModel: widget.orderModel);
     if (Platform.isAndroid) {
-      await AndroidInAppWebViewController.setWebContentsDebuggingEnabled(true);
+      await InAppWebViewController.setWebContentsDebuggingEnabled(true);
 
-      bool swAvailable =
-          await AndroidWebViewFeature.isFeatureSupported(AndroidWebViewFeature.SERVICE_WORKER_BASIC_USAGE);
-      bool swInterceptAvailable =
-          await AndroidWebViewFeature.isFeatureSupported(AndroidWebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST);
+      bool swAvailable = await WebViewFeature.isFeatureSupported(
+        WebViewFeature.SERVICE_WORKER_BASIC_USAGE,
+      );
+      bool swInterceptAvailable = await WebViewFeature.isFeatureSupported(
+        WebViewFeature.SERVICE_WORKER_SHOULD_INTERCEPT_REQUEST,
+      );
 
       if (swAvailable && swInterceptAvailable) {
-        AndroidServiceWorkerController serviceWorkerController = AndroidServiceWorkerController.instance();
-        await serviceWorkerController.setServiceWorkerClient(AndroidServiceWorkerClient(
+        ServiceWorkerController serviceWorkerController = ServiceWorkerController.instance();
+        await serviceWorkerController.setServiceWorkerClient(ServiceWorkerClient(
           shouldInterceptRequest: (request) async {
             debugPrint(request.toString());
             return null;
@@ -72,26 +74,23 @@ class _PaymentScreenState extends State<PaymentScreen> {
     }
 
     pullToRefreshController = PullToRefreshController(
-      options: PullToRefreshOptions(
-        color: Colors.black,
-      ),
+      settings: PullToRefreshSettings(color: Colors.black),
       onRefresh: () async {
         if (Platform.isAndroid) {
-          browser.webViewController.reload();
+          browser.webViewController?.reload();
         } else if (Platform.isIOS) {
-          browser.webViewController.loadUrl(urlRequest: URLRequest(url: await browser.webViewController.getUrl()));
+          browser.webViewController?.loadUrl(urlRequest: URLRequest(url: await browser.webViewController?.getUrl()));
         }
       },
     );
-    browser.pullToRefreshController = pullToRefreshController;
 
     await browser.openUrlRequest(
-      urlRequest: URLRequest(url: Uri.parse(selectedUrl)),
-      options: InAppBrowserClassOptions(
-        inAppWebViewGroupOptions: InAppWebViewGroupOptions(
-          crossPlatform: InAppWebViewOptions(useShouldOverrideUrlLoading: true, useOnLoadResource: true),
-        ),
-      ),
+      urlRequest: URLRequest(url: WebUri.uri(Uri.parse(selectedUrl))),
+      settings: InAppBrowserClassSettings(
+          webViewSettings: InAppWebViewSettings(
+        useShouldOverrideUrlLoading: true,
+        useOnLoadResource: true,
+      )),
     );
     setState(() {
       loading = false;

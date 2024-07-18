@@ -66,9 +66,7 @@ class _ProductViewState extends State<ProductView> {
         scrollWidth = _width * baseScrollPoint * move;
         move++;
       });
-      scrollController.animateTo(scrollWidth,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.fastOutSlowIn);
+      scrollController.animateTo(scrollWidth, duration: const Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
     }
   }
 
@@ -78,9 +76,7 @@ class _ProductViewState extends State<ProductView> {
         move--;
         scrollWidth = scrollWidth - (baseScrollPoint * _width);
       });
-      scrollController.animateTo(scrollWidth,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.fastOutSlowIn);
+      scrollController.animateTo(scrollWidth, duration: const Duration(milliseconds: 300), curve: Curves.fastOutSlowIn);
     }
   }
 
@@ -117,8 +113,7 @@ class _ProductViewState extends State<ProductView> {
                         itemCount: 10,
                         itemBuilder: (context, index) {
                           return Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 5),
+                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                             width: widget.isFromCart ? 120 : 195,
                             child: ProductWidgetWebShimmer(
                               isFromCart: widget.isFromCart,
@@ -127,25 +122,14 @@ class _ProductViewState extends State<ProductView> {
                         },
                       ),
                     )
-                  : GridView.builder(
+                  : ListView.separated(
+                      separatorBuilder: (_, __) => const SizedBox(height: 20),
                       shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisSpacing:
-                            ResponsiveHelper.isMobile(context) ? 8 : 5,
-                        mainAxisSpacing: 5,
-                        childAspectRatio: ResponsiveHelper.isMobile(context)
-                            ? widget.isFromPointsScreen
-                                ? 1.8
-                                : 2.1
-                            : 4,
-                        crossAxisCount: ResponsiveHelper.isTab(context) ? 1 : 1,
-                      ),
                       itemCount: 12,
                       itemBuilder: (BuildContext context, int index) {
                         return ProductShimmer(isEnabled: productList == null);
                       },
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: Dimensions.PADDING_SIZE_SMALL),
+                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
                     )
               : const SizedBox();
         }
@@ -168,18 +152,11 @@ class _ProductViewState extends State<ProductView> {
                                 scrollDirection: Axis.horizontal,
                                 physics: const BouncingScrollPhysics(),
                                 controller: scrollController,
-                                itemCount: widget.isFromCart
-                                    ? productList.length
-                                    : productList.length,
+                                itemCount: widget.isFromCart ? productList.length : productList.length,
                                 itemBuilder: (context, index) {
                                   return Container(
                                     padding: EdgeInsets.only(
-                                        left: widget.isFromCart && index == 0
-                                            ? 0
-                                            : 10,
-                                        right: 5,
-                                        top: 5,
-                                        bottom: 5),
+                                        left: widget.isFromCart && index == 0 ? 0 : 10, right: 5, top: 5, bottom: 5),
                                     width: widget.isFromCart ? null : 195,
                                     child: ProductWidgetWeb(
                                       product: productList![index],
@@ -201,11 +178,8 @@ class _ProductViewState extends State<ProductView> {
                                         scrollToRight();
                                       },
                                       child: Container(
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  Colors.grey.withOpacity(0.4)),
-                                          child: const Icon(
-                                              Icons.arrow_forward_ios_sharp)),
+                                          decoration: BoxDecoration(color: Colors.grey.withOpacity(0.4)),
+                                          child: const Icon(Icons.arrow_forward_ios_sharp)),
                                     ))
                                 : const SizedBox(),
                             ResponsiveHelper.isMobile(context) && !isShowArrow
@@ -217,11 +191,8 @@ class _ProductViewState extends State<ProductView> {
                                         scrollToLeft();
                                       },
                                       child: Container(
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  Colors.grey.withOpacity(0.4)),
-                                          child:
-                                              const Icon(Icons.arrow_back_ios)),
+                                          decoration: BoxDecoration(color: Colors.grey.withOpacity(0.4)),
+                                          child: const Icon(Icons.arrow_back_ios)),
                                     ))
                                 : const SizedBox()
                           ],
@@ -235,13 +206,10 @@ class _ProductViewState extends State<ProductView> {
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           physics: const BouncingScrollPhysics(),
-                          itemCount: widget.isFromCart
-                              ? productList.length
-                              : productList.length,
+                          itemCount: widget.isFromCart ? productList.length : productList.length,
                           itemBuilder: (context, index) {
                             return Container(
-                              padding: const EdgeInsets.only(
-                                  left: 10, right: 5, top: 5, bottom: 5),
+                              padding: const EdgeInsets.only(left: 10, right: 5, top: 5, bottom: 5),
                               width: 195,
                               child: ProductWidgetWeb(
                                 product: productList![index],
@@ -254,22 +222,10 @@ class _ProductViewState extends State<ProductView> {
                           },
                         ),
                       )
-                    : GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisSpacing:
-                              ResponsiveHelper.isMobile(context) ? 8 : 5,
-                          mainAxisSpacing: 5,
-                          childAspectRatio: ResponsiveHelper.isMobile(context)
-                              ? widget.isFromPointsScreen
-                                  ? 1.8
-                                  : 2.1
-                              : 4,
-                          crossAxisCount:
-                              ResponsiveHelper.isTab(context) ? 1 : 1,
-                        ),
+                    : ListView.separated(
+                        separatorBuilder: (_, __) => const SizedBox(height: 20),
                         itemCount: productList.length,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemBuilder: (BuildContext context, int index) {
@@ -282,16 +238,13 @@ class _ProductViewState extends State<ProductView> {
             : Column(children: [
                 GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisSpacing:
-                        ResponsiveHelper.isMobile(context) ? 8 : 5,
+                    crossAxisSpacing: ResponsiveHelper.isMobile(context) ? 8 : 5,
                     mainAxisSpacing: 5,
-                    childAspectRatio:
-                        ResponsiveHelper.isMobile(context) ? 2.1 : 4,
+                    childAspectRatio: ResponsiveHelper.isMobile(context) ? 2.1 : 4,
                     crossAxisCount: ResponsiveHelper.isTab(context) ? 2 : 2,
                   ),
                   itemCount: productList.length,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
@@ -307,8 +260,7 @@ class _ProductViewState extends State<ProductView> {
                         child: prodProvider.isLoading
                             ? Center(
                                 child: Padding(
-                                padding: const EdgeInsets.all(
-                                    Dimensions.PADDING_SIZE_SMALL),
+                                padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                                 child: CircularProgressIndicator(
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                   Theme.of(context).primaryColor,
@@ -366,16 +318,13 @@ class _ProducCatViewState extends State<ProducCatView> {
 
                 GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisSpacing:
-                        ResponsiveHelper.isMobile(context) ? 8 : 5,
+                    crossAxisSpacing: ResponsiveHelper.isMobile(context) ? 8 : 5,
                     mainAxisSpacing: 5,
-                    childAspectRatio:
-                        ResponsiveHelper.isMobile(context) ? 2.1 : 4,
+                    childAspectRatio: ResponsiveHelper.isMobile(context) ? 2.1 : 4,
                     crossAxisCount: ResponsiveHelper.isTab(context) ? 1 : 1,
                   ),
                   itemCount: productList[ind].products.length,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
@@ -392,8 +341,7 @@ class _ProducCatViewState extends State<ProducCatView> {
                         child: prodProvider.isLoading
                             ? Center(
                                 child: Padding(
-                                padding: const EdgeInsets.all(
-                                    Dimensions.PADDING_SIZE_SMALL),
+                                padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
                                 child: CircularProgressIndicator(
                                     valueColor: AlwaysStoppedAnimation<Color>(
                                   Theme.of(context).primaryColor,

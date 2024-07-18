@@ -1,7 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/body/place_order_body.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/api_response.dart';

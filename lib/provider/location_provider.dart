@@ -1,24 +1,23 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_map_math/flutter_geo_math.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/address_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/api_response.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/error_response.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/distance_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/response_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/repository/location_repo.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/api_checker.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/config_model.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/address/widget/permission_dialog.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_maps_webservice/places.dart';
-
-import '../data/model/response/config_model.dart';
-import '../view/screens/address/widget/permission_dialog.dart';
-import 'dart:math';
 
 class Coordinate {
   double latitude;
@@ -143,18 +142,15 @@ class LocationProvider with ChangeNotifier {
   }
 
   checkRadius() {
-    LatLng start = LatLng(double.parse(currentBranch!.latitude), double.parse(currentBranch!.longitude));
-    LatLng end = LatLng(position!.latitude, position!.longitude);
-
-    getDistanceInMeter(start, end).then((value) {
-      debugPrint('===distance:$distance ${currentBranch!.coverage}');
-      if (distance < currentBranch!.coverage) {
-        _isAvailable = true;
-      } else {
-        _isAvailable = false;
-      }
-    });
-
+    distance = FlutterMapMath().distanceBetween(
+      double.parse(currentBranch!.latitude),
+      double.parse(currentBranch!.longitude),
+      position!.latitude,
+      position!.longitude,
+      "meters",
+    );
+    distance = distance / 1000;
+    _isAvailable = distance < currentBranch!.coverage;
     notifyListeners();
   }
 
@@ -227,41 +223,6 @@ class LocationProvider with ChangeNotifier {
       callback(false, errorMessage);
     }
     notifyListeners();
-  }
-
-  Future<bool> getDistanceInMeter(LatLng originLatLng, LatLng destinationLatLng) async {
-    debugPrint('======get distance');
-    distance = -1;
-    bool isSuccess = false;
-    ApiResponse response = await locationRepo.getDistanceInMeter(originLatLng, destinationLatLng);
-    try {
-      if (response.response != null &&
-          response.response!.statusCode == 200 &&
-          jsonDecode(response.response!.body)['status'] == 'OK') {
-        isSuccess = true;
-        distance =
-            DistanceModel.fromJson(jsonDecode(response.response!.body)).rows!.first.elements!.first.distance!.value /
-                1000;
-      } else {
-        distance = Geolocator.distanceBetween(
-              originLatLng.latitude,
-              originLatLng.longitude,
-              destinationLatLng.latitude,
-              destinationLatLng.longitude,
-            ) /
-            1000;
-      }
-    } catch (e) {
-      distance = Geolocator.distanceBetween(
-            originLatLng.latitude,
-            originLatLng.longitude,
-            destinationLatLng.latitude,
-            destinationLatLng.longitude,
-          ) /
-          1000;
-    }
-    notifyListeners();
-    return isSuccess;
   }
 
   // user address

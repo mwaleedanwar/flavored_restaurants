@@ -31,9 +31,7 @@ class LocationRepo {
     debugPrint('-----removeAddressByID Api by id $id ');
 
     try {
-      final response = await httpClient.post(
-          '${AppConstants.REMOVE_ADDRESS_URI}$id',
-          data: {"_method": "delete"});
+      final response = await httpClient.post('${AppConstants.REMOVE_ADDRESS_URI}$id', data: {"_method": "delete"});
 
       debugPrint('-----removeAddressByID Api response:$response');
       return ApiResponse.withSuccess(response);
@@ -59,7 +57,9 @@ class LocationRepo {
   }
 
   Future<ApiResponse> updateAddress(
-      AddressModel addressModel, int addressId) async {
+    AddressModel addressModel,
+    int addressId,
+  ) async {
     debugPrint('-----update address Api ');
 
     try {
@@ -87,8 +87,8 @@ class LocationRepo {
     debugPrint('-----getAddressFromGeocode');
 
     try {
-      http.Response response = await httpClient.get(
-          '${AppConstants.GEOCODE_URI}?lat=${latLng.latitude}&lng=${latLng.longitude}');
+      http.Response response =
+          await httpClient.get('${AppConstants.GEOCODE_URI}?lat=${latLng.latitude}&lng=${latLng.longitude}');
       debugPrint('-----getAddressFromGeocode Api response:$response');
 
       return ApiResponse.withSuccess(response);
@@ -100,8 +100,8 @@ class LocationRepo {
   Future<ApiResponse> searchLocation(String text) async {
     debugPrint('------search api');
     try {
-      http.Response response = await httpClient.get(
-          '${AppConstants.SEARCH_LOCATION_URI}?search_text=$text&restaurant_id=${F.restaurantId}');
+      http.Response response =
+          await httpClient.get('${AppConstants.SEARCH_LOCATION_URI}?search_text=$text&restaurant_id=${F.restaurantId}');
       debugPrint('------search api response:$response');
 
       return ApiResponse.withSuccess(response);
@@ -114,8 +114,8 @@ class LocationRepo {
     debugPrint('------places details api  for ID:$placeID');
 
     try {
-      http.Response response = await httpClient.get(
-          '${AppConstants.PLACE_DETAILS_URI}?placeid=$placeID&restaurant_id=${F.restaurantId}');
+      http.Response response =
+          await httpClient.get('${AppConstants.PLACE_DETAILS_URI}?placeid=$placeID&restaurant_id=${F.restaurantId}');
       debugPrint('------places details api response:$response');
 
       return ApiResponse.withSuccess(response);
@@ -124,11 +124,9 @@ class LocationRepo {
     }
   }
 
-  Future<ApiResponse> getDistanceInMeter(
-      LatLng originLatLng, LatLng destinationLatLng) async {
+  Future<ApiResponse> getDistanceInMeter(LatLng originLatLng, LatLng destinationLatLng) async {
     try {
-      http.Response response = await httpClient.get(
-          '${AppConstants.DISTANCE_MATRIX_URI}'
+      http.Response response = await httpClient.get('${AppConstants.DISTANCE_MATRIX_URI}'
           '?origin_lat=${originLatLng.latitude}&origin_lng=${originLatLng.longitude}'
           '&destination_lat=${destinationLatLng.latitude}&destination_lng=${destinationLatLng.longitude}&restaurant_id=${F.restaurantId}');
 

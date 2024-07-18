@@ -45,7 +45,7 @@ class Pages {
 
   factory Pages.fromJson(Map<String, dynamic> json) {
     return Pages(
-      status: int.tryParse(json["status"].toString()) == 1 ? true : false,
+      status: int.tryParse(json["status"].toString()) == 1,
       content: json["content"],
     );
   }

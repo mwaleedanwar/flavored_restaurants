@@ -32,9 +32,7 @@ class ChatModel {
     data['total_size'] = totalSize;
     data['limit'] = limit;
     data['offset'] = offset;
-
     data['messages'] = messages?.map((v) => v.toJson()).toList();
-
     return data;
   }
 }
@@ -54,11 +52,11 @@ class Messages {
 
   Messages({
     required this.id,
-    this.message,
     required this.reply,
-    this.isReply,
     required this.createdAt,
     required this.updatedAt,
+    this.message,
+    this.isReply,
     this.conversationId,
     this.customerId,
     this.deliverymanId,
