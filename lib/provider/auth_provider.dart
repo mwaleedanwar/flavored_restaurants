@@ -227,7 +227,7 @@ class AuthProvider with ChangeNotifier {
       if (apiResponse.error is String) {
         errorMessage = apiResponse.error.toString();
       } else {
-        errorMessage = apiResponse.error;
+        errorMessage = apiResponse.error ?? 'UNKNOWN ERROR';
       }
       debugPrint(errorMessage);
     }
