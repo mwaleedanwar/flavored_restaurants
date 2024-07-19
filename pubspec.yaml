@@ -53,7 +53,6 @@ dependencies:
   image: ^4.2.0
   flutter_widget_from_html_core: ^0.8.5+1
   phone_numbers_parser:
-  flutter_typeahead: ^5.2.0
   cloud_firestore: ^5.1.0
   fwfh_selectable_text: ^0.8.3+1
   circular_countdown_timer: ^0.2.1

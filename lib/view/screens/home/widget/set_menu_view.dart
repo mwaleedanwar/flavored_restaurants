@@ -3,14 +3,10 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/helper/date_converter.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/price_converter.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/set_menu_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/theme_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/provider_barrel.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/rating_bar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/title_widget.dart';
@@ -32,7 +28,7 @@ class SetMenuView extends StatelessWidget {
               child: TitleWidget(
                   title: getTranslated('set_menu', context),
                   onTap: () {
-                    Navigator.pushNamed(context, Routes.getSetMenuRoute());
+                    // Navigator.pushNamed(context, Routes.getSetMenuRoute());
                   }),
             ),
             SizedBox(

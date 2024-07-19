@@ -38,6 +38,6 @@ export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/support/support_s
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/track/order_tracking_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/update/update_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/welcome_screen/welcome_screen.dart';
-export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/AddCardScreen/View/my_payment_method_screen.dart';
+export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/AddCard/View/my_payment_method_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/branch/branch_list_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/new_home.dart';

@@ -12,7 +12,7 @@ export 'package:noapl_dos_maa_kitchen_flavor_test/provider/news_letter_controlle
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/notification_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/onboarding_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/order_provider.dart';
-export 'package:noapl_dos_maa_kitchen_flavor_test/provider/paymet_provider.dart';
+export 'package:noapl_dos_maa_kitchen_flavor_test/provider/payment_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/product_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/profile_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/search_provider.dart';

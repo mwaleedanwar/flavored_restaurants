@@ -1,7 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
-import 'dart:math';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_map_math/flutter_geo_math.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/address_model.dart';
@@ -24,10 +24,6 @@ class Coordinate {
   double longitude;
 
   Coordinate(this.latitude, this.longitude);
-}
-
-double radians(double degrees) {
-  return degrees * (pi / 180);
 }
 
 class LocationProvider with ChangeNotifier {
@@ -364,7 +360,7 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
-  setLocation(
+  Future<void> setLocation(
     String placeID,
     String address,
   ) async {
@@ -450,6 +446,7 @@ class LocationProvider with ChangeNotifier {
         ApiChecker.checkApi(context, response);
       }
     }
+    log(_predictionList.toString());
     return _predictionList;
   }
 

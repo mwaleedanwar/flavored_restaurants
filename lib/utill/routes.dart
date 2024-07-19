@@ -60,12 +60,12 @@ class Routes {
   static String getWelcomeRoute() => WELCOME_SCREEN;
   static String getLoginRoute() => LOGIN_SCREEN;
   static String getSignUpRoute() => SIGNUP_SCREEN;
-  static String getForgetPassRoute() => FORGOT_PASS_SCREEN;
+  // static String getForgetPassRoute() => FORGOT_PASS_SCREEN;
   static String getCreateAccountRoute() => CREATE_ACCOUNT_SCREEN;
   static String getMainRoute() => DASHBOARD;
   static String getMaintainRoute() => MAINTAIN;
-  static String getUpdateRoute() => UPDATE;
-  static String getSetMenuRoute() => SET_MENU_SCREEN;
+  // static String getUpdateRoute() => UPDATE;
+  // static String getSetMenuRoute() => SET_MENU_SCREEN;
   static String getNotificationRoute() => NOTIFICATION_SCREEN;
   static String getProfileRoute() => PROFILE_SCREEN;
   static String getAddressRoute() => ADDRESS_SCREEN;

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -250,6 +251,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                                                             ),
 
                                                             const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                                            //timeslots
                                                             SizedBox(
                                                               height: 50,
                                                               child: order.timeSlots != null
@@ -278,8 +280,10 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                                                                           },
                                                                         )
                                                                       : Center(
-                                                                          child: Text(getTranslated(
-                                                                              'no_slot_available', context)))
+                                                                          child: Text(
+                                                                            getTranslated('no_slot_available', context),
+                                                                          ),
+                                                                        )
                                                                   : const Center(child: CircularProgressIndicator()),
                                                             ),
                                                             !takeAway
@@ -290,7 +294,8 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                                                                 : Text(
                                                                     'Pickup Instructions (Optional)',
                                                                     style: poppinsRegular.copyWith(
-                                                                        color: ColorResources.getHintColor(context)),
+                                                                      color: ColorResources.getHintColor(context),
+                                                                    ),
                                                                   ),
                                                             !takeAway
                                                                 ? const SizedBox.shrink()
@@ -314,7 +319,6 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                                                                 ? detailsWidget(context)
                                                                 : CardFormField(
                                                                     controller: controller,
-                                                                    // enablePostalCode: false,
                                                                     style: CardFormStyle(
                                                                       borderColor: Colors.transparent,
                                                                       textColor:
@@ -355,7 +359,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  Container confirmButtonWidget(OrderProvider order, bool takeAway, LocationProvider address, bool kmWiseCharge,
+  Widget confirmButtonWidget(OrderProvider order, bool takeAway, LocationProvider address, bool kmWiseCharge,
       double deliveryCharge, BuildContext context) {
     return Container(
       width: 1170,
@@ -395,10 +399,9 @@ class CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  void _openSearchDialog(
-    BuildContext context,
-  ) async {
-    showDialog(context: context, builder: (context) => const LocationSearchDialog());
+  void _openSearchDialog(BuildContext context) async {
+    log('opening dialogue');
+    await showDialog(context: context, builder: (context) => const LocationSearchDialog());
   }
 
   Widget detailsWidget(BuildContext context) {

@@ -10,8 +10,8 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/footer_view.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/no_data_screen.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/not_logged_in_screen.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/AddCardScreen/add_card.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/AddCardScreen/components/card_widget.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/AddCard/add_card.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/AddCard/components/card_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/address/widget/add_button_view.dart';
 import 'package:provider/provider.dart';
 

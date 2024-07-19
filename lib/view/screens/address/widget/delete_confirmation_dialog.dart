@@ -2,7 +2,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/address_mo
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/location_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/paymet_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/payment_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
