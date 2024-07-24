@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/language_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/repository/language_repo.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 
 class LanguageProvider with ChangeNotifier {
   final LanguageRepo languageRepo;
@@ -21,25 +22,22 @@ class LanguageProvider with ChangeNotifier {
 
   void searchLanguage(String query) {
     if (query.isEmpty) {
-      _languages.clear();
-      _languages = languageRepo.getAllLanguages;
-      notifyListeners();
+      _languages = AppConstants.languages;
     } else {
       _selectIndex = -1;
       _languages = [];
-      for (var product in languageRepo.getAllLanguages) {
+      for (var product in AppConstants.languages) {
         if (product.languageName.toLowerCase().contains(query.toLowerCase())) {
           _languages.add(product);
         }
       }
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   void initializeAllLanguages(BuildContext context) {
     if (_languages.isEmpty) {
-      _languages.clear();
-      _languages = languageRepo.getAllLanguages;
+      _languages = AppConstants.languages;
     }
   }
 }

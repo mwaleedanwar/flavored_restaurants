@@ -1,5 +1,4 @@
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/auth_provider.dart';
-export 'package:noapl_dos_maa_kitchen_flavor_test/provider/banner_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/branch_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/category_provider.dart';

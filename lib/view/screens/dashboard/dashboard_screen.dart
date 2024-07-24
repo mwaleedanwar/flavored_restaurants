@@ -41,7 +41,7 @@ class DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    debugPrint('===branch id:${Provider.of<BranchProvider>(context, listen: false).getBranchId()}');
+    debugPrint('===branch id:${Provider.of<BranchProvider>(context, listen: false).getBranchId}');
     Provider.of<BranchProvider>(context, listen: false).setCurrentId();
     debugPrint('===branch dash id:${Provider.of<BranchProvider>(context, listen: false).branch}');
     Provider.of<AllCategoryProvider>(context, listen: false).getCategoryList(

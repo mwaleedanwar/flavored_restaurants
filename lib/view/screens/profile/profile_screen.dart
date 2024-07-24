@@ -354,7 +354,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             pass,
                                             file,
                                             data,
-                                            Provider.of<AuthProvider>(context, listen: false).getUserToken(),
+                                            Provider.of<AuthProvider>(context, listen: false).getUserToken,
                                           );
 
                                           if (responseModel.isSuccess) {

@@ -39,7 +39,7 @@ class OrderProvider extends ChangeNotifier {
   OrderModel? _trackModel;
   ResponseModel? _responseModel;
   int _addressIndex = -1;
-  int _cardIndex = -1;
+
   bool _isLoading = false;
   bool _showCancelled = false;
   DeliveryManModel? _deliveryManModel;
@@ -69,8 +69,6 @@ class OrderProvider extends ChangeNotifier {
   ResponseModel? get responseModel => _responseModel;
 
   int get addressIndex => _addressIndex;
-
-  int get cardIndex => _cardIndex;
 
   bool get isLoading => _isLoading;
 
@@ -150,11 +148,11 @@ class OrderProvider extends ChangeNotifier {
 
   Future<void> getDeliveryManData(String orderID, BuildContext context) async {
     ApiResponse apiResponse = await orderRepo.getDeliveryManData(orderID);
-    if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+    if (apiResponse.response != null && apiResponse.response!.statusCode == 200 && apiResponse.response!.body != '{}') {
       _deliveryManModel = DeliveryManModel.fromJson(jsonDecode(apiResponse.response!.body));
       debugPrint('==getDeliveryManData: ${apiResponse.response!.body}');
     } else {
-      ApiChecker.checkApi(context, apiResponse);
+      // ApiChecker.checkApi(context, apiResponse); TODO: UNCOMMENT WHEN DELIVERY IS LIVE && REMOVE LAST CONDITION IN IF
     }
     notifyListeners();
   }
@@ -245,18 +243,8 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void startLoader() {
-    _isLoading = true;
-    notifyListeners();
-  }
-
   void setAddressIndex(int index) {
     _addressIndex = index;
-    notifyListeners();
-  }
-
-  void setCardIndex(int index) {
-    _cardIndex = index;
     notifyListeners();
   }
 
@@ -267,7 +255,7 @@ class OrderProvider extends ChangeNotifier {
     _distance = -1;
   }
 
-  void cancelOrder(String orderID, Function callback) async {
+  Future<void> cancelOrder(String orderID, Function callback) async {
     _isLoading = true;
     notifyListeners();
     ApiResponse apiResponse = await orderRepo.cancelOrder(orderID);
@@ -319,13 +307,6 @@ class OrderProvider extends ChangeNotifier {
     if (notify) {
       notifyListeners();
     }
-  }
-
-  void setBranchIndex(int index) {
-    _branchIndex = index;
-    _addressIndex = -1;
-    _distance = -1;
-    notifyListeners();
   }
 
   Future<void> initializeTimeSlot(BuildContext context) async {
@@ -407,11 +388,7 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void validateSlot(
-    List<TimeSlotModel>? slots,
-    int dateIndex, {
-    bool notify = true,
-  }) {
+  void validateSlot(List<TimeSlotModel>? slots, int dateIndex, {bool notify = true}) {
     _timeSlots = [];
     int day = 0;
     if (dateIndex == 0) {
@@ -466,10 +443,6 @@ class OrderProvider extends ChangeNotifier {
     }
     notifyListeners();
     return isSuccess;
-  }
-
-  Future<void> setPlaceOrder(String placeOrder) async {
-    await sharedPreferences.setString(AppConstants.PLACE_ORDER_DATA, placeOrder);
   }
 
   String? getPlaceOrder() {

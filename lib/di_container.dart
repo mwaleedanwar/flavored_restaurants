@@ -46,13 +46,10 @@ Future<void> init() async {
   sl.registerFactory(() => OnBoardingProvider(onboardingRepo: sl(), sharedPreferences: sl()));
   sl.registerFactory(() => CategoryProvider(categoryRepo: sl()));
   sl.registerFactory(() => AllCategoryProvider(categoryRepo: sl()));
-  sl.registerFactory(() => BannerProvider(bannerRepo: sl()));
   sl.registerFactory(() => ProductProvider(productRepo: sl()));
   sl.registerFactory(() => CartProvider(cartRepo: sl()));
   sl.registerFactory(() => OrderProvider(orderRepo: sl(), sharedPreferences: sl()));
-  sl.registerFactory(() => PaymentProvider(
-        paymentRepo: sl(),
-      ));
+  sl.registerFactory(() => PaymentProvider(paymentRepo: sl()));
   sl.registerFactory(() => ChatProvider(chatRepo: sl(), notificationRepo: sl()));
   sl.registerFactory(() => AuthProvider(authRepo: sl()));
   sl.registerFactory(() => LocationProvider(sharedPreferences: sl(), locationRepo: sl()));

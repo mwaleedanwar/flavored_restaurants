@@ -70,7 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
           if (config?.maintenanceMode ?? true) {
             Navigator.pushNamedAndRemoveUntil(context, Routes.getMaintainRoute(), (route) => false);
           } else {
-            debugPrint('===branch id:${Provider.of<BranchProvider>(context, listen: false).getBranchId()}');
+            debugPrint('===branch id:${Provider.of<BranchProvider>(context, listen: false).getBranchId}');
             Provider.of<BranchProvider>(context, listen: false).setCurrentId();
             debugPrint('===branch id:${Provider.of<BranchProvider>(context, listen: false).branch}');
 

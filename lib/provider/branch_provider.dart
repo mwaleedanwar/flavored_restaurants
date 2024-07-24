@@ -40,11 +40,11 @@ class BranchProvider extends ChangeNotifier {
     }
   }
 
-  int getBranchId() => splashRepo.getBranchId();
+  int get getBranchId => splashRepo.getBranchId;
 
   setCurrentId() {
-    _selectedBranchId = splashRepo.getBranchId();
-    branch = splashRepo.getBranchId() == -1 ? null : splashRepo.getBranchId();
+    _selectedBranchId = splashRepo.getBranchId;
+    branch = splashRepo.getBranchId == -1 ? null : splashRepo.getBranchId;
   }
 
   Future<void> setBranch(int id) async {
@@ -56,7 +56,7 @@ class BranchProvider extends ChangeNotifier {
   }
 
   Branches? getBranch(context, {int? id}) {
-    int branchId = id ?? getBranchId();
+    int branchId = id ?? getBranchId;
     debugPrint('===erro: branch:$branchId');
 
     Branches? branch;

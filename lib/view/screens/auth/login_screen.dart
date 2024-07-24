@@ -47,8 +47,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     setState(() {
-      _emailController.text = Provider.of<AuthProvider>(context, listen: false).getUserNumber();
-      _passwordController.text = Provider.of<AuthProvider>(context, listen: false).getUserPassword();
+      _emailController.text = Provider.of<AuthProvider>(context, listen: false).getUserNumber;
+      _passwordController.text = Provider.of<AuthProvider>(context, listen: false).getUserPassword;
     });
   }
 

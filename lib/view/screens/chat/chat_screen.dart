@@ -242,7 +242,7 @@ class _ChatScreenState extends State<ChatScreen> {
                                   Provider.of<ChatProvider>(context, listen: false).sendMessage(
                                       _inputMessageController.text,
                                       context,
-                                      Provider.of<AuthProvider>(context, listen: false).getUserToken(),
+                                      Provider.of<AuthProvider>(context, listen: false).getUserToken,
                                       widget.orderModel);
                                   _inputMessageController.clear();
                                   Provider.of<ChatProvider>(context, listen: false).toggleSendButtonActivity();

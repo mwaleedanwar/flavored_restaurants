@@ -46,10 +46,10 @@ class _BranchListScreenState extends State<BranchListScreen> {
     final branchProvider = Provider.of<BranchProvider>(context, listen: false);
     branchProvider.updateTabIndex(0, isUpdate: false);
 
-    if (branchProvider.getBranchId() == -1) {
+    if (branchProvider.getBranchId == -1) {
       branchProvider.updateBranchId(null, isUpdate: false);
     } else {
-      branchProvider.updateBranchId(branchProvider.getBranchId(), isUpdate: false);
+      branchProvider.updateBranchId(branchProvider.getBranchId, isUpdate: false);
     }
     Provider.of<LocationProvider>(context, listen: false).getCurrentLatLong().then((latLong) {
       if (latLong != null) {
@@ -224,7 +224,7 @@ class _BranchListScreenState extends State<BranchListScreen> {
                             borderRadius: 30,
                             onTap: () {
                               if (branchProvider.selectedBranchId != null) {
-                                if (branchProvider.selectedBranchId != branchProvider.getBranchId() &&
+                                if (branchProvider.selectedBranchId != branchProvider.getBranchId &&
                                     cartProvider.cartList.isNotEmpty) {
                                   showAnimatedDialog(
                                     context,

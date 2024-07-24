@@ -314,7 +314,7 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
                                           pass,
                                           null,
                                           widget.file!,
-                                          Provider.of<AuthProvider>(context, listen: false).getUserToken(),
+                                          Provider.of<AuthProvider>(context, listen: false).getUserToken,
                                         );
 
                                         if (responseModel.isSuccess) {

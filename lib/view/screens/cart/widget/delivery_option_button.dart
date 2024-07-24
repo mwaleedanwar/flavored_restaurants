@@ -19,7 +19,7 @@ class DeliveryOptionButton extends StatelessWidget {
     return Consumer<OrderProvider>(
       builder: (context, order, child) {
         return InkWell(
-          onTap: () => order.setOrderType(value, notify: true),
+          onTap: () => order.setOrderType(value),
           child: Row(
             children: [
               Radio(

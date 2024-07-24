@@ -32,14 +32,13 @@ class AuthProvider with ChangeNotifier {
   String _loginErrorMessage = '';
   bool _isForgotPasswordLoading = false;
   String _email = '';
-  String _phone = '';
+
   bool _isLoading = false;
   bool _isSignUp = false;
   String? _verificationMsg = '';
   String _registrationErrorMessage = '';
   String _verificationCode = '';
   bool _isEnableVerificationCode = false;
-  bool _isActiveRememberMe = false;
 
   bool get isLoading => _isLoading;
 
@@ -59,25 +58,12 @@ class AuthProvider with ChangeNotifier {
 
   String get email => _email;
 
-  String get phone => _phone;
-
   String get verificationCode => _verificationCode;
 
   bool get isEnableVerificationCode => _isEnableVerificationCode;
 
-  bool get isActiveRememberMe => _isActiveRememberMe;
-
   void resetSignUp() {
     _isSignUp = false;
-  }
-
-  void setSignUp() {
-    _isSignUp = true;
-  }
-
-  void updateRegistrationErrorMessage(String message) {
-    _registrationErrorMessage = message;
-    notifyListeners();
   }
 
   Future<ResponseModel> registration(SignUpModel signUpModel, context) async {
@@ -106,7 +92,7 @@ class AuthProvider with ChangeNotifier {
         debugPrint('====coupon data:${CouponModel.fromJson(map['coupon'])}');
         Provider.of<CouponProvider>(context, listen: false).giftCoupon(CouponModel.fromJson(map['coupon']));
       }
-      setSignUp();
+      _isSignUp = true;
 
       responseModel = ResponseModel(true, 'successful');
     } else {
@@ -298,13 +284,8 @@ class AuthProvider with ChangeNotifier {
     return responseModel;
   }
 
-  updateEmail(String email) {
+  void updateEmail(String email) {
     _email = email;
-    notifyListeners();
-  }
-
-  updatePhone(String phone) {
-    _phone = phone;
     notifyListeners();
   }
 
@@ -444,18 +425,13 @@ class AuthProvider with ChangeNotifier {
     return responseModel;
   }
 
-  updateVerificationCode(String query) {
+  void updateVerificationCode(String query) {
     if (query.length == 4) {
       _isEnableVerificationCode = true;
     } else {
       _isEnableVerificationCode = false;
     }
     _verificationCode = query;
-    notifyListeners();
-  }
-
-  toggleRememberMe() {
-    _isActiveRememberMe = !_isActiveRememberMe;
     notifyListeners();
   }
 
@@ -474,25 +450,11 @@ class AuthProvider with ChangeNotifier {
     return isSuccess;
   }
 
-  void saveUserNumberAndPassword(String number, String password) {
-    authRepo.saveUserNumberAndPassword(number, password);
-  }
+  String get getUserNumber => authRepo.getUserNumber();
 
-  String getUserNumber() {
-    return authRepo.getUserNumber();
-  }
+  String get getUserPassword => authRepo.getUserPassword();
 
-  String getUserPassword() {
-    return authRepo.getUserPassword();
-  }
-
-  Future<bool> clearUserNumberAndPassword() async {
-    return authRepo.clearUserNumberAndPassword();
-  }
-
-  String getUserToken() {
-    return authRepo.getUserToken();
-  }
+  String get getUserToken => authRepo.getUserToken();
 
   Future<void> deleteUser(BuildContext context) async {
     _isLoading = true;

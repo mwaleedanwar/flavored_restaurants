@@ -90,12 +90,12 @@ class CategoryProvider extends ChangeNotifier {
     }
   }
 
-  updateSelectCategory(int index) {
+  void updateSelectCategory(int index) {
     _selectCategory = index;
     notifyListeners();
   }
 
-  updateProductCurrentIndex(int index, int totalLength) {
+  void updateProductCurrentIndex(int index, int totalLength) {
     if (index > 0) {
       _pageFirstIndex = false;
       notifyListeners();
@@ -117,14 +117,11 @@ class AllCategoryProvider extends ChangeNotifier {
   final CategoryRepo categoryRepo;
   double catHeight = 110.0;
   double proHeight = 55.0;
-  List<TabCat> tabs = [];
-  ScrollController scrollController = ScrollController();
 
   AllCategoryProvider({required this.categoryRepo});
 
   List<CategoryProductModel> categoryList = [];
 
-  List<ProductItem> categoryProductList = [];
   final bool _pageFirstIndex = true;
   final bool _pageLastIndex = false;
   bool _isLoading = false;
@@ -156,88 +153,4 @@ class AllCategoryProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  void init(TickerProvider tickerProvider) {
-    debugPrint('==tabs init ');
-    double offsetFrom = 0.0;
-    double offsetTo = 0.0;
-
-    for (int i = 0; i < categoryList.length; i++) {
-      final category = categoryList[i];
-      if (offsetFrom > 0) {
-        offsetFrom += categoryList[i - 1].products.length * proHeight;
-      }
-
-      if (i < categoryList.length - 1) {
-        offsetTo = offsetFrom + categoryList[i + 1].products.length * proHeight;
-      } else {
-        offsetTo = double.infinity;
-      }
-      tabs.add(
-        TabCat(
-          categoryProductModel: category,
-          selected: (i == 0),
-          offset: catHeight * i + offsetFrom,
-          offsetTo: offsetTo,
-        ),
-      );
-      for (int j = 0; j < category.products.length; j++) {
-        final product = category.products[j];
-        categoryProductList.add(ProductItem(
-          product: product,
-          categoryProductModel: category,
-        ));
-      }
-    }
-  }
-
-  void onCategorySelected(int index, {animationRequired = true}) async {
-    debugPrint('==selected index:$index');
-    final selected = tabs[index];
-    for (int i = 0; i < tabs.length; i++) {
-      final condition = selected.categoryProductModel.name == tabs[i].categoryProductModel.name;
-      tabs[i] = tabs[i].copyWith(condition);
-    }
-    notifyListeners();
-    if (animationRequired) {
-      await scrollController.animateTo(
-        selected.offset,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.linear,
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    scrollController.removeListener(() {});
-    scrollController.dispose();
-    super.dispose();
-  }
-}
-
-class TabCat {
-  CategoryProductModel categoryProductModel;
-  bool selected;
-  double offset;
-  double offsetTo;
-
-  TabCat({
-    required this.categoryProductModel,
-    required this.selected,
-    required this.offset,
-    required this.offsetTo,
-  });
-
-  TabCat copyWith(bool selected) =>
-      TabCat(categoryProductModel: categoryProductModel, selected: selected, offset: offset, offsetTo: offsetTo);
-}
-
-class ProductItem {
-  CategoryProductModel? categoryProductModel;
-  Product? product;
-
-  ProductItem({this.categoryProductModel, this.product});
-
-  bool get isCategory => categoryProductModel != null;
 }

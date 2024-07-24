@@ -32,12 +32,10 @@ class SplashRepo {
       return sharedPreferences.setBool(AppConstants.THEME, false);
     }
     if (!sharedPreferences.containsKey(AppConstants.COUNTRY_CODE)) {
-      return sharedPreferences.setString(
-          AppConstants.COUNTRY_CODE, AppConstants.languages[0].countryCode);
+      return sharedPreferences.setString(AppConstants.COUNTRY_CODE, AppConstants.languages[0].countryCode);
     }
     if (!sharedPreferences.containsKey(AppConstants.LANGUAGE_CODE)) {
-      return sharedPreferences.setString(
-          AppConstants.LANGUAGE_CODE, AppConstants.languages[0].languageCode);
+      return sharedPreferences.setString(AppConstants.LANGUAGE_CODE, AppConstants.languages[0].languageCode);
     }
     if (!sharedPreferences.containsKey(AppConstants.ON_BOARDING_SKIP)) {
       return sharedPreferences.setBool(AppConstants.ON_BOARDING_SKIP, true);
@@ -63,7 +61,7 @@ class SplashRepo {
     }
   }
 
-  int getBranchId() => sharedPreferences.getInt(AppConstants.BRANCH) ?? -1;
+  int get getBranchId => sharedPreferences.getInt(AppConstants.BRANCH) ?? -1;
 
   Future<void> setBranchId(int id) async {
     await sharedPreferences.setInt(AppConstants.BRANCH, id);
