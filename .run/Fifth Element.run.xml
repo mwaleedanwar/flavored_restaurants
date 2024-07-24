@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="5th Element" type="FlutterRunConfigurationType" factoryName="Flutter">
+        <option name="additionalArgs" value="--flavor fifthE" />
+        <option name="filePath" value="$PROJECT_DIR$/lib/main_5th_element.dart" />
+        <method v="2" />
+    </configuration>
+</component>

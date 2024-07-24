@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               Center(
                                   child: Text(
-                                getTranslated('login', context),
+                                isAlreadyExsist ? 'Login' : 'Sign Up',
                                 style: Theme.of(context)
                                     .textTheme
                                     .displayMedium
@@ -129,7 +129,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ?.copyWith(color: ColorResources.getHintColor(context)),
                                     ),
                               const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-
                               MaskedTextField(
                                   mask: AppConstants.phone_form,
                                   controller: _numberController,

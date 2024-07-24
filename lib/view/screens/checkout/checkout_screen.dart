@@ -1,13 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:masked_text/masked_text.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/product_model.dart';
@@ -66,6 +64,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
   final _phoneNumberController = TextEditingController();
 
   final controller = CardFormEditController();
+  final cardNode = FocusNode();
   final _houseNode = FocusNode();
   final _floorNode = FocusNode();
 
@@ -175,175 +174,168 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                           child: Column(
                             children: [
                               Expanded(
-                                child: Scrollbar(
-                                  child: SingleChildScrollView(
-                                    physics: const BouncingScrollPhysics(),
-                                    child: Column(
-                                      children: [
-                                        ConstrainedBox(
-                                          constraints: BoxConstraints(
-                                              minHeight: !ResponsiveHelper.isDesktop(context) && height < 600
-                                                  ? height
-                                                  : height - 400),
-                                          child: Center(
-                                            child: SizedBox(
-                                              width: 1170,
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Expanded(
-                                                    flex: 6,
-                                                    child: Container(
-                                                      decoration: const BoxDecoration(),
-                                                      child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Column(
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  Padding(
-                                                                    padding: const EdgeInsets.all(10),
-                                                                    child: Row(
-                                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                      children: [
-                                                                        Text('Choose Store',
-                                                                            style: rubikMedium.copyWith(
-                                                                                fontSize: Dimensions.FONT_SIZE_LARGE)),
-                                                                        Container(
-                                                                          padding: const EdgeInsets.all(8),
-                                                                          decoration: BoxDecoration(
-                                                                            color: Theme.of(context).primaryColor,
-                                                                            borderRadius: BorderRadius.circular(10),
-                                                                          ),
-                                                                          child: const BranchButtonView(),
-                                                                        ),
-                                                                      ],
+                                child: SingleChildScrollView(
+                                  physics: const BouncingScrollPhysics(),
+                                  child: Column(
+                                    children: [
+                                      ConstrainedBox(
+                                        constraints: BoxConstraints(
+                                            minHeight: !ResponsiveHelper.isDesktop(context) && height < 600
+                                                ? height
+                                                : height - 400),
+                                        child: Center(
+                                          child: SizedBox(
+                                            width: 1170,
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                  flex: 6,
+                                                  child: Container(
+                                                    decoration: const BoxDecoration(),
+                                                    child:
+                                                        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                                        Padding(
+                                                          padding: const EdgeInsets.all(10),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Text('Choose Store',
+                                                                  style: rubikMedium.copyWith(
+                                                                      fontSize: Dimensions.FONT_SIZE_LARGE)),
+                                                              Container(
+                                                                padding: const EdgeInsets.all(8),
+                                                                decoration: BoxDecoration(
+                                                                  color: Theme.of(context).primaryColor,
+                                                                  borderRadius: BorderRadius.circular(10),
+                                                                ),
+                                                                child: const BranchButtonView(),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ]),
+                                                      // Address
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(
+                                                            horizontal: Dimensions.PADDING_SIZE_SMALL),
+                                                        child: Text(getTranslated('preference_time', context),
+                                                            style: rubikMedium),
+                                                      ),
+                                                      const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                                      SizedBox(
+                                                        height: 50,
+                                                        child: ListView.builder(
+                                                          scrollDirection: Axis.horizontal,
+                                                          shrinkWrap: true,
+                                                          physics: const BouncingScrollPhysics(),
+                                                          padding: const EdgeInsets.only(
+                                                              left: Dimensions.PADDING_SIZE_SMALL),
+                                                          itemCount: 2,
+                                                          itemBuilder: (context, index) {
+                                                            return SlotWidget(
+                                                              title: index == 0
+                                                                  ? getTranslated('today', context)
+                                                                  : getTranslated('tomorrow', context),
+                                                              isSelected: order.selectDateSlot == index,
+                                                              onTap: () => order.updateDateSlot(index),
+                                                            );
+                                                          },
+                                                        ),
+                                                      ),
+
+                                                      const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                                      //timeslots
+                                                      SizedBox(
+                                                        height: 50,
+                                                        child: order.timeSlots != null
+                                                            ? order.timeSlots!.isNotEmpty
+                                                                ? ListView.builder(
+                                                                    scrollDirection: Axis.horizontal,
+                                                                    shrinkWrap: true,
+                                                                    physics: const BouncingScrollPhysics(),
+                                                                    padding: const EdgeInsets.only(
+                                                                        left: Dimensions.PADDING_SIZE_SMALL),
+                                                                    itemCount: order.timeSlots!.length,
+                                                                    itemBuilder: (context, index) {
+                                                                      return SlotWidget(
+                                                                        title: (index == 0 &&
+                                                                                order.selectDateSlot == 0 &&
+                                                                                Provider.of<SplashProvider>(context,
+                                                                                        listen: false)
+                                                                                    .isRestaurantOpenNow(context))
+                                                                            ? getTranslated('now', context)
+                                                                            : '${DateConverter.dateToTimeOnly(order.timeSlots![index].startTime, context)} '
+                                                                                '- ${DateConverter.dateToTimeOnly(order.timeSlots![index].endTime, context)}',
+                                                                        isSelected: order.selectTimeSlot == index,
+                                                                        onTap: () => order.updateTimeSlot(index),
+                                                                      );
+                                                                    },
+                                                                  )
+                                                                : Center(
+                                                                    child: Text(
+                                                                      getTranslated('no_slot_available', context),
                                                                     ),
-                                                                  ),
-                                                                ]),
-                                                            // Address
-                                                            Padding(
-                                                              padding: const EdgeInsets.symmetric(
-                                                                  horizontal: Dimensions.PADDING_SIZE_SMALL),
-                                                              child: Text(getTranslated('preference_time', context),
-                                                                  style: rubikMedium),
-                                                            ),
-                                                            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                                            SizedBox(
-                                                              height: 50,
-                                                              child: ListView.builder(
-                                                                scrollDirection: Axis.horizontal,
-                                                                shrinkWrap: true,
-                                                                physics: const BouncingScrollPhysics(),
-                                                                padding: const EdgeInsets.only(
-                                                                    left: Dimensions.PADDING_SIZE_SMALL),
-                                                                itemCount: 2,
-                                                                itemBuilder: (context, index) {
-                                                                  return SlotWidget(
-                                                                    title: index == 0
-                                                                        ? getTranslated('today', context)
-                                                                        : getTranslated('tomorrow', context),
-                                                                    isSelected: order.selectDateSlot == index,
-                                                                    onTap: () => order.updateDateSlot(index),
-                                                                  );
-                                                                },
+                                                                  )
+                                                            : const Center(child: CircularProgressIndicator()),
+                                                      ),
+                                                      !takeAway
+                                                          ? const SizedBox.shrink()
+                                                          : const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                                      !takeAway
+                                                          ? const SizedBox.shrink()
+                                                          : Text(
+                                                              'Pickup Instructions (Optional)',
+                                                              style: poppinsRegular.copyWith(
+                                                                color: ColorResources.getHintColor(context),
                                                               ),
                                                             ),
-
-                                                            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                                            //timeslots
-                                                            SizedBox(
-                                                              height: 50,
-                                                              child: order.timeSlots != null
-                                                                  ? order.timeSlots!.isNotEmpty
-                                                                      ? ListView.builder(
-                                                                          scrollDirection: Axis.horizontal,
-                                                                          shrinkWrap: true,
-                                                                          physics: const BouncingScrollPhysics(),
-                                                                          padding: const EdgeInsets.only(
-                                                                              left: Dimensions.PADDING_SIZE_SMALL),
-                                                                          itemCount: order.timeSlots!.length,
-                                                                          itemBuilder: (context, index) {
-                                                                            return SlotWidget(
-                                                                              title: (index == 0 &&
-                                                                                      order.selectDateSlot == 0 &&
-                                                                                      Provider.of<SplashProvider>(
-                                                                                              context,
-                                                                                              listen: false)
-                                                                                          .isRestaurantOpenNow(context))
-                                                                                  ? getTranslated('now', context)
-                                                                                  : '${DateConverter.dateToTimeOnly(order.timeSlots![index].startTime, context)} '
-                                                                                      '- ${DateConverter.dateToTimeOnly(order.timeSlots![index].endTime, context)}',
-                                                                              isSelected: order.selectTimeSlot == index,
-                                                                              onTap: () => order.updateTimeSlot(index),
-                                                                            );
-                                                                          },
-                                                                        )
-                                                                      : Center(
-                                                                          child: Text(
-                                                                            getTranslated('no_slot_available', context),
-                                                                          ),
-                                                                        )
-                                                                  : const Center(child: CircularProgressIndicator()),
+                                                      !takeAway
+                                                          ? const SizedBox.shrink()
+                                                          : const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                                      !takeAway
+                                                          ? const SizedBox.shrink()
+                                                          : CustomTextField(
+                                                              controller: _noteController,
+                                                              hintText: 'Additional instructions for Pickup',
+                                                              maxLines: 2,
+                                                              inputType: TextInputType.multiline,
+                                                              inputAction: TextInputAction.newline,
+                                                              capitalization: TextCapitalization.sentences,
                                                             ),
-                                                            !takeAway
-                                                                ? const SizedBox.shrink()
-                                                                : const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                                                            !takeAway
-                                                                ? const SizedBox.shrink()
-                                                                : Text(
-                                                                    'Pickup Instructions (Optional)',
-                                                                    style: poppinsRegular.copyWith(
-                                                                      color: ColorResources.getHintColor(context),
-                                                                    ),
-                                                                  ),
-                                                            !takeAway
-                                                                ? const SizedBox.shrink()
-                                                                : const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                                            !takeAway
-                                                                ? const SizedBox.shrink()
-                                                                : CustomTextField(
-                                                                    controller: _noteController,
-                                                                    hintText: 'Additional instructions for Pickup',
-                                                                    maxLines: 2,
-                                                                    inputType: TextInputType.multiline,
-                                                                    inputAction: TextInputAction.newline,
-                                                                    capitalization: TextCapitalization.sentences,
-                                                                  ),
 
-                                                            takeAway
-                                                                ? const SizedBox(height: Dimensions.PADDING_SIZE_SMALL)
-                                                                : const SizedBox.shrink(),
+                                                      takeAway
+                                                          ? const SizedBox(height: Dimensions.PADDING_SIZE_SMALL)
+                                                          : const SizedBox.shrink(),
 
-                                                            !takeAway
-                                                                ? detailsWidget(context)
-                                                                : CardFormField(
-                                                                    controller: controller,
-                                                                    style: CardFormStyle(
-                                                                      borderColor: Colors.transparent,
-                                                                      textColor:
-                                                                          Provider.of<ThemeProvider>(context).darkTheme
-                                                                              ? Colors.white
-                                                                              : ColorResources.COLOR_BLACK,
-                                                                      placeholderColor:
-                                                                          Provider.of<ThemeProvider>(context).darkTheme
-                                                                              ? Colors.white
-                                                                              : ColorResources.COLOR_BLACK,
-                                                                    ),
-                                                                    onCardChanged: (card) {
-                                                                      debugPrint(card.toString());
-                                                                    },
-                                                                  ),
-                                                          ]),
-                                                    ),
+                                                      !takeAway
+                                                          ? detailsWidget(context)
+                                                          : CardFormField(
+                                                              controller: controller,
+                                                              style: CardFormStyle(
+                                                                borderColor: Colors.transparent,
+                                                                textColor: Provider.of<ThemeProvider>(context).darkTheme
+                                                                    ? Colors.white
+                                                                    : ColorResources.COLOR_BLACK,
+                                                                placeholderColor:
+                                                                    Provider.of<ThemeProvider>(context).darkTheme
+                                                                        ? Colors.white
+                                                                        : ColorResources.COLOR_BLACK,
+                                                              ),
+                                                              onCardChanged: (card) {
+                                                                debugPrint(card.toString());
+                                                              },
+                                                            ),
+                                                    ]),
                                                   ),
-                                                ],
-                                              ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -379,16 +371,14 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                     } else {
                       if (controller.details.complete) {
                         if (!address.isAvailable && !takeAway) {
-                          debugPrint('===no service');
+                          ('===no service');
                         } else if (takeAway) {
                           createCardToken(context, order, takeAway, lastName, email);
                         } else {
-                          debugPrint('===service available');
                           createCardToken(context, order, takeAway, lastName, email);
                         }
                       } else {
-                        createCardToken(context, order, takeAway, lastName, email);
-                        debugPrint('===complete card');
+                        debugPrint('===incomplete card');
                       }
                     }
                   }),
@@ -400,7 +390,6 @@ class CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void _openSearchDialog(BuildContext context) async {
-    log('opening dialogue');
     await showDialog(context: context, builder: (context) => const LocationSearchDialog());
   }
 
@@ -522,16 +511,20 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                         _latitude = locationProvider.pickPosition.latitude.toString();
                         _longitude = locationProvider.pickPosition.latitude.toString();
 
-                        return Row(children: [
-                          Expanded(
+                        return Row(
+                          children: [
+                            Expanded(
                               child: Text(
-                                  locationProvider.pickAddress == null || locationProvider.pickAddress == ''
-                                      ? 'Enter address Manually'
-                                      : locationProvider.pickAddress!,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis)),
-                          const Icon(Icons.search, size: 20),
-                        ]);
+                                locationProvider.address == null || locationProvider.address == ''
+                                    ? 'Enter address Manually'
+                                    : locationProvider.address!,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            const Icon(Icons.search, size: 20),
+                          ],
+                        );
                       }),
                     ),
                   )
@@ -586,6 +579,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
             CardFormField(
               controller: controller,
               dangerouslyGetFullCardDetails: true,
+              dangerouslyUpdateFullCardDetails: true,
               style: CardFormStyle(
                   cursorColor: Theme.of(context).textTheme.bodyLarge?.color,
                   textColor: Theme.of(context).textTheme.bodyLarge?.color,
@@ -599,8 +593,14 @@ class CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Future<void> createCardToken(
-      BuildContext context, OrderProvider order, bool takeAway, String name, String email) async {
+    BuildContext context,
+    OrderProvider order,
+    bool takeAway,
+    String name,
+    String email,
+  ) async {
     debugPrint('==called createCardToken');
+    FocusScope.of(context).unfocus();
     try {
       BillingDetails billingDetails = BillingDetails(
         email: email,
@@ -609,8 +609,11 @@ class CheckoutScreenState extends State<CheckoutScreen> {
       final token = await Stripe.instance.createPaymentMethod(
         params: PaymentMethodParams.card(
           paymentMethodData: PaymentMethodData(
-              billingDetails: billingDetails,
-              mandateData: const MandateData(customerAcceptance: MandateDataCustomerAcceptance())),
+            billingDetails: billingDetails,
+            mandateData: const MandateData(
+              customerAcceptance: MandateDataCustomerAcceptance(),
+            ),
+          ),
         ),
       );
 
@@ -631,23 +634,21 @@ class CheckoutScreenState extends State<CheckoutScreen> {
     }
   }
 
-  void _callback(bool isSuccess, String message, String orderID, int addressID) async {
+  Future<void> _callback(bool isSuccess, String message, String orderID, int addressID) async {
     if (isSuccess) {
       if (widget.fromCart) {
         Provider.of<CartProvider>(context, listen: false).clearCartList();
       }
       Provider.of<OrderProvider>(context, listen: false).stopLoader();
-      if (_isCashOnDeliveryActive && Provider.of<OrderProvider>(context, listen: false).paymentMethodIndex == 0) {
-        Navigator.pushReplacementNamed(context, '${Routes.ORDER_SUCCESS_SCREEN}/$orderID/success');
-      } else {
-        Navigator.pushReplacementNamed(context, '${Routes.ORDER_SUCCESS_SCREEN}/$orderID/success');
-      }
+      Navigator.pushReplacementNamed(context, '${Routes.ORDER_SUCCESS_SCREEN}/$orderID/success');
+      Navigator.pushReplacementNamed(context, '${Routes.ORDER_SUCCESS_SCREEN}/$orderID/success');
     } else {
+      log(message);
       showCustomSnackBar(message, context);
     }
   }
 
-  placeOrder(OrderProvider order, bool takeAway, String name, String email) async {
+  Future<void> placeOrder(OrderProvider order, bool takeAway, String name, String email) async {
     try {
       DateTime scheduleStartDate = DateTime.now();
       DateTime scheduleEndDate = DateTime.now();
@@ -680,11 +681,14 @@ class CheckoutScreenState extends State<CheckoutScreen> {
           addOnIdList.add(addOn.id);
           addOnQtyList.add(addOn.quantity);
         });
-        cart.variation!.removeWhere((variation) => variation != null);
+        final cartVariation = <Variation>[];
+        for (Variation? variation in cart.variation ?? []) {
+          if (variation != null) cartVariation.add(variation);
+        }
         carts.add(Cart(
           productId: (cart.product?.id).toString(),
           price: cart.discountedPrice.toString(),
-          variation: cart.variation as List<Variation>?,
+          variation: cartVariation,
           discountAmount: cart.discountAmount,
           quantity: cart.quantity,
           taxAmount: cart.taxAmount,
@@ -735,85 +739,57 @@ class CheckoutScreenState extends State<CheckoutScreen> {
             addOnQtys: [],
           ));
         }
-
-        PlaceOrderBody placeOrderBody = PlaceOrderBody(
-          cart: carts,
-          couponDiscountAmount: Provider.of<CouponProvider>(context, listen: false).discount,
-          couponDiscountTitle: widget.couponCode.isNotEmpty ? widget.couponCode : null,
-          restaurantId: F.restaurantId,
-          orderAmount: double.parse((widget.amount).toStringAsFixed(2)),
-          orderNote: _noteController.text,
-          orderType: widget.orderType,
-          orderTip: double.parse(Get.put(TipController()).tip.value.toStringAsFixed(2)),
-          taxFee: double.parse(Provider.of<CartProvider>(context, listen: false).taxFee.toStringAsFixed(2)),
-          paymentMethod: _isCashOnDeliveryActive
-              ? order.paymentMethodIndex == 0
-                  ? 'cash_on_delivery'
-                  : 'stripe'
-              : 'stripe',
-          couponCode: widget.couponCode.isNotEmpty ? widget.couponCode : null,
-          distance: takeAway ? 0 : order.distance,
-          branchId: currentBranch!.id,
-          deliveryDate: DateFormat('yyyy-MM-dd').format(scheduleStartDate),
-          deliveryTime: (order.selectTimeSlot == 0 && order.selectDateSlot == 0)
-              ? 'now'
-              : DateFormat('HH:mm').format(scheduleStartDate),
-          platform: kIsWeb
-              ? 'Web'
-              : Platform.isAndroid
-                  ? 'Android'
-                  : 'iOS',
-          catering: [],
-          happyHours: [],
-          tipChargeId: '',
-          paymentId: order.stripeModel.id,
-          chargeId: order.stripeModel.latestCharge,
-          address: Provider.of<LocationProvider>(context, listen: false).pickAddress,
-          latitude: _latitude,
-          longitude: _longitude,
-          floor: _floorController.text,
-          addressType: 'home',
-          email: email,
-          phone: Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.phone,
-          firstName: name,
-          lastName: '',
-          userId: Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.id.toString(),
-          cardHolder: 'ali',
-          contactName: name,
-          contactPhone: Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.phone,
-        );
-
-        order.placeOrder(placeOrderBody, _callback);
       }
-    } catch (e) {
-      debugPrint('Error initializing PaymentSheet: $e');
-      return false;
-    }
-  }
-
-  createPaymentIntent(String amount, String currency) async {
-    try {
-      Map<String, dynamic> body = {
-        'amount': amount,
-        'currency': currency,
-        'name': Provider.of<ProfileProvider>(context, listen: false).userInfoModel?.fName ?? 'guest',
-        'email': Provider.of<ProfileProvider>(context, listen: false).userInfoModel?.email ?? 'guest@gmail.com',
-        'account_owner': Provider.of<ProfileProvider>(context, listen: false).userInfoModel?.fName ?? 'guest'
-      };
-
-      var response = await http.post(
-        Uri.parse('https://cafescale.site/api/v1/stripe/createPaymentIntent'),
-        headers: {
-          'Authorization':
-              'Bearer sk_test_51MvRunJdXQeau2q1YkTvnJkyC1taaWq8zpgRGhfaN9FFeW76yrGHKqKCZtOBcxl1CRlRcDGjhgWiiB7MBg8DhVCd00P4eXT6c8',
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: body,
+      PlaceOrderBody placeOrderBody = PlaceOrderBody(
+        cart: carts,
+        couponDiscountAmount: Provider.of<CouponProvider>(context, listen: false).discount,
+        couponDiscountTitle: widget.couponCode.isNotEmpty ? widget.couponCode : null,
+        restaurantId: F.restaurantId,
+        orderAmount: double.parse((widget.amount).toStringAsFixed(2)),
+        orderNote: _noteController.text,
+        orderType: widget.orderType,
+        orderTip: double.parse(Get.put(TipController()).tip.value.toStringAsFixed(2)),
+        taxFee: double.parse(Provider.of<CartProvider>(context, listen: false).taxFee.toStringAsFixed(2)),
+        paymentMethod: _isCashOnDeliveryActive
+            ? order.paymentMethodIndex == 0
+                ? 'cash_on_delivery'
+                : 'stripe'
+            : 'stripe',
+        couponCode: widget.couponCode.isNotEmpty ? widget.couponCode : null,
+        distance: takeAway ? 0 : order.distance,
+        branchId: currentBranch!.id,
+        deliveryDate: DateFormat('yyyy-MM-dd').format(scheduleStartDate),
+        deliveryTime: (order.selectTimeSlot == 0 && order.selectDateSlot == 0)
+            ? 'now'
+            : DateFormat('HH:mm').format(scheduleStartDate),
+        platform: kIsWeb
+            ? 'Web'
+            : Platform.isAndroid
+                ? 'Android'
+                : 'iOS',
+        catering: [],
+        happyHours: [],
+        tipChargeId: '',
+        paymentId: order.stripeModel.id,
+        chargeId: order.stripeModel.latestCharge,
+        address: Provider.of<LocationProvider>(context, listen: false).address,
+        latitude: _latitude,
+        longitude: _longitude,
+        floor: _floorController.text,
+        addressType: 'home',
+        email: email,
+        phone: Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.phone,
+        firstName: name,
+        lastName: '',
+        userId: Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.id.toString(),
+        cardHolder: 'ali',
+        contactName: name,
+        contactPhone: Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.phone,
       );
-      debugPrint('=======${response.body}');
-      return json.decode(response.body);
-    } catch (err) {
-      debugPrint('Error initializing PaymentSheet: $err');
+
+      order.placeOrder(placeOrderBody, _callback);
+    } catch (e) {
+      debugPrint('Error placing order: $e');
     }
   }
 }

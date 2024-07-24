@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="Chaat House" type="FlutterRunConfigurationType" factoryName="Flutter">
+        <option name="additionalArgs" value="--flavor chaatHouse" />
+        <option name="filePath" value="$PROJECT_DIR$/lib/main_chaat_house.dart" />
+        <method v="2" />
+    </configuration>
+</component>

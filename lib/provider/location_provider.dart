@@ -113,11 +113,11 @@ class LocationProvider with ChangeNotifier {
 
   List<String> get getAllAddressType => _getAllAddressType;
 
-  updateAddressStatusMessage({required String message}) {
+  void updateAddressStatusMessage({required String message}) {
     _addressStatusMessage = message;
   }
 
-  resetPickedAddress() {
+  void resetPickedAddress() {
     _pickAddress = '';
   }
 
@@ -129,8 +129,7 @@ class LocationProvider with ChangeNotifier {
 
     Position myPosition;
     try {
-      Position newLocalData = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      myPosition = newLocalData;
+      myPosition = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     } catch (e) {
       myPosition = Position(
         latitude: double.parse('0'),
@@ -166,9 +165,9 @@ class LocationProvider with ChangeNotifier {
       double.parse(currentBranch!.longitude),
       position!.latitude,
       position!.longitude,
-      "meters",
+      "miles",
     );
-    distance = distance / 1000;
+    log('distance $distance');
     _isAvailable = distance < currentBranch!.coverage;
     notifyListeners();
   }
@@ -281,7 +280,7 @@ class LocationProvider with ChangeNotifier {
       responseModel = ResponseModel(true, message);
       _addressStatusMessage = message;
     } else {
-      debugPrint('======location error');
+      debugPrint('location error');
       String errorMessage = apiResponse.error.toString();
       if (apiResponse.error is String) {
         debugPrint(apiResponse.error.toString());
@@ -346,29 +345,25 @@ class LocationProvider with ChangeNotifier {
     return sharedPreferences.getString(AppConstants.USER_ADDRESS) ?? "";
   }
 
-  updateAddressIndex(int index, bool notify) {
+  void updateAddressIndex(int index, bool notify) {
     _selectAddressIndex = index;
     if (notify) {
       notifyListeners();
     }
   }
 
-  initializeAllAddressType() {
+  void initializeAllAddressType() {
     if (_getAllAddressType.isEmpty) {
       _getAllAddressType = [];
       _getAllAddressType = locationRepo.getAllAddressType();
     }
   }
 
-  Future<void> setLocation(
-    String placeID,
-    String address,
-  ) async {
+  Future<void> setLocation(String placeID, String address) async {
     _loading = true;
     notifyListeners();
-    PlacesDetailsResponse detail;
     ApiResponse response = await locationRepo.getPlaceDetails(placeID);
-    detail = PlacesDetailsResponse.fromJson(jsonDecode(response.response!.body));
+    PlacesDetailsResponse detail = PlacesDetailsResponse.fromJson(jsonDecode(response.response!.body));
 
     _pickPosition = Position(
       longitude: detail.result.geometry!.location.lng,
@@ -382,9 +377,9 @@ class LocationProvider with ChangeNotifier {
       altitudeAccuracy: 1,
       headingAccuracy: 1,
     );
-    checkRadius();
     _position = _pickPosition;
-    _pickAddress = address;
+    checkRadius();
+    _address = address;
     _changeAddress = false;
     _loading = false;
     notifyListeners();
@@ -446,7 +441,6 @@ class LocationProvider with ChangeNotifier {
         ApiChecker.checkApi(context, response);
       }
     }
-    log(_predictionList.toString());
     return _predictionList;
   }
 

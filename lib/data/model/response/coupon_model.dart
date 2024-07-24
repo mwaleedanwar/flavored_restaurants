@@ -24,12 +24,12 @@ class CouponModel {
   String createdAt;
   String updatedAt;
   String couponType;
-  String limit;
+  String? limit;
   String restaurantId;
-  String userId;
-  String userPhone;
-  String userEmail;
-  String productId;
+  String? userId;
+  String? userPhone;
+  String? userEmail;
+  String? productId;
   bool isExpired;
   Product? product;
 
@@ -45,13 +45,13 @@ class CouponModel {
     required this.createdAt,
     required this.updatedAt,
     required this.couponType,
-    required this.limit,
     required this.restaurantId,
-    required this.userId,
-    required this.userPhone,
-    required this.userEmail,
     required this.isExpired,
-    required this.productId,
+    this.limit,
+    this.userId,
+    this.userPhone,
+    this.userEmail,
+    this.productId,
     this.minPurchase,
     this.maxDiscount,
     this.product,

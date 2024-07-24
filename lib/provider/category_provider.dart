@@ -138,7 +138,7 @@ class AllCategoryProvider extends ChangeNotifier {
     if (categoryList.isEmpty || reload) {
       _isLoading = true;
       ApiResponse apiResponse = await categoryRepo.getAllCategoryProductList(languageCode);
-      if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
+      if (categoryList.isEmpty && apiResponse.response != null && apiResponse.response!.statusCode == 200) {
         debugPrint('====new response:${apiResponse.response!.body}');
         jsonDecode(apiResponse.response!.body).forEach((category) {
           debugPrint(

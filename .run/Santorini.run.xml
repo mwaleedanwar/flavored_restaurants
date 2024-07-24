@@ -1,0 +1,7 @@
+ <component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Santorini" type="FlutterRunConfigurationType" factoryName="Flutter">
+    <option name="additionalArgs" value="--flavor santo" />
+    <option name="filePath" value="$PROJECT_DIR$/lib/main_santo.dart" />
+    <method v="2" />
+  </configuration>
+</component>

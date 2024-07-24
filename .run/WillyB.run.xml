@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="WillyB" type="FlutterRunConfigurationType" factoryName="Flutter">
+        <option name="additionalArgs" value="--flavor willyb" />
+        <option name="filePath" value="$PROJECT_DIR$/lib/main_willy_b.dart" />
+        <method v="2" />
+    </configuration>
+</component>

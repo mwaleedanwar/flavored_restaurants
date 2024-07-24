@@ -364,19 +364,18 @@ class DetailsView extends StatelessWidget {
             },
           ),
 
-          (order.trackModel?.orderNote != null && order.trackModel!.orderNote.isNotEmpty)
-              ? Container(
-                  padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-                  margin: const EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_LARGE),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(width: 1, color: ColorResources.getGreyColor(context)),
-                  ),
-                  child: Text(order.trackModel!.orderNote,
-                      style: rubikRegular.copyWith(color: ColorResources.getGreyColor(context))),
-                )
-              : const SizedBox(),
+          if (order.trackModel?.orderNote != null && order.trackModel!.orderNote!.isNotEmpty)
+            Container(
+              padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+              margin: const EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_LARGE),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                border: Border.all(width: 1, color: ColorResources.getGreyColor(context)),
+              ),
+              child: Text(order.trackModel!.orderNote!,
+                  style: rubikRegular.copyWith(color: ColorResources.getGreyColor(context))),
+            )
         ],
       );
     });

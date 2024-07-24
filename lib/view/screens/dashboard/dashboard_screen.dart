@@ -98,13 +98,6 @@ class DashboardScreenState extends State<DashboardScreen> {
     showDialog(context: context, barrierDismissible: false, builder: (context) => const WelcomeMessageDialog());
   }
 
-  final _screens = const [
-    ModifiedHomePage(),
-    TestMenuScreen(),
-    CartScreen(),
-    OrderScreen(),
-    HeartPointScreen(),
-  ];
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -137,13 +130,19 @@ class DashboardScreenState extends State<DashboardScreen> {
                 },
               )
             : const SizedBox(),
-        body: PageView.builder(
+        body: PageView(
           controller: _pageController,
-          itemCount: _screens.length,
           physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return _screens[index];
-          },
+          children: [
+            ModifiedHomePage(
+              navigateToMenu: () => _setPage(1),
+              navigateToReward: () => _setPage(4),
+            ),
+            const TestMenuScreen(),
+            const CartScreen(),
+            const OrderScreen(),
+            const HeartPointScreen(),
+          ],
         ),
       ),
     );

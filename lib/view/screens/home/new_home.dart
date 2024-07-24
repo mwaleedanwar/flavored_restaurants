@@ -117,6 +117,16 @@ class _TestMenuScreenState extends State<TestMenuScreen> with TickerProviderStat
     VisibilityDetectorController.instance.notifyNow();
   }
 
+  double maxLength(List<CategoryProductModel> categories) {
+    double max = 0;
+    for (CategoryProductModel category in categories) {
+      if (category.name.length > max) {
+        max = category.name.length.toDouble();
+      }
+    }
+    return max;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AllCategoryProvider>(
@@ -148,6 +158,7 @@ class _TestMenuScreenState extends State<TestMenuScreen> with TickerProviderStat
                         _categoryTabController,
                         provider.categoryList,
                         _tabInfoList,
+                        maxLength(provider.categoryList) > 12 ? 110 : 90,
                       ),
                       pinned: true,
                     ),
@@ -229,11 +240,12 @@ class _CategoryTabBarDelegate extends SliverPersistentHeaderDelegate {
   final TabController controller;
   final List<CategoryProductModel> data;
   List<GlobalKey> keys;
-
+  double size;
   _CategoryTabBarDelegate(
     this.controller,
     this.data,
     this.keys,
+    this.size,
   );
 
   @override
@@ -252,10 +264,10 @@ class _CategoryTabBarDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => 90;
+  double get maxExtent => size;
 
   @override
-  double get minExtent => 90;
+  double get minExtent => size;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
@@ -282,47 +294,47 @@ class _CategoryTabBarState extends State<CategoryTabBar> {
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).cardColor,
-      shadowColor: Colors.black38,
-      child: LayoutBuilder(
-        builder: (context, constraints) => TabBar(
-          indicatorColor: F.appbarHeaderColor,
-          controller: widget.controller,
-          isScrollable: true,
-          labelPadding: EdgeInsets.zero,
-          indicatorSize: TabBarIndicatorSize.tab,
-          tabAlignment: TabAlignment.start,
-          onTap: (index) async {
-            currentIndex = index;
-
-            GlobalKey globalKey = widget.keys[index];
-            await Scrollable.ensureVisible(
-              globalKey.currentContext!,
-              duration: const Duration(milliseconds: 150),
-            );
-            setState(() {});
-          },
-          tabs: List.generate(widget.data.length, (index) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: ClipOval(
-                    child: FadeInImage.assetNetwork(
-                      placeholder: Images.placeholder_image,
-                      width: currentIndex == index ? 70 : 65,
-                      height: currentIndex == index ? 70 : 65,
-                      fit: BoxFit.cover,
-                      image: Provider.of<SplashProvider>(context, listen: false).baseUrls != null
-                          ? '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.categoryImageUrl}/${widget.data[index].image}'
-                          : '',
-                      imageErrorBuilder: (c, o, s) =>
-                          Image.asset(Images.placeholder_image, width: 65, height: 65, fit: BoxFit.cover),
-                    ),
+    return ColoredBox(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      child: TabBar(
+        indicatorPadding: EdgeInsets.zero,
+        indicatorColor: F.appbarHeaderColor,
+        controller: widget.controller,
+        isScrollable: true,
+        labelPadding: EdgeInsets.zero,
+        indicatorSize: TabBarIndicatorSize.tab,
+        tabAlignment: TabAlignment.start,
+        onTap: (index) async {
+          currentIndex = index;
+          GlobalKey globalKey = widget.keys[index];
+          await Scrollable.ensureVisible(
+            globalKey.currentContext!,
+            duration: const Duration(milliseconds: 150),
+          );
+          setState(() {});
+        },
+        tabs: List.generate(widget.data.length, (index) {
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 5),
+                child: ClipOval(
+                  child: FadeInImage.assetNetwork(
+                    placeholder: Images.placeholder_image,
+                    width: currentIndex == index ? 70 : 65,
+                    height: currentIndex == index ? 70 : 65,
+                    fit: BoxFit.cover,
+                    image: Provider.of<SplashProvider>(context, listen: false).baseUrls != null
+                        ? '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.categoryImageUrl}/${widget.data[index].image}'
+                        : '',
+                    imageErrorBuilder: (c, o, s) =>
+                        Image.asset(Images.placeholder_image, width: 65, height: 65, fit: BoxFit.cover),
                   ),
                 ),
-                Text(
+              ),
+              Container(
+                constraints: const BoxConstraints(maxWidth: 80),
+                child: Text(
                   widget.data[index].name,
                   style: rubikMedium.copyWith(
                     fontSize: Dimensions.FONT_SIZE_SMALL,
@@ -331,11 +343,12 @@ class _CategoryTabBarState extends State<CategoryTabBar> {
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
                 ),
-              ],
-            );
-          }),
-        ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }

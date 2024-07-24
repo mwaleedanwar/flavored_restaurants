@@ -19,7 +19,9 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/heart_points/widg
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/menu/menu_screen.dart';
 
 class ModifiedHomePage extends StatefulWidget {
-  const ModifiedHomePage({super.key});
+  final VoidCallback? navigateToMenu;
+  final VoidCallback? navigateToReward;
+  const ModifiedHomePage({super.key, this.navigateToMenu, this.navigateToReward});
 
   @override
   State<ModifiedHomePage> createState() => _ModifiedHomePageState();
@@ -185,9 +187,7 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                                       side: BorderSide(width: 2, color: Theme.of(context).primaryColor)),
                                   minimumSize: const Size(150, 30),
                                 ),
-                                onPressed: () {
-                                  Navigator.pushReplacementNamed(context, Routes.getDashboardRoute('menu'));
-                                },
+                                onPressed: widget.navigateToReward ?? () {},
                                 child: Text('Reward Options',
                                     style: rubikRegular.copyWith(
                                       fontSize: Dimensions.FONT_SIZE_LARGE,
@@ -257,8 +257,10 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
 class HomeBannerCard extends StatefulWidget {
   final BannerForRestaurantWebApp bannerForRestaurantWebApp;
   final String imageBaseUrl;
+  final VoidCallback? navigateToMenu;
 
-  const HomeBannerCard({super.key, required this.bannerForRestaurantWebApp, required this.imageBaseUrl});
+  const HomeBannerCard(
+      {super.key, required this.bannerForRestaurantWebApp, required this.imageBaseUrl, this.navigateToMenu});
 
   @override
   State<HomeBannerCard> createState() => _HomeBannerCardState();
@@ -307,15 +309,18 @@ class _HomeBannerCardState extends State<HomeBannerCard> {
               ? TextButton(
                   style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        side: BorderSide(width: 2, color: Theme.of(context).primaryColor)),
+                      borderRadius: BorderRadius.circular(5),
+                      side: BorderSide(width: 2, color: Theme.of(context).primaryColor),
+                    ),
                     minimumSize: const Size(150, 30),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (widget.bannerForRestaurantWebApp.buttonText == 'Order Now') {
-                      Navigator.pushReplacementNamed(context, Routes.getDashboardRoute('food_menu'));
+                      if (widget.navigateToMenu != null) {
+                        widget.navigateToMenu!();
+                      }
                     } else {
-                      Navigator.pushNamed(context, Routes.getSupportRoute());
+                      await Navigator.pushNamed(context, Routes.getSupportRoute());
                     }
                   },
                   child: Text(widget.bannerForRestaurantWebApp.buttonText ?? '',

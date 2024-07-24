@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Nopal Dos" type="FlutterRunConfigurationType" factoryName="Flutter">
-    <option name="additionalArgs" value="--flavor nopal -t lib/main_nopal_dos.dart" />
+    <option name="additionalArgs" value="--flavor nopal" />
     <option name="filePath" value="$PROJECT_DIR$/lib/main_nopal_dos.dart" />
     <method v="2" />
   </configuration>

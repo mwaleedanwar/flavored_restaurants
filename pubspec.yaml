@@ -26,8 +26,6 @@ dependencies:
   shimmer_animation: ^2.0.0
   url_launcher: ^6.0.2
   webview_flutter: ^4.8.0
-  easy_stepper:
-  percent_indicator:
   flutter_stripe: ^10.2.0
   fluttertoast: ^8.2.1
   firebase_core: ^3.2.0

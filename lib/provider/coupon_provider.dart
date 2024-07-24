@@ -35,7 +35,7 @@ class CouponProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  List<CouponModel> get couponList => _couponList!;
+  List<CouponModel> get couponList => _couponList ?? [];
 
   Future<void> getCouponList(BuildContext context) async {
     ApiResponse apiResponse = await couponRepo.getCouponList();

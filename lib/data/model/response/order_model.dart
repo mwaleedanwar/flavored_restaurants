@@ -11,17 +11,17 @@ class OrderModel {
   double totalTaxAmount;
   double orderTip;
   String paymentMethod;
-  String transactionReference;
-  int deliveryAddressId;
+  String? transactionReference;
+  int? deliveryAddressId;
   String createdAt;
   String updatedAt;
-  int deliveryManId;
+  int? deliveryManId;
   double deliveryCharge;
-  String orderNote;
+  String? orderNote;
   List<int>? addOnIds;
   List<Details>? details;
   DeliveryMan? deliveryMan;
-  int detailsCount;
+  int? detailsCount;
   String orderType;
   String? deliveryTime;
   String deliveryDate;
@@ -41,14 +41,14 @@ class OrderModel {
     required this.totalTaxAmount,
     required this.orderTip,
     required this.paymentMethod,
-    required this.transactionReference,
-    required this.deliveryAddressId,
+    this.transactionReference,
+    this.deliveryAddressId,
     required this.createdAt,
     required this.updatedAt,
-    required this.deliveryManId,
+    this.deliveryManId,
     required this.deliveryCharge,
-    required this.orderNote,
-    required this.detailsCount,
+    this.orderNote,
+    this.detailsCount,
     this.deliveryTime,
     required this.deliveryDate,
     required this.orderType,
@@ -70,13 +70,9 @@ class OrderModel {
       couponDiscountTitle: json['coupon_discount_title'],
       paymentStatus: json['payment_status'],
       orderStatus:
-          json['order_status'] == 'cooking' || json['order_status'] == 'done'
-              ? 'processing'
-              : json['order_status'],
+          json['order_status'] == 'cooking' || json['order_status'] == 'done' ? 'processing' : json['order_status'],
       totalTaxAmount: json['total_tax_amount'].toDouble(),
-      orderTip: json['order_tip_amount'] == null
-          ? 0.0
-          : double.parse(json['order_tip_amount'].toString()),
+      orderTip: json['order_tip_amount'] == null ? 0.0 : double.parse(json['order_tip_amount'].toString()),
       paymentMethod: json['payment_method'],
       transactionReference: json['transaction_reference'],
       deliveryAddressId: json['delivery_address_id'],
@@ -87,19 +83,14 @@ class OrderModel {
       orderNote: json['order_note'],
       detailsCount: json['details_count'],
       addOnIds: json['add_on_ids']?.cast<int>(),
-      deliveryMan: json['delivery_man'] != null
-          ? DeliveryMan.fromJson(json['delivery_man'])
-          : null,
+      deliveryMan: json['delivery_man'] != null ? DeliveryMan.fromJson(json['delivery_man']) : null,
       orderType: json['order_type'],
       deliveryTime: json['delivery_time'],
       deliveryDate: json['delivery_date'],
       extraDiscount: double.tryParse(json['extra_discount'] ?? ''),
-      deliveryAddress: json['delivery_address'] != null
-          ? DeliveryAddress.fromJson(json['delivery_address'])
-          : null,
+      deliveryAddress: json['delivery_address'] != null ? DeliveryAddress.fromJson(json['delivery_address']) : null,
       preparationTime: json['preparation_time']?.toString() ?? '0',
-      isProductAvailable:
-          int.tryParse('${json['is_product_available']}') == 1 ? true : false,
+      isProductAvailable: int.tryParse('${json['is_product_available']}') == 1 ? true : false,
     );
 
     if (json['details'] != null) {

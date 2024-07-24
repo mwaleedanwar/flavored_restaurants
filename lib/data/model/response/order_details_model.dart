@@ -16,7 +16,6 @@ class OrderDetailsModel {
   int orderId;
   double price;
   Product? productDetails;
-  Variation variation;
   int discountOnProduct;
   String discountType;
   String loyaltyPoints;
@@ -41,7 +40,6 @@ class OrderDetailsModel {
     required this.orderId,
     required this.price,
     required this.productDetails,
-    required this.variation,
     required this.discountOnProduct,
     required this.discountType,
     required this.quantity,
@@ -66,7 +64,6 @@ class OrderDetailsModel {
         productId: json["product_id"],
         orderId: json["order_id"],
         price: json["price"].toDouble(),
-        variation: json["variation"],
         discountOnProduct: json["discount_on_product"],
         discountType: json["discount_type"],
         quantity: json["quantity"],

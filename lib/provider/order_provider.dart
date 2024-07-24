@@ -196,10 +196,9 @@ class OrderProvider extends ChangeNotifier {
     _isLoading = true;
     ApiResponse apiResponse = await orderRepo.makePayment(token, amount, name, email);
     if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
-      _stripeIntentModel = jsonDecode(apiResponse.response!.body);
+      _stripeIntentModel = StripeIntentModel.fromJson(jsonDecode(apiResponse.response!.body));
       _responseModel = ResponseModel(true, 'Successful');
-
-      debugPrint('=======Payment intent was created successfully}');
+      debugPrint('=======Payment intent was created successfully');
     } else {
       _responseModel = ResponseModel(false, apiResponse.error.errors.first.message);
       debugPrint('ERROR MAKING PAYMENT ==> ${apiResponse.error}');

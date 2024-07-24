@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/location_provider.dart';
@@ -13,6 +14,20 @@ class LocationSearchDialog extends StatefulWidget {
 }
 
 class _LocationSearchDialogState extends State<LocationSearchDialog> {
+  int indx = 0;
+  Timer? debounce;
+  List<Prediction> results = [];
+  Iterable<Prediction> handleSearch(String pattern) {
+    if (debounce != null) debounce!.cancel();
+    debounce = Timer(const Duration(milliseconds: 300), () async {
+      results = await Provider.of<LocationProvider>(context, listen: false).searchLocation(context, pattern);
+      if (mounted) {
+        setState(() {});
+      }
+    });
+    return results;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -22,6 +37,7 @@ class _LocationSearchDialogState extends State<LocationSearchDialog> {
         margin: const EdgeInsets.only(top: 80, right: 10, left: 10),
         alignment: Alignment.topCenter,
         child: Autocomplete<Prediction>(
+          initialValue: TextEditingValue(text: Provider.of<LocationProvider>(context, listen: false).address ?? ''),
           fieldViewBuilder: (context, controller, focus, _) {
             return TextFormField(
               focusNode: focus,
@@ -58,9 +74,7 @@ class _LocationSearchDialogState extends State<LocationSearchDialog> {
                 )
                 .then((_) => Navigator.of(context)..pop());
           },
-          optionsBuilder: (pattern) async {
-            return await Provider.of<LocationProvider>(context, listen: false).searchLocation(context, pattern.text);
-          },
+          optionsBuilder: (pattern) => handleSearch(pattern.text),
           optionsViewBuilder: (context, onSelected, options) {
             return ListView.separated(
               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -103,5 +117,11 @@ class _LocationSearchDialogState extends State<LocationSearchDialog> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    debounce?.cancel();
   }
 }

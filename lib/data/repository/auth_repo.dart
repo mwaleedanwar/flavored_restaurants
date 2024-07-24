@@ -117,9 +117,8 @@ class AuthRepo {
         deviceToken = await _saveDeviceToken();
       }
 
-      if (!kIsWeb) {
-        FirebaseMessaging.instance.subscribeToTopic(AppConstants.TOPIC);
-      }
+      FirebaseMessaging.instance.subscribeToTopic(AppConstants.TOPIC);
+
       debugPrint('---app token  fb $deviceToken');
       debugPrint('---app token  url ${AppConstants.TOKEN_URI}');
 
@@ -297,10 +296,7 @@ class AuthRepo {
   }
 
   Future<bool> clearSharedData() async {
-    if (!kIsWeb) {
-      await FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.TOPIC);
-    }
-
+    await FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.TOPIC);
     await httpClient.post(
       AppConstants.TOKEN_URI,
       data: {"_method": "put", "cm_firebase_token": '@'},
