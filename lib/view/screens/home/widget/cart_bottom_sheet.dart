@@ -24,6 +24,8 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_text_field.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/title_widget.dart';
 
+import '../../../../utill/app_toast.dart';
+
 class CartBottomSheet extends StatefulWidget {
   final Product product;
   final bool fromSetMenu;
@@ -487,8 +489,7 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                 // debugPrint('need to login first');
               }
             } else {
-              showCustomSnackBar('Select the required variant(s)', context);
-            }
+              appToast(text: 'select the required variant(s)', toastColor: Colors.red);            }
           }),
     ]);
   }

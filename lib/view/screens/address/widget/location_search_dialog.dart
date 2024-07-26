@@ -46,6 +46,7 @@ class _LocationSearchDialogState extends State<LocationSearchDialog> {
               autofocus: true,
               textCapitalization: TextCapitalization.words,
               keyboardType: TextInputType.streetAddress,
+
               decoration: InputDecoration(
                 hintText: getTranslated('search_location', context),
                 border: OutlineInputBorder(
@@ -57,6 +58,11 @@ class _LocationSearchDialogState extends State<LocationSearchDialog> {
                       color: Theme.of(context).disabledColor,
                     ),
                 filled: true,
+                suffixIcon: InkWell(
+                    onTap: (){
+                      controller.clear();
+                    },
+                    child: Icon(Icons.close)),
                 fillColor: Theme.of(context).cardColor,
               ),
               style: Theme.of(context).textTheme.displayMedium?.copyWith(

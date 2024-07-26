@@ -240,7 +240,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                   Provider.of<SplashProvider>(context, listen: false).configModel?.emailVerification ??
                                           false
                                       ? CustomTextField(
-                                          hintText: 'Doe',
+                                          hintText: 'first name',
                                           isShowBorder: true,
                                           controller: _lastNameController,
                                           focusNode: _lastNameFocus,

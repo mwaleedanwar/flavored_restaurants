@@ -30,9 +30,9 @@ android {
     signingConfigs {
         configNopal {
             keyAlias 'nopal'
-            keyPassword '123456' //change password to your key password
+            keyPassword 'FastTech@123' //change password to your key password
             storeFile file('./src/nopal/upload-keystore.jks')
-            storePassword '123456' //change password to your key password
+            storePassword 'FastTech@123' //change password to your key password
         }
         configMaa {
             keyAlias 'maa'

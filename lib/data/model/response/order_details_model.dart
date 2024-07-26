@@ -18,7 +18,7 @@ class OrderDetailsModel {
   Product? productDetails;
   int discountOnProduct;
   String discountType;
-  String loyaltyPoints;
+  String? loyaltyPoints;
   int quantity;
   int taxAmount;
   DateTime createdAt;
@@ -28,7 +28,7 @@ class OrderDetailsModel {
   dynamic addOnQtys;
   String restaurantId;
   dynamic happyHourId;
-  String cateringId;
+  String? cateringId;
   SpecialOfferModel? offerDetail;
   String reviewsCount;
   int isProductAvailable;

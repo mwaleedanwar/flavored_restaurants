@@ -315,7 +315,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                     ?.emailVerification ??
                                                 false
                                             ? CustomTextField(
-                                                hintText: 'Doe',
+                                                hintText: 'first name',
                                                 isShowBorder: true,
                                                 controller: _lastNameController,
                                                 focusNode: _lastNameFocus,
