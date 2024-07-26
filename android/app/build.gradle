@@ -121,51 +121,61 @@ android {
             dimension "flavor-type"
             applicationId "com.fasttech.cafesantorini"
             resValue "string", "app_name", "Cafe Santorini"
+            signingConfig signingConfigs.configSanto
         }
         hcb {
             dimension "flavor-type"
             applicationId "com.halalchinabox.app"
             resValue "string", "app_name", "Halal China Box"
+            signingConfig signingConfigs.configHcb
         }
         apnaa {
             dimension "flavor-type"
             applicationId "com.fasttechapnabazar.app"
             resValue "string", "app_name", "Apnaa Bazar"
+            signingConfig signingConfigs.configApnaa
         }
         willyb {
             dimension "flavor-type"
             applicationId "com.willybsteakhouse.fasttech"
             resValue "string", "app_name", "Steakhouse"
+            signingConfig signingConfigs.configWillyb
         }
         chaatHouse {
             dimension "flavor-type"
             applicationId "com.chaathouse.app"
             resValue "string", "app_name", "Chaat House"
+            signingConfig signingConfigs.configChaatHouse
         }
         kabsah {
             dimension "flavor-type"
             applicationId "com.scalecafe.app"
             resValue "string", "app_name", "kabsah"
+            signingConfig signingConfigs.configKabsah
         }
         fifthE {
             dimension "flavor-type"
             applicationId "com.element5th.app"
             resValue "string", "app_name", "5th Element"
+            signingConfig signingConfigs.configFifthE
         }
         alladinGrill {
             dimension "flavor-type"
             applicationId "com.alladingrill.app"
             resValue "string", "app_name", "Aladdin Grill"
+            signingConfig signingConfigs.configAlladinGrill
         }
         jaxspice {
             dimension "flavor-type"
             applicationId "com.jaxspice.com"
             resValue "string", "app_name", "jaxSpice"
+            signingConfig signingConfigs.configJaxspice
         }
         afgrill {
             dimension "flavor-type"
             applicationId "com.fasttech.eatatanfgyros"
             resValue "string", "app_name", "ANF Gyros Grill"
+            signingConfig signingConfigs.configAfgrill
         }
     }
 
