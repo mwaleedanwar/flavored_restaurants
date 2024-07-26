@@ -55,10 +55,8 @@ Future<void> init() async {
   sl.registerFactory(() => LocationProvider(sharedPreferences: sl(), locationRepo: sl()));
   sl.registerFactory(() => ProfileProvider(profileRepo: sl()));
   sl.registerFactory(() => NotificationProvider(notificationRepo: sl()));
-  sl.registerFactory(() => SetMenuProvider(setMenuRepo: sl()));
   sl.registerFactory(() => WishListProvider(wishListRepo: sl()));
   sl.registerFactory(() => CouponProvider(couponRepo: sl()));
-  sl.registerFactory(() => SearchProvider(searchRepo: sl()));
   sl.registerFactory(() => NewsLetterProvider(newsLetterRepo: sl()));
   sl.registerLazySingleton(() => TimerProvider());
   sl.registerLazySingleton(() => BranchProvider(splashRepo: sl()));

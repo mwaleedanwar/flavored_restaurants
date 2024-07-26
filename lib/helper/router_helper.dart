@@ -51,10 +51,6 @@ class RouterHelper {
             ));
   });
 
-  static final Handler _forgotPassHandler = Handler(
-    handlerFunc: (context, Map<String, dynamic> params) => _routeHandler(context, const ForgotPasswordScreen()),
-  );
-
   static final Handler _createNewPassHandler = Handler(handlerFunc: (context, Map<String, dynamic> params) {
     CreateNewPasswordScreen? createPassScreen = ModalRoute.of(context!)?.settings.arguments as CreateNewPasswordScreen?;
     return _routeHandler(
@@ -73,23 +69,6 @@ class RouterHelper {
   static final Handler __newHomeScreenHandler = Handler(handlerFunc: (context, Map<String, dynamic> params) {
     return _routeHandler(context, const ModifiedHomePage());
   });
-
-  static final Handler _searchHandler = Handler(
-    handlerFunc: (context, Map<String, dynamic> params) => _routeHandler(context, const SearchScreen()),
-  );
-
-  static final Handler _searchResultHandler = Handler(handlerFunc: (context, Map<String, dynamic> params) {
-    List<int> decode = base64Decode(params['text'][0]);
-    String data = utf8.decode(decode);
-    return _routeHandler(context, SearchResultScreen(searchString: data));
-  });
-  static final Handler _updateHandler = Handler(
-    handlerFunc: (context, Map<String, dynamic> params) => _routeHandler(context, const UpdateScreen()),
-  );
-
-  static final Handler _setMenuHandler = Handler(
-    handlerFunc: (context, Map<String, dynamic> params) => _routeHandler(context, const SetMenuScreen()),
-  );
 
   static final Handler _categoryHandler = Handler(handlerFunc: (context, Map<String, dynamic> params) {
     return _routeHandler(context, const MyHomePage());
@@ -281,16 +260,12 @@ class RouterHelper {
     router.define(Routes.SIGNUP_SCREEN, handler: _signUpHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.VERIFY, handler: _verificationHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.CREATE_ACCOUNT_SCREEN, handler: _createAccountHandler, transitionType: TransitionType.fadeIn);
-    router.define(Routes.FORGOT_PASS_SCREEN, handler: _forgotPassHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.CREATE_NEW_PASS_SCREEN, handler: _createNewPassHandler, transitionType: TransitionType.fadeIn);
 
     router.define(Routes.NEW_HOME,
         handler: __newHomeScreenHandler, transitionType: TransitionType.fadeIn); // ?page=home
     router.define(Routes.DASHBOARD, handler: dashScreenBoardHandler, transitionType: TransitionType.fadeIn);
-    router.define(Routes.SEARCH_SCREEN, handler: _searchHandler, transitionType: TransitionType.fadeIn);
-    router.define(Routes.SEARCH_RESULT_SCREEN, handler: _searchResultHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.CATEGORY_SCREEN, handler: _categoryHandler, transitionType: TransitionType.fadeIn);
-    router.define(Routes.SET_MENU_SCREEN, handler: _setMenuHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.NOTIFICATION_SCREEN, handler: _notificationHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.CHECKOUT_SCREEN, handler: _checkoutHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.PAYMENT_SCREEN, handler: _paymentHandler, transitionType: TransitionType.fadeIn);
@@ -315,7 +290,6 @@ class RouterHelper {
     router.define(Routes.POLICY_SCREEN, handler: _policyHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.ABOUT_US_SCREEN, handler: _aboutUsHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.MAINTAIN, handler: _maintainHandler, transitionType: TransitionType.fadeIn);
-    router.define(Routes.UPDATE, handler: _updateHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.RETURN_POLICY_SCREEN, handler: _returnPolicyHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.REFUND_POLICY_SCREEN, handler: _refundPolicyHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.CANCELLATION_POLICY_SCREEN,

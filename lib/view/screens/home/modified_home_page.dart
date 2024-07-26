@@ -32,7 +32,7 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
   bool _isLoggedIn = false;
   double points = 0;
 
-  Future<void> _loadData(BuildContext context, bool reload) async {
+  Future<void> _loadData(BuildContext context) async {
     if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
       Provider.of<ProfileProvider>(context, listen: false).getUserInfo(context);
       _isLoggedIn = true;
@@ -51,7 +51,7 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
   @override
   void initState() {
     super.initState();
-    _loadData(context, false);
+    _loadData(context);
   }
 
   @override
@@ -147,109 +147,106 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                 : const SizedBox(),
           ],
         ),
-        body: Consumer<SplashProvider>(builder: (context, config, child) {
-          return Consumer<ProfileProvider>(builder: (context, profile, child) {
-            return Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _isLoggedIn
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Text(profile.points.toStringAsFixed(1),
-                                          style: rubikMedium.copyWith(fontSize: 22)),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Icon(
-                                        Icons.favorite,
-                                        color: Theme.of(context).primaryColor,
-                                        size: 18,
-                                      )
-                                    ],
-                                  ),
-                                  Text('Heart Balance', style: rubikMedium.copyWith(fontSize: 16)),
-                                ],
-                              ),
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                      side: BorderSide(width: 2, color: Theme.of(context).primaryColor)),
-                                  minimumSize: const Size(150, 30),
+        body: Consumer2<SplashProvider, ProfileProvider>(builder: (context, config, profile, child) {
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _isLoggedIn
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Text(profile.points.toStringAsFixed(1), style: rubikMedium.copyWith(fontSize: 22)),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Icon(
+                                      Icons.favorite,
+                                      color: Theme.of(context).primaryColor,
+                                      size: 18,
+                                    )
+                                  ],
                                 ),
-                                onPressed: widget.navigateToReward ?? () {},
-                                child: Text('Reward Options',
-                                    style: rubikRegular.copyWith(
-                                      fontSize: Dimensions.FONT_SIZE_LARGE,
-                                    )),
+                                Text('Heart Balance', style: rubikMedium.copyWith(fontSize: 16)),
+                              ],
+                            ),
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                    side: BorderSide(width: 2, color: Theme.of(context).primaryColor)),
+                                minimumSize: const Size(150, 30),
                               ),
-                            ],
-                          )
-                        : Column(
-                            children: [
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height: 40,
-                                child: CustomButton(
-                                    btnTxt: 'Sign Up',
-                                    onTap: () {
-                                      Navigator.pushNamed(context, Routes.getLoginRoute());
-                                    }),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width,
-                                height: 40,
-                                child: CustomButton(
-                                    btnTxt: getTranslated('login', context),
-                                    onTap: () {
-                                      Navigator.pushNamed(context, Routes.getLoginRoute());
-                                    }),
-                              ),
-                            ],
-                          ),
-                    ProgressTimeline(points),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Text('Let\'s Get Started', style: rubikMedium.copyWith(fontSize: 14)),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: (config.configModel?.bannerForRestaurantWebApp ?? []).length,
-                        itemBuilder: (context, index) {
-                          var banner = config.configModel!.bannerForRestaurantWebApp![index];
-                          bool isRight = (banner.bannerType == 'catering' ||
-                                  banner.bannerType == 'product' ||
-                                  banner.bannerType == 'simple') &&
-                              banner.isMobileView == 0;
-                          return isRight
-                              ? HomeBannerCard(
-                                  bannerForRestaurantWebApp: banner,
-                                  imageBaseUrl: config.baseUrls!.bannerImageUrl,
-                                )
-                              : const SizedBox();
-                        })
-                  ],
-                ),
+                              onPressed: widget.navigateToReward ?? () {},
+                              child: Text('Reward Options',
+                                  style: rubikRegular.copyWith(
+                                    fontSize: Dimensions.FONT_SIZE_LARGE,
+                                  )),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: 40,
+                              child: CustomButton(
+                                  btnTxt: 'Sign Up',
+                                  onTap: () {
+                                    Navigator.pushNamed(context, Routes.getLoginRoute());
+                                  }),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width,
+                              height: 40,
+                              child: CustomButton(
+                                  btnTxt: getTranslated('login', context),
+                                  onTap: () {
+                                    Navigator.pushNamed(context, Routes.getLoginRoute());
+                                  }),
+                            ),
+                          ],
+                        ),
+                  ProgressTimeline(points),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text('Let\'s Get Started', style: rubikMedium.copyWith(fontSize: 14)),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: config.configModel?.bannerForRestaurantWebApp?.length,
+                      itemBuilder: (context, index) {
+                        var banner = config.configModel!.bannerForRestaurantWebApp![index];
+                        bool isRight = (banner.bannerType == 'catering' ||
+                                banner.bannerType == 'product' ||
+                                banner.bannerType == 'simple') &&
+                            banner.isMobileView == 0;
+                        return isRight
+                            ? HomeBannerCard(
+                                bannerForRestaurantWebApp: banner,
+                                imageBaseUrl: config.baseUrls!.bannerImageUrl,
+                              )
+                            : const SizedBox();
+                      })
+                ],
               ),
-            );
-          });
+            ),
+          );
         }));
   }
 }

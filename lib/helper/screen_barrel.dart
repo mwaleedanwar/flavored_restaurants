@@ -20,7 +20,6 @@ export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/checkout/payment_
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/checkout/widget/order_web_payment.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/coupon/coupon_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/forgot_password/create_new_password_screen.dart';
-export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/forgot_password/forgot_password_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/forgot_password/verification_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/modified_home_page.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/html/html_viewer_screen.dart';
@@ -30,13 +29,9 @@ export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/onboarding/onboar
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/order/order_details_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/profile/profile_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/rare_review/rate_review_screen.dart';
-export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/search/search_result_screen.dart';
-export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/search/search_screen.dart';
-export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/setmenu/set_menu_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/splash/splash_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/support/support_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/track/order_tracking_screen.dart';
-export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/update/update_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/welcome_screen/welcome_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/AddCard/View/my_payment_method_screen.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/branch/branch_list_screen.dart';

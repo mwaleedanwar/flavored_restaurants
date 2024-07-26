@@ -27,6 +27,81 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    signingConfigs {
+        configNopal {
+            keyAlias 'nopal'
+            keyPassword '123456' //change password to your key password
+            storeFile file('./src/nopal/upload-keystore.jks')
+            storePassword '123456' //change password to your key password
+        }
+        configMaa {
+            keyAlias 'maa'
+            keyPassword '123456' //change password to your key password
+            storeFile file('./src/maa/upload-keystore.jks')
+            storePassword '123456' //change password to your key password
+        }
+        configSanto {
+            keyAlias 'maa'
+            keyPassword '123456' //change password to your key password
+            storeFile file('./src/maa/upload-keystore.jks')
+            storePassword '123456' //change password to your key password
+        }
+        configHcb {
+            keyAlias 'hcb'
+            keyPassword '123456' //change password to your key password
+            storeFile file('./src/hcb/upload-keystore.jks')
+            storePassword '123456' //change password to your key password
+        }
+        configApnaa {
+            keyAlias 'apnaa'
+            keyPassword '123456' //change password to your key password
+            storeFile file('./src/apnaa/upload-keystore.jks')
+            storePassword '123456' //change password to your key password
+        }
+        configWillyb {
+            keyAlias 'willyb'
+            keyPassword '123456' //change password to your key password
+            storeFile file('./src/willyb/upload-keystore.jks')
+            storePassword '123456' //change password to your key password
+        }
+        configChaatHouse {
+            keyAlias 'chaatHouse'
+            keyPassword '123456' //change password to your key password
+            storeFile file('./src/chaatHouse/upload-keystore.jks')
+            storePassword '123456' //change password to your key password
+        }
+        configKabsah {
+            keyAlias 'kabsah'
+            keyPassword '123456' //change password to your key password
+            storeFile file('./src/kabsah/upload-keystore.jks')
+            storePassword '123456' //change password to your key password
+        }
+        configFifthE {
+            keyAlias 'fifthE'
+            keyPassword '123456' //change password to your key password
+            storeFile file('./src/fifthE/upload-keystore.jks')
+            storePassword '123456' //change password to your key password
+        }
+        configAlladinGrill {
+            keyAlias 'alladinGrill'
+            keyPassword '123456' //change password to your key password
+            storeFile file('./src/alladinGrill/upload-keystore.jks')
+            storePassword '123456' //change password to your key password
+        }
+        configJaxspice {
+            keyAlias 'jaxspice'
+            keyPassword '123456' //change password to your key password
+            storeFile file('./src/jaxspice/upload-keystore.jks')
+            storePassword '123456' //change password to your key password
+        }
+        configAfgrill {
+            keyAlias 'afgrill'
+            keyPassword '123456' //change password to your key password
+            storeFile file('./src/afgrill/upload-keystore.jks')
+            storePassword '123456' //change password to your key password
+        }
+    }
+
     flavorDimensions "flavor-type"
 
     productFlavors {
@@ -34,11 +109,13 @@ android {
             dimension "flavor-type"
             applicationId "com.nopal.app"
             resValue "string", "app_name", "Nopal Dos"
+            signingConfig signingConfigs.configNopal
         }
         maa {
             dimension "flavor-type"
             applicationId "com.fasttech.maakitchen"
             resValue "string", "app_name", "Maa Kitchen"
+            signingConfig signingConfigs.configMaa
         }
         santo {
             dimension "flavor-type"
@@ -116,10 +193,12 @@ android {
         multiDexEnabled true
     }
 
+    
     buildTypes {
         release {
             crunchPngs false
-            signingConfig signingConfigs.debug
+            minifyEnabled true
+            shrinkResources true
         }
     }
 }

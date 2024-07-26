@@ -185,6 +185,49 @@ class ConfigModel {
     data['restaurant_schedule_time'] = restaurantScheduleTime;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'ConfigModel {\n'
+        '  restaurantName: $restaurantName,\n'
+        '  restaurantLogo: $restaurantLogo,\n'
+        '  restaurantAddress: $restaurantAddress,\n'
+        '  restaurantPhone: $restaurantPhone,\n'
+        '  restaurantEmail: $restaurantEmail,\n'
+        '  currencySymbol: $currencySymbol,\n'
+        '  deliveryCharge: $deliveryCharge,\n'
+        '  taxFee: $taxFee,\n'
+        '  cashOnDelivery: $cashOnDelivery,\n'
+        '  digitalPayment: $digitalPayment,\n'
+        '  termsAndConditions: $termsAndConditions,\n'
+        '  privacyPolicy: $privacyPolicy,\n'
+        '  aboutUs: $aboutUs,\n'
+        '  emailVerification: $emailVerification,\n'
+        '  phoneVerification: $phoneVerification,\n'
+        '  currencySymbolPosition: $currencySymbolPosition,\n'
+        '  maintenanceMode: $maintenanceMode,\n'
+        '  countryCode: $countryCode,\n'
+        '  minimumOrderValue: $minimumOrderValue,\n'
+        '  selfPickup: $selfPickup,\n'
+        '  homeDelivery: $homeDelivery,\n'
+        '  scheduleOrderSlotDuration: $scheduleOrderSlotDuration,\n'
+        '  timeFormat: $timeFormat,\n'
+        '  restaurantScheduleTime: $restaurantScheduleTime,\n'
+        '  softwareVersion: $softwareVersion,\n'
+        '  footerCopyright: $footerCopyright,\n'
+        '  timeZone: $timeZone,\n'
+        '  decimalPointSettings: $decimalPointSettings,\n'
+        '  baseUrls: $baseUrls,\n'
+        '  restaurantLocationCoverage: $restaurantLocationCoverage,\n'
+        '  socialLoginStatus: $socialLoginStatus,\n'
+        '  deliveryManagement: $deliveryManagement,\n'
+        '  branches: $branches,\n'
+        '  bannerForRestaurantWebApp: $bannerForRestaurantWebApp,\n'
+        '  playStoreConfig: $playStoreConfig,\n'
+        '  appStoreConfig: $appStoreConfig,\n'
+        '  socialMediaLink: $socialMediaLink,\n'
+        '}';
+  }
 }
 
 class BaseUrls {

@@ -14,8 +14,6 @@ export 'package:noapl_dos_maa_kitchen_flavor_test/provider/order_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/payment_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/product_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/profile_provider.dart';
-export 'package:noapl_dos_maa_kitchen_flavor_test/provider/search_provider.dart';
-export 'package:noapl_dos_maa_kitchen_flavor_test/provider/set_menu_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/theme_provider.dart';
 export 'package:noapl_dos_maa_kitchen_flavor_test/provider/time_provider.dart';

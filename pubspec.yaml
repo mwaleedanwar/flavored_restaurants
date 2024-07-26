@@ -17,8 +17,7 @@ dependencies:
   dio: ^5.5.0+1
   image_picker: ^1.1.2
   pin_code_fields: ^8.0.1
-  google_maps_flutter_web: ^0.5.8
-  google_maps_flutter: ^2.0.7
+  google_maps_flutter: ^2.7.0
   flutter_google_places: ^0.3.0
   geocoding: ^3.0.0
   firebase_dynamic_links: ^6.0.3

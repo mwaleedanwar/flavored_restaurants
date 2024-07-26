@@ -13,7 +13,6 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/cart_bottom_sheet.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/marque_text.dart';
 import 'package:provider/provider.dart';
 
 class CartProductWidget extends StatefulWidget {
@@ -40,9 +39,7 @@ class _CartProductWidgetState extends State<CartProductWidget> {
   @override
   Widget build(BuildContext context) {
     String variationText = '';
-    if (
-        // widget.cart?.product?.choiceOptions != null &&
-        widget.cart?.variation != null && widget.cart!.variation!.isNotEmpty) {
+    if (widget.cart?.variation != null && widget.cart!.variation!.isNotEmpty) {
       List<String> variationTypes = widget.cart!.variation!.first!.type.split('-');
 
       if (variationTypes.length == widget.cart!.product!.choiceOptions!.length) {
@@ -54,10 +51,12 @@ class _CartProductWidgetState extends State<CartProductWidget> {
       } else {
         variationText = widget.cart!.product!.variations!.first.type;
       }
-      for (Variation? variation in widget.cart!.variation ?? []) {
-        if (variation?.values != null) {
-          for (var element in variation!.values!) {
-            variations.add(element);
+      if (variations.isEmpty) {
+        for (Variation? variation in widget.cart!.variation ?? []) {
+          if (variation?.values != null) {
+            for (var element in variation!.values!) {
+              variations.add(element);
+            }
           }
         }
       }
@@ -158,29 +157,19 @@ class _CartProductWidgetState extends State<CartProductWidget> {
                                     )
                                   : const SizedBox(),
                             ]),
-                            widget.cart?.product?.variations?.isNotEmpty ?? false
-                                ? Padding(
-                                    padding: const EdgeInsets.only(top: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                    child: Row(mainAxisSize: MainAxisSize.min, children: [
-                                      Flexible(
-                                        child: MarqueeWidget(
-                                          backDuration: const Duration(microseconds: 500),
-                                          animationDuration: const Duration(microseconds: 500),
-                                          direction: Axis.horizontal,
-                                          child: Row(
-                                            children: List.generate(variations.length, (index) {
-                                              return Text(
-                                                  '${variations[index].label}${variations[index].optionPrice == '0' ? ',' : '(${variations[index].optionPrice})'}',
-                                                  style: poppinsRegular.copyWith(
-                                                      fontSize: Dimensions.FONT_SIZE_SMALL,
-                                                      color: Theme.of(context).disabledColor));
-                                            }),
-                                          ),
-                                        ),
-                                      ),
-                                    ]),
-                                  )
-                                : const SizedBox(),
+                            if (widget.cart?.product?.variations?.isNotEmpty ?? false)
+                              Padding(
+                                padding: const EdgeInsets.only(top: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                child: Text(
+                                  compoundVariations(variations),
+                                  style: poppinsRegular.copyWith(
+                                    fontSize: Dimensions.FONT_SIZE_SMALL,
+                                    color: Theme.of(context).disabledColor,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              )
                           ]),
                     ),
                     widget.cart?.isGift == true
@@ -282,6 +271,14 @@ class _CartProductWidgetState extends State<CartProductWidget> {
         ]),
       ),
     );
+  }
+
+  String compoundVariations(List<dynamic> variations) {
+    String init = '';
+    for (var variation in variations) {
+      init += '${variation.label}${variation.optionPrice == '0' ? ',' : '(${variation.optionPrice}),'}';
+    }
+    return init.substring(0, init.length - 1);
   }
 }
 

@@ -78,26 +78,6 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
     }
   }
 
-  Map<String, bool> values = {
-    'google.com': false,
-    'youtube.com': false,
-    'yahoo.com': false,
-    'gmail.com': false,
-  };
-
-  var tmpArray = [];
-
-  getCheckboxItems() {
-    values.forEach((key, value) {
-      if (value == true) {
-        tmpArray.add(key);
-      }
-    });
-
-    debugPrint(tmpArray.toString());
-    tmpArray.clear();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<CartProvider>(builder: (context, cartProvider, child) {

@@ -192,9 +192,27 @@ class CartProvider extends ChangeNotifier {
   }
 
   int isExistInCart(int productId, List<Variation?>? variations) {
+    List<Variation>? list1;
+    List<Variation>? list2;
+    if (variations != null) {
+      list2 = [];
+      for (Variation? variation in variations) {
+        if (variation != null) {
+          list2.add(variation);
+        }
+      }
+    }
     for (int index = 0; index < _cartList.length; index++) {
       if (_cartList[index].product!.id == productId) {
-        if (variationListMatch(_cartList[index].variation, variations)) {
+        if (_cartList[index].variation != null) {
+          list1 = [];
+          for (Variation? variation in _cartList[index].variation!) {
+            if (variation != null) {
+              list1.add(variation);
+            }
+          }
+        }
+        if (variationListMatch(list1, list2)) {
           return index;
         }
       }
@@ -202,26 +220,49 @@ class CartProvider extends ChangeNotifier {
     return -1;
   }
 
-  bool variationListMatch(List<Variation?>? a, List<Variation?>? b) {
-    if (a == null || b == null || a.contains(null) || b.contains(null) || a.length != b.length) {
+  bool variationListMatch(List<Variation>? a, List<Variation>? b) {
+    bool match = false;
+    if (a == null || b == null || a.length != b.length) {
       return false;
     }
-    if (a.isEmpty && b.isEmpty) {
-      return true;
-    }
-    final results = List.generate(a.length, (index) => false);
-    int index = 0;
-    for (Variation? varA in a) {
-      for (Variation? varB in b) {
-        if (varA!.name == varB!.name && matchVarValues(varA.values, varB.values)) {
-          results[index] = true;
-          index++;
-          break;
-        }
+    for (Variation? variation in a) {
+      if (b.contains(variation)) {
+        match = true;
       }
     }
-    return !results.contains(false);
+    return match;
   }
+  // int isExistInCart(int productId, List<Variation?>? variations) {
+  //   for (int index = 0; index < _cartList.length; index++) {
+  //     if (_cartList[index].product?.id == productId) {
+  //       if (variationListMatch(_cartList[index].variation, variations)) {
+  //         return index;
+  //       }
+  //     }
+  //   }
+  //   return -1;
+  // }
+
+  // bool variationListMatch(List<Variation?>? a, List<Variation?>? b) {
+  //   if (a == null || b == null || a.contains(null) || b.contains(null) || a.length != b.length) {
+  //     return false;
+  //   }
+  //   if (a.isEmpty && b.isEmpty) {
+  //     return true;
+  //   }
+  //   final results = List.generate(a.length, (index) => false);
+  //   int index = 0;
+  //   for (Variation? varA in a) {
+  //     for (Variation? varB in b) {
+  //       if (varA!.name == varB!.name && matchVarValues(varA.values, varB.values)) {
+  //         results[index] = true;
+  //         index++;
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   return !results.contains(false);
+  // }
 
   bool matchVarValues(List<Value>? a, List<Value>? b) {
     if (a == null || b == null || a.length != b.length) {

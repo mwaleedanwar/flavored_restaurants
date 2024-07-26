@@ -13,16 +13,12 @@ class Routes {
   static const String LOGIN_SCREEN = '/login';
   static const String SIGNUP_SCREEN = '/sign-up';
   static const String VERIFY = '/verify';
-  static const String FORGOT_PASS_SCREEN = '/forgot-password';
   static const String CREATE_NEW_PASS_SCREEN = '/create-new-password';
   static const String CREATE_ACCOUNT_SCREEN = '/create-account';
   static const String DASHBOARD = '/';
   static const String MAINTAIN = '/maintain';
-  static const String UPDATE = '/update';
   static const String DASHBOARD_SCREEN = '/main';
-  static const String SEARCH_SCREEN = '/search';
-  static const String SEARCH_RESULT_SCREEN = '/search-result';
-  static const String SET_MENU_SCREEN = '/set-menu';
+
   static const String CATEGORY_SCREEN = '/category';
   static const String NOTIFICATION_SCREEN = '/notification';
   static const String CHECKOUT_SCREEN = '/checkout';
@@ -60,12 +56,10 @@ class Routes {
   static String getWelcomeRoute() => WELCOME_SCREEN;
   static String getLoginRoute() => LOGIN_SCREEN;
   static String getSignUpRoute() => SIGNUP_SCREEN;
-  // static String getForgetPassRoute() => FORGOT_PASS_SCREEN;
   static String getCreateAccountRoute() => CREATE_ACCOUNT_SCREEN;
   static String getMainRoute() => DASHBOARD;
   static String getMaintainRoute() => MAINTAIN;
   // static String getUpdateRoute() => UPDATE;
-  // static String getSetMenuRoute() => SET_MENU_SCREEN;
   static String getNotificationRoute() => NOTIFICATION_SCREEN;
   static String getProfileRoute() => PROFILE_SCREEN;
   static String getAddressRoute() => ADDRESS_SCREEN;
@@ -94,12 +88,6 @@ class Routes {
   }
 
   static String getDashboardRoute(String page) => '$DASHBOARD_SCREEN?page=$page';
-  static String getSearchRoute() => SEARCH_SCREEN;
-  static String getSearchResultRoute(String text) {
-    List<int> encoded = utf8.encode(text);
-    String data = base64Encode(encoded);
-    return '$SEARCH_RESULT_SCREEN?text=$data';
-  }
 
   static String getCategoryRoute(index) => '$CATEGORY_SCREEN?selectedIndex=$index';
   static String getCheckoutRoute(double amount, String page, String type, String code) {
