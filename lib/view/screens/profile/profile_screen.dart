@@ -207,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                         CustomTextField(
-                                          hintText: 'John',
+                                          hintText: 'first name',
                                           isShowBorder: true,
                                           controller: _firstNameController,
                                           focusNode: _firstNameFocus,
@@ -227,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                         CustomTextField(
-                                          hintText: 'Doe',
+                                          hintText: 'last name',
                                           isShowBorder: true,
                                           controller: _lastNameController,
                                           focusNode: _lastNameFocus,
