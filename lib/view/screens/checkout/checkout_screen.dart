@@ -313,6 +313,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                                                           ? detailsWidget(context)
                                                           : CardFormField(
                                                               controller: controller,
+                                                              enablePostalCode: false,
                                                               style: CardFormStyle(
                                                                 borderColor: Colors.transparent,
                                                                 textColor: Provider.of<ThemeProvider>(context).darkTheme
@@ -322,6 +323,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                                                                     Provider.of<ThemeProvider>(context).darkTheme
                                                                         ? Colors.white
                                                                         : ColorResources.COLOR_BLACK,
+                                                                textErrorColor: Colors.red,
                                                               ),
                                                               onCardChanged: (card) {
                                                                 debugPrint(card.toString());
@@ -368,17 +370,19 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                       showCustomSnackBar('enter user name', context);
                     } else if (email.isEmpty) {
                       showCustomSnackBar('enter your email', context);
+                    } else if (order.timeSlots!.isEmpty) {
+                      showCustomSnackBar('select time slot', context);
                     } else {
                       if (controller.details.complete) {
                         if (!address.isAvailable && !takeAway) {
-                          ('===no service');
+                          showCustomSnackBar('Sorry, service unavailable in your area', context);
                         } else if (takeAway) {
                           createCardToken(context, order, takeAway, lastName, email);
                         } else {
                           createCardToken(context, order, takeAway, lastName, email);
                         }
                       } else {
-                        debugPrint('===incomplete card');
+                        showCustomSnackBar('Kindly Complete Card Info', context);
                       }
                     }
                   }),
@@ -789,6 +793,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
 
       order.placeOrder(placeOrderBody, _callback);
     } catch (e) {
+      order.stopLoader();
       debugPrint('Error placing order: $e');
     }
   }

@@ -201,7 +201,7 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                               child: CustomButton(
                                   btnTxt: 'Sign Up',
                                   onTap: () {
-                                    Navigator.pushNamed(context, Routes.getLoginRoute());
+                                    Navigator.pushNamed(context, Routes.getCreateAccountRoute());
                                   }),
                             ),
                             const SizedBox(

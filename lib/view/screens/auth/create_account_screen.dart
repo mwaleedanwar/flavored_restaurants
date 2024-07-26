@@ -78,9 +78,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                 child: Center(
                   child: Container(
                     width: width > 700 ? 700 : width,
-                    padding: width > 700
-                        ? const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT)
-                        : null,
+                    padding: width > 700 ? const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT) : null,
                     decoration: width > 700
                         ? BoxDecoration(
                             color: Theme.of(context).cardColor,
@@ -101,13 +99,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         Center(
                             child: Text(
                           getTranslated('create_account', context),
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium
-                              ?.copyWith(
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontSize: 24,
-                                color:
-                                    ColorResources.getGreyBunkerColor(context),
+                                color: ColorResources.getGreyBunkerColor(context),
                               ),
                         )),
                         SizedBox(height: isCodeSent ? 20 : 120),
@@ -116,45 +110,31 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           style: Theme.of(context)
                               .textTheme
                               .displayMedium
-                              ?.copyWith(
-                                  color: ColorResources.getHintColor(context)),
+                              ?.copyWith(color: ColorResources.getHintColor(context)),
                         ),
                         const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
 
                         MaskedTextField(
                             mask: AppConstants.phone_form,
                             controller: _numberController,
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayMedium
-                                ?.copyWith(
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.color,
-                                    fontSize: Dimensions.FONT_SIZE_LARGE),
+                            style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                color: Theme.of(context).textTheme.bodyLarge?.color,
+                                fontSize: Dimensions.FONT_SIZE_LARGE),
                             keyboardType: TextInputType.number,
                             focusNode: _numberFocus,
                             decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 16, horizontal: 22),
+                              contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
-                                borderSide: const BorderSide(
-                                    style: BorderStyle.none, width: 0),
+                                borderSide: const BorderSide(style: BorderStyle.none, width: 0),
                               ),
                               isDense: true,
                               hintText: AppConstants.phone_form_hint,
                               fillColor: Theme.of(context).cardColor,
-                              hintStyle: Theme.of(context)
-                                  .textTheme
-                                  .displayMedium
-                                  ?.copyWith(
-                                      fontSize: Dimensions.FONT_SIZE_SMALL,
-                                      color: ColorResources.COLOR_GREY_CHATEAU),
+                              hintStyle: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                  fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.COLOR_GREY_CHATEAU),
                               filled: true,
-                              prefixIconConstraints: const BoxConstraints(
-                                  minWidth: 23, maxHeight: 20),
+                              prefixIconConstraints: const BoxConstraints(minWidth: 23, maxHeight: 20),
                               suffixIcon: InkWell(
                                   onTap: () {
                                     _emailController.clear();
@@ -163,27 +143,23 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     // isChecked=false;
                                     isCodeSent = false;
 
-                                    FocusScope.of(context)
-                                        .requestFocus(_numberFocus);
+                                    FocusScope.of(context).requestFocus(_numberFocus);
                                   },
                                   child: Icon(
                                     Icons.close,
-                                    color: ColorResources.getGreyBunkerColor(
-                                        context),
+                                    color: ColorResources.getGreyBunkerColor(context),
                                   )),
                             ),
                             onChanged: (number) {
                               if (_numberController.text.trim().length == 14) {
                                 _numberFocus.unfocus();
-                                FocusScope.of(context)
-                                    .requestFocus(_passwordFocus);
+                                FocusScope.of(context).requestFocus(_passwordFocus);
                                 isCodeSent = true;
 
                                 authProvider
                                     .checkPhone(
                                         AppConstants.country_code +
-                                            _numberController.text.replaceAll(
-                                                RegExp('[()\\-\\s]'), ''),
+                                            _numberController.text.replaceAll(RegExp('[()\\-\\s]'), ''),
                                         context)
                                     .then((value) async {
                                   if (value.isSuccess) {
@@ -197,63 +173,38 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const SizedBox(
-                                      height: Dimensions.PADDING_SIZE_LARGE),
+                                  const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                                   Text(
                                     'Enter the code we sent you',
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayMedium
-                                        ?.copyWith(
-                                            color: ColorResources.getHintColor(
-                                                context)),
+                                        ?.copyWith(color: ColorResources.getHintColor(context)),
                                   ),
-                                  const SizedBox(
-                                      height: Dimensions.PADDING_SIZE_SMALL),
+                                  const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                   MaskedTextField(
                                     maxLength: 4,
                                     controller: _passwordController,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium
-                                        ?.copyWith(
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodyLarge
-                                                ?.color,
-                                            fontSize:
-                                                Dimensions.FONT_SIZE_LARGE),
+                                    style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                                        fontSize: Dimensions.FONT_SIZE_LARGE),
                                     keyboardType: TextInputType.number,
                                     focusNode: _passwordFocus,
                                     decoration: InputDecoration(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              vertical: 16, horizontal: 22),
+                                      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
                                       border: OutlineInputBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        borderSide: const BorderSide(
-                                            style: BorderStyle.none, width: 0),
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        borderSide: const BorderSide(style: BorderStyle.none, width: 0),
                                       ),
                                       isDense: true,
                                       hintText: '0000',
                                       fillColor: Theme.of(context).cardColor,
-                                      hintStyle: Theme.of(context)
-                                          .textTheme
-                                          .displayMedium
-                                          ?.copyWith(
-                                              fontSize:
-                                                  Dimensions.FONT_SIZE_SMALL,
-                                              color: ColorResources
-                                                  .COLOR_GREY_CHATEAU),
+                                      hintStyle: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                          fontSize: Dimensions.FONT_SIZE_SMALL,
+                                          color: ColorResources.COLOR_GREY_CHATEAU),
                                       filled: true,
-                                      prefixIconConstraints:
-                                          const BoxConstraints(
-                                              minWidth: 23, maxHeight: 20),
+                                      prefixIconConstraints: const BoxConstraints(minWidth: 23, maxHeight: 20),
                                     ),
-                                    onChanged: (otp) {
-                                      _passwordFocus.unfocus();
-                                    },
                                   ),
 
                                   const SizedBox(height: 22),
@@ -263,12 +214,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayMedium
-                                        ?.copyWith(
-                                            color: ColorResources.getHintColor(
-                                                context)),
+                                        ?.copyWith(color: ColorResources.getHintColor(context)),
                                   ),
-                                  const SizedBox(
-                                      height: Dimensions.PADDING_SIZE_SMALL),
+                                  const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                   CustomTextField(
                                     hintText: 'first name',
                                     isShowBorder: true,
@@ -278,8 +226,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     inputType: TextInputType.name,
                                     capitalization: TextCapitalization.words,
                                   ),
-                                  const SizedBox(
-                                      height: Dimensions.PADDING_SIZE_LARGE),
+                                  const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                                   // for last name section
                                   Text(
@@ -287,16 +234,10 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayMedium
-                                        ?.copyWith(
-                                            color: ColorResources.getHintColor(
-                                                context)),
+                                        ?.copyWith(color: ColorResources.getHintColor(context)),
                                   ),
-                                  const SizedBox(
-                                      height: Dimensions.PADDING_SIZE_SMALL),
-                                  Provider.of<SplashProvider>(context,
-                                                  listen: false)
-                                              .configModel
-                                              ?.emailVerification ??
+                                  const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                  Provider.of<SplashProvider>(context, listen: false).configModel?.emailVerification ??
                                           false
                                       ? CustomTextField(
                                           hintText: 'Doe',
@@ -305,8 +246,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                           focusNode: _lastNameFocus,
                                           nextFocus: _emailFocus,
                                           inputType: TextInputType.name,
-                                          capitalization:
-                                              TextCapitalization.words,
+                                          capitalization: TextCapitalization.words,
                                         )
                                       : CustomTextField(
                                           hintText: 'last name',
@@ -315,11 +255,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                           focusNode: _lastNameFocus,
                                           nextFocus: _emailFocus,
                                           inputType: TextInputType.name,
-                                          capitalization:
-                                              TextCapitalization.words,
+                                          capitalization: TextCapitalization.words,
                                         ),
-                                  const SizedBox(
-                                      height: Dimensions.PADDING_SIZE_LARGE),
+                                  const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
                                   // for email section
 
@@ -328,12 +266,9 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     style: Theme.of(context)
                                         .textTheme
                                         .displayMedium
-                                        ?.copyWith(
-                                            color: ColorResources.getHintColor(
-                                                context)),
+                                        ?.copyWith(color: ColorResources.getHintColor(context)),
                                   ),
-                                  const SizedBox(
-                                      height: Dimensions.PADDING_SIZE_SMALL),
+                                  const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                   CustomTextField(
                                     hintText: 'Enter your email',
                                     isShowBorder: true,
@@ -342,17 +277,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     nextFocus: _passwordFocus,
                                     inputType: TextInputType.emailAddress,
                                   ),
-                                  const SizedBox(
-                                      height: Dimensions.PADDING_SIZE_LARGE),
+                                  const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
                                   CheckboxListTile(
                                     dense: true,
                                     contentPadding: EdgeInsets.zero,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                     activeColor: Theme.of(context).primaryColor,
-                                    controlAffinity:
-                                        ListTileControlAffinity.leading,
+                                    controlAffinity: ListTileControlAffinity.leading,
                                     value: isChecked,
                                     onChanged: (val) {
                                       setState(() {
@@ -365,44 +296,33 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                         text: TextSpan(
                                           children: [
                                             TextSpan(
-                                              text:
-                                                  'By creating an account, you agree to our ',
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
+                                              text: 'By creating an account, you agree to our ',
+                                              style: TextStyle(color: Theme.of(context).primaryColor),
                                             ),
                                             TextSpan(
                                               text: 'terms & conditions',
                                               style: TextStyle(
-                                                  color: ColorResources
-                                                      .getHintColor(context),
-                                                  decoration:
-                                                      TextDecoration.underline,
+                                                  color: ColorResources.getHintColor(context),
+                                                  decoration: TextDecoration.underline,
                                                   fontWeight: FontWeight.w500),
                                               recognizer: TapGestureRecognizer()
                                                 ..onTap = () {
-                                                  Navigator.pushNamed(context,
-                                                      Routes.getTermsRoute());
+                                                  Navigator.pushNamed(context, Routes.getTermsRoute());
                                                 },
                                             ),
                                             TextSpan(
                                               text: ' and ',
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
+                                              style: TextStyle(color: Theme.of(context).primaryColor),
                                             ),
                                             TextSpan(
                                               text: 'privacy policy.',
                                               style: TextStyle(
-                                                  color: ColorResources
-                                                      .getHintColor(context),
-                                                  decoration:
-                                                      TextDecoration.underline,
+                                                  color: ColorResources.getHintColor(context),
+                                                  decoration: TextDecoration.underline,
                                                   fontWeight: FontWeight.w500),
                                               recognizer: TapGestureRecognizer()
                                                 ..onTap = () {
-                                                  Navigator.pushNamed(context,
-                                                      Routes.getPolicyRoute());
+                                                  Navigator.pushNamed(context, Routes.getPolicyRoute());
                                                   // launch('http://cafescale.com/privacy-policy');
                                                 },
                                             ),
@@ -421,41 +341,25 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             ? CustomButton(
                                 btnTxt: getTranslated('signup', context),
                                 onTap: () {
-                                  String firstName =
-                                      _firstNameController.text.trim();
-                                  String lastName =
-                                      _lastNameController.text.trim();
+                                  String firstName = _firstNameController.text.trim();
+                                  String lastName = _lastNameController.text.trim();
                                   String number = _numberController.text.trim();
                                   String email = _emailController.text.trim();
-                                  String password =
-                                      _passwordController.text.trim();
+                                  String password = _passwordController.text.trim();
 
                                   if (firstName.isEmpty) {
-                                    showCustomSnackBar(
-                                        getTranslated(
-                                            'enter_first_name', context),
-                                        context);
+                                    showCustomSnackBar(getTranslated('enter_first_name', context), context);
                                   } else if (lastName.isEmpty) {
-                                    showCustomSnackBar(
-                                        getTranslated(
-                                            'enter_last_name', context),
-                                        context);
+                                    showCustomSnackBar(getTranslated('enter_last_name', context), context);
                                   } else if (number.isEmpty) {
-                                    showCustomSnackBar(
-                                        getTranslated(
-                                            'enter_phone_number', context),
-                                        context);
+                                    showCustomSnackBar(getTranslated('enter_phone_number', context), context);
                                   } else if (email.isEmpty) {
-                                    showCustomSnackBar(
-                                        getTranslated(
-                                            'enter_phone_number', context),
-                                        context);
+                                    showCustomSnackBar(getTranslated('enter_phone_number', context), context);
                                   } else if (password.isEmpty) {
                                     showCustomSnackBar('Enter otp', context);
                                   } else if (isChecked == false) {
                                     debugPrint('-=not');
-                                    showCustomSnackBar(
-                                        'Accept terms and conditions', context);
+                                    showCustomSnackBar('Accept terms and conditions', context);
                                   } else {
                                     SignUpModel signUpModel = SignUpModel(
                                         fName: firstName,
@@ -469,19 +373,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                             : Platform.isAndroid
                                                 ? 'Android'
                                                 : 'iOS',
-                                        phone: AppConstants.country_code +
-                                            number.replaceAll(
-                                                RegExp('[()\\-\\s]'), ''),
+                                        phone: AppConstants.country_code + number.replaceAll(RegExp('[()\\-\\s]'), ''),
                                         token: password,
                                         isMobile: 'true');
-                                    authProvider
-                                        .verifyOtp(signUpModel, context)
-                                        .then((status) async {
+                                    authProvider.verifyOtp(signUpModel, context).then((status) async {
                                       if (status.isSuccess) {
                                         Navigator.pushNamedAndRemoveUntil(
                                             context,
-                                            Provider.of<SplashProvider>(context,
-                                                            listen: false)
+                                            Provider.of<SplashProvider>(context, listen: false)
                                                         .configModel
                                                         ?.branches
                                                         ?.length ==
@@ -496,16 +395,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               )
                             : Center(
                                 child: CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    Theme.of(context).primaryColor),
+                                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                               )),
 
                         // for already an account
                         const SizedBox(height: 11),
                         InkWell(
                           onTap: () {
-                            Navigator.pushReplacementNamed(
-                                context, Routes.getLoginRoute());
+                            Navigator.pushReplacementNamed(context, Routes.getLoginRoute());
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -513,28 +410,17 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  getTranslated(
-                                      'already_have_account', context),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displayMedium
-                                      ?.copyWith(
-                                          fontSize: Dimensions.FONT_SIZE_SMALL,
-                                          color: ColorResources.getGreyColor(
-                                              context)),
+                                  getTranslated('already_have_account', context),
+                                  style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                      fontSize: Dimensions.FONT_SIZE_SMALL,
+                                      color: ColorResources.getGreyColor(context)),
                                 ),
-                                const SizedBox(
-                                    width: Dimensions.PADDING_SIZE_SMALL),
+                                const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                                 Text(
                                   getTranslated('login', context),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .displaySmall
-                                      ?.copyWith(
-                                          fontSize: Dimensions.FONT_SIZE_SMALL,
-                                          color:
-                                              ColorResources.getGreyBunkerColor(
-                                                  context)),
+                                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                      fontSize: Dimensions.FONT_SIZE_SMALL,
+                                      color: ColorResources.getGreyBunkerColor(context)),
                                 ),
                               ],
                             ),

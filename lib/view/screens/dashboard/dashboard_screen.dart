@@ -65,8 +65,6 @@ class DashboardScreenState extends State<DashboardScreen> {
       false,
       '1',
     );
-    Provider.of<ProductProvider>(context, listen: false).getSpecialOffersList(context);
-    Provider.of<ProductProvider>(context, listen: false).getDealsList(context);
 
     Provider.of<OrderProvider>(context, listen: false).changeStatus(true);
     _pageIndex = widget.pageIndex;
