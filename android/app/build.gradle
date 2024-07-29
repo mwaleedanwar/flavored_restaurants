@@ -29,76 +29,76 @@ apply plugin: 'com.google.gms.google-services'
 android {
     signingConfigs {
         configNopal {
-            keyAlias 'nopal'
-            keyPassword 'FastTech@123' //change password to your key password
+            keyAlias 'nopaldose'
+            keyPassword '12345678'
             storeFile file('./src/nopal/upload-keystore.jks')
-            storePassword 'FastTech@123' //change password to your key password
+            storePassword '12345678'
         }
         configMaa {
-            keyAlias 'maa'
-            keyPassword '123456' //change password to your key password
-            storeFile file('./src/maa/upload-keystore.jks')
-            storePassword '123456' //change password to your key password
-        }
-        configSanto {
-            keyAlias 'maa'
-            keyPassword '123456' //change password to your key password
-            storeFile file('./src/maa/upload-keystore.jks')
-            storePassword '123456' //change password to your key password
+            keyAlias 'maakitchen'
+            keyPassword 'FastTech@123'
+            storeFile file('C:/Users/AhmadRaza/MaaKitchen.jks')
+            storePassword 'FastTech@123'
         }
         configHcb {
-            keyAlias 'hcb'
-            keyPassword '123456' //change password to your key password
-            storeFile file('./src/hcb/upload-keystore.jks')
-            storePassword '123456' //change password to your key password
+            keyAlias 'chinabox'
+            keyPassword 'FastTech@123'
+            storeFile file('C:/Users/AhmadRaza/ChinaBox.jks')
+            storePassword 'FastTech@123'
         }
         configApnaa {
-            keyAlias 'apnaa'
-            keyPassword '123456' //change password to your key password
-            storeFile file('./src/apnaa/upload-keystore.jks')
-            storePassword '123456' //change password to your key password
-        }
-        configWillyb {
-            keyAlias 'willyb'
-            keyPassword '123456' //change password to your key password
-            storeFile file('./src/willyb/upload-keystore.jks')
-            storePassword '123456' //change password to your key password
+            keyAlias 'apnaabazaarrest'
+            keyPassword 'FastTech@123'
+            storeFile file('C:/Users/AhmadRaza/ApnaaBazaarRest.jks')
+            storePassword 'FastTech@123'
         }
         configChaatHouse {
-            keyAlias 'chaatHouse'
-            keyPassword '123456' //change password to your key password
-            storeFile file('./src/chaatHouse/upload-keystore.jks')
-            storePassword '123456' //change password to your key password
+            keyAlias 'chaathouse'
+            keyPassword 'FastTech@123'
+            storeFile file('C:/Users/AhmadRaza/ChaatHouse.jks')
+            storePassword 'FastTech@123'
         }
         configKabsah {
-            keyAlias 'kabsah'
-            keyPassword '123456' //change password to your key password
-            storeFile file('./src/kabsah/upload-keystore.jks')
-            storePassword '123456' //change password to your key password
+            keyAlias 'kabsahapp'
+            keyPassword '12345678'
+            storeFile file('C:/Users/AhmadRaza/kabsahapp.jks')
+            storePassword '12345678'
         }
         configFifthE {
-            keyAlias 'fifthE'
-            keyPassword '123456' //change password to your key password
-            storeFile file('./src/fifthE/upload-keystore.jks')
-            storePassword '123456' //change password to your key password
+            keyAlias '5thelement'
+            keyPassword 'FastTech@123'
+            storeFile file('C:/Users/AhmadRaza/5thElement.jks')
+            storePassword 'FastTech@123'
         }
         configAlladinGrill {
-            keyAlias 'alladinGrill'
-            keyPassword '123456' //change password to your key password
-            storeFile file('./src/alladinGrill/upload-keystore.jks')
-            storePassword '123456' //change password to your key password
+            keyAlias 'aladdingrill'
+            keyPassword 'FastTech@123'
+            storeFile file('C:/Users/AhmadRaza/AlladinGrill.jks')
+            storePassword 'FastTech@123'
         }
         configJaxspice {
             keyAlias 'jaxspice'
-            keyPassword '123456' //change password to your key password
-            storeFile file('./src/jaxspice/upload-keystore.jks')
-            storePassword '123456' //change password to your key password
+            keyPassword 'FastTech@123'
+            storeFile file('C:/Users/AhmadRaza/jaxspice.jks')
+            storePassword 'FastTech@123'
         }
         configAfgrill {
-            keyAlias 'afgrill'
-            keyPassword '123456' //change password to your key password
-            storeFile file('./src/afgrill/upload-keystore.jks')
-            storePassword '123456' //change password to your key password
+            keyAlias 'anfg'
+            keyPassword 'FastTech@123'
+            storeFile file('C:/Users/AhmadRaza/ANFG.jks')
+            storePassword 'FastTech@123'
+        }
+        configSanto {
+            keyAlias '' //add alias here
+            keyPassword '' //password
+            storeFile file('C:/Users/AhmadRaza/<FILE_NAME>.jks') //replace <FILE_NAME>
+            storePassword '' //password
+        }
+        configWillyb {
+            keyAlias '' //add alias here
+            keyPassword '' //password
+            storeFile file('C:/Users/AhmadRaza/<FILE_NAME>.jks') //replace <FILE_NAME>
+            storePassword '' //password
         }
     }
 

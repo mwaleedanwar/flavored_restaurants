@@ -42,56 +42,6 @@ class _AddCardState extends State<AddCard> {
     });
   }
 
-  var isLoading = false;
-
-  // .... Validation for Month and Year TextInput ....
-  String validateMonthAndYear(String value) {
-    {
-      List<String> monthAndYear = value.split("/");
-      if (value.isNotEmpty) {
-        if (GetUtils.isNum(monthAndYear[0])) {
-          return "Month must be in digit";
-        }
-        int monthValue = int.parse(monthAndYear[0]);
-        if (monthValue > 12) {
-          return "Invalid Month";
-        }
-        if (monthAndYear.length > 1) {
-          String value = monthAndYear[1];
-          if (value.isNotEmpty) {
-            int yearValue = int.parse(monthAndYear[1]);
-            Future.delayed(
-              Duration.zero,
-              () => setState(
-                () {
-                  month = monthValue.toString();
-                  year = yearValue.toString();
-                },
-              ),
-            );
-
-            var now = DateTime.now();
-            debugPrint('yearValue $yearValue - now.year ${now.year}');
-
-            if (yearValue < now.year) {
-              debugPrint('yearValue $yearValue - now.year ${now.year}');
-              return "Invalid Year";
-            }
-          }
-        }
-      }
-    }
-    return "";
-  }
-
-  // .... Validation for Numeric value ....
-  String validateNumericValue(String value) {
-    if (GetUtils.isNum(value)) {
-      return "Card number must be in digit";
-    }
-    return "";
-  }
-
   String month = "";
   String year = "";
   String tokenId = "";
@@ -380,7 +330,7 @@ Widget getRandomBackground(double height, double width) {
   );
 }
 
-Container getChipImage() {
+Widget getChipImage() {
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 16),
     child: Image.asset(
