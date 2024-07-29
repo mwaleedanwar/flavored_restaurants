@@ -281,14 +281,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1+1"
-  fading_edge_scrollview:
-    dependency: transitive
-    description:
-      name: fading_edge_scrollview
-      sha256: c25c2231652ce774cc31824d0112f11f653881f43d7f5302c05af11942052031
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -462,14 +454,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.1"
-  flutter_google_places:
-    dependency: "direct main"
-    description:
-      name: flutter_google_places
-      sha256: e9fb23ceacdc7359aa759627550146f7fd3ae6c067d16f39f3c50d8feebf4809
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.0"
   flutter_inappwebview:
     dependency: "direct main"
     description:
@@ -578,10 +562,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_stripe
-      sha256: "6c10f839e2623a336de79023a95a49c8d177032d5fd54b1f7ee9755fc577e227"
+      sha256: "28527923373720fcd39eade306f4acc007df8a3f2c0aeea545f1521dec9399c2"
       url: "https://pub.dev"
     source: hosted
-    version: "10.2.0"
+    version: "11.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -732,10 +716,10 @@ packages:
     dependency: "direct main"
     description:
       name: google_api_headers
-      sha256: b27a55935d5c51cedda8a925f5df8388cc327c94a47fef5a4335e8707e089878
+      sha256: "9058f12f0bde4edff994e76e73886649a5ba60bf03ef352773afa988467dbd77"
       url: "https://pub.dev"
     source: hosted
-    version: "1.6.0"
+    version: "4.1.3"
   google_identity_services_web:
     dependency: transitive
     description:
@@ -1016,14 +1000,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
-  marquee:
-    dependency: "direct main"
-    description:
-      name: marquee
-      sha256: "4b5243d2804373bdc25fc93d42c3b402d6ec1f4ee8d0bb72276edd04ae7addb8"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.3"
   mask_text_input_formatter:
     dependency: transitive
     description:
@@ -1100,18 +1076,18 @@ packages:
     dependency: transitive
     description:
       name: package_info_plus
-      sha256: "7e76fad405b3e4016cd39d08f455a4eb5199723cf594cd1b8916d47140d93017"
+      sha256: "4de6c36df77ffbcef0a5aefe04669d33f2d18397fea228277b852a2d4e58e860"
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.0"
+    version: "8.0.1"
   package_info_plus_platform_interface:
     dependency: transitive
     description:
       name: package_info_plus_platform_interface
-      sha256: "9bc8ba46813a4cc42c66ab781470711781940780fd8beddd0c3da62506d3a6c6"
+      sha256: ac1f4a4847f1ade8e6a87d1f39f5d7c67490738642e2542f559ec38c37489a66
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "3.0.1"
   path:
     dependency: "direct main"
     description:
@@ -1433,26 +1409,26 @@ packages:
     dependency: transitive
     description:
       name: stripe_android
-      sha256: "74c977ae0a918949e84796a8a3524a68610f4719c66170f01592b4bc5196f049"
+      sha256: "189b8d5c79dfb363540a77e813ba350c9058559673f3df80a2cb87e0983a316e"
       url: "https://pub.dev"
     source: hosted
-    version: "10.2.1"
+    version: "11.0.0"
   stripe_ios:
     dependency: transitive
     description:
       name: stripe_ios
-      sha256: eb91cb9b971e22f865937309b0e5e4e0f5bcbfc39e671bd41c0fdaddbb5ad948
+      sha256: "680d442b2bb920dd91bec4aba9286de050a76a789e9bc128044f2b3732369be6"
       url: "https://pub.dev"
     source: hosted
-    version: "10.2.0"
+    version: "11.0.0"
   stripe_platform_interface:
     dependency: transitive
     description:
       name: stripe_platform_interface
-      sha256: "1a2e3fe106bc723c0c0cda2f97f15bfef16944507621639c636041845a96ff57"
+      sha256: "3a4e22f0ad461dc47147601d1215f2a72715c6c67f56fb4b8a3cab4b857b9a41"
       url: "https://pub.dev"
     source: hosted
-    version: "10.2.0"
+    version: "11.0.0"
   synchronized:
     dependency: transitive
     description:
@@ -1686,5 +1662,5 @@ packages:
     source: hosted
     version: "6.5.0"
 sdks:
-  dart: ">=3.4.3 <4.0.0"
-  flutter: ">=3.22.0"
+  dart: ">=3.4.4 <4.0.0"
+  flutter: ">=3.22.3"
