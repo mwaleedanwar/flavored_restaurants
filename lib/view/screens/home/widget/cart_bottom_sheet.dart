@@ -20,7 +20,6 @@ import 'package:provider/provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/product_type.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/auth_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_text_field.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/title_widget.dart';
 
@@ -489,7 +488,8 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                 // debugPrint('need to login first');
               }
             } else {
-              appToast(text: 'select the required variant(s)', toastColor: Colors.red);            }
+              appToast(text: 'select the required variant(s)', toastColor: Colors.red);
+            }
           }),
     ]);
   }

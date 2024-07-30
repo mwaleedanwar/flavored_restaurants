@@ -12,7 +12,6 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/cart_bottom_sheet.dart';
 import 'package:provider/provider.dart';
-import 'package:scrollable_list_tabview/scrollable_list_tabview.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
@@ -42,40 +41,41 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
                 ))
-              : ScrollableListTabView(
-                  tabHeight: 48,
-                  bodyAnimationDuration: const Duration(milliseconds: 150),
-                  tabAnimationCurve: Curves.easeOut,
-                  tabAnimationDuration: const Duration(milliseconds: 200),
-                  tabs: List.generate(
-                    category.categoryList.length,
-                    (index) => ScrollableListTab(
-                      tab: ListTab(
-                          borderColor: Colors.transparent,
-                          activeBackgroundColor: Theme.of(context).primaryColor,
-                          label: Text(category.categoryList[index].name),
-                          // icon: Icon(Icons.group),
-                          showIconOnList: false),
-                      body: GridView.builder(
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisSpacing: ResponsiveHelper.isMobile(context) ? 8 : 5,
-                          mainAxisSpacing: 5,
-                          childAspectRatio: ResponsiveHelper.isMobile(context) ? 2.1 : 4.5,
-                          crossAxisCount: ResponsiveHelper.isTab(context) ? 1 : 1,
-                        ),
-                        itemCount: category.categoryList[index].products.length,
-                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (BuildContext context, int ind) {
-                          return ProductWidget(
-                            product: category.categoryList[index].products[ind],
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                );
+              : const SizedBox.shrink();
+          // : ScrollableListTabView(
+          //     tabHeight: 48,
+          //     bodyAnimationDuration: const Duration(milliseconds: 150),
+          //     tabAnimationCurve: Curves.easeOut,
+          //     tabAnimationDuration: const Duration(milliseconds: 200),
+          //     tabs: List.generate(
+          //       category.categoryList.length,
+          //       (index) => ScrollableListTab(
+          //         tab: ListTab(
+          //             borderColor: Colors.transparent,
+          //             activeBackgroundColor: Theme.of(context).primaryColor,
+          //             label: Text(category.categoryList[index].name),
+          //             // icon: Icon(Icons.group),
+          //             showIconOnList: false),
+          //         body: GridView.builder(
+          //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //             crossAxisSpacing: ResponsiveHelper.isMobile(context) ? 8 : 5,
+          //             mainAxisSpacing: 5,
+          //             childAspectRatio: ResponsiveHelper.isMobile(context) ? 2.1 : 4.5,
+          //             crossAxisCount: ResponsiveHelper.isTab(context) ? 1 : 1,
+          //           ),
+          //           itemCount: category.categoryList[index].products.length,
+          //           padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+          //           physics: const NeverScrollableScrollPhysics(),
+          //           shrinkWrap: true,
+          //           itemBuilder: (BuildContext context, int ind) {
+          //             return ProductWidget(
+          //               product: category.categoryList[index].products[ind],
+          //             );
+          //           },
+          //         ),
+          //       ),
+          //     ),
+          //   );
         }),
         bottomNavigationBar: Consumer<CartProvider>(builder: (context, cart, child) {
           return cart.isFromCategory == true

@@ -15,7 +15,6 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/provider/provider_barrel.dart'
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:provider/provider.dart';
-import 'package:url_strategy/url_strategy.dart';
 import 'di_container.dart' as di;
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -27,7 +26,6 @@ Future<void> mainCommon() async {
 
   HttpOverrides.global = MyHttpOverrides();
 
-  setPathUrlStrategy();
   Stripe.publishableKey = AppConstants.public_stripe_key;
   Stripe.merchantIdentifier = 'merchant.flutter.stripe.test';
   Stripe.urlScheme = 'flutterstripe';

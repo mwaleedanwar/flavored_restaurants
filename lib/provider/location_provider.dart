@@ -13,7 +13,6 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/helper/api_checker.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/config_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/address/widget/permission_dialog.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -332,15 +331,6 @@ class LocationProvider with ChangeNotifier {
     return responseModel;
   }
 
-  Future<void> saveUserAddress({required Placemark address}) async {
-    String userAddress = jsonEncode(address);
-    try {
-      await sharedPreferences.setString(AppConstants.USER_ADDRESS, userAddress);
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   String getUserAddress() {
     return sharedPreferences.getString(AppConstants.USER_ADDRESS) ?? "";
   }
@@ -442,10 +432,6 @@ class LocationProvider with ChangeNotifier {
       }
     }
     return _predictionList;
-  }
-
-  String placeMarkToAddress(String placeMark) {
-    return placeMark;
   }
 
   Future<LatLng?> getCurrentLatLong() async {
