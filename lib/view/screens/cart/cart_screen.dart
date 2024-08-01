@@ -6,14 +6,10 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/helper/date_converter.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/price_converter.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/provider/provider_barrel.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/tip_controller.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/product_view.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/product_type.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/coupon_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/localization_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/order_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
@@ -31,9 +27,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' hide Value;
 import 'package:provider/provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/address_model.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/location_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/product_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/theme_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/title_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/address/widget/permission_dialog.dart';
@@ -627,47 +620,38 @@ class _CartScreenState extends State<CartScreen> {
                                                                 'Minimum order amount is ${PriceConverter.convertPrice(context, splash.configModel!.minimumOrderValue)}, you have ${PriceConverter.convertPrice(context, orderAmount)} in your cart, please add more item.',
                                                                 context);
                                                           } else {
-                                                            Provider.of<LocationProvider>(context, listen: false)
-                                                                .initAddressList(context)
-                                                                .then(
-                                                              (value) {
-                                                                if ((Provider.of<LocationProvider>(context,
-                                                                                    listen: false)
-                                                                                .addressList ??
-                                                                            [])
-                                                                        .isEmpty &&
-                                                                    Provider.of<OrderProvider>(context, listen: false)
-                                                                            .orderType ==
-                                                                        'delivery') {
-                                                                  debugPrint(
-                                                                      '===order type1:${Provider.of<OrderProvider>(context, listen: false).orderType}');
-                                                                  _checkPermission(
-                                                                      context,
-                                                                      Routes.getAddAddressRoute(
-                                                                          'cart', 'add', AddressModel(),
-                                                                          amount: total +
-                                                                              double.parse(
-                                                                                  tipController.tip.value.toString())));
-                                                                } else {
-                                                                  debugPrint(
-                                                                      '===order type:${Provider.of<OrderProvider>(context, listen: false).orderType}');
-                                                                  Navigator.pushNamed(
-                                                                    context,
-                                                                    Routes.getCheckoutRoute(
-                                                                      total +
+                                                            if ((Provider.of<LocationProvider>(context, listen: false)
+                                                                            .addressList ??
+                                                                        [])
+                                                                    .isEmpty &&
+                                                                Provider.of<OrderProvider>(context, listen: false)
+                                                                        .orderType ==
+                                                                    'delivery') {
+                                                              debugPrint(
+                                                                  '===order type1:${Provider.of<OrderProvider>(context, listen: false).orderType}');
+                                                              _checkPermission(
+                                                                  context,
+                                                                  Routes.getAddAddressRoute(
+                                                                      'cart', 'add', AddressModel(),
+                                                                      amount: total +
                                                                           double.parse(
-                                                                              tipController.tip.value.toString()),
-                                                                      'cart',
-                                                                      Provider.of<OrderProvider>(context, listen: false)
-                                                                          .orderType,
-                                                                      Provider.of<CouponProvider>(context,
-                                                                              listen: false)
-                                                                          .code,
-                                                                    ),
-                                                                  );
-                                                                }
-                                                              },
-                                                            );
+                                                                              tipController.tip.value.toString())));
+                                                            } else {
+                                                              debugPrint(
+                                                                  '===order type:${Provider.of<OrderProvider>(context, listen: false).orderType}');
+                                                              Navigator.pushNamed(
+                                                                context,
+                                                                Routes.getCheckoutRoute(
+                                                                  total +
+                                                                      double.parse(tipController.tip.value.toString()),
+                                                                  'cart',
+                                                                  Provider.of<OrderProvider>(context, listen: false)
+                                                                      .orderType,
+                                                                  Provider.of<CouponProvider>(context, listen: false)
+                                                                      .code,
+                                                                ),
+                                                              );
+                                                            }
                                                           }
                                                         },
                                                       ),
@@ -700,18 +684,14 @@ class _CartScreenState extends State<CartScreen> {
                                     'Minimum order amount is ${PriceConverter.convertPrice(context, splash.configModel!.minimumOrderValue)}, you have ${PriceConverter.convertPrice(context, orderAmount)} in your cart, please add more item.',
                                     context);
                               } else {
-                                Provider.of<LocationProvider>(context, listen: false)
-                                    .initAddressList(context)
-                                    .then((value) {
-                                  Navigator.pushNamed(
-                                      context,
-                                      Routes.getCheckoutRoute(
-                                        total + double.parse(tipController.tip.value.toString()),
-                                        'cart',
-                                        Provider.of<OrderProvider>(context, listen: false).orderType,
-                                        Provider.of<CouponProvider>(context, listen: false).code,
-                                      ));
-                                });
+                                Navigator.pushNamed(
+                                    context,
+                                    Routes.getCheckoutRoute(
+                                      total + double.parse(tipController.tip.value.toString()),
+                                      'cart',
+                                      Provider.of<OrderProvider>(context, listen: false).orderType,
+                                      Provider.of<CouponProvider>(context, listen: false).code,
+                                    ));
                               }
                             }),
                       ),

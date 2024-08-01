@@ -124,6 +124,8 @@ class CheckoutScreenState extends State<CheckoutScreen> {
         }),
         context,
       );
+    } else {
+      locationProvider.checkRadius(notify: false);
     }
     takeAway = widget.orderType == 'take_away';
     kmWiseCharge = Provider.of<SplashProvider>(context, listen: false).configModel?.deliveryManagement?.status == 1;

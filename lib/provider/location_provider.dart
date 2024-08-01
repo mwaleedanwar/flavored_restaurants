@@ -158,7 +158,7 @@ class LocationProvider with ChangeNotifier {
     return myPosition;
   }
 
-  void checkRadius() {
+  void checkRadius({bool notify = true}) {
     distance = FlutterMapMath().distanceBetween(
       double.parse(currentBranch!.latitude),
       double.parse(currentBranch!.longitude),
@@ -168,7 +168,7 @@ class LocationProvider with ChangeNotifier {
     );
     log('distance $distance');
     _isAvailable = distance < currentBranch!.coverage;
-    notifyListeners();
+    if (notify) notifyListeners();
   }
 
   // update Position
