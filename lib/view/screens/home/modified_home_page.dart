@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/auth_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/profile_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
@@ -59,30 +57,13 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.5,
-          leading: ResponsiveHelper.isTab(context)
-              ? IconButton(
-                  onPressed: () => drawerGlobalKey.currentState?.openDrawer(),
-                  icon: Icon(Icons.menu, color: Theme.of(context).textTheme.bodyLarge?.color),
-                )
-              : null,
           backgroundColor: Theme.of(context).cardColor,
           title: Consumer<SplashProvider>(
               builder: (context, splash, child) => Consumer<ProfileProvider>(builder: (context, profile, child) {
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        ResponsiveHelper.isWeb()
-                            ? FadeInImage.assetNetwork(
-                                placeholder: Images.placeholder_rectangle,
-                                height: 40,
-                                width: 40,
-                                image: splash.baseUrls != null
-                                    ? '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}'
-                                    : '',
-                                imageErrorBuilder: (c, o, s) =>
-                                    Image.asset(Images.placeholder_rectangle, height: 40, width: 40),
-                              )
-                            : Image.asset(F.logo, width: 40, height: 40),
+                        Image.asset(F.logo, width: 40, height: 40),
                         const SizedBox(width: 10),
                         _isLoggedIn && profile.userInfoModel != null
                             ? Expanded(
@@ -109,42 +90,10 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                     );
                   })),
           actions: [
-            ResponsiveHelper.isTab(context)
-                ? const SizedBox()
-                : IconButton(
-                    onPressed: () =>
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const MenuScreen())),
-                    icon: Icon(Icons.menu, color: Theme.of(context).textTheme.displayLarge?.color),
-                  ),
-            ResponsiveHelper.isTab(context)
-                ? IconButton(
-                    onPressed: () => Navigator.pushNamed(context, Routes.getDashboardRoute('cart')),
-                    icon: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        Icon(Icons.shopping_cart, color: Theme.of(context).textTheme.displayLarge?.color),
-                        Positioned(
-                          top: -10,
-                          right: -10,
-                          child: Container(
-                            padding: const EdgeInsets.all(4),
-                            alignment: Alignment.center,
-                            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.red),
-                            child: Center(
-                              child: Text(
-                                (Provider.of<CartProvider>(context).cartList.length +
-                                        Provider.of<CartProvider>(context).cateringList.length +
-                                        Provider.of<CartProvider>(context).happyHoursList.length)
-                                    .toString(),
-                                style: rubikMedium.copyWith(color: Colors.white, fontSize: 8),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                : const SizedBox(),
+            IconButton(
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const MenuScreen())),
+              icon: Icon(Icons.menu, color: Theme.of(context).textTheme.displayLarge?.color),
+            ),
           ],
         ),
         body: Consumer2<SplashProvider, ProfileProvider>(builder: (context, config, profile, child) {

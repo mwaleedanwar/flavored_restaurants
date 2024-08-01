@@ -238,6 +238,11 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void startLoader() {
+    _isLoading = true;
+    notifyListeners();
+  }
+
   void stopLoader() {
     _isLoading = false;
     notifyListeners();

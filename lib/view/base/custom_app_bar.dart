@@ -29,7 +29,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ? IconButton(
               icon: const Icon(Icons.arrow_back_ios),
               color: Theme.of(context).textTheme.bodyLarge?.color,
-              onPressed: () => onBackPressed ?? Navigator.pop(context),
+              onPressed: onBackPressed ?? () => Navigator.pop(context),
             )
           : const SizedBox(),
       backgroundColor: bgColor ?? Theme.of(context).cardColor,

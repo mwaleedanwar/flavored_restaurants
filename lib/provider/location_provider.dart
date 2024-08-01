@@ -450,7 +450,7 @@ class LocationProvider with ChangeNotifier {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     } else if (permission == LocationPermission.deniedForever) {
-      showDialog(context: context, barrierDismissible: false, builder: (context) => const PermissionDialog());
+      await showDialog(context: context, barrierDismissible: false, builder: (context) => const PermissionDialog());
     } else {
       callback();
     }

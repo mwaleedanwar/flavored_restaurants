@@ -203,15 +203,28 @@ class _CartProductWidgetState extends State<CartProductWidget> {
                                             .removeFromCart(widget.cartIndex);
                                       }
                                     },
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
                                           horizontal: Dimensions.PADDING_SIZE_SMALL,
                                           vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                      child: Icon(Icons.remove, size: 20),
+                                      child: Icon(
+                                        Icons.remove,
+                                        size: 20,
+                                        color: Provider.of<ThemeProvider>(context, listen: false).darkTheme
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ),
                                     ),
                                   ),
-                                  Text((widget.cart?.quantity ?? 0).toString(),
-                                      style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
+                                  Text(
+                                    (widget.cart?.quantity ?? 0).toString(),
+                                    style: rubikMedium.copyWith(
+                                      fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE,
+                                      color: Provider.of<ThemeProvider>(context, listen: false).darkTheme
+                                          ? Colors.black
+                                          : Colors.white,
+                                    ),
+                                  ),
                                   InkWell(
                                     onTap: () {
                                       Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
@@ -220,11 +233,17 @@ class _CartProductWidgetState extends State<CartProductWidget> {
                                         cart: widget.cart,
                                       );
                                     },
-                                    child: const Padding(
-                                      padding: EdgeInsets.symmetric(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
                                           horizontal: Dimensions.PADDING_SIZE_SMALL,
                                           vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                      child: Icon(Icons.add, size: 20),
+                                      child: Icon(
+                                        Icons.add,
+                                        size: 20,
+                                        color: Provider.of<ThemeProvider>(context, listen: false).darkTheme
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ]),

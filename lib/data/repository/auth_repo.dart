@@ -148,13 +148,10 @@ class AuthRepo {
     } catch (error) {
       debugPrint('error is: $error');
     }
-    if (deviceToken == null) {
-      debugPrint('--------Device Token---------- $deviceToken');
-      throw Exception('Null device token');
-    }
+
     debugPrint('--------Device Token---------- $deviceToken');
 
-    return deviceToken;
+    return deviceToken ?? '';
   }
 
   // for forgot password

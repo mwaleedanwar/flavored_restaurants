@@ -18,7 +18,6 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/config_mod
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/userinfo_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/date_converter.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
@@ -31,7 +30,6 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_text_field.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/not_logged_in_screen.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/address/widget/location_search_dialog.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/checkout/widget/slot_widget.dart';
 
@@ -59,7 +57,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
   final _noteController = TextEditingController();
   final _floorController = TextEditingController();
-  final _lastNameController = TextEditingController();
+  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneNumberController = TextEditingController();
 
@@ -68,44 +66,37 @@ class CheckoutScreenState extends State<CheckoutScreen> {
   final _houseNode = FocusNode();
   final _floorNode = FocusNode();
 
-  final _lastNameFocus = FocusNode();
+  final _nameFocus = FocusNode();
   final _emailFocus = FocusNode();
   final _phoneNumberFocus = FocusNode();
 
   bool _isCashOnDeliveryActive = false;
   bool _isLoggedIn = false;
   bool loading = true;
+  bool canPop = true;
+  bool takeAway = false;
   List<CartModel> _cartList = [];
   String _latitude = '';
   String _longitude = '';
   Branches? currentBranch;
-
-  void update() => setState(() {});
+  bool kmWiseCharge = false;
 
   @override
   void initState() {
     super.initState();
-    debugPrint('The total amount is : ${widget.amount}');
-    controller.addListener(update);
-
+    final locationProvider = Provider.of<LocationProvider>(context, listen: false);
     currentBranch = Provider.of<BranchProvider>(context, listen: false).getBranch(context);
-    Provider.of<LocationProvider>(context, listen: false).currentBranch = currentBranch;
-    debugPrint('===currentBranch: ${currentBranch?.address}');
-
+    locationProvider.currentBranch = currentBranch;
     _isLoggedIn = Provider.of<AuthProvider>(context, listen: false).isLoggedIn();
     if (_isLoggedIn) {
       Provider.of<ProfileProvider>(context, listen: false).getUserInfo(context).then((value) {
-        debugPrint('=====new data=====');
-
         if (Provider.of<ProfileProvider>(context, listen: false).userInfoModel != null) {
           UserInfoModel userInfoModel = Provider.of<ProfileProvider>(context, listen: false).userInfoModel!;
-          _lastNameController.text = userInfoModel.lName ?? '';
+          _nameController.text = userInfoModel.fName ?? '';
           _phoneNumberController.text = userInfoModel.phone?.replaceAll('+1', '') ?? '';
           _emailController.text = userInfoModel.email ?? '';
         }
       });
-
-      Provider.of<PaymentProvider>(context, listen: false).getCardsList(context);
 
       Provider.of<OrderProvider>(context, listen: false).initializeTimeSlot(context).then((value) {
         Provider.of<OrderProvider>(context, listen: false).sortTime();
@@ -113,7 +104,8 @@ class CheckoutScreenState extends State<CheckoutScreen> {
       if (Provider.of<ProfileProvider>(context, listen: false).userInfoModel == null) {
         Provider.of<ProfileProvider>(context, listen: false).getUserInfo(context);
       } else {
-        _lastNameController.text = Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.fName ?? '';
+        print('====name:${Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.fName}');
+        _nameController.text = Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.fName ?? '';
         _emailController.text = Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.email ?? '';
       }
 
@@ -125,15 +117,16 @@ class CheckoutScreenState extends State<CheckoutScreen> {
           ? _cartList.addAll(Provider.of<CartProvider>(context, listen: false).cartList)
           : _cartList.addAll(widget.cartList ?? []);
     }
-
-    Provider.of<LocationProvider>(context, listen: false).checkPermission(
-      () => Provider.of<LocationProvider>(context, listen: false)
-          .getCurrentLocation(context, false)
-          .then((currentPosition) {
-        Provider.of<LocationProvider>(context, listen: false).checkRadius();
-      }),
-      context,
-    );
+    if (locationProvider.address == null || locationProvider.address!.isEmpty) {
+      locationProvider.checkPermission(
+        () => locationProvider.getCurrentLocation(context, false).then((currentPosition) {
+          locationProvider.checkRadius();
+        }),
+        context,
+      );
+    }
+    takeAway = widget.orderType == 'take_away';
+    kmWiseCharge = Provider.of<SplashProvider>(context, listen: false).configModel?.deliveryManagement?.status == 1;
     setState(() {
       loading = false;
     });
@@ -141,459 +134,384 @@ class CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final configModel = Provider.of<SplashProvider>(context, listen: false).configModel;
-    final height = MediaQuery.of(context).size.height;
-    bool kmWiseCharge = configModel?.deliveryManagement?.status == 1;
-    bool takeAway = widget.orderType == 'take_away';
-
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: ResponsiveHelper.isDesktop(context)
-          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
-          : CustomAppBar(context: context, title: getTranslated('checkout', context)),
-      body: loading
-          ? const Center(child: CircularProgressIndicator.adaptive())
-          : _isLoggedIn
-              ? Consumer<OrderProvider>(
-                  builder: (context, order, child) {
-                    double deliveryCharge = 0;
-
-                    if (!takeAway && kmWiseCharge) {
-                      deliveryCharge = order.distance * configModel!.deliveryManagement!.shippingPerKm;
-                      if (deliveryCharge < configModel.deliveryManagement!.minShippingCharge) {
-                        deliveryCharge = configModel.deliveryManagement!.minShippingCharge;
+    return PopScope(
+      onPopInvoked: (popped) {
+        Provider.of<OrderProvider>(context, listen: false).stopLoader();
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: CustomAppBar(
+          context: context,
+          title: getTranslated('checkout', context),
+          onBackPressed: () {
+            Provider.of<OrderProvider>(context, listen: false).stopLoader();
+            Navigator.pop(context);
+          },
+        ),
+        body: loading
+            ? const Center(child: CircularProgressIndicator.adaptive())
+            : _isLoggedIn
+                ? Consumer3<OrderProvider, SplashProvider, LocationProvider>(
+                    builder: (context, order, config, address, child) {
+                      double deliveryCharge = 0;
+                      _latitude = address.pickPosition.latitude.toString();
+                      _longitude = address.pickPosition.latitude.toString();
+                      if (!takeAway && kmWiseCharge) {
+                        deliveryCharge = order.distance * config.configModel!.deliveryManagement!.shippingPerKm;
+                        if (deliveryCharge < config.configModel!.deliveryManagement!.minShippingCharge) {
+                          deliveryCharge = config.configModel!.deliveryManagement!.minShippingCharge;
+                        }
+                      } else if (!takeAway && !kmWiseCharge) {
+                        deliveryCharge = config.configModel!.deliveryCharge;
                       }
-                    } else if (!takeAway && !kmWiseCharge) {
-                      deliveryCharge = configModel!.deliveryCharge;
-                    }
-
-                    return Consumer<LocationProvider>(
-                      builder: (context, address, child) {
-                        return Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  physics: const BouncingScrollPhysics(),
-                                  child: Column(
+                      return Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: SingleChildScrollView(
+                          physics: const BouncingScrollPhysics(),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: MediaQuery.of(context).size.height < 600
+                                  ? MediaQuery.of(context).size.height
+                                  : MediaQuery.of(context).size.height - 400,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // Choose branch
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      ConstrainedBox(
-                                        constraints: BoxConstraints(
-                                            minHeight: !ResponsiveHelper.isDesktop(context) && height < 600
-                                                ? height
-                                                : height - 400),
-                                        child: Center(
-                                          child: SizedBox(
-                                            width: 1170,
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Expanded(
-                                                  flex: 6,
-                                                  child: Container(
-                                                    decoration: const BoxDecoration(),
-                                                    child:
-                                                        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                                        Padding(
-                                                          padding: const EdgeInsets.all(10),
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                              Text('Choose Store',
-                                                                  style: rubikMedium.copyWith(
-                                                                      fontSize: Dimensions.FONT_SIZE_LARGE)),
-                                                              Container(
-                                                                padding: const EdgeInsets.all(8),
-                                                                decoration: BoxDecoration(
-                                                                  color: Theme.of(context).primaryColor,
-                                                                  borderRadius: BorderRadius.circular(10),
-                                                                ),
-                                                                child: const BranchButtonView(),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ]),
-                                                      // Address
-                                                      Padding(
-                                                        padding: const EdgeInsets.symmetric(
-                                                            horizontal: Dimensions.PADDING_SIZE_SMALL),
-                                                        child: Text(getTranslated('preference_time', context),
-                                                            style: rubikMedium),
-                                                      ),
-                                                      const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                                      SizedBox(
-                                                        height: 50,
-                                                        child: ListView.builder(
-                                                          scrollDirection: Axis.horizontal,
-                                                          shrinkWrap: true,
-                                                          physics: const BouncingScrollPhysics(),
-                                                          padding: const EdgeInsets.only(
-                                                              left: Dimensions.PADDING_SIZE_SMALL),
-                                                          itemCount: 2,
-                                                          itemBuilder: (context, index) {
-                                                            return SlotWidget(
-                                                              title: index == 0
-                                                                  ? getTranslated('today', context)
-                                                                  : getTranslated('tomorrow', context),
-                                                              isSelected: order.selectDateSlot == index,
-                                                              onTap: () => order.updateDateSlot(index),
-                                                            );
-                                                          },
-                                                        ),
-                                                      ),
-
-                                                      const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                                      //timeslots
-                                                      SizedBox(
-                                                        height: 50,
-                                                        child: order.timeSlots != null
-                                                            ? order.timeSlots!.isNotEmpty
-                                                                ? ListView.builder(
-                                                                    scrollDirection: Axis.horizontal,
-                                                                    shrinkWrap: true,
-                                                                    physics: const BouncingScrollPhysics(),
-                                                                    padding: const EdgeInsets.only(
-                                                                        left: Dimensions.PADDING_SIZE_SMALL),
-                                                                    itemCount: order.timeSlots!.length,
-                                                                    itemBuilder: (context, index) {
-                                                                      return SlotWidget(
-                                                                        title: (index == 0 &&
-                                                                                order.selectDateSlot == 0 &&
-                                                                                Provider.of<SplashProvider>(context,
-                                                                                        listen: false)
-                                                                                    .isRestaurantOpenNow(context))
-                                                                            ? getTranslated('now', context)
-                                                                            : '${DateConverter.dateToTimeOnly(order.timeSlots![index].startTime, context)} '
-                                                                                '- ${DateConverter.dateToTimeOnly(order.timeSlots![index].endTime, context)}',
-                                                                        isSelected: order.selectTimeSlot == index,
-                                                                        onTap: () => order.updateTimeSlot(index),
-                                                                      );
-                                                                    },
-                                                                  )
-                                                                : Center(
-                                                                    child: Text(
-                                                                      getTranslated('no_slot_available', context),
-                                                                    ),
-                                                                  )
-                                                            : const Center(child: CircularProgressIndicator()),
-                                                      ),
-                                                      !takeAway
-                                                          ? const SizedBox.shrink()
-                                                          : const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                                                      !takeAway
-                                                          ? const SizedBox.shrink()
-                                                          : Text(
-                                                              'Pickup Instructions (Optional)',
-                                                              style: poppinsRegular.copyWith(
-                                                                color: ColorResources.getHintColor(context),
-                                                              ),
-                                                            ),
-                                                      !takeAway
-                                                          ? const SizedBox.shrink()
-                                                          : const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                                      !takeAway
-                                                          ? const SizedBox.shrink()
-                                                          : CustomTextField(
-                                                              controller: _noteController,
-                                                              hintText: 'Additional instructions for Pickup',
-                                                              maxLines: 2,
-                                                              inputType: TextInputType.multiline,
-                                                              inputAction: TextInputAction.newline,
-                                                              capitalization: TextCapitalization.sentences,
-                                                            ),
-
-                                                      takeAway
-                                                          ? const SizedBox(height: Dimensions.PADDING_SIZE_SMALL)
-                                                          : const SizedBox.shrink(),
-
-                                                      !takeAway
-                                                          ? detailsWidget(context)
-                                                          : CardFormField(
-                                                              controller: controller,
-                                                              enablePostalCode: false,
-                                                              style: CardFormStyle(
-                                                                borderColor: Colors.transparent,
-                                                                textColor: Provider.of<ThemeProvider>(context).darkTheme
-                                                                    ? Colors.white
-                                                                    : ColorResources.COLOR_BLACK,
-                                                                placeholderColor:
-                                                                    Provider.of<ThemeProvider>(context).darkTheme
-                                                                        ? Colors.white
-                                                                        : ColorResources.COLOR_BLACK,
-                                                                textErrorColor: Colors.red,
-                                                              ),
-                                                              onCardChanged: (card) {
-                                                                debugPrint(card.toString());
-                                                              },
-                                                            ),
-                                                    ]),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                      Text(
+                                        'Choose Store',
+                                        style: rubikMedium.copyWith(
+                                          fontSize: Dimensions.FONT_SIZE_LARGE,
                                         ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).primaryColor,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                        child: const BranchButtonView(),
                                       ),
                                     ],
                                   ),
                                 ),
-                              ),
-                              confirmButtonWidget(order, takeAway, address, kmWiseCharge, deliveryCharge, context),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  },
-                )
-              : const NotLoggedInScreen(),
-    );
-  }
+                                // Time Preference
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
+                                  child: Text(getTranslated('preference_time', context), style: rubikMedium),
+                                ),
+                                const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                //Today or Tomorrow
+                                SizedBox(
+                                  height: 50,
+                                  child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    shrinkWrap: true,
+                                    physics: const BouncingScrollPhysics(),
+                                    padding: const EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
+                                    itemCount: 2,
+                                    itemBuilder: (context, index) {
+                                      return SlotWidget(
+                                        title: index == 0
+                                            ? getTranslated('today', context)
+                                            : getTranslated('tomorrow', context),
+                                        isSelected: order.selectDateSlot == index,
+                                        onTap: () => order.updateDateSlot(index),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                //Timeslots
+                                SizedBox(
+                                  height: 50,
+                                  child: order.timeSlots != null
+                                      ? order.timeSlots!.isNotEmpty
+                                          ? ListView.builder(
+                                              scrollDirection: Axis.horizontal,
+                                              shrinkWrap: true,
+                                              physics: const BouncingScrollPhysics(),
+                                              padding: const EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
+                                              itemCount: order.timeSlots!.length,
+                                              itemBuilder: (context, index) {
+                                                return SlotWidget(
+                                                  title: (index == 0 &&
+                                                          order.selectDateSlot == 0 &&
+                                                          Provider.of<SplashProvider>(context, listen: false)
+                                                              .isRestaurantOpenNow(context))
+                                                      ? getTranslated('now', context)
+                                                      : '${DateConverter.dateToTimeOnly(order.timeSlots![index].startTime, context)} '
+                                                          '- ${DateConverter.dateToTimeOnly(order.timeSlots![index].endTime, context)}',
+                                                  isSelected: order.selectTimeSlot == index,
+                                                  onTap: () => order.updateTimeSlot(index),
+                                                );
+                                              },
+                                            )
+                                          : Center(
+                                              child: Text(
+                                                getTranslated('no_slot_available', context),
+                                              ),
+                                            )
+                                      : const Center(child: CircularProgressIndicator()),
+                                ),
+                                //Delivery Instructions
+                                if (takeAway) ...[
+                                  const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                  Text(
+                                    'Pickup Instructions (Optional)',
+                                    style: poppinsRegular.copyWith(
+                                      color: ColorResources.getHintColor(context),
+                                    ),
+                                  ),
+                                  const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                  CustomTextField(
+                                    controller: _noteController,
+                                    hintText: 'Additional instructions for Pickup',
+                                    maxLines: 2,
+                                    inputType: TextInputType.multiline,
+                                    inputAction: TextInputAction.newline,
+                                    capitalization: TextCapitalization.sentences,
+                                  ),
+                                  const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                ],
+                                //Delivery and other things
+                                if (!takeAway)
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 24.0),
+                                        child: Text(
+                                          'Personal Info',
+                                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                              color: ColorResources.getGreyBunkerColor(context),
+                                              fontSize: Dimensions.FONT_SIZE_LARGE),
+                                        ),
+                                      ),
+                                      Text(
+                                        'Name',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium
+                                            ?.copyWith(color: ColorResources.getHintColor(context)),
+                                      ),
+                                      const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                      CustomTextField(
+                                        hintText: 'Enter Name',
+                                        isShowBorder: true,
+                                        controller: _nameController,
+                                        focusNode: _nameFocus,
+                                        inputType: TextInputType.name,
+                                        capitalization: TextCapitalization.words,
+                                      ),
+                                      const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                      Text(
+                                        getTranslated('email', context),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium
+                                            ?.copyWith(color: ColorResources.getHintColor(context)),
+                                      ),
+                                      const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                      CustomTextField(
+                                        hintText: 'Enter your email',
+                                        isShowBorder: true,
+                                        controller: _emailController,
+                                        focusNode: _emailFocus,
+                                        inputType: TextInputType.emailAddress,
+                                      ),
+                                      const SizedBox(height: Dimensions.PADDING_SIZE_LARGE * 2),
+                                      Text(
+                                        getTranslated('mobile_number', context),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .displayMedium
+                                            ?.copyWith(color: ColorResources.getHintColor(context)),
+                                      ),
+                                      const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                      MaskedTextField(
+                                        mask: AppConstants.phone_form,
+                                        style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                                            fontSize: Dimensions.FONT_SIZE_LARGE),
+                                        controller: _phoneNumberController,
+                                        readOnly: true,
+                                        focusNode: _phoneNumberFocus,
+                                        keyboardType: TextInputType.phone,
+                                        decoration: InputDecoration(
+                                          contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
+                                          border: OutlineInputBorder(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            borderSide: const BorderSide(style: BorderStyle.none, width: 0),
+                                          ),
+                                          isDense: true,
+                                          hintText: AppConstants.phone_form_hint,
+                                          fillColor: Theme.of(context).cardColor,
+                                          hintStyle: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                              fontSize: Dimensions.FONT_SIZE_SMALL,
+                                              color: ColorResources.COLOR_GREY_CHATEAU),
+                                          filled: true,
+                                          prefixIconConstraints: const BoxConstraints(minWidth: 23, maxHeight: 20),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 24.0),
+                                        child: Text(
+                                          getTranslated('delivery_address', context),
+                                          style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                              color: ColorResources.getGreyBunkerColor(context),
+                                              fontSize: Dimensions.FONT_SIZE_LARGE),
+                                        ),
+                                      ),
+                                      if (address.pickAddress != null)
+                                        InkWell(
+                                          onTap: () async => await showDialog(
+                                            context: context,
+                                            builder: (context) => const LocationSearchDialog(),
+                                          ),
+                                          child: Container(
+                                            width: MediaQuery.of(context).size.width,
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: Dimensions.PADDING_SIZE_LARGE,
+                                              vertical: 18.0,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context).cardColor,
+                                              border: Border.all(
+                                                color: address.isAvailable ? Theme.of(context).cardColor : Colors.red,
+                                              ),
+                                              borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    address.address == null || address.address == ''
+                                                        ? 'Enter address Manually'
+                                                        : address.address!,
+                                                    maxLines: 1,
+                                                    overflow: TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                const Icon(Icons.search, size: 20),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      if (!address.isAvailable)
+                                        Text(
+                                          'Service not available in that area',
+                                          style: poppinsRegular.copyWith(color: Colors.red),
+                                        ),
+                                      const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                      Text(
+                                        'Apt / Suite / Floor',
+                                        style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
+                                      ),
+                                      const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                      CustomTextField(
+                                        hintText: getTranslated('ex_2', context),
+                                        isShowBorder: true,
+                                        inputType: TextInputType.streetAddress,
+                                        inputAction: TextInputAction.next,
+                                        focusNode: _houseNode,
+                                        nextFocus: _floorNode,
+                                        controller: _floorController,
+                                      ),
+                                      const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                      Text(
+                                        'Delivery Instructions (Optional)',
+                                        style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
+                                      ),
+                                      const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                                      CustomTextField(
+                                        controller: _noteController,
+                                        hintText: 'Additional instructions for delivery',
+                                        maxLines: 2,
+                                        inputType: TextInputType.multiline,
+                                        inputAction: TextInputAction.newline,
+                                        capitalization: TextCapitalization.sentences,
+                                      ),
+                                    ],
+                                  ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 24),
+                                  child: Text(
+                                    'Payment Info',
+                                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                        color: ColorResources.getGreyBunkerColor(context),
+                                        fontSize: Dimensions.FONT_SIZE_LARGE),
+                                  ),
+                                ),
+                                CardFormField(
+                                  controller: controller,
+                                  style: CardFormStyle(
+                                    borderColor: Colors.transparent,
+                                    textErrorColor: Colors.red,
+                                    textColor:
+                                        Provider.of<ThemeProvider>(context).darkTheme ? Colors.white : Colors.black,
+                                    placeholderColor:
+                                        Provider.of<ThemeProvider>(context).darkTheme ? Colors.white : Colors.black,
+                                  ),
+                                  onCardChanged: (card) {
+                                    if (kDebugMode) debugPrint(card.toString());
+                                  },
+                                ),
+                                Center(
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    alignment: Alignment.center,
+                                    padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
+                                    child: !order.isLoading
+                                        ? CustomButton(
+                                            btnTxt: 'Pay with Delivery',
+                                            onTap: () async {
+                                              String lastName = _nameController.text.trim();
+                                              String email = _emailController.text.trim();
+                                              if (lastName.isEmpty) {
+                                                showCustomSnackBar('enter user name', context);
+                                              } else if (email.isEmpty) {
+                                                showCustomSnackBar('enter your email', context);
+                                              } else if (order.timeSlots!.length == 0) {
+                                                showCustomSnackBar('select time slot', context);
+                                              } else {
+                                                if (controller.details.complete) {
+                                                  if (!address.isAvailable && !takeAway) {
+                                                    showCustomSnackBar('Service not available in that area', context);
+                                                  } else if (takeAway) {
+                                                    order.startLoader();
 
-  Widget confirmButtonWidget(OrderProvider order, bool takeAway, LocationProvider address, bool kmWiseCharge,
-      double deliveryCharge, BuildContext context) {
-    return Container(
-      width: 1170,
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
-      child: !order.isLoading
-          ? Builder(
-              builder: (context) => CustomButton(
-                  btnTxt: 'Pay with Delivery',
-                  onTap: () async {
-                    String lastName = _lastNameController.text.trim();
-                    String email = _emailController.text.trim();
-                    if (lastName.isEmpty) {
-                      showCustomSnackBar('enter user name', context);
-                    } else if (email.isEmpty) {
-                      showCustomSnackBar('enter your email', context);
-                    } else if (order.timeSlots!.isEmpty) {
-                      showCustomSnackBar('select time slot', context);
-                    } else {
-                      if (controller.details.complete) {
-                        if (!address.isAvailable && !takeAway) {
-                          showCustomSnackBar('Sorry, service unavailable in your area', context);
-                        } else if (takeAway) {
-                          createCardToken(context, order, takeAway, lastName, email);
-                        } else {
-                          createCardToken(context, order, takeAway, lastName, email);
-                        }
-                      } else {
-                        showCustomSnackBar('Kindly Complete Card Info', context);
-                      }
-                    }
-                  }),
-            )
-          : Center(
-              child:
-                  CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor))),
-    );
-  }
+                                                    createCardToken(context, order, takeAway, lastName, email);
+                                                  } else {
+                                                    order.startLoader();
 
-  void _openSearchDialog(BuildContext context) async {
-    await showDialog(context: context, builder: (context) => const LocationSearchDialog());
-  }
-
-  Widget detailsWidget(BuildContext context) {
-    return Consumer<LocationProvider>(builder: (context, locationProvider, _) {
-      return Container(
-        decoration: const BoxDecoration(),
-        padding: EdgeInsets.zero,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.isDesktop(context) ? 0 : 24.0),
-              child: Text(
-                'Personnel Info',
-                style: Theme.of(context)
-                    .textTheme
-                    .displaySmall
-                    ?.copyWith(color: ColorResources.getGreyBunkerColor(context), fontSize: Dimensions.FONT_SIZE_LARGE),
-              ),
-            ),
-
-            Text(
-              'User Name',
-              style: Theme.of(context).textTheme.displayMedium?.copyWith(color: ColorResources.getHintColor(context)),
-            ),
-
-            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-            CustomTextField(
-              hintText: 'Doe',
-              isShowBorder: true,
-              controller: _lastNameController,
-              focusNode: _lastNameFocus,
-              inputType: TextInputType.name,
-              capitalization: TextCapitalization.words,
-            ),
-            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-            // for email section
-            Text(
-              getTranslated('email', context),
-              style: Theme.of(context).textTheme.displayMedium?.copyWith(color: ColorResources.getHintColor(context)),
-            ),
-            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-            CustomTextField(
-              hintText: 'Enter your email',
-              isShowBorder: true,
-              controller: _emailController,
-              focusNode: _emailFocus,
-              inputType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-
-            // for phone Number section
-            Text(
-              getTranslated('mobile_number', context),
-              style: Theme.of(context).textTheme.displayMedium?.copyWith(color: ColorResources.getHintColor(context)),
-            ),
-            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-            MaskedTextField(
-              mask: AppConstants.phone_form,
-              style: Theme.of(context)
-                  .textTheme
-                  .displayMedium
-                  ?.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: Dimensions.FONT_SIZE_LARGE),
-              controller: _phoneNumberController,
-              readOnly: true,
-              focusNode: _phoneNumberFocus,
-              keyboardType: TextInputType.phone,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                  borderSide: const BorderSide(style: BorderStyle.none, width: 0),
-                ),
-                isDense: true,
-                hintText: AppConstants.phone_form_hint,
-                fillColor: Theme.of(context).cardColor,
-                hintStyle: Theme.of(context)
-                    .textTheme
-                    .displayMedium
-                    ?.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.COLOR_GREY_CHATEAU),
-                filled: true,
-                prefixIconConstraints: const BoxConstraints(minWidth: 23, maxHeight: 20),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.isDesktop(context) ? 0 : 24.0),
-              child: Text(
-                getTranslated('delivery_address', context),
-                style: Theme.of(context)
-                    .textTheme
-                    .displaySmall
-                    ?.copyWith(color: ColorResources.getGreyBunkerColor(context), fontSize: Dimensions.FONT_SIZE_LARGE),
-              ),
-            ),
-
-            // for Address Field
-            Text(
-              getTranslated('address_line_01', context),
-              style: Theme.of(context).textTheme.displayMedium?.copyWith(color: ColorResources.getHintColor(context)),
-            ),
-            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-            locationProvider.pickAddress != null
-                ? InkWell(
-                    onTap: () => _openSearchDialog(context),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_LARGE, vertical: 18.0),
-                      margin: const EdgeInsets.only(top: 23.0),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardColor,
-                        border:
-                            Border.all(color: locationProvider.isAvailable ? Theme.of(context).cardColor : Colors.red),
-                        borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL),
-                      ),
-                      child: Builder(builder: (context) {
-                        _latitude = locationProvider.pickPosition.latitude.toString();
-                        _longitude = locationProvider.pickPosition.latitude.toString();
-
-                        return Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                locationProvider.address == null || locationProvider.address == ''
-                                    ? 'Enter address Manually'
-                                    : locationProvider.address!,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                                                    createCardToken(context, order, takeAway, lastName, email);
+                                                  }
+                                                } else {
+                                                  showCustomSnackBar('complete cad Info', context);
+                                                }
+                                              }
+                                            })
+                                        : CircularProgressIndicator(
+                                            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                                          ),
+                                  ),
+                                )
+                              ],
                             ),
-                            const Icon(Icons.search, size: 20),
-                          ],
-                        );
-                      }),
-                    ),
+                          ),
+                        ),
+                      );
+                    },
                   )
-                : const SizedBox.shrink(),
-            locationProvider.isAvailable
-                ? const SizedBox.shrink()
-                : Text(
-                    'Service not available in that area',
-                    style: poppinsRegular.copyWith(color: Colors.red),
-                  ),
-
-            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-            Text(
-              'Apt / Suite / Floor',
-              style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
-            ),
-            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-            CustomTextField(
-              hintText: getTranslated('ex_2', context),
-              isShowBorder: true,
-              inputType: TextInputType.streetAddress,
-              inputAction: TextInputAction.next,
-              focusNode: _houseNode,
-              nextFocus: _floorNode,
-              controller: _floorController,
-            ),
-            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-            Text(
-              'Delivery Instructions (Optional)',
-              style: poppinsRegular.copyWith(color: ColorResources.getHintColor(context)),
-            ),
-            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-            CustomTextField(
-              controller: _noteController,
-              hintText: 'Additional instructions for delivery',
-              maxLines: 2,
-              inputType: TextInputType.multiline,
-              inputAction: TextInputAction.newline,
-              capitalization: TextCapitalization.sentences,
-            ),
-
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: ResponsiveHelper.isDesktop(context) ? 0 : 24.0),
-              child: Text(
-                'Payment Info',
-                style: Theme.of(context)
-                    .textTheme
-                    .displaySmall
-                    ?.copyWith(color: ColorResources.getGreyBunkerColor(context), fontSize: Dimensions.FONT_SIZE_LARGE),
-              ),
-            ),
-            CardFormField(
-              controller: controller,
-              dangerouslyGetFullCardDetails: true,
-              dangerouslyUpdateFullCardDetails: true,
-              style: CardFormStyle(
-                  cursorColor: Theme.of(context).textTheme.bodyLarge?.color,
-                  textColor: Theme.of(context).textTheme.bodyLarge?.color,
-                  placeholderColor: ColorResources.getHintColor(context)),
-            ),
-            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-          ],
-        ),
-      );
-    });
+                : const NotLoggedInScreen(),
+      ),
+    );
   }
 
   Future<void> createCardToken(
@@ -603,7 +521,6 @@ class CheckoutScreenState extends State<CheckoutScreen> {
     String name,
     String email,
   ) async {
-    debugPrint('==called createCardToken');
     FocusScope.of(context).unfocus();
     try {
       BillingDetails billingDetails = BillingDetails(
@@ -630,11 +547,9 @@ class CheckoutScreenState extends State<CheckoutScreen> {
           showCustomSnackBar('ERROR PLACING ORDER', context);
         }
       });
-    } on StripeException catch (e) {
+    } on Exception catch (e) {
       order.stopLoader();
-
-      // Handle error
-      showCustomSnackBar(e.error.message.toString(), context);
+      showCustomSnackBar(e.toString(), context);
     }
   }
 
@@ -645,9 +560,8 @@ class CheckoutScreenState extends State<CheckoutScreen> {
       }
       Provider.of<OrderProvider>(context, listen: false).stopLoader();
       Navigator.pushReplacementNamed(context, '${Routes.ORDER_SUCCESS_SCREEN}/$orderID/success');
-      Navigator.pushReplacementNamed(context, '${Routes.ORDER_SUCCESS_SCREEN}/$orderID/success');
     } else {
-      log(message);
+      log('Error in order $message');
       showCustomSnackBar(message, context);
     }
   }
@@ -677,6 +591,8 @@ class CheckoutScreenState extends State<CheckoutScreen> {
       }
 
       List<Cart> carts = [];
+      final cartProvider = Provider.of<CartProvider>(context, listen: false);
+      //check all Carts
       for (int index = 0; index < _cartList.length; index++) {
         CartModel cart = _cartList[index];
         List<int> addOnIdList = [];
@@ -700,8 +616,8 @@ class CheckoutScreenState extends State<CheckoutScreen> {
           addOnQtys: addOnQtyList,
         ));
       }
-      for (int index = 0; index < Provider.of<CartProvider>(context, listen: false).cateringList.length; index++) {
-        CateringCartModel cartModel = Provider.of<CartProvider>(context, listen: false).cateringList[index];
+      for (int index = 0; index < cartProvider.cateringList.length; index++) {
+        CateringCartModel cartModel = cartProvider.cateringList[index];
 
         carts.add(Cart(
           price: cartModel.discountAmount.toString(),
@@ -714,9 +630,8 @@ class CheckoutScreenState extends State<CheckoutScreen> {
           addOnQtys: [],
         ));
       }
-      for (int index = 0; index < Provider.of<CartProvider>(context, listen: false).happyHoursList.length; index++) {
-        HappyHoursCartModel happyHoursCartModel =
-            Provider.of<CartProvider>(context, listen: false).happyHoursList[index];
+      for (int index = 0; index < cartProvider.happyHoursList.length; index++) {
+        HappyHoursCartModel happyHoursCartModel = cartProvider.happyHoursList[index];
 
         carts.add(Cart(
           price: happyHoursCartModel.discountAmount.toString(),
@@ -729,8 +644,8 @@ class CheckoutScreenState extends State<CheckoutScreen> {
           addOnQtys: [],
         ));
 
-        for (int index = 0; index < Provider.of<CartProvider>(context, listen: false).dealsList.length; index++) {
-          DealCartModel dealsList = Provider.of<CartProvider>(context, listen: false).dealsList[index];
+        for (int index = 0; index < cartProvider.dealsList.length; index++) {
+          DealCartModel dealsList = cartProvider.dealsList[index];
 
           carts.add(Cart(
             price: dealsList.price.toString(),
@@ -744,6 +659,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
           ));
         }
       }
+      //Create order body
       PlaceOrderBody placeOrderBody = PlaceOrderBody(
         cart: carts,
         couponDiscountAmount: Provider.of<CouponProvider>(context, listen: false).discount,
@@ -753,7 +669,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
         orderNote: _noteController.text,
         orderType: widget.orderType,
         orderTip: double.parse(Get.put(TipController()).tip.value.toStringAsFixed(2)),
-        taxFee: double.parse(Provider.of<CartProvider>(context, listen: false).taxFee.toStringAsFixed(2)),
+        taxFee: double.parse(cartProvider.taxFee.toStringAsFixed(2)),
         paymentMethod: _isCashOnDeliveryActive
             ? order.paymentMethodIndex == 0
                 ? 'cash_on_delivery'
@@ -791,9 +707,10 @@ class CheckoutScreenState extends State<CheckoutScreen> {
         contactPhone: Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.phone,
       );
 
-      order.placeOrder(placeOrderBody, _callback);
+      await order.placeOrder(placeOrderBody, _callback);
     } catch (e) {
       order.stopLoader();
+
       debugPrint('Error placing order: $e');
     }
   }
