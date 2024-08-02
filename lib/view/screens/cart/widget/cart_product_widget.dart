@@ -293,6 +293,7 @@ class _CartProductWidgetState extends State<CartProductWidget> {
   }
 
   String compoundVariations(List<dynamic> variations) {
+    if (variations.isEmpty) return '';
     String init = '';
     for (var variation in variations) {
       init += '${variation.label}${variation.optionPrice == '0' ? ',' : '(${variation.optionPrice}),'}';
