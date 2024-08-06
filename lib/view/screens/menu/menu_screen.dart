@@ -30,7 +30,7 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size(MediaQuery.of(context).size.width, 70),
+          preferredSize: Size(MediaQuery.of(context).size.width, 75),
           child: Padding(
             padding: const EdgeInsets.only(left: Dimensions.PADDING_SIZE_DEFAULT, top: 45),
             child: Column(

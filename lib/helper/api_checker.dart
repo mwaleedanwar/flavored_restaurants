@@ -25,7 +25,7 @@ class ApiChecker {
             context, Routes.getLoginRoute(), (route) => false);
       }
     } else {
-      showCustomSnackBar(message, context);
+      // showCustomSnackBar(message, context);
     }
   }
 }

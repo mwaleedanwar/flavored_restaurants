@@ -335,7 +335,7 @@ class _CategoryTabBarState extends State<CategoryTabBar> {
               Container(
                 constraints: const BoxConstraints(maxWidth: 80),
                 child: Text(
-                  widget.data[index].name,
+                  widget.data[index].name.replaceAll(' ', '\n'),
                   style: rubikMedium.copyWith(
                     fontSize: Dimensions.FONT_SIZE_SMALL,
                     fontWeight: currentIndex != index ? FontWeight.w500 : FontWeight.w700,

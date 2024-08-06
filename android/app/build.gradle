@@ -31,7 +31,7 @@ android {
         configNopal {
             keyAlias 'nopaldose'
             keyPassword '12345678'
-            storeFile file('./src/nopal/upload-keystore.jks')
+            storeFile file('C:/Users/AhmadRaza/NopalDose.jks')
             storePassword '12345678'
         }
         configMaa {
@@ -73,7 +73,7 @@ android {
         configAlladinGrill {
             keyAlias 'aladdingrill'
             keyPassword 'FastTech@123'
-            storeFile file('C:/Users/AhmadRaza/AlladinGrill.jks')
+            storeFile file('C:/Users/AhmadRaza/AladdinGrill.jks')
             storePassword 'FastTech@123'
         }
         configJaxspice {
