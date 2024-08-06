@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
@@ -33,6 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKeyLogin = GlobalKey<FormState>();
   bool isCodeSent = false;
+  bool isChecked = true;
   bool isAlreadyExsist = true;
   final FocusNode _firstNameFocus = FocusNode();
   final FocusNode _lastNameFocus = FocusNode();
@@ -227,17 +232,18 @@ class _LoginScreenState extends State<LoginScreen> {
                                         prefixIconConstraints: const BoxConstraints(minWidth: 23, maxHeight: 20),
                                       ),
                                       onChanged: (otp) {
-                                        if (_passwordController.text.length == 4 && isAlreadyExsist == true) {
+
+                                        if(_passwordController.text.length == 4&& isAlreadyExsist == true){
+
+
+
                                           SignUpModel signupModel = SignUpModel(
                                             phone: AppConstants.country_code +
                                                 _numberController.text.replaceAll(RegExp('[()\\-\\s]'), ''),
                                             token: _passwordController.text,
                                             restaurantId: F.restaurantId,
-                                            fName: _firstNameController.text,
-                                            lName: _lastNameController.text,
+
                                             isMobile: 'true',
-                                            email: _emailController.text,
-                                            password: _passwordController.text,
                                           );
                                           authProvider.verifyOtp(signupModel, context).then((value) {
                                             if (value.isSuccess) {
@@ -246,8 +252,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                                   context, Routes.getMainRoute(), (route) => false);
                                             }
                                           });
-                                        }
-                                      },
+
+
+                                        }}
+
                                     )
                                   : const SizedBox.shrink(),
 
@@ -353,6 +361,60 @@ class _LoginScreenState extends State<LoginScreen> {
                                           inputType: TextInputType.emailAddress,
                                         ),
                                         const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                                        CheckboxListTile(
+                                          dense: true,
+                                          contentPadding: EdgeInsets.zero,
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                          activeColor: Theme.of(context).primaryColor,
+                                          controlAffinity: ListTileControlAffinity.leading,
+                                          value: isChecked,
+                                          onChanged: (val) {
+                                            setState(() {
+                                              isChecked = !isChecked;
+                                            });
+                                          },
+                                          title: Padding(
+                                            padding: const EdgeInsets.only(top: 5.0),
+                                            child: RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                    text: 'By creating an account, you agree to our ',
+                                                    style: TextStyle(color: Theme.of(context).primaryColor),
+                                                  ),
+                                                  TextSpan(
+                                                    text: 'terms & conditions',
+                                                    style: TextStyle(
+                                                        color: ColorResources.getHintColor(context),
+                                                        decoration: TextDecoration.underline,
+                                                        fontWeight: FontWeight.w500),
+                                                    recognizer: TapGestureRecognizer()
+                                                      ..onTap = () {
+                                                        Navigator.pushNamed(context, Routes.getTermsRoute());
+                                                      },
+                                                  ),
+                                                  TextSpan(
+                                                    text: ' and ',
+                                                    style: TextStyle(color: Theme.of(context).primaryColor),
+                                                  ),
+                                                  TextSpan(
+                                                    text: 'privacy policy.',
+                                                    style: TextStyle(
+                                                        color: ColorResources.getHintColor(context),
+                                                        decoration: TextDecoration.underline,
+                                                        fontWeight: FontWeight.w500),
+                                                    recognizer: TapGestureRecognizer()
+                                                      ..onTap = () {
+                                                        Navigator.pushNamed(context, Routes.getPolicyRoute());
+                                                        // launch('http://cafescale.com/privacy-policy');
+                                                      },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+
                                       ],
                                     )
                                   : const SizedBox.shrink(),
@@ -380,33 +442,60 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               !authProvider.isLoading
                                   ? CustomButton(
-                                      btnTxt: getTranslated('login', context),
-                                      onTap: () async {
-                                        if (_numberController.text.isEmpty) {
-                                          showCustomSnackBar(getTranslated('enter_phone_number', context), context);
-                                        } else if (_passwordController.text.isEmpty) {
-                                          showCustomSnackBar('Enter otp', context);
-                                        } else {
-                                          SignUpModel signupModel = SignUpModel(
-                                            phone: AppConstants.country_code +
-                                                _numberController.text.replaceAll(RegExp('[()\\-\\s]'), ''),
-                                            token: _passwordController.text,
-                                            restaurantId: F.restaurantId,
-                                            fName: _firstNameController.text,
-                                            lName: _lastNameController.text,
-                                            email: _emailController.text,
-                                            isMobile: 'true',
-                                            password: _passwordController.text,
-                                          );
-                                          authProvider.verifyOtp(signupModel, context).then((value) {
-                                            if (value.isSuccess) {
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                  context, Routes.getMainRoute(), (route) => false);
-                                            }
-                                          });
-                                        }
-                                      },
-                                    )
+                                btnTxt:isAlreadyExsist?"Login": getTranslated('signup', context),
+                                onTap: () {
+                                  String firstName = _firstNameController.text.trim();
+                                  String lastName = _lastNameController.text.trim();
+                                  String number = _numberController.text.trim();
+                                  String email = _emailController.text.trim();
+                                  String password = _passwordController.text.trim();
+
+                                  if (firstName.isEmpty) {
+                                    showCustomSnackBar(getTranslated('enter_first_name', context), context);
+                                  } else if (lastName.isEmpty) {
+                                    showCustomSnackBar(getTranslated('enter_last_name', context), context);
+                                  } else if (number.isEmpty) {
+                                    showCustomSnackBar(getTranslated('enter_phone_number', context), context);
+                                  } else if (email.isEmpty) {
+                                    showCustomSnackBar(getTranslated('enter_phone_number', context), context);
+                                  } else if (password.isEmpty) {
+                                    showCustomSnackBar('Enter otp', context);
+                                  } else if (isChecked == false) {
+                                    debugPrint('-=not');
+                                    showCustomSnackBar('Accept terms and conditions', context);
+                                  } else {
+                                    SignUpModel signUpModel = SignUpModel(
+                                        fName: firstName,
+                                        lName: lastName,
+                                        email: email,
+                                        restaurantId: F.restaurantId,
+                                        referralCode: '',
+                                        password: _passwordController.text,
+                                        platform: kIsWeb
+                                            ? 'Web'
+                                            : Platform.isAndroid
+                                            ? 'Android'
+                                            : 'iOS',
+                                        phone: AppConstants.country_code + number.replaceAll(RegExp('[()\\-\\s]'), ''),
+                                        token: password,
+                                        isMobile: 'true');
+                                    authProvider.verifyOtp(signUpModel, context).then((status) async {
+                                      if (status.isSuccess) {
+                                        Navigator.pushNamedAndRemoveUntil(
+                                            context,
+                                            Provider.of<SplashProvider>(context, listen: false)
+                                                .configModel
+                                                ?.branches
+                                                ?.length ==
+                                                1
+                                                ? Routes.getMainRoute()
+                                                : Routes.getBranchListScreen(),
+                                                (route) => false);
+                                      }
+                                    });
+                                  }
+                                },
+                              )
                                   : Center(
                                       child: CircularProgressIndicator(
                                       valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
@@ -441,32 +530,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                               ),
 
-                              if ((socialStatus?.isFacebook ?? false) || (socialStatus?.isGoogle ?? false))
-                                const Center(child: SocialLoginWidget()),
 
-                              Center(
-                                  child:
-                                      Text(getTranslated('OR', context), style: poppinsRegular.copyWith(fontSize: 12))),
-
-                              Center(
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.pushReplacementNamed(context, Routes.getDashboardRoute('home'));
-                                  },
-                                  child: RichText(
-                                      text: TextSpan(children: [
-                                    TextSpan(
-                                        text: '${getTranslated('continue_as_a', context)} ',
-                                        style: poppinsRegular.copyWith(
-                                            fontSize: Dimensions.FONT_SIZE_SMALL,
-                                            color: ColorResources.getHintColor(context))),
-                                    TextSpan(
-                                        text: getTranslated('guest', context),
-                                        style: poppinsRegular.copyWith(
-                                            color: Theme.of(context).textTheme.bodyLarge?.color)),
-                                  ])),
-                                ),
-                              ),
                             ],
                           ),
                         );
@@ -474,7 +538,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                if (ResponsiveHelper.isDesktop(context)) const FooterView(),
               ],
             ),
           ),

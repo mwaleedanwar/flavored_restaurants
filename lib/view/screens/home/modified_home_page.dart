@@ -184,11 +184,12 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                         bool isRight = (banner.bannerType == 'catering' ||
                                 banner.bannerType == 'product' ||
                                 banner.bannerType == 'simple') &&
-                            banner.isMobileView == 0;
+                            banner.isMobileView == 1;
                         return isRight
                             ? HomeBannerCard(
                                 bannerForRestaurantWebApp: banner,
                                 imageBaseUrl: config.baseUrls!.bannerImageUrl,
+                          navigateToMenu: widget.navigateToMenu,
                               )
                             : const SizedBox();
                       })

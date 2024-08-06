@@ -1,9 +1,9 @@
 class SignUpModel {
-  String fName;
-  String lName;
-  String phone;
-  String email;
-  String password;
+  String? fName;
+  String? lName;
+  String? phone;
+  String? email;
+  String? password;
   int restaurantId;
   String? referralCode;
   String? platform;
@@ -11,11 +11,11 @@ class SignUpModel {
   String isMobile;
 
   SignUpModel({
-    required this.fName,
-    required this.lName,
+     this.fName,
+  this.lName,
     required this.phone,
     this.email = '',
-    required this.password,
+     this.password,
     required this.restaurantId,
     this.referralCode,
     this.platform,

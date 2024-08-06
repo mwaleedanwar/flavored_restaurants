@@ -56,7 +56,7 @@ class F {
   static String get BASE_URL {
     switch (appFlavor) {
       case Flavor.nopalDos:
-        return 'https://nopaldos.cafescale.app';
+        return 'https://admin.nopaldos.com';
       case Flavor.maaKitchen:
         return 'https://maakitchen.cafescale.app';
       case Flavor.cafeSantorini:

@@ -82,7 +82,7 @@ class AuthProvider with ChangeNotifier {
       } catch (e) {
         debugPrint('===register login');
 
-        login(signUpModel.email, signUpModel.password, context);
+        // login(signUpModel.email, signUpModel.password, context);
       }
 
       authRepo.saveUserToken(token);
@@ -172,8 +172,8 @@ class AuthProvider with ChangeNotifier {
       await authRepo.updateToken();
       responseModel = ResponseModel(true, 'successful');
     } else {
-      if (apiResponse.response!.statusCode == 401) {
-        showCustomSnackBar('Invalid credentials', context);
+      if (apiResponse.response!.statusCode == 404) {
+        showCustomSnackBar('Invalid otp', context);
       }
       _isLoading = false;
       notifyListeners();

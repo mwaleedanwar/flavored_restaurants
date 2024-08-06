@@ -476,7 +476,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                                               String lastName = _nameController.text.trim();
                                               String email = _emailController.text.trim();
                                               if (lastName.isEmpty) {
-                                                showCustomSnackBar('enter user name', context);
+                                                showCustomSnackBar('enter name', context);
                                               } else if (email.isEmpty) {
                                                 showCustomSnackBar('enter your email', context);
                                               } else if (order.timeSlots!.length == 0) {
@@ -561,8 +561,8 @@ class CheckoutScreenState extends State<CheckoutScreen> {
         Provider.of<CartProvider>(context, listen: false).clearCartList();
       }
       Provider.of<OrderProvider>(context, listen: false).stopLoader();
-      Navigator.pushReplacementNamed(context, '${Routes.ORDER_SUCCESS_SCREEN}/$orderID/success');
-    } else {
+      Navigator.pushReplacementNamed(
+          context, Routes.getOrderTrackingRoute(int.parse(orderID)));    } else {
       log('Error in order $message');
       showCustomSnackBar(message, context);
     }
