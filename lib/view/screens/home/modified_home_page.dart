@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/auth_provider.dart';
@@ -191,7 +189,7 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
                             ? HomeBannerCard(
                                 bannerForRestaurantWebApp: banner,
                                 imageBaseUrl: config.baseUrls!.bannerImageUrl,
-                                navigateToMenu: widget.navigateToMenu,
+                          navigateToMenu: widget.navigateToMenu,
                               )
                             : const SizedBox();
                       })

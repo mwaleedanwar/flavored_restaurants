@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/address_model.dart';
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';

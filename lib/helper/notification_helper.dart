@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
@@ -17,8 +15,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class NotificationHelper {
-  static Future<void> initialize(FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
-    const androidInitialize = AndroidInitializationSettings('notification_icon');
+  static Future<void> initialize(
+      FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin) async {
+    const androidInitialize =
+        AndroidInitializationSettings('notification_icon');
     const iOSInitialize = DarwinInitializationSettings();
     const initializationsSettings = InitializationSettings(
       android: androidInitialize,
@@ -26,11 +26,14 @@ class NotificationHelper {
     );
     flutterLocalNotificationsPlugin.initialize(
       initializationsSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse notificationResponse) async {
-        PayloadModel payload = PayloadModel.fromJson(jsonDecode('${notificationResponse.payload}'));
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) async {
+        PayloadModel payload = PayloadModel.fromJson(
+            jsonDecode('${notificationResponse.payload}'));
 
         try {
-          if (notificationResponse.payload != null && notificationResponse.payload!.isNotEmpty) {
+          if (notificationResponse.payload != null &&
+              notificationResponse.payload!.isNotEmpty) {
             if (payload.orderId != null) {
               Get.navigator.push(
                 MaterialPageRoute(
@@ -41,7 +44,8 @@ class NotificationHelper {
                 ),
               );
             } else if (payload.orderId == null && payload.type == 'message') {
-              Navigator.pushNamed(Get.context, Routes.getChatRoute(orderModel: null));
+              Navigator.pushNamed(
+                  Get.context, Routes.getChatRoute(orderModel: null));
             }
           }
         } catch (e) {
@@ -55,7 +59,8 @@ class NotificationHelper {
       if (message.data['type'] == 'message') {
         int? id;
         id = int.tryParse('${message.data['order_id']}');
-        Provider.of<ChatProvider>(Get.context, listen: false).getMessages(Get.context, 1, id, false);
+        Provider.of<ChatProvider>(Get.context, listen: false)
+            .getMessages(Get.context, 1, id, false);
       }
 
       showNotification(message, flutterLocalNotificationsPlugin, kIsWeb);
@@ -65,7 +70,8 @@ class NotificationHelper {
       if (message.data['type'] == 'message') {
         int? id;
         id = int.tryParse('${message.data['order_id']}');
-        Provider.of<ChatProvider>(Get.context, listen: false).getMessages(Get.context, 1, id, false);
+        Provider.of<ChatProvider>(Get.context, listen: false)
+            .getMessages(Get.context, 1, id, false);
       }
 
       try {
@@ -104,7 +110,8 @@ class NotificationHelper {
       title = message.data['title'];
       body = message.data['body'];
       orderID = message.data['order_id'];
-      image = (message.data['image'] != null && message.data['image'].isNotEmpty)
+      image = (message.data['image'] != null &&
+              message.data['image'].isNotEmpty)
           ? message.data['image'].startsWith('http')
               ? message.data['image']
               : '${F.BASE_URL}/storage/app/public/notification/${message.data['image']}'
@@ -114,13 +121,15 @@ class NotificationHelper {
       body = message.notification?.body;
       orderID = message.notification?.titleLocKey;
       if (Platform.isAndroid) {
-        image = (message.notification?.android?.imageUrl != null && message.notification!.android!.imageUrl!.isNotEmpty)
+        image = (message.notification?.android?.imageUrl != null &&
+                message.notification!.android!.imageUrl!.isNotEmpty)
             ? message.notification!.android!.imageUrl!.startsWith('http')
                 ? message.notification!.android!.imageUrl
                 : '${F.BASE_URL}/storage/app/public/notification/${message.notification!.android!.imageUrl}'
             : null;
       } else if (Platform.isIOS) {
-        image = (message.notification?.apple?.imageUrl != null && message.notification!.apple!.imageUrl!.isNotEmpty)
+        image = (message.notification?.apple?.imageUrl != null &&
+                message.notification!.apple!.imageUrl!.isNotEmpty)
             ? message.notification!.apple!.imageUrl!.startsWith('http')
                 ? message.notification!.apple!.imageUrl
                 : '${F.BASE_URL}/storage/app/public/notification/${message.notification!.apple!.imageUrl}'
@@ -161,14 +170,16 @@ class NotificationHelper {
     }
   }
 
-  static Future<void> showBigTextNotification(PayloadModel payload, FlutterLocalNotificationsPlugin fln) async {
+  static Future<void> showBigTextNotification(
+      PayloadModel payload, FlutterLocalNotificationsPlugin fln) async {
     BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
       payload.body ?? '',
       htmlFormatBigText: true,
       contentTitle: payload.title,
       htmlFormatContentTitle: true,
     );
-    AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
       'efood',
       'efood',
       importance: Importance.max,
@@ -177,15 +188,20 @@ class NotificationHelper {
       playSound: true,
       sound: const RawResourceAndroidNotificationSound('notification'),
     );
-    NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-    await fln.show(0, payload.title, payload.body, platformChannelSpecifics, payload: jsonEncode(payload.toJson()));
+    NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await fln.show(0, payload.title, payload.body, platformChannelSpecifics,
+        payload: jsonEncode(payload.toJson()));
   }
 
   static Future<void> showBigPictureNotificationHiddenLargeIcon(
       PayloadModel payload, FlutterLocalNotificationsPlugin fln) async {
-    final String largeIconPath = await _downloadAndSaveFile(payload.image!, 'largeIcon');
-    final String bigPicturePath = await _downloadAndSaveFile(payload.image!, 'bigPicture');
-    final BigPictureStyleInformation bigPictureStyleInformation = BigPictureStyleInformation(
+    final String largeIconPath =
+        await _downloadAndSaveFile(payload.image!, 'largeIcon');
+    final String bigPicturePath =
+        await _downloadAndSaveFile(payload.image!, 'bigPicture');
+    final BigPictureStyleInformation bigPictureStyleInformation =
+        BigPictureStyleInformation(
       FilePathAndroidBitmap(bigPicturePath),
       hideExpandedLargeIcon: true,
       contentTitle: payload.title,
@@ -193,7 +209,8 @@ class NotificationHelper {
       summaryText: payload.body,
       htmlFormatSummaryText: true,
     );
-    final AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
       'efood',
       'efood',
       largeIcon: FilePathAndroidBitmap(largeIconPath),
@@ -203,14 +220,18 @@ class NotificationHelper {
       importance: Importance.max,
       sound: const RawResourceAndroidNotificationSound('notification'),
     );
-    final NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics);
-    await fln.show(0, payload.title, payload.body, platformChannelSpecifics, payload: jsonEncode(payload.toJson()));
+    final NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+    await fln.show(0, payload.title, payload.body, platformChannelSpecifics,
+        payload: jsonEncode(payload.toJson()));
   }
 
-  static Future<String> _downloadAndSaveFile(String url, String fileName) async {
+  static Future<String> _downloadAndSaveFile(
+      String url, String fileName) async {
     final Directory directory = await getApplicationDocumentsDirectory();
     final String filePath = '${directory.path}/$fileName';
-    final Response response = await Dio().get(url, options: Options(responseType: ResponseType.bytes));
+    final Response response = await Dio()
+        .get(url, options: Options(responseType: ResponseType.bytes));
     final File file = File(filePath);
     await file.writeAsBytes(response.data);
     return filePath;
@@ -237,7 +258,8 @@ class PayloadModel {
   String? image;
   String? type;
 
-  factory PayloadModel.fromRawJson(String str) => PayloadModel.fromJson(json.decode(str));
+  factory PayloadModel.fromRawJson(String str) =>
+      PayloadModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 

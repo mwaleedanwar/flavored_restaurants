@@ -172,7 +172,7 @@ class _CartProductWidgetState extends State<CartProductWidget> {
                               )
                           ]),
                     ),
-                    widget.cart?.isGift ?? false
+                    widget.cart?.isGift == true
                         ? Text(
                             'Your\nGift',
                             style: TextStyle(

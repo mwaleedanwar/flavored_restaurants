@@ -80,7 +80,9 @@ class AuthProvider with ChangeNotifier {
 
         debugPrint('===coupon:${map['coupon']}');
       } catch (e) {
-        debugPrint('===register login error $e');
+        debugPrint('===register login');
+
+        // login(signUpModel.email, signUpModel.password, context);
       }
 
       authRepo.saveUserToken(token);

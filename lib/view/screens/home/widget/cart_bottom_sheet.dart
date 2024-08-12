@@ -128,18 +128,18 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                 }
                 bool isAvailable = currentTime.isAfter(startTime) && currentTime.isBefore(endTime);
                 CartModel cartModel = CartModel(
-                    price: !widget.fromPoints ? price : 0.0,
+                    price: widget.fromPoints == false ? price : 0.0,
                     points: widget.fromPoints ? double.parse(widget.product.loyaltyPoints) : 0.0,
                     discountedPrice: priceWithDiscount,
                     variation: List.from(selectedVariations),
-                    discountAmount: !widget.fromPoints
+                    discountAmount: widget.fromPoints == false
                         ? (price -
                             PriceConverter.convertWithDiscount(
                                 context, price, widget.product.discount, widget.product.discountType))
                         : 0,
                     quantity: productProvider.quantity,
                     specialInstruction: _specilInstructionController.text,
-                    taxAmount: !widget.fromPoints
+                    taxAmount: widget.fromPoints == false
                         ? price -
                             PriceConverter.convertWithDiscount(
                                 context, price, widget.product.tax, widget.product.taxType)
