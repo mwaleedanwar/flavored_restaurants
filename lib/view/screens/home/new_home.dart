@@ -363,7 +363,7 @@ class PopularProductCarousel extends StatefulWidget {
 }
 
 class _PopularProductCarouselState extends State<PopularProductCarousel> {
-  final controller = CarouselController();
+  final controller = CarouselSliderController();
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {
