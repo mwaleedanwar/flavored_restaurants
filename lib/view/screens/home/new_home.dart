@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
           //   );
         }),
         bottomNavigationBar: Consumer<CartProvider>(builder: (context, cart, child) {
-          return cart.isFromCategory == true
+          return cart.isFromCategory
               ? Container(
                   width: 1170,
                   padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),
@@ -363,7 +363,7 @@ class PopularProductCarousel extends StatefulWidget {
 }
 
 class _PopularProductCarouselState extends State<PopularProductCarousel> {
-  final controller = CarouselController();
+  final controller = CarouselSliderController();
   int currentIndex = 0;
   @override
   Widget build(BuildContext context) {

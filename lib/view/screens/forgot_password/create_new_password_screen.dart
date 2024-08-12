@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/auth_provider.dart';

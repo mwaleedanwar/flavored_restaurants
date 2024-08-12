@@ -3,7 +3,6 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/api_r
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/base/error_response.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
 import 'package:provider/provider.dart';
 
 class ApiChecker {
@@ -17,15 +16,11 @@ class ApiChecker {
     }
 
     if (message == 'Unauthorized.' ||
-        message == 'Unauthenticated.' &&
-            ModalRoute.of(context)?.settings.name != Routes.getLoginRoute()) {
+        message == 'Unauthenticated.' && ModalRoute.of(context)?.settings.name != Routes.getLoginRoute()) {
       Provider.of<SplashProvider>(context, listen: false).removeSharedData();
       if (ModalRoute.of(context)?.settings.name != Routes.getLoginRoute()) {
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.getLoginRoute(), (route) => false);
+        Navigator.pushNamedAndRemoveUntil(context, Routes.getLoginRoute(), (route) => false);
       }
-    } else {
-      // showCustomSnackBar(message, context);
     }
   }
 }

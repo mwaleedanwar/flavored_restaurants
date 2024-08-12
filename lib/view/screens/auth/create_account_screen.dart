@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -50,7 +52,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   final lower = RegExp(r'(?=.*[a-z])\w+');
   bool isChecked = true;
   bool isCodeSent = false;
-  bool isAlreadyExist=true;
+  bool isAlreadyExist = true;
 
   @override
   void initState() {
@@ -141,7 +143,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     _emailController.clear();
                                     _passwordController.clear();
                                     _passwordFocus.unfocus();
-                                    // isChecked=false;
                                     isCodeSent = false;
 
                                     FocusScope.of(context).requestFocus(_numberFocus);
@@ -165,229 +166,214 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     .then((value) async {
                                   if (value.isSuccess) {
                                     if (value.message == 'active') {
-                                      isAlreadyExist=value.isExist;
+                                      isAlreadyExist = value.isExist;
                                     }
                                   }
                                 });
                               }
                             }),
-                        SizedBox(height: isCodeSent == true ? Dimensions.PADDING_SIZE_SMALL : 0),
-                        isCodeSent == true
+                        SizedBox(height: isCodeSent ? Dimensions.PADDING_SIZE_SMALL : 0),
+                        isCodeSent
                             ? MaskedTextField(
-                            maxLength: 4,
-                            controller: _passwordController,
-                            style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                                color: Theme.of(context).textTheme.bodyLarge?.color,
-                                fontSize: Dimensions.FONT_SIZE_LARGE),
-                            keyboardType: TextInputType.number,
-                            focusNode: _passwordFocus,
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                                borderSide: const BorderSide(style: BorderStyle.none, width: 0),
-                              ),
-                              isDense: true,
-                              hintText: '0000',
-                              fillColor: Theme.of(context).cardColor,
-                              hintStyle: Theme.of(context).textTheme.displayMedium?.copyWith(
-                                  fontSize: Dimensions.FONT_SIZE_SMALL,
-                                  color: ColorResources.COLOR_GREY_CHATEAU),
-                              filled: true,
-                              prefixIconConstraints: const BoxConstraints(minWidth: 23, maxHeight: 20),
-                            ),
-                            onChanged: (otp) {
-
-                              if(_passwordController.text.length == 4&& isAlreadyExist == true){
-
-
-
-                                SignUpModel signupModel = SignUpModel(
-                                  phone: AppConstants.country_code +
-                                      _numberController.text.replaceAll(RegExp('[()\\-\\s]'), ''),
-                                  token: _passwordController.text,
-                                  restaurantId: F.restaurantId,
-
-                                  isMobile: 'true',
-                                );
-                                authProvider.verifyOtp(signupModel, context).then((value) {
-                                  if (value.isSuccess) {
-                                    _passwordFocus.unfocus();
-                                    Navigator.pushNamedAndRemoveUntil(
-                                        context, Routes.getMainRoute(), (route) => false);
+                                maxLength: 4,
+                                controller: _passwordController,
+                                style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                                    fontSize: Dimensions.FONT_SIZE_LARGE),
+                                keyboardType: TextInputType.number,
+                                focusNode: _passwordFocus,
+                                decoration: InputDecoration(
+                                  contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: const BorderSide(style: BorderStyle.none, width: 0),
+                                  ),
+                                  isDense: true,
+                                  hintText: '0000',
+                                  fillColor: Theme.of(context).cardColor,
+                                  hintStyle: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                      fontSize: Dimensions.FONT_SIZE_SMALL, color: ColorResources.COLOR_GREY_CHATEAU),
+                                  filled: true,
+                                  prefixIconConstraints: const BoxConstraints(minWidth: 23, maxHeight: 20),
+                                ),
+                                onChanged: (otp) {
+                                  if (_passwordController.text.length == 4 && isAlreadyExist) {
+                                    SignUpModel signupModel = SignUpModel(
+                                      phone: AppConstants.country_code +
+                                          _numberController.text.replaceAll(RegExp('[()\\-\\s]'), ''),
+                                      token: _passwordController.text,
+                                      restaurantId: F.restaurantId,
+                                      isMobile: 'true',
+                                    );
+                                    authProvider.verifyOtp(signupModel, context).then((value) {
+                                      if (value.isSuccess) {
+                                        _passwordFocus.unfocus();
+                                        Navigator.pushNamedAndRemoveUntil(
+                                            context, Routes.getMainRoute(), (route) => false);
+                                      }
+                                    });
                                   }
-                                });
-
-
-                              }}
-
-                        )
+                                })
                             : const SizedBox.shrink(),
 
-                        isCodeSent == true
-                            ? Center(
+                        if (isCodeSent)
+                          Center(
                             child: Text(
                               'A one-time verification code was sent to your phone and should arrive shortly. Didn\'t receive a code yet?',
                               style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                                color: ColorResources.getGreyBunkerColor(context),
-                              ),
-                            ))
-                            : const SizedBox.shrink(),
-
-                        isCodeSent == true
-                            ? InkWell(
-                          onTap: () {},
-                          child: Padding(
-                            padding:
-                            const EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                            child: Text(
-                              'Resend verification code',
-                              style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                                  color: ColorResources.getGreyBunkerColor(context),
-                                  decoration: TextDecoration.underline),
+                                    color: ColorResources.getGreyBunkerColor(context),
+                                  ),
                             ),
                           ),
-                        )
-                            : const SizedBox.shrink(),
+
+                        if (isCodeSent)
+                          InkWell(
+                            onTap: () {},
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                              child: Text(
+                                'Resend verification code',
+                                style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                                    color: ColorResources.getGreyBunkerColor(context),
+                                    decoration: TextDecoration.underline),
+                              ),
+                            ),
+                          ),
                         const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                        isAlreadyExist == false
-                            ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              getTranslated('first_name', context),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displayMedium
-                                  ?.copyWith(color: ColorResources.getHintColor(context)),
-                            ),
-                            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                            CustomTextField(
-                              hintText: 'first name',
-                              isShowBorder: true,
-                              controller: _firstNameController,
-                              focusNode: _firstNameFocus,
-                              nextFocus: _lastNameFocus,
-                              inputType: TextInputType.name,
-                              capitalization: TextCapitalization.words,
-                            ),
-                            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                        if (!isAlreadyExist)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                getTranslated('first_name', context),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium
+                                    ?.copyWith(color: ColorResources.getHintColor(context)),
+                              ),
+                              const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                              CustomTextField(
+                                hintText: 'first name',
+                                isShowBorder: true,
+                                controller: _firstNameController,
+                                focusNode: _firstNameFocus,
+                                nextFocus: _lastNameFocus,
+                                inputType: TextInputType.name,
+                                capitalization: TextCapitalization.words,
+                              ),
+                              const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
-                            // for last name section
-                            Text(
-                              getTranslated('last_name', context),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displayMedium
-                                  ?.copyWith(color: ColorResources.getHintColor(context)),
-                            ),
-                            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                            Provider.of<SplashProvider>(context, listen: false)
-                                .configModel
-                                ?.emailVerification ??
-                                false
-                                ? CustomTextField(
-                              hintText: 'first name',
-                              isShowBorder: true,
-                              controller: _lastNameController,
-                              focusNode: _lastNameFocus,
-                              nextFocus: _emailFocus,
-                              inputType: TextInputType.name,
-                              capitalization: TextCapitalization.words,
-                            )
-                                : CustomTextField(
-                              hintText: 'last name',
-                              isShowBorder: true,
-                              controller: _lastNameController,
-                              focusNode: _lastNameFocus,
-                              nextFocus: _emailFocus,
-                              inputType: TextInputType.name,
-                              capitalization: TextCapitalization.words,
-                            ),
-                            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                              // for last name section
+                              Text(
+                                getTranslated('last_name', context),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium
+                                    ?.copyWith(color: ColorResources.getHintColor(context)),
+                              ),
+                              const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                              Provider.of<SplashProvider>(context, listen: false).configModel?.emailVerification ??
+                                      false
+                                  ? CustomTextField(
+                                      hintText: 'first name',
+                                      isShowBorder: true,
+                                      controller: _lastNameController,
+                                      focusNode: _lastNameFocus,
+                                      nextFocus: _emailFocus,
+                                      inputType: TextInputType.name,
+                                      capitalization: TextCapitalization.words,
+                                    )
+                                  : CustomTextField(
+                                      hintText: 'last name',
+                                      isShowBorder: true,
+                                      controller: _lastNameController,
+                                      focusNode: _lastNameFocus,
+                                      nextFocus: _emailFocus,
+                                      inputType: TextInputType.name,
+                                      capitalization: TextCapitalization.words,
+                                    ),
+                              const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
 
-                            // for email section
+                              // for email section
 
-                            Text(
-                              getTranslated('email', context),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .displayMedium
-                                  ?.copyWith(color: ColorResources.getHintColor(context)),
-                            ),
-                            const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                            CustomTextField(
-                              hintText: 'Enter your email',
-                              isShowBorder: true,
-                              controller: _emailController,
-                              focusNode: _emailFocus,
-                              nextFocus: _passwordFocus,
-                              inputType: TextInputType.emailAddress,
-                            ),
-                            const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                            CheckboxListTile(
-                              dense: true,
-                              contentPadding: EdgeInsets.zero,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                              activeColor: Theme.of(context).primaryColor,
-                              controlAffinity: ListTileControlAffinity.leading,
-                              value: isChecked,
-                              onChanged: (val) {
-                                setState(() {
-                                  isChecked = !isChecked;
-                                });
-                              },
-                              title: Padding(
-                                padding: const EdgeInsets.only(top: 5.0),
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: 'By creating an account, you agree to our ',
-                                        style: TextStyle(color: Theme.of(context).primaryColor),
-                                      ),
-                                      TextSpan(
-                                        text: 'terms & conditions',
-                                        style: TextStyle(
-                                            color: ColorResources.getHintColor(context),
-                                            decoration: TextDecoration.underline,
-                                            fontWeight: FontWeight.w500),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            Navigator.pushNamed(context, Routes.getTermsRoute());
-                                          },
-                                      ),
-                                      TextSpan(
-                                        text: ' and ',
-                                        style: TextStyle(color: Theme.of(context).primaryColor),
-                                      ),
-                                      TextSpan(
-                                        text: 'privacy policy.',
-                                        style: TextStyle(
-                                            color: ColorResources.getHintColor(context),
-                                            decoration: TextDecoration.underline,
-                                            fontWeight: FontWeight.w500),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            Navigator.pushNamed(context, Routes.getPolicyRoute());
-                                            // launch('http://cafescale.com/privacy-policy');
-                                          },
-                                      ),
-                                    ],
+                              Text(
+                                getTranslated('email', context),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .displayMedium
+                                    ?.copyWith(color: ColorResources.getHintColor(context)),
+                              ),
+                              const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
+                              CustomTextField(
+                                hintText: 'Enter your email',
+                                isShowBorder: true,
+                                controller: _emailController,
+                                focusNode: _emailFocus,
+                                nextFocus: _passwordFocus,
+                                inputType: TextInputType.emailAddress,
+                              ),
+                              const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
+                              CheckboxListTile(
+                                dense: true,
+                                contentPadding: EdgeInsets.zero,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                activeColor: Theme.of(context).primaryColor,
+                                controlAffinity: ListTileControlAffinity.leading,
+                                value: isChecked,
+                                onChanged: (val) {
+                                  setState(() {
+                                    isChecked = !isChecked;
+                                  });
+                                },
+                                title: Padding(
+                                  padding: const EdgeInsets.only(top: 5.0),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: 'By creating an account, you agree to our ',
+                                          style: TextStyle(color: Theme.of(context).primaryColor),
+                                        ),
+                                        TextSpan(
+                                          text: 'terms & conditions',
+                                          style: TextStyle(
+                                              color: ColorResources.getHintColor(context),
+                                              decoration: TextDecoration.underline,
+                                              fontWeight: FontWeight.w500),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              Navigator.pushNamed(context, Routes.getTermsRoute());
+                                            },
+                                        ),
+                                        TextSpan(
+                                          text: ' and ',
+                                          style: TextStyle(color: Theme.of(context).primaryColor),
+                                        ),
+                                        TextSpan(
+                                          text: 'privacy policy.',
+                                          style: TextStyle(
+                                              color: ColorResources.getHintColor(context),
+                                              decoration: TextDecoration.underline,
+                                              fontWeight: FontWeight.w500),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              Navigator.pushNamed(context, Routes.getPolicyRoute());
+                                              // launch('http://cafescale.com/privacy-policy');
+                                            },
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-
-                          ],
-                        )
-                            : const SizedBox.shrink(),
+                            ],
+                          ),
 
                         // for signup button
                         const SizedBox(height: 10),
                         !authProvider.isLoading
                             ? CustomButton(
-                                btnTxt:isAlreadyExist?"Login": getTranslated('signup', context),
+                                btnTxt: isAlreadyExist ? "Login" : getTranslated('signup', context),
                                 onTap: () {
                                   String firstName = _firstNameController.text.trim();
                                   String lastName = _lastNameController.text.trim();
@@ -405,8 +391,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     showCustomSnackBar(getTranslated('enter_phone_number', context), context);
                                   } else if (password.isEmpty) {
                                     showCustomSnackBar('Enter otp', context);
-                                  } else if (isChecked == false) {
-                                    debugPrint('-=not');
+                                  } else if (!isChecked) {
                                     showCustomSnackBar('Accept terms and conditions', context);
                                   } else {
                                     SignUpModel signUpModel = SignUpModel(
