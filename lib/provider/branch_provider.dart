@@ -73,11 +73,11 @@ class BranchProvider extends ChangeNotifier {
     return branch;
   }
 
-  List<BranchValue> branchSort(LatLng? currentLatLng) {
+  List<BranchValue> branchSort(context,LatLng? currentLatLng) {
     _isLoading = true;
     List<BranchValue> branchValueList = [];
 
-    for (var branch in Provider.of<SplashProvider>(Get.context!, listen: false).configModel!.branches!) {
+    for (var branch in Provider.of<SplashProvider>(context, listen: false).configModel!.branches!) {
       double distance = -1;
       if (currentLatLng != null) {
         distance = Geolocator.distanceBetween(

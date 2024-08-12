@@ -1,6 +1,6 @@
 name: noapl_dos_maa_kitchen_flavor_test
 description: Flavors in the restaurants
-version: 2.0.0+13
+version: 2.0.0+23
 
 environment:
   sdk: ">=3.4.3 <4.0.0"

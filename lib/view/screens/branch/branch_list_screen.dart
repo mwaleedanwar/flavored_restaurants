@@ -47,15 +47,26 @@ class _BranchListScreenState extends State<BranchListScreen> {
     branchProvider.updateTabIndex(0, isUpdate: false);
 
     if (branchProvider.getBranchId == -1) {
+      print('===if');
       branchProvider.updateBranchId(null, isUpdate: false);
+
     } else {
+      print('===else');
+
       branchProvider.updateBranchId(branchProvider.getBranchId, isUpdate: false);
     }
     Provider.of<LocationProvider>(context, listen: false).getCurrentLatLong().then((latLong) {
       if (latLong != null) {
+        print('===lat long');
+
         _currentLocationLatLng = latLong;
       }
-      _branchesValue = branchProvider.branchSort(_currentLocationLatLng);
+      _branchesValue = branchProvider.branchSort( context,_currentLocationLatLng);
+      print('===br');
+
+      setState(() {
+        loading = false;
+      });
     });
 
     scrollController = AutoScrollController(
@@ -63,12 +74,16 @@ class _BranchListScreenState extends State<BranchListScreen> {
       axis: Axis.horizontal,
     );
     setState(() {
+      print('===set');
+
       loading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
+
     return Consumer<BranchProvider>(builder: (context, branchProvider, _) {
       return loading
           ? const Center(
