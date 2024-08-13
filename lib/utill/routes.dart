@@ -73,7 +73,7 @@ class Routes {
   static String getReturnPolicyRoute() => RETURN_POLICY_SCREEN;
   static String getCancellationPolicyRoute() => CANCELLATION_POLICY_SCREEN;
   static String getRefundPolicyRoute() => REFUND_POLICY_SCREEN;
-  static String getBranchListScreen() => BRANCH_LIST_SCREEN;
+  static String getBranchListScreen(bool isFromMain) => '$BRANCH_LIST_SCREEN?isFromMain=$isFromMain';
 
   static String getLanguageRoute(String page) => '$LANGUAGE_SCREEN?page=$page';
   static String getNewPassRoute(String email, String token) => '$CREATE_NEW_PASS_SCREEN?email=$email&token=$token';

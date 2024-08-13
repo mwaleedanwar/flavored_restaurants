@@ -489,7 +489,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 ?.length ==
                                                 1
                                                 ? Routes.getMainRoute()
-                                                : Routes.getBranchListScreen(),
+                                                : Routes.getBranchListScreen(true),
                                                 (route) => false);
                                       }
                                     });
@@ -503,7 +503,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               // for create an account
                               const SizedBox(height: 20),
-                              InkWell(
+                              isCodeSent?const SizedBox.shrink():    InkWell(
                                 onTap: () {
                                   Navigator.pushNamed(context, Routes.getCreateAccountRoute());
                                 },

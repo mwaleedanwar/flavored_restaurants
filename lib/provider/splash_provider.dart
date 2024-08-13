@@ -10,6 +10,9 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/helper/date_converter.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/policy_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/api_checker.dart';
+import 'package:provider/provider.dart';
+
+import 'branch_provider.dart';
 
 class SplashProvider extends ChangeNotifier {
   final SplashRepo splashRepo;
@@ -37,6 +40,8 @@ class SplashProvider extends ChangeNotifier {
       _baseUrls = ConfigModel.fromJson(jsonDecode(apiResponse.response!.body)).baseUrls!;
       debugPrint('====confige Model Response uri:${_baseUrls!.restaurantImageUrl}/${_configModel!.restaurantLogo}');
       debugPrint('====confige Model Response:${_configModel!.termsAndConditions}');
+      Provider.of<BranchProvider>(context, listen: false).branchSort(context);
+
       isSuccess = true;
       notifyListeners();
     } else {

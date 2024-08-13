@@ -51,6 +51,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   bool isChecked = true;
   bool isCodeSent = false;
   bool isAlreadyExist=true;
+  String button='Sign Up';
 
   @override
   void initState() {
@@ -139,12 +140,15 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                               suffixIcon: InkWell(
                                   onTap: () {
                                     _emailController.clear();
-                                    _passwordController.clear();
-                                    _passwordFocus.unfocus();
-                                    // isChecked=false;
+                                    _numberController.clear();
+                                    button='Sign Up';
+
                                     isCodeSent = false;
 
                                     FocusScope.of(context).requestFocus(_numberFocus);
+                                    setState(() {
+
+                                    });
                                   },
                                   child: Icon(
                                     Icons.close,
@@ -165,7 +169,11 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                     .then((value) async {
                                   if (value.isSuccess) {
                                     if (value.message == 'active') {
+                                      if(value.isExist==true){
+                                        button='Login';
+                                      }
                                       isAlreadyExist=value.isExist;
+
                                     }
                                   }
                                 });
@@ -250,7 +258,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         )
                             : const SizedBox.shrink(),
                         const SizedBox(height: Dimensions.PADDING_SIZE_LARGE),
-                        isAlreadyExist == false
+                        isAlreadyExist == false&&isCodeSent
                             ? Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -387,7 +395,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                         const SizedBox(height: 10),
                         !authProvider.isLoading
                             ? CustomButton(
-                                btnTxt:isAlreadyExist?"Login": getTranslated('signup', context),
+                                btnTxt:button,
                                 onTap: () {
                                   String firstName = _firstNameController.text.trim();
                                   String lastName = _lastNameController.text.trim();
@@ -434,7 +442,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                                         ?.length ==
                                                     1
                                                 ? Routes.getMainRoute()
-                                                : Routes.getBranchListScreen(),
+                                                : Routes.getBranchListScreen(true),
                                             (route) => false);
                                       }
                                     });
@@ -448,7 +456,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
 
                         // for already an account
                         const SizedBox(height: 11),
-                        InkWell(
+                     isCodeSent?const SizedBox.shrink():   InkWell(
                           onTap: () {
                             Navigator.pushReplacementNamed(context, Routes.getLoginRoute());
                           },

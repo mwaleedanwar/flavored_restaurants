@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map_math/flutter_geo_math.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/config_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/repository/splash_repo.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/screen_barrel.dart';
@@ -8,8 +9,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:get/get.dart';
 
+import 'location_provider.dart';
+
 class BranchProvider extends ChangeNotifier {
   final SplashRepo splashRepo;
+  List<BranchValue> _branchesValue = [];
 
   BranchProvider({required this.splashRepo});
 
@@ -21,6 +25,7 @@ class BranchProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
   int _branchTabIndex = 0;
+  List<BranchValue>? get branchesList=>_branchesValue;
 
   int get branchTabIndex => _branchTabIndex;
 
@@ -73,28 +78,31 @@ class BranchProvider extends ChangeNotifier {
     return branch;
   }
 
-  List<BranchValue> branchSort(context,LatLng? currentLatLng) {
+ branchSort(context) {
     _isLoading = true;
     List<BranchValue> branchValueList = [];
+    final locationProvider=Provider.of<LocationProvider>(context, listen: false);
 
     for (var branch in Provider.of<SplashProvider>(context, listen: false).configModel!.branches!) {
       double distance = -1;
-      if (currentLatLng != null) {
-        distance = Geolocator.distanceBetween(
+
+        distance =  FlutterMapMath().distanceBetween(
               double.parse(branch.latitude),
               double.parse(branch.longitude),
-              currentLatLng.latitude,
-              currentLatLng.longitude,
-            ) /
-            1000;
-      }
+          locationProvider.position!.latitude,
+          locationProvider.position!.latitude,
+          "miles",
+
+            ) ;
+
       branchValueList.add(BranchValue(branch, distance));
     }
     branchValueList.sort((a, b) => a.distance.compareTo(b.distance));
+    _branchesValue=  branchValueList;
+    print('====branch list:$_branchesValue');
 
     _isLoading = false;
     notifyListeners();
 
-    return branchValueList;
   }
 }

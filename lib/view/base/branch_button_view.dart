@@ -16,7 +16,7 @@ class BranchButtonView extends StatelessWidget {
     return Consumer<BranchProvider>(builder: (context, branchProvider, _) {
       return branchProvider.getBranchId != -1
           ? InkWell(
-              onTap: () => Navigator.pushNamed(context, Routes.getBranchListScreen()),
+              onTap: () => Navigator.pushNamed(context, Routes.getBranchListScreen(false)),
               child: Row(
                 children: [
                   Image.asset(

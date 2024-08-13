@@ -244,7 +244,7 @@ class RouterHelper {
   static final Handler _branchListHandler = Handler(
       handlerFunc: (context, Map<String, dynamic> params) => _routeHandler(
             context,
-            const BranchListScreen(),
+             BranchListScreen(isFromMain: params['isFromMain'][0]=='true',),
           ));
   static Handler dashScreenBoardHandler = Handler(handlerFunc: (context, Map<String, dynamic> params) {
     return _routeHandler(context, const DashboardScreen(pageIndex: 0));

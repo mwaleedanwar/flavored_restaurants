@@ -77,7 +77,7 @@ class OptionsView extends StatelessWidget {
                 isLoggedIn
                     ? ListTile(
                         onTap: () {
-                          Navigator.pushNamed(context, Routes.getBranchListScreen());
+                          Navigator.pushNamed(context, Routes.getBranchListScreen(false));
                         },
                         leading: Image.asset(Images.referral_icon,
                             width: 20, height: 20, color: Theme.of(context).textTheme.bodyLarge?.color),
