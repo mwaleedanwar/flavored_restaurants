@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
@@ -46,7 +48,6 @@ class _LocationSearchDialogState extends State<LocationSearchDialog> {
               autofocus: true,
               textCapitalization: TextCapitalization.words,
               keyboardType: TextInputType.streetAddress,
-
               decoration: InputDecoration(
                 hintText: getTranslated('search_location', context),
                 border: OutlineInputBorder(
@@ -59,10 +60,10 @@ class _LocationSearchDialogState extends State<LocationSearchDialog> {
                     ),
                 filled: true,
                 suffixIcon: InkWell(
-                    onTap: (){
+                    onTap: () {
                       controller.clear();
                     },
-                    child: Icon(Icons.close)),
+                    child: const Icon(Icons.close)),
                 fillColor: Theme.of(context).cardColor,
               ),
               style: Theme.of(context).textTheme.displayMedium?.copyWith(
@@ -78,7 +79,7 @@ class _LocationSearchDialogState extends State<LocationSearchDialog> {
                   suggestion.placeId!,
                   suggestion.description!,
                 )
-                .then((_) => Navigator.of(context)..pop());
+                .then((_) => Navigator.of(context).pop());
           },
           optionsBuilder: (pattern) => handleSearch(pattern.text),
           optionsViewBuilder: (context, onSelected, options) {

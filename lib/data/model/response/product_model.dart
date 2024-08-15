@@ -322,7 +322,7 @@ class Variation {
         "type": type,
         "min": min,
         "max": max,
-        "required": required == true ? "on" : "off",
+        "required": required ? "on" : "off",
         "values": values != null ? List<dynamic>.from(values!.map((x) => x.toJson())) : [],
       };
 

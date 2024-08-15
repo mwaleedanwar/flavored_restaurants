@@ -78,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
           //   );
         }),
         bottomNavigationBar: Consumer<CartProvider>(builder: (context, cart, child) {
-          return cart.isFromCategory == true
+          return cart.isFromCategory
               ? Container(
                   width: 1170,
                   padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_SMALL),

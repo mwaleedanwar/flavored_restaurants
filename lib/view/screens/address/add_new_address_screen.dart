@@ -292,7 +292,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                                   } else {
                                     showCustomSnackBar(value.message, context, isError: false);
                                   }
-                                  widget.isFromCart == true
+                                  widget.isFromCart
                                       ? Navigator.pushReplacementNamed(
                                           context,
                                           Routes.getCheckoutRoute(

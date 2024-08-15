@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/body/review_body_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/order_details_model.dart';

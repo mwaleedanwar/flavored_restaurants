@@ -101,11 +101,11 @@ class _CouponScreenState extends State<CouponScreen> {
                                               itemBuilder: (context, index) {
                                                 return InkWell(
                                                   onTap: () {
-                                                    coupon.couponList[index].isExpired == true
+                                                    coupon.couponList[index].isExpired
                                                         ? null
                                                         : Clipboard.setData(
                                                             ClipboardData(text: coupon.couponList[index].code));
-                                                    coupon.couponList[index].isExpired == true
+                                                    coupon.couponList[index].isExpired
                                                         ? showCustomSnackBar('Coupon Expired', context, isError: false)
                                                         : showCustomSnackBar(
                                                             getTranslated('coupon_code_copied', context), context,
@@ -117,7 +117,7 @@ class _CouponScreenState extends State<CouponScreen> {
                                                       height: 120,
                                                       width: 1170,
                                                       fit: BoxFit.fitWidth,
-                                                      color: coupon.couponList[index].isExpired == true
+                                                      color: coupon.couponList[index].isExpired
                                                           ? Colors.grey
                                                           : Theme.of(context).primaryColor,
                                                     ),

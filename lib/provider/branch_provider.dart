@@ -4,10 +4,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/config_mod
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/repository/splash_repo.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/screen_barrel.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:get/get.dart';
 
 import 'location_provider.dart';
 
@@ -25,7 +22,7 @@ class BranchProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
   int _branchTabIndex = 0;
-  List<BranchValue>? get branchesList=>_branchesValue;
+  List<BranchValue>? get branchesList => _branchesValue;
 
   int get branchTabIndex => _branchTabIndex;
 
@@ -78,31 +75,29 @@ class BranchProvider extends ChangeNotifier {
     return branch;
   }
 
- branchSort(context) {
+  branchSort(context) {
     _isLoading = true;
     List<BranchValue> branchValueList = [];
-    final locationProvider=Provider.of<LocationProvider>(context, listen: false);
+    final locationProvider = Provider.of<LocationProvider>(context, listen: false);
 
     for (var branch in Provider.of<SplashProvider>(context, listen: false).configModel!.branches!) {
       double distance = -1;
 
-        distance =  FlutterMapMath().distanceBetween(
-              double.parse(branch.latitude),
-              double.parse(branch.longitude),
-          locationProvider.position!.latitude,
-          locationProvider.position!.latitude,
-          "miles",
-
-            ) ;
+      distance = FlutterMapMath().distanceBetween(
+        double.parse(branch.latitude),
+        double.parse(branch.longitude),
+        locationProvider.position!.latitude,
+        locationProvider.position!.latitude,
+        "miles",
+      );
 
       branchValueList.add(BranchValue(branch, distance));
     }
     branchValueList.sort((a, b) => a.distance.compareTo(b.distance));
-    _branchesValue=  branchValueList;
-    print('====branch list:$_branchesValue');
+    _branchesValue = branchValueList;
+    debugPrint('====branch list:$_branchesValue');
 
     _isLoading = false;
     notifyListeners();
-
   }
 }

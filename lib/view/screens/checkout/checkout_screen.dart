@@ -104,7 +104,6 @@ class CheckoutScreenState extends State<CheckoutScreen> {
       if (Provider.of<ProfileProvider>(context, listen: false).userInfoModel == null) {
         Provider.of<ProfileProvider>(context, listen: false).getUserInfo(context);
       } else {
-        print('====name:${Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.fName}');
         _nameController.text = Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.fName ?? '';
         _emailController.text = Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.email ?? '';
       }
@@ -479,7 +478,7 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                                                 showCustomSnackBar('enter name', context);
                                               } else if (email.isEmpty) {
                                                 showCustomSnackBar('enter your email', context);
-                                              } else if (order.timeSlots!.length == 0) {
+                                              } else if (order.timeSlots!.isEmpty) {
                                                 showCustomSnackBar('select time slot', context);
                                               } else {
                                                 if (controller.details.complete) {
@@ -561,8 +560,8 @@ class CheckoutScreenState extends State<CheckoutScreen> {
         Provider.of<CartProvider>(context, listen: false).clearCartList();
       }
       Provider.of<OrderProvider>(context, listen: false).stopLoader();
-      Navigator.pushReplacementNamed(
-          context, Routes.getOrderTrackingRoute(int.parse(orderID)));    } else {
+      Navigator.pushReplacementNamed(context, Routes.getOrderTrackingRoute(int.parse(orderID)));
+    } else {
       log('Error in order $message');
       showCustomSnackBar(message, context);
     }

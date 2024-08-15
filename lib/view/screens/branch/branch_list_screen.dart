@@ -25,14 +25,13 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 
 class BranchListScreen extends StatefulWidget {
   final bool? isFromMain;
-   BranchListScreen({super.key,this.isFromMain});
+  const BranchListScreen({super.key, this.isFromMain});
 
   @override
   State<BranchListScreen> createState() => _BranchListScreenState();
 }
 
 class _BranchListScreenState extends State<BranchListScreen> {
-
   Set<Marker> _markers = HashSet<Marker>();
   late GoogleMapController _mapController;
   LatLng? _currentLocationLatLng;
@@ -40,15 +39,12 @@ class _BranchListScreenState extends State<BranchListScreen> {
   @override
   void initState() {
     super.initState();
-    print('===isfr:${widget.isFromMain}');
     final branchProvider = Provider.of<BranchProvider>(context, listen: false);
     branchProvider.updateTabIndex(0, isUpdate: false);
 
     if (branchProvider.getBranchId == -1) {
       branchProvider.updateBranchId(null, isUpdate: false);
-
     } else {
-
       branchProvider.updateBranchId(branchProvider.getBranchId, isUpdate: false);
     }
 
@@ -56,157 +52,167 @@ class _BranchListScreenState extends State<BranchListScreen> {
       viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, MediaQuery.of(context).padding.bottom),
       axis: Axis.horizontal,
     );
-
   }
 
   @override
   Widget build(BuildContext context) {
-
-
     return Consumer<BranchProvider>(builder: (context, branchProvider, _) {
       return WillPopScope(
           onWillPop: () async {
-        if (branchProvider.branchTabIndex != 0) {
-          branchProvider.updateTabIndex(0);
-          return false;
-        } else {
-          return true;
-        }
-      },
-      child:
-
-
-        Scaffold(
-        appBar: ResponsiveHelper.isDesktop(context)
-            ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
-            : CustomAppBar(
-          context: context,
-          isBackButtonExist: !widget.isFromMain!,
-          title: 'Choose Store',
-        ),
-        body: Center(
-            child: SizedBox(
+            if (branchProvider.branchTabIndex != 0) {
+              branchProvider.updateTabIndex(0);
+              return false;
+            } else {
+              return true;
+            }
+          },
+          child: Scaffold(
+            appBar: ResponsiveHelper.isDesktop(context)
+                ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
+                : CustomAppBar(
+                    context: context,
+                    isBackButtonExist: !widget.isFromMain!,
+                    title: 'Choose Store',
+                  ),
+            body: Center(
+                child: SizedBox(
               width: Dimensions.WEB_SCREEN_WIDTH,
               child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 Expanded(
                   child: branchProvider.branchTabIndex == 1
                       ? Stack(
-                    children: [
-                      GoogleMap(
-                        mapType: MapType.normal,
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(
-                            double.parse(Provider.of<BranchProvider>(context, listen: false).branchesList![0].branches.latitude),
-                            double.parse(Provider.of<BranchProvider>(context, listen: false).branchesList![0].branches.longitude),
-                          ),
-                          zoom: 5,
-                        ),
-                        minMaxZoomPreference: const MinMaxZoomPreference(0, 16),
-                        zoomControlsEnabled: true,
-                        markers: _markers,
-                        onMapCreated: (GoogleMapController controller) async {
-                          await Geolocator.requestPermission();
-                          _mapController = controller;
-                          _setMarkers(1);
-                        },
-                      ),
-                      Positioned.fill(
-                          child: Align(
-                            alignment: Alignment.bottomCenter,
-                            child: SingleChildScrollView(
-                              controller: scrollController,
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: Provider.of<BranchProvider>(context, listen: false).branchesList!
-                                    .map((branchValue) => AutoScrollTag(
-                                  controller: scrollController,
-                                  key: ValueKey(Provider.of<BranchProvider>(context, listen: false).branchesList!.indexOf(branchValue)),
-                                  index: Provider.of<BranchProvider>(context, listen: false).branchesList!.indexOf(branchValue),
-                                  child: BranchCartView(
-                                    branchModel: branchValue,
-                                    branchModelList: Provider.of<BranchProvider>(context, listen: false).branchesList!,
-                                    onTap: () => _setMarkers(Provider.of<BranchProvider>(context, listen: false).branchesList!.indexOf(branchValue),
-                                        fromBranchSelect: true),
-                                  ),
-                                ))
-                                    .toList(),
+                          children: [
+                            GoogleMap(
+                              mapType: MapType.normal,
+                              initialCameraPosition: CameraPosition(
+                                target: LatLng(
+                                  double.parse(Provider.of<BranchProvider>(context, listen: false)
+                                      .branchesList![0]
+                                      .branches
+                                      .latitude),
+                                  double.parse(Provider.of<BranchProvider>(context, listen: false)
+                                      .branchesList![0]
+                                      .branches
+                                      .longitude),
+                                ),
+                                zoom: 5,
                               ),
+                              minMaxZoomPreference: const MinMaxZoomPreference(0, 16),
+                              zoomControlsEnabled: true,
+                              markers: _markers,
+                              onMapCreated: (GoogleMapController controller) async {
+                                await Geolocator.requestPermission();
+                                _mapController = controller;
+                                _setMarkers(1);
+                              },
                             ),
-                          )),
-                    ],
-                  )
+                            Positioned.fill(
+                                child: Align(
+                              alignment: Alignment.bottomCenter,
+                              child: SingleChildScrollView(
+                                controller: scrollController,
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: Provider.of<BranchProvider>(context, listen: false)
+                                      .branchesList!
+                                      .map((branchValue) => AutoScrollTag(
+                                            controller: scrollController,
+                                            key: ValueKey(Provider.of<BranchProvider>(context, listen: false)
+                                                .branchesList!
+                                                .indexOf(branchValue)),
+                                            index: Provider.of<BranchProvider>(context, listen: false)
+                                                .branchesList!
+                                                .indexOf(branchValue),
+                                            child: BranchCartView(
+                                              branchModel: branchValue,
+                                              branchModelList:
+                                                  Provider.of<BranchProvider>(context, listen: false).branchesList!,
+                                              onTap: () => _setMarkers(
+                                                  Provider.of<BranchProvider>(context, listen: false)
+                                                      .branchesList!
+                                                      .indexOf(branchValue),
+                                                  fromBranchSelect: true),
+                                            ),
+                                          ))
+                                      .toList(),
+                                ),
+                              ),
+                            )),
+                          ],
+                        )
                       : Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: Dimensions.PADDING_SIZE_SMALL, horizontal: Dimensions.PADDING_SIZE_DEFAULT),
-                    child: Column(children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Nearest Store (${Provider.of<BranchProvider>(context, listen: false).branchesList!.length})', style: rubikBold),
-                          GestureDetector(
-                            onTap: () => branchProvider.updateTabIndex(1),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                border: Border.all(color: Theme.of(context).primaryColor),
-                              ),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    height: 25,
-                                    width: 25,
+                          padding: const EdgeInsets.symmetric(
+                              vertical: Dimensions.PADDING_SIZE_SMALL, horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+                          child: Column(children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                    'Nearest Store (${Provider.of<BranchProvider>(context, listen: false).branchesList!.length})',
+                                    style: rubikBold),
+                                GestureDetector(
+                                  onTap: () => branchProvider.updateTabIndex(1),
+                                  child: Container(
                                     decoration: BoxDecoration(
-                                        color: Theme.of(context).primaryColor,
-                                        borderRadius:
-                                        Provider.of<LocalizationProvider>(context, listen: false).isLtr
-                                            ? const BorderRadius.only(
-                                          bottomLeft: Radius.circular(30),
-                                          topLeft: Radius.circular(30),
-                                        )
-                                            : const BorderRadius.only(
-                                          bottomRight: Radius.circular(30),
-                                          topRight: Radius.circular(30),
-                                        )),
-                                    child: const Icon(
-                                      Icons.my_location_rounded,
-                                      color: Colors.white,
-                                      size: Dimensions.PADDING_SIZE_DEFAULT,
+                                      borderRadius: BorderRadius.circular(30),
+                                      border: Border.all(color: Theme.of(context).primaryColor),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: 25,
+                                          width: 25,
+                                          decoration: BoxDecoration(
+                                              color: Theme.of(context).primaryColor,
+                                              borderRadius:
+                                                  Provider.of<LocalizationProvider>(context, listen: false).isLtr
+                                                      ? const BorderRadius.only(
+                                                          bottomLeft: Radius.circular(30),
+                                                          topLeft: Radius.circular(30),
+                                                        )
+                                                      : const BorderRadius.only(
+                                                          bottomRight: Radius.circular(30),
+                                                          topRight: Radius.circular(30),
+                                                        )),
+                                          child: const Icon(
+                                            Icons.my_location_rounded,
+                                            color: Colors.white,
+                                            size: Dimensions.PADDING_SIZE_DEFAULT,
+                                          ),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                          child: Text(
+                                            'Select From Map',
+                                            style: rubikMedium.copyWith(color: Theme.of(context).primaryColor),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                                    child: Text(
-                                      'Select From Map',
-                                      style: rubikMedium.copyWith(color: Theme.of(context).primaryColor),
+                                )
+                              ],
+                            ),
+                            const SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
+                            !branchProvider.isLoading
+                                ? Flexible(
+                                    child: GridView.builder(
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisSpacing: 50,
+                                      mainAxisSpacing:
+                                          ResponsiveHelper.isDesktop(context) ? Dimensions.PADDING_SIZE_LARGE : 0.01,
+                                      childAspectRatio: ResponsiveHelper.isDesktop(context) ? 3.6 : 2.5,
+                                      crossAxisCount: ResponsiveHelper.isMobile(context) ? 1 : 2,
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                      const SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
-                      !branchProvider.isLoading
-                          ? Flexible(
-                          child: GridView.builder(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisSpacing: 50,
-                              mainAxisSpacing: ResponsiveHelper.isDesktop(context)
-                                  ? Dimensions.PADDING_SIZE_LARGE
-                                  : 0.01,
-                              childAspectRatio: ResponsiveHelper.isDesktop(context) ? 3.6 : 2.5,
-                              crossAxisCount: ResponsiveHelper.isMobile(context) ? 1 : 2,
-                            ),
-                            itemCount: branchProvider.branchesList!.length,
-                            itemBuilder: (context, index) => BranchItemView(
-                              branchesValue: branchProvider.branchesList![index],
-                            ),
-                          ))
-                          : const CircularProgressIndicator(),
-                    ]),
-                  ),
+                                    itemCount: branchProvider.branchesList!.length,
+                                    itemBuilder: (context, index) => BranchItemView(
+                                      branchesValue: branchProvider.branchesList![index],
+                                    ),
+                                  ))
+                                : const CircularProgressIndicator(),
+                          ]),
+                        ),
                 ),
                 Container(
                   width: Dimensions.WEB_SCREEN_WIDTH,
@@ -228,7 +234,7 @@ class _BranchListScreenState extends State<BranchListScreen> {
                                   description: '',
                                   icon: Icons.question_mark,
                                   title:
-                                  'You have some foods in your cart. If you change your Branch, your cart data will be reset.',
+                                      'You have some foods in your cart. If you change your Branch, your cart data will be reset.',
                                   onTapTrue: () {
                                     cartProvider.clearCartList();
                                     _setBranch();
@@ -253,7 +259,7 @@ class _BranchListScreenState extends State<BranchListScreen> {
                 )
               ]),
             )),
-      ));
+          ));
     });
   }
 
@@ -279,20 +285,23 @@ class _BranchListScreenState extends State<BranchListScreen> {
     currentLocationDescriptor =
         await BitmapDescriptor.asset(const ImageConfiguration(size: Size(30, 50)), Images.current_location_marker);
     _markers = HashSet<Marker>();
-    for (int index = 0; index <  Provider.of<BranchProvider>(context, listen: false).branchesList!.length; index++) {
+    for (int index = 0; index < Provider.of<BranchProvider>(context, listen: false).branchesList!.length; index++) {
       _markers.add(Marker(
         onTap: () async {
           await scrollController.scrollToIndex(index, preferPosition: AutoScrollPosition.middle);
           scrollController.highlight(index);
-          if ( Provider.of<BranchProvider>(context, listen: false).branchesList![index].branches.status) {
-            Provider.of<BranchProvider>(context, listen: false).updateBranchId(Provider.of<BranchProvider>(context, listen: false).branchesList![index].branches.id);
+          if (Provider.of<BranchProvider>(context, listen: false).branchesList![index].branches.status) {
+            Provider.of<BranchProvider>(context, listen: false)
+                .updateBranchId(Provider.of<BranchProvider>(context, listen: false).branchesList![index].branches.id);
           }
         },
         markerId: MarkerId('branch_$index'),
-        position: LatLng(double.parse(Provider.of<BranchProvider>(context, listen: false).branchesList![index].branches.latitude),
+        position: LatLng(
+            double.parse(Provider.of<BranchProvider>(context, listen: false).branchesList![index].branches.latitude),
             double.parse(Provider.of<BranchProvider>(context, listen: false).branchesList![index].branches.longitude)),
-        infoWindow:
-            InfoWindow(title: Provider.of<BranchProvider>(context, listen: false).branchesList![index].branches.name, snippet: Provider.of<BranchProvider>(context, listen: false).branchesList![index].branches.address),
+        infoWindow: InfoWindow(
+            title: Provider.of<BranchProvider>(context, listen: false).branchesList![index].branches.name,
+            snippet: Provider.of<BranchProvider>(context, listen: false).branchesList![index].branches.address),
         visible: Provider.of<BranchProvider>(context, listen: false).branchesList![index].branches.status,
         icon: selectedIndex == index ? bitmapDescriptor : bitmapDescriptorUnSelect,
       ));
@@ -310,8 +319,10 @@ class _BranchListScreenState extends State<BranchListScreen> {
       target: _currentLocationLatLng != null && !fromBranchSelect
           ? _currentLocationLatLng!
           : LatLng(
-              double.parse(Provider.of<BranchProvider>(context, listen: false).branchesList![selectedIndex].branches.latitude),
-              double.parse(Provider.of<BranchProvider>(context, listen: false).branchesList![selectedIndex].branches.longitude),
+              double.parse(
+                  Provider.of<BranchProvider>(context, listen: false).branchesList![selectedIndex].branches.latitude),
+              double.parse(
+                  Provider.of<BranchProvider>(context, listen: false).branchesList![selectedIndex].branches.longitude),
             ),
       zoom: ResponsiveHelper.isMobile(context) ? 12 : 16,
     )));
