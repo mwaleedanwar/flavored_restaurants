@@ -8,7 +8,6 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constran
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/auth_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/coupon_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
@@ -141,32 +140,31 @@ class _CouponScreenState extends State<CouponScreen> {
                                                               Text(
                                                                 coupon.couponList[index].title,
                                                                 style: rubikMedium.copyWith(
-                                                                  color: ColorResources.COLOR_WHITE,
+                                                                  color: Colors.white,
                                                                   fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE,
                                                                 ),
                                                               ),
                                                               SelectableText(
                                                                 coupon.couponList[index].code,
-                                                                style: rubikRegular.copyWith(
-                                                                    color: ColorResources.COLOR_WHITE),
+                                                                style: rubikRegular.copyWith(color: Colors.white),
                                                               ),
                                                               coupon.couponList[index].discountType == 'product'
                                                                   ? Text(
                                                                       '${coupon.couponList[index].product!.name}',
                                                                       style: rubikMedium.copyWith(
-                                                                          color: ColorResources.COLOR_WHITE,
+                                                                          color: Colors.white,
                                                                           fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE),
                                                                     )
                                                                   : Text(
                                                                       '${coupon.couponList[index].discount}${coupon.couponList[index].discountType == 'percent' ? '%' : Provider.of<SplashProvider>(context, listen: false).configModel!.currencySymbol} off',
                                                                       style: rubikMedium.copyWith(
-                                                                          color: ColorResources.COLOR_WHITE,
+                                                                          color: Colors.white,
                                                                           fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE),
                                                                     ),
                                                               Text(
                                                                 '${getTranslated('valid_until', context)} ${DateConverter.isoStringToLocalDateOnly(coupon.couponList[index].expireDate)}',
                                                                 style: rubikRegular.copyWith(
-                                                                    color: ColorResources.COLOR_WHITE,
+                                                                    color: Colors.white,
                                                                     fontSize: Dimensions.FONT_SIZE_SMALL),
                                                               ),
                                                             ],

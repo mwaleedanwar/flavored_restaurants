@@ -10,6 +10,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart'
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/theme_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/cart_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:visibility_detector/visibility_detector.dart';
@@ -319,17 +320,15 @@ class _CategoryTabBarState extends State<CategoryTabBar> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 5),
                 child: ClipOval(
-                  child: FadeInImage.assetNetwork(
-                    placeholder: Images.placeholder_image,
-                    width: currentIndex == index ? 70 : 65,
-                    height: currentIndex == index ? 70 : 65,
-                    fit: BoxFit.cover,
-                    image: Provider.of<SplashProvider>(context, listen: false).baseUrls != null
-                        ? '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.categoryImageUrl}/${widget.data[index].image}'
-                        : '',
-                    imageErrorBuilder: (c, o, s) =>
-                        Image.asset(Images.placeholder_image, width: 65, height: 65, fit: BoxFit.cover),
-                  ),
+                  child: Provider.of<SplashProvider>(context, listen: false).baseUrls != null
+                      ? ImageWidget(
+                          '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.categoryImageUrl}/${widget.data[index].image}',
+                          placeholder: Images.placeholder_image,
+                          width: currentIndex == index ? 70 : 65,
+                          height: currentIndex == index ? 70 : 65,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.asset(Images.placeholder_image, width: 65, height: 65, fit: BoxFit.cover),
                 ),
               ),
               Container(
@@ -451,10 +450,9 @@ class PopularProductCard extends StatelessWidget {
             Center(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: FadeInImage.assetNetwork(
+                child: ImageWidget(
+                  '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${product.image}',
                   placeholder: Images.placeholder_rectangle,
-                  image:
-                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${product.image}',
                   fit: BoxFit.cover,
                   width: MediaQuery.of(context).size.width,
                   height: ResponsiveHelper.isTab(context) ? 350 : 200,

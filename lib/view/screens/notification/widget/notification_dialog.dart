@@ -5,6 +5,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:provider/provider.dart';
 
 class NotificationDialog extends StatelessWidget {
@@ -35,15 +36,12 @@ class NotificationDialog extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10), color: Theme.of(context).primaryColor.withOpacity(0.20)),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: FadeInImage.assetNetwork(
+                child: ImageWidget(
+                  '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.notificationImageUrl}/${notificationModel.image}',
                   placeholder: Images.placeholder_banner,
                   height: 150,
                   width: MediaQuery.of(context).size.width,
                   fit: BoxFit.cover,
-                  image:
-                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.notificationImageUrl}/${notificationModel.image}',
-                  imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_banner,
-                      height: 150, width: MediaQuery.of(context).size.width, fit: BoxFit.cover),
                 ),
               ),
             ),

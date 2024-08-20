@@ -13,6 +13,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/not_logged_in_screen.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/chat/widget/message_bubble.dart';
@@ -84,14 +85,15 @@ class _ChatScreenState extends State<ChatScreen> {
                           color: Theme.of(context).cardColor),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(50),
-                        child: FadeInImage.assetNetwork(
-                          fit: BoxFit.cover,
-                          placeholder: isAdmin ? F.logo : Images.profile,
-                          image: isAdmin
-                              ? ''
-                              : '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.deliveryManImageUrl}/${widget.orderModel!.deliveryMan!.image}',
-                          imageErrorBuilder: (c, t, o) => Image.asset(isAdmin ? F.logo : Images.profile),
-                        ),
+                        child: isAdmin
+                            ? Image.asset(isAdmin ? F.logo : Images.profile)
+                            : ImageWidget(
+                                '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.deliveryManImageUrl}/${widget.orderModel!.deliveryMan!.image}',
+                                fit: BoxFit.cover,
+                                placeholder: isAdmin ? F.logo : Images.profile,
+                                width: 40,
+                                height: 40,
+                              ),
                       ),
                     ),
                   )

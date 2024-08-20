@@ -7,6 +7,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,9 +25,7 @@ class DeliveryManWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Provider.of<ThemeProvider>(context).darkTheme
-                ? Colors.grey.shade700
-                : Colors.grey.shade300,
+            color: Provider.of<ThemeProvider>(context).darkTheme ? Colors.grey.shade700 : Colors.grey.shade300,
             blurRadius: 5,
             spreadRadius: 1,
           )
@@ -34,22 +33,15 @@ class DeliveryManWidget extends StatelessWidget {
       ),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(getTranslated('delivery_man', context),
-            style: rubikRegular.copyWith(
-                fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL)),
+            style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL)),
         ListTile(
           leading: ClipOval(
-            child: FadeInImage.assetNetwork(
+            child: ImageWidget(
+              '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.deliveryManImageUrl}/${deliveryMan.image}',
               placeholder: Images.placeholder_user,
               height: 40,
               width: 40,
               fit: BoxFit.cover,
-              image:
-                  '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.deliveryManImageUrl}/${deliveryMan.image}',
-              imageErrorBuilder: (c, o, s) => Image.asset(
-                  Images.placeholder_user,
-                  height: 40,
-                  width: 40,
-                  fit: BoxFit.cover),
             ),
           ),
           title: Text(
@@ -57,18 +49,13 @@ class DeliveryManWidget extends StatelessWidget {
             style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
           ),
           subtitle: RatingBar(
-              rating: (deliveryMan.rating ?? []).isNotEmpty
-                  ? double.parse(deliveryMan.rating![0].average)
-                  : 0,
+              rating: (deliveryMan.rating ?? []).isNotEmpty ? double.parse(deliveryMan.rating![0].average) : 0,
               size: 15),
           trailing: InkWell(
             onTap: () => launchUrl(Uri.parse('tel:${deliveryMan.phone}')),
             child: Container(
-              padding:
-                  const EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: ColorResources.getSearchBg(context)),
+              padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
+              decoration: BoxDecoration(shape: BoxShape.circle, color: ColorResources.getSearchBg(context)),
               child: const Icon(Icons.call_outlined),
             ),
           ),

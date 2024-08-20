@@ -40,7 +40,7 @@ class ProductProvider extends ChangeNotifier {
   ];
 
   List<Product> _relatedProducts = [];
-  List<Product> _latestProductList = [];
+  final _latestProductList = <Product>[];
   bool _isLoading = false;
   int? _popularPageSize;
   int? _latestPageSize;
@@ -115,7 +115,7 @@ class ProductProvider extends ChangeNotifier {
       if (apiResponse.response != null && apiResponse.response!.statusCode == 200) {
         debugPrint('${jsonDecode(apiResponse.response!.body)}');
         if (reload || offset == '1') {
-          _latestProductList = [];
+          _latestProductList.clear();
         }
         _latestProductList.addAll(ProductModel.fromJson(jsonDecode(apiResponse.response!.body)).products ?? []);
         _latestPageSize = ProductModel.fromJson(jsonDecode(apiResponse.response!.body)).totalSize;

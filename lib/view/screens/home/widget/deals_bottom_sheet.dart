@@ -5,6 +5,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart'
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/cart_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/product_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/date_converter.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/auth_provider.dart';
@@ -39,14 +40,11 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
             constraints: BoxConstraints(
               maxHeight: MediaQuery.of(context).size.height * 0.8,
             ),
-            padding: const EdgeInsets.symmetric(
-                horizontal: Dimensions.PADDING_SIZE_DEFAULT),
+            padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_DEFAULT),
             decoration: BoxDecoration(
               color: Theme.of(context).cardColor,
               borderRadius: ResponsiveHelper.isMobile(context)
-                  ? const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20))
+                  ? const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20))
                   : const BorderRadius.all(Radius.circular(20)),
             ),
             child: Consumer<ProductProvider>(
@@ -58,19 +56,15 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                     ResponsiveHelper.isMobile(context)
                         ? Center(
                             child: Container(
-                              margin:
-                                  const EdgeInsets.only(bottom: 10, top: 10),
+                              margin: const EdgeInsets.only(bottom: 10, top: 10),
                               height: 5,
                               width: 80,
-                              decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(5)),
+                              decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(5)),
                             ),
                           )
                         : const SizedBox(),
                     Text(widget.dealsDataModel.name,
-                        style: rubikMedium.copyWith(
-                            fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
+                        style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
                     const SizedBox(
                       height: 8,
                     ),
@@ -78,19 +72,16 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                       children: [
                         Text(
                           'Deal Ends At:',
-                          style: rubikMedium.copyWith(
-                              fontWeight: FontWeight.w400,
-                              fontSize: Dimensions.FONT_SIZE_SMALL),
+                          style:
+                              rubikMedium.copyWith(fontWeight: FontWeight.w400, fontSize: Dimensions.FONT_SIZE_SMALL),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const Spacer(),
                         Text(
-                          DateConverter.estimatedDate(
-                              widget.dealsDataModel.expireDate),
-                          style: rubikMedium.copyWith(
-                              fontWeight: FontWeight.w400,
-                              fontSize: Dimensions.FONT_SIZE_SMALL),
+                          DateConverter.estimatedDate(widget.dealsDataModel.expireDate),
+                          style:
+                              rubikMedium.copyWith(fontWeight: FontWeight.w400, fontSize: Dimensions.FONT_SIZE_SMALL),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -103,18 +94,16 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                       children: [
                         Text(
                           'Discount:',
-                          style: rubikMedium.copyWith(
-                              fontWeight: FontWeight.w400,
-                              fontSize: Dimensions.FONT_SIZE_SMALL),
+                          style:
+                              rubikMedium.copyWith(fontWeight: FontWeight.w400, fontSize: Dimensions.FONT_SIZE_SMALL),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const Spacer(),
                         Text(
                           '${widget.dealsDataModel.discountPercentage}%',
-                          style: rubikMedium.copyWith(
-                              fontWeight: FontWeight.w400,
-                              fontSize: Dimensions.FONT_SIZE_SMALL),
+                          style:
+                              rubikMedium.copyWith(fontWeight: FontWeight.w400, fontSize: Dimensions.FONT_SIZE_SMALL),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -127,18 +116,16 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                       children: [
                         Text(
                           'Total price:',
-                          style: rubikMedium.copyWith(
-                              fontWeight: FontWeight.w400,
-                              fontSize: Dimensions.FONT_SIZE_SMALL),
+                          style:
+                              rubikMedium.copyWith(fontWeight: FontWeight.w400, fontSize: Dimensions.FONT_SIZE_SMALL),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                         const Spacer(),
                         Text(
                           widget.dealsDataModel.totalDiscountAmount,
-                          style: rubikMedium.copyWith(
-                              fontWeight: FontWeight.w400,
-                              fontSize: Dimensions.FONT_SIZE_SMALL),
+                          style:
+                              rubikMedium.copyWith(fontWeight: FontWeight.w400, fontSize: Dimensions.FONT_SIZE_SMALL),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -147,9 +134,7 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                     const SizedBox(
                       height: 8,
                     ),
-                    Text('Deal Items',
-                        style: rubikMedium.copyWith(
-                            fontSize: Dimensions.FONT_SIZE_DEFAULT)),
+                    Text('Deal Items', style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_DEFAULT)),
                     SizedBox(
                       height: 185,
                       child: ListView.builder(
@@ -159,54 +144,31 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                           itemBuilder: (context, index) {
                             return Container(
                               // height: 180 ,
-                              margin: EdgeInsets.only(
-                                  top: 8.0,
-                                  left: index == 0 ? 0 : 8,
-                                  right: 6,
-                                  bottom: 8),
+                              margin: EdgeInsets.only(top: 8.0, left: index == 0 ? 0 : 8, right: 6, bottom: 8),
                               width: 100,
                               decoration: BoxDecoration(
                                   color: ColorResources.getCartColor(context),
                                   borderRadius: BorderRadius.circular(10),
                                   boxShadow: [
                                     BoxShadow(
-                                        color:
-                                            Provider.of<ThemeProvider>(context)
-                                                    .darkTheme
-                                                ? Colors.grey.shade800
-                                                : Colors.grey.shade300,
-                                        blurRadius:
-                                            Provider.of<ThemeProvider>(context)
-                                                    .darkTheme
-                                                ? 2
-                                                : 5,
-                                        spreadRadius:
-                                            Provider.of<ThemeProvider>(context)
-                                                    .darkTheme
-                                                ? 0
-                                                : 1)
+                                        color: Provider.of<ThemeProvider>(context).darkTheme
+                                            ? Colors.grey.shade800
+                                            : Colors.grey.shade300,
+                                        blurRadius: Provider.of<ThemeProvider>(context).darkTheme ? 2 : 5,
+                                        spreadRadius: Provider.of<ThemeProvider>(context).darkTheme ? 0 : 1)
                                   ]),
                               child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     ClipRRect(
-                                      borderRadius: const BorderRadius.vertical(
-                                          top: Radius.circular(10)),
-                                      child: FadeInImage.assetNetwork(
-                                        placeholder:
-                                            Images.placeholder_rectangle,
+                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+                                      child: ImageWidget(
+                                        '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${widget.dealsDataModel.dealItems[index].image}',
+                                        placeholder: Images.placeholder_rectangle,
                                         fit: BoxFit.cover,
                                         height: 90,
                                         width: 150,
-                                        image:
-                                            '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${widget.dealsDataModel.dealItems[index].image}',
-                                        imageErrorBuilder: (c, o, s) =>
-                                            Image.asset(
-                                                Images.placeholder_rectangle,
-                                                fit: BoxFit.cover,
-                                                height: 90,
-                                                width: 150),
                                       ),
                                     ),
                                     const SizedBox(
@@ -214,21 +176,14 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                                     ),
                                     Expanded(
                                       child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal:
-                                                Dimensions.PADDING_SIZE_SMALL),
+                                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
                                         child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                widget.dealsDataModel
-                                                    .dealItems[index].name,
-                                                style: rubikBold.copyWith(
-                                                    fontSize: Dimensions
-                                                        .FONT_SIZE_SMALL),
+                                                widget.dealsDataModel.dealItems[index].name,
+                                                style: rubikBold.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL),
                                                 maxLines: 2,
                                               ),
                                               const SizedBox(
@@ -237,10 +192,7 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                                               Text(
                                                 'Quantity : ${widget.dealsDataModel.dealItems[index].itemQuantity}',
                                                 style: rubikBold.copyWith(
-                                                    fontSize: Dimensions
-                                                        .FONT_SIZE_SMALL,
-                                                    fontWeight:
-                                                        FontWeight.w500),
+                                                    fontSize: Dimensions.FONT_SIZE_SMALL, fontWeight: FontWeight.w500),
                                               ),
                                             ]),
                                       ),
@@ -259,11 +211,9 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                         btnTxt: 'Add to cart',
                         backgroundColor: Theme.of(context).primaryColor,
                         onTap: () {
-                          if (Provider.of<AuthProvider>(context, listen: false)
-                              .isLoggedIn()) {
+                          if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
                             DealCartModel dealModle = DealCartModel(
-                                price: double.parse(
-                                    widget.dealsDataModel.totalDiscountAmount),
+                                price: double.parse(widget.dealsDataModel.totalDiscountAmount),
                                 discountedPrice: 0.0,
                                 discountAmount: 0.0,
                                 quantity: 1,
@@ -275,20 +225,15 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                               cartProvider.addDealToCart(dealModle, cartIndex);
                               Navigator.pop(context);
 
-                              appToast(
-                                  text: 'Deal added to cart',
-                                  toastColor: Colors.green);
+                              appToast(text: 'Deal added to cart', toastColor: Colors.green);
                             } else {
-                              Provider.of<CartProvider>(context, listen: false)
-                                  .setQuantity(
+                              Provider.of<CartProvider>(context, listen: false).setQuantity(
                                 isIncrement: true,
                                 isCatering: false,
                                 isCart: false,
                                 isDeal: true,
                                 dealCartModel: cartProvider.dealsList
-                                    .where((element) =>
-                                        element.dealsDataModel?.id ==
-                                        widget.dealsDataModel.id)
+                                    .where((element) => element.dealsDataModel?.id == widget.dealsDataModel.id)
                                     .toList()[0],
                               );
                               Navigator.pop(context);
@@ -299,8 +244,7 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                                   toastColor: Colors.green);
                             }
                           } else {
-                            Navigator.pushNamed(
-                                context, Routes.getLoginRoute());
+                            Navigator.pushNamed(context, Routes.getLoginRoute());
                           }
                         }),
                     const SizedBox(
@@ -316,9 +260,7 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
               : Positioned(
                   right: 10,
                   top: 5,
-                  child: InkWell(
-                      onTap: () => Navigator.pop(context),
-                      child: const Icon(Icons.close)),
+                  child: InkWell(onTap: () => Navigator.pop(context), child: const Icon(Icons.close)),
                 ),
         ],
       );

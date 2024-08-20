@@ -10,6 +10,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/map_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/order/widget/change_method_dialog.dart';
 import 'package:provider/provider.dart';
@@ -177,15 +178,13 @@ class DetailsView extends StatelessWidget {
                       Row(children: [
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
-                          child: FadeInImage.assetNetwork(
+                          child: ImageWidget(
+                            '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/'
+                            '${order.orderDetails![index].productDetails!.image}',
                             placeholder: Images.placeholder_image,
                             height: 70,
                             width: 80,
                             fit: BoxFit.cover,
-                            image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/'
-                                '${order.orderDetails![index].productDetails!.image}',
-                            imageErrorBuilder: (c, o, s) =>
-                                Image.asset(Images.placeholder_image, height: 70, width: 80, fit: BoxFit.cover),
                           ),
                         ),
                         const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
@@ -271,16 +270,13 @@ class DetailsView extends StatelessWidget {
                           Row(children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
-                              child: FadeInImage.assetNetwork(
+                              child: ImageWidget(
+                                '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/'
+                                '${order.orderDetails![index].offerDetail!.image}',
                                 placeholder: Images.placeholder_image,
                                 height: 70,
                                 width: 80,
                                 fit: BoxFit.cover,
-                                image:
-                                    '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/'
-                                    '${order.orderDetails![index].offerDetail!.image}',
-                                imageErrorBuilder: (c, o, s) =>
-                                    Image.asset(Images.placeholder_image, height: 70, width: 80, fit: BoxFit.cover),
                               ),
                             ),
                             const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),

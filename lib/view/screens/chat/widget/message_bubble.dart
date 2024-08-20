@@ -9,6 +9,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:provider/provider.dart';
 
 import 'image_diaglog.dart';
@@ -51,15 +52,12 @@ class MessageBubble extends StatelessWidget {
                                   borderRadius: BorderRadius.all(Radius.circular(Dimensions.PADDING_SIZE_DEFAULT))),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20.0),
-                                child: FadeInImage.assetNetwork(
+                                child: ImageWidget(
+                                  '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.deliveryManImageUrl}/${messages.deliverymanId?.image ?? ''}',
                                   placeholder: Images.placeholder_user,
                                   fit: BoxFit.cover,
                                   width: 40,
                                   height: 40,
-                                  image:
-                                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.deliveryManImageUrl}/${messages.deliverymanId?.image ?? ''}',
-                                  imageErrorBuilder: (c, o, s) =>
-                                      Image.asset(Images.placeholder_user, fit: BoxFit.cover, width: 40, height: 40),
                                 ),
                               ),
                             ),
@@ -88,45 +86,36 @@ class MessageBubble extends StatelessWidget {
                                     ),
                                   ),
                                 if (messages.attachment != null) const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
-                                messages.attachment != null
-                                    ? GridView.builder(
-                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                          childAspectRatio: 1,
-                                          crossAxisCount: ResponsiveHelper.isDesktop(context) ? 8 : 3,
-                                          crossAxisSpacing: 5,
-                                          mainAxisSpacing: 5,
+                                if (messages.attachment != null)
+                                  GridView.builder(
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      childAspectRatio: 1,
+                                      crossAxisCount: ResponsiveHelper.isDesktop(context) ? 8 : 3,
+                                      crossAxisSpacing: 5,
+                                      mainAxisSpacing: 5,
+                                    ),
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemCount: messages.attachment?.length,
+                                    itemBuilder: (BuildContext context, index) {
+                                      return InkWell(
+                                        onTap: () => showDialog(
+                                          context: context,
+                                          builder: (ctx) => ImageDialog(imageUrl: messages.attachment![index]),
                                         ),
-                                        shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        itemCount: messages.attachment!.length,
-                                        itemBuilder: (BuildContext context, index) {
-                                          return messages.attachment!.isNotEmpty
-                                              ? InkWell(
-                                                  onTap: () => showDialog(
-                                                    context: context,
-                                                    builder: (ctx) =>
-                                                        ImageDialog(imageUrl: messages.attachment![index]),
-                                                  ),
-                                                  child: ClipRRect(
-                                                    borderRadius: BorderRadius.circular(5),
-                                                    child: FadeInImage.assetNetwork(
-                                                      placeholder: Images.placeholder_image,
-                                                      height: 100,
-                                                      width: 100,
-                                                      fit: BoxFit.cover,
-                                                      image: messages.attachment![index],
-                                                      imageErrorBuilder: (c, o, s) => Image.asset(
-                                                          Images.placeholder_image,
-                                                          height: 100,
-                                                          width: 100,
-                                                          fit: BoxFit.cover),
-                                                    ),
-                                                  ),
-                                                )
-                                              : const SizedBox();
-                                        },
-                                      )
-                                    : const SizedBox(),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(5),
+                                          child: ImageWidget(
+                                            messages.attachment![index],
+                                            placeholder: Images.placeholder_image,
+                                            height: 100,
+                                            width: 100,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
                               ],
                             ),
                           ),
@@ -149,7 +138,6 @@ class MessageBubble extends StatelessWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL),
-                    //color: Colors.red
                   ),
                   child: Padding(
                     padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
@@ -205,30 +193,22 @@ class MessageBubble extends StatelessWidget {
                                             physics: const NeverScrollableScrollPhysics(),
                                             itemCount: messages.attachment?.length,
                                             itemBuilder: (BuildContext context, index) {
-                                              return (messages.attachment!.isNotEmpty)
-                                                  ? InkWell(
-                                                      onTap: () => showDialog(
-                                                        context: context,
-                                                        builder: (ctx) =>
-                                                            ImageDialog(imageUrl: messages.attachment![index]),
-                                                      ),
-                                                      child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(5),
-                                                        child: FadeInImage.assetNetwork(
-                                                          placeholder: Images.placeholder_image,
-                                                          height: 100,
-                                                          width: 100,
-                                                          fit: BoxFit.cover,
-                                                          image: messages.attachment![index],
-                                                          imageErrorBuilder: (c, o, s) => Image.asset(
-                                                              Images.placeholder_image,
-                                                              height: 100,
-                                                              width: 100,
-                                                              fit: BoxFit.cover),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : const SizedBox();
+                                              return InkWell(
+                                                onTap: () => showDialog(
+                                                  context: context,
+                                                  builder: (ctx) => ImageDialog(imageUrl: messages.attachment![index]),
+                                                ),
+                                                child: ClipRRect(
+                                                  borderRadius: BorderRadius.circular(5),
+                                                  child: ImageWidget(
+                                                    messages.attachment![index],
+                                                    placeholder: Images.placeholder_image,
+                                                    height: 100,
+                                                    width: 100,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              );
                                             },
                                           ),
                                         )
@@ -236,29 +216,24 @@ class MessageBubble extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
-                              child: Container(
+                            if (Provider.of<ProfileProvider>(context, listen: false).userInfoModel != null)
+                              Container(
+                                padding: const EdgeInsets.only(left: Dimensions.PADDING_SIZE_SMALL),
                                 width: 40,
                                 height: 40,
                                 decoration: const BoxDecoration(
                                     borderRadius: BorderRadius.all(Radius.circular(Dimensions.PADDING_SIZE_DEFAULT))),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20.0),
-                                  child: FadeInImage.assetNetwork(
+                                  child: ImageWidget(
+                                    '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/${Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.image}',
                                     placeholder: Images.placeholder_image,
-                                    fit: BoxFit.cover,
                                     width: 40,
                                     height: 40,
-                                    imageErrorBuilder: (c, o, s) =>
-                                        Image.asset(Images.placeholder_image, fit: BoxFit.cover),
-                                    image: Provider.of<ProfileProvider>(context, listen: false).userInfoModel != null
-                                        ? '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/${Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.image}'
-                                        : '',
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
-                            ),
                           ],
                         ),
                         const SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
@@ -298,15 +273,12 @@ class MessageBubble extends StatelessWidget {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(20.0),
-                                child: FadeInImage.assetNetwork(
+                                child: ImageWidget(
+                                  '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.restaurantImageUrl}/${Provider.of<SplashProvider>(context, listen: false).configModel!.restaurantName}',
                                   placeholder: F.logo,
                                   fit: BoxFit.cover,
                                   width: 40,
                                   height: 40,
-                                  image:
-                                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.restaurantImageUrl}/${Provider.of<SplashProvider>(context, listen: false).configModel!.restaurantName}',
-                                  imageErrorBuilder: (c, o, s) =>
-                                      Image.asset(F.logo, fit: BoxFit.contain, width: 40, height: 40),
                                 ),
                               ),
                               const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
@@ -336,56 +308,46 @@ class MessageBubble extends StatelessWidget {
                                       ),
                                     if (messages.reply != null && messages.reply!.isNotEmpty)
                                       const SizedBox(height: 8.0),
-                                    messages.image != null
-                                        ? GridView.builder(
-                                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                              childAspectRatio: 1,
-                                              crossAxisCount: ResponsiveHelper.isDesktop(context) ? 8 : 3,
-                                              crossAxisSpacing: 5,
-                                              mainAxisSpacing: 5,
+                                    if (messages.image != null)
+                                      GridView.builder(
+                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                          childAspectRatio: 1,
+                                          crossAxisCount: ResponsiveHelper.isDesktop(context) ? 8 : 3,
+                                          crossAxisSpacing: 5,
+                                          mainAxisSpacing: 5,
+                                        ),
+                                        shrinkWrap: true,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        itemCount: messages.image?.length,
+                                        itemBuilder: (BuildContext context, index) {
+                                          return InkWell(
+                                            hoverColor: Colors.transparent,
+                                            onTap: () => showDialog(
+                                              context: context,
+                                              builder: (ctx) => ImageDialog(
+                                                  imageUrl:
+                                                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.chatImageUrl}/${messages.image![index]}'),
                                             ),
-                                            shrinkWrap: true,
-                                            physics: const NeverScrollableScrollPhysics(),
-                                            itemCount: messages.image?.length,
-                                            itemBuilder: (BuildContext context, index) {
-                                              return messages.image!.isNotEmpty
-                                                  ? InkWell(
-                                                      hoverColor: Colors.transparent,
-                                                      onTap: () => showDialog(
-                                                        context: context,
-                                                        builder: (ctx) => ImageDialog(
-                                                            imageUrl:
-                                                                '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.chatImageUrl}/${messages.image![index]}'),
-                                                      ),
-                                                      child: Padding(
-                                                        padding: EdgeInsets.only(
-                                                          top:
-                                                              (messages.message != null && messages.message!.isNotEmpty)
-                                                                  ? Dimensions.PADDING_SIZE_SMALL
-                                                                  : 0,
-                                                        ),
-                                                        child: ClipRRect(
-                                                          borderRadius: BorderRadius.circular(5),
-                                                          child: FadeInImage.assetNetwork(
-                                                            placeholder: Images.placeholder_image,
-                                                            height: 100,
-                                                            width: 100,
-                                                            fit: BoxFit.cover,
-                                                            image:
-                                                                '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.chatImageUrl}/${messages.image![index]}',
-                                                            imageErrorBuilder: (c, o, s) => Image.asset(
-                                                                Images.placeholder_image,
-                                                                height: 100,
-                                                                width: 100,
-                                                                fit: BoxFit.cover),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    )
-                                                  : const SizedBox();
-                                            },
-                                          )
-                                        : const SizedBox(),
+                                            child: Padding(
+                                              padding: EdgeInsets.only(
+                                                top: (messages.message != null && messages.message!.isNotEmpty)
+                                                    ? Dimensions.PADDING_SIZE_SMALL
+                                                    : 0,
+                                              ),
+                                              child: ClipRRect(
+                                                borderRadius: BorderRadius.circular(5),
+                                                child: ImageWidget(
+                                                  '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.chatImageUrl}/${messages.image![index]}',
+                                                  placeholder: Images.placeholder_image,
+                                                  height: 100,
+                                                  width: 100,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
                                   ],
                                 ),
                               ),
@@ -473,17 +435,12 @@ class MessageBubble extends StatelessWidget {
                                                             ),
                                                             child: ClipRRect(
                                                               borderRadius: BorderRadius.circular(5),
-                                                              child: FadeInImage.assetNetwork(
+                                                              child: ImageWidget(
+                                                                messages.image![index],
                                                                 placeholder: Images.placeholder_image,
                                                                 height: 100,
                                                                 width: 100,
                                                                 fit: BoxFit.cover,
-                                                                image: messages.image![index],
-                                                                imageErrorBuilder: (c, o, s) => Image.asset(
-                                                                    Images.placeholder_image,
-                                                                    height: 100,
-                                                                    width: 100,
-                                                                    fit: BoxFit.cover),
                                                               ),
                                                             ),
                                                           ),
@@ -506,20 +463,12 @@ class MessageBubble extends StatelessWidget {
                                             BorderRadius.all(Radius.circular(Dimensions.PADDING_SIZE_DEFAULT))),
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(20.0),
-                                      child: FadeInImage.assetNetwork(
+                                      child: ImageWidget(
+                                        '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/${profileController.userInfoModel!.image}',
                                         placeholder: Images.placeholder_image,
                                         fit: BoxFit.cover,
                                         width: 40,
                                         height: 40,
-                                        image: profileController.userInfoModel != null
-                                            ? '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/${profileController.userInfoModel!.image}'
-                                            : '',
-                                        imageErrorBuilder: (c, o, s) => Image.asset(
-                                          Images.placeholder_image,
-                                          fit: BoxFit.cover,
-                                          width: 40,
-                                          height: 40,
-                                        ),
                                       ),
                                     ),
                                   ),

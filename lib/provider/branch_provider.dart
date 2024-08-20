@@ -62,7 +62,7 @@ class BranchProvider extends ChangeNotifier {
     debugPrint('===erro: branch:$branchId');
 
     Branches? branch;
-    ConfigModel? config = Provider.of<SplashProvider>(context, listen: false).configModel;
+    final config = Provider.of<SplashProvider>(context, listen: false).configModel;
     if (config?.branches != null && config!.branches!.isNotEmpty) {
       try {
         branch = config.branches!.firstWhere((branch) => branch.id == branchId);

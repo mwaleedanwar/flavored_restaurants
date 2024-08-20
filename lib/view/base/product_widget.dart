@@ -7,9 +7,9 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart'
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/theme_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/cart_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/profile_provider.dart';
@@ -51,15 +51,8 @@ class ProductWidget extends StatelessWidget {
         PriceConverter.convertWithDiscount(context, product.price, product.discount, product.discountType);
 
     return Consumer<CartProvider>(builder: (context, cartProvider, child) {
-      String productImage = '';
-      try {
-        productImage =
-            '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${product.image}';
-      } catch (e) {
-        debugPrint('ERROR PRODUCT WIDGET');
-      }
       int cartIndex = cartProvider.getCartIndex(product) ?? -1;
-      debugPrint('---image $productImage');
+
       return Padding(
           padding: const EdgeInsets.only(bottom: 0),
           child: InkWell(
@@ -129,7 +122,6 @@ class ProductWidget extends StatelessWidget {
                                   style: rubikMedium.copyWith(
                                       fontSize: Dimensions.FONT_SIZE_DEFAULT, color: ColorResources.COLOR_GREY_CHATEAU),
                                 ),
-                                // WishButton(product: product, edgeInset: EdgeInsets.all(5)),
                               ],
                             ),
                             product.price > discountedPrice
@@ -147,16 +139,11 @@ class ProductWidget extends StatelessWidget {
                     const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: FadeInImage.assetNetwork(
-                        placeholder: Images.placeholder_image,
+                      child: ImageWidget(
+                        '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${product.image}',
                         height: ResponsiveHelper.isMobile(context) ? 110 : 80,
                         width: ResponsiveHelper.isMobile(context) ? 105 : 95,
                         fit: BoxFit.cover,
-                        image: productImage,
-                        imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_image,
-                            height: ResponsiveHelper.isMobile(context) ? 110 : 80,
-                            width: ResponsiveHelper.isMobile(context) ? 105 : 95,
-                            fit: BoxFit.cover),
                       ),
                     ),
                   ]),

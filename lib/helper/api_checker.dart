@@ -21,8 +21,6 @@ class ApiChecker {
       if (ModalRoute.of(context)?.settings.name != Routes.getLoginRoute()) {
         Navigator.pushNamedAndRemoveUntil(context, Routes.getLoginRoute(), (route) => false);
       }
-    } else {
-      // showCustomSnackBar(message, context);
     }
   }
 }

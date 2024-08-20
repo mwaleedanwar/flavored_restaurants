@@ -5,6 +5,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart'
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:provider/provider.dart';
 
 class BranchItemView extends StatelessWidget {
@@ -36,16 +37,12 @@ class BranchItemView extends StatelessWidget {
                   borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(Dimensions.RADIUS_DEFAULT),
                       topLeft: Radius.circular(Dimensions.RADIUS_DEFAULT)),
-                  child: FadeInImage.assetNetwork(
+                  child: ImageWidget(
+                    '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.branchImageUrl}/${branchesValue.branches.coverImage}',
                     placeholder: Images.branch_banner,
-                    image:
-                        '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.branchImageUrl}/${branchesValue.branches.coverImage}',
-                    fit: BoxFit.cover,
                     width: Dimensions.WEB_SCREEN_WIDTH,
-                    imageErrorBuilder: (c, o, s) => Image.asset(
-                      Images.branch_banner,
-                      width: Dimensions.WEB_SCREEN_WIDTH,
-                    ),
+                    height: null,
+                    fit: BoxFit.cover,
                   ),
                 )),
                 Expanded(
@@ -114,15 +111,12 @@ class BranchItemView extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(Dimensions.RADIUS_DEFAULT),
-                    child: FadeInImage.assetNetwork(
+                    child: ImageWidget(
+                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.branchImageUrl}/${branchesValue.branches.image}',
                       placeholder: Images.placeholder_image,
-                      image:
-                          '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.branchImageUrl}/${branchesValue.branches.image}',
                       height: size.width < 400 ? 38 : 50,
                       width: size.width < 400 ? 38 : 50,
                       fit: BoxFit.cover,
-                      imageErrorBuilder: (c, o, s) =>
-                          Image.asset(Images.placeholder_image, width: size.width < 400 ? 38 : 50),
                     ),
                   ),
                 ),

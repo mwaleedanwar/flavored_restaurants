@@ -152,8 +152,8 @@ class CheckoutScreenState extends State<CheckoutScreen> {
         body: loading
             ? const Center(child: CircularProgressIndicator.adaptive())
             : _isLoggedIn
-                ? Consumer3<OrderProvider, SplashProvider, LocationProvider>(
-                    builder: (context, order, config, address, child) {
+                ? Consumer4<OrderProvider, SplashProvider, LocationProvider, BranchProvider>(
+                    builder: (context, order, config, address, branchProvider, child) {
                       double deliveryCharge = 0;
                       _latitude = address.pickPosition.latitude.toString();
                       _longitude = address.pickPosition.latitude.toString();
@@ -190,14 +190,17 @@ class CheckoutScreenState extends State<CheckoutScreen> {
                                           fontSize: Dimensions.FONT_SIZE_LARGE,
                                         ),
                                       ),
-                                      Container(
-                                        padding: const EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: Theme.of(context).primaryColor,
-                                          borderRadius: BorderRadius.circular(10),
+                                      if (branchProvider.getBranchId != -1)
+                                        Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context).primaryColor,
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: BranchButtonView(
+                                            branchName: branchProvider.getBranch(context)?.name ?? '',
+                                          ),
                                         ),
-                                        child: const BranchButtonView(),
-                                      ),
                                     ],
                                   ),
                                 ),

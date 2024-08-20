@@ -9,7 +9,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
-import 'package:get/get.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/config_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/salutations_function.dart';
@@ -37,14 +37,12 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
       Provider.of<ProfileProvider>(context, listen: false).getUserInfo(context);
       _isLoggedIn = true;
 
-      if (_isLoggedIn) {
-        Provider.of<ProfileProvider>(context, listen: false).getUserInfo(context).then((value) {
-          if (Provider.of<ProfileProvider>(context, listen: false).userInfoModel?.point != null) {
-            points = Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.point!.toDouble();
-            setState(() {});
-          }
-        });
-      }
+      Provider.of<ProfileProvider>(context, listen: false).getUserInfo(context).then((value) {
+        if (Provider.of<ProfileProvider>(context, listen: false).userInfoModel?.point != null) {
+          points = Provider.of<ProfileProvider>(context, listen: false).userInfoModel!.point!.toDouble();
+          setState(() {});
+        }
+      });
     }
   }
 
@@ -203,19 +201,18 @@ class _ModifiedHomePageState extends State<ModifiedHomePage> {
   }
 }
 
-class HomeBannerCard extends StatefulWidget {
+class HomeBannerCard extends StatelessWidget {
   final BannerForRestaurantWebApp bannerForRestaurantWebApp;
   final String imageBaseUrl;
   final VoidCallback? navigateToMenu;
 
-  const HomeBannerCard(
-      {super.key, required this.bannerForRestaurantWebApp, required this.imageBaseUrl, this.navigateToMenu});
+  const HomeBannerCard({
+    super.key,
+    required this.bannerForRestaurantWebApp,
+    required this.imageBaseUrl,
+    this.navigateToMenu,
+  });
 
-  @override
-  State<HomeBannerCard> createState() => _HomeBannerCardState();
-}
-
-class _HomeBannerCardState extends State<HomeBannerCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -224,60 +221,63 @@ class _HomeBannerCardState extends State<HomeBannerCard> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(5),
-            child: FadeInImage.assetNetwork(
+            child: ImageWidget(
+              '$imageBaseUrl/${bannerForRestaurantWebApp.image[0]}',
               placeholder: Images.placeholder_rectangle,
               fit: BoxFit.cover,
               height: 150,
               width: MediaQuery.of(context).size.width,
-              image: '${widget.imageBaseUrl}/${widget.bannerForRestaurantWebApp.image[0]}',
-              imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_rectangle,
-                  fit: BoxFit.cover, height: 150, width: MediaQuery.of(context).size.width),
             ),
           ),
-          if (widget.bannerForRestaurantWebApp.bannerType != 'catering') ...[
+          if (bannerForRestaurantWebApp.bannerType != 'catering') ...[
             const SizedBox(
               height: 10,
             ),
-            Text(widget.bannerForRestaurantWebApp.title, style: rubikMedium.copyWith(fontSize: 16))
-                .marginSymmetric(horizontal: 6),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: Text(bannerForRestaurantWebApp.title, style: rubikMedium.copyWith(fontSize: 16)),
+            ),
             const SizedBox(
               height: 10,
             ),
-            Text(
-              widget.bannerForRestaurantWebApp.description ?? '',
-              style: rubikRegular.copyWith(
-                fontSize: 14,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: Text(
+                bannerForRestaurantWebApp.description ?? '',
+                style: rubikRegular.copyWith(
+                  fontSize: 14,
+                ),
+                maxLines: 2,
               ),
-              maxLines: 2,
-            ).marginSymmetric(horizontal: 6),
+            )
           ],
           const SizedBox(
             height: 10,
           ),
-          widget.bannerForRestaurantWebApp.buttonText != null
-              ? TextButton(
-                  style: TextButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      side: BorderSide(width: 2, color: Theme.of(context).primaryColor),
-                    ),
-                    minimumSize: const Size(150, 30),
+          if (bannerForRestaurantWebApp.buttonText != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                    side: BorderSide(width: 2, color: Theme.of(context).primaryColor),
                   ),
-                  onPressed: () async {
-                    if (widget.bannerForRestaurantWebApp.buttonText == 'Order Now') {
-                      if (widget.navigateToMenu != null) {
-                        widget.navigateToMenu!();
-                      }
-                    } else {
-                      await Navigator.pushNamed(context, Routes.getSupportRoute());
-                    }
-                  },
-                  child: Text(widget.bannerForRestaurantWebApp.buttonText ?? '',
-                      style: rubikRegular.copyWith(
-                        fontSize: Dimensions.FONT_SIZE_LARGE,
-                      )),
-                ).marginSymmetric(horizontal: 4)
-              : const SizedBox.shrink(),
+                  minimumSize: const Size(150, 30),
+                ),
+                onPressed: () async {
+                  if (bannerForRestaurantWebApp.buttonText == 'Order Now' && navigateToMenu != null) {
+                    navigateToMenu!();
+                  } else {
+                    await Navigator.pushNamed(context, Routes.getSupportRoute());
+                  }
+                },
+                child: Text(
+                  bannerForRestaurantWebApp.buttonText ?? '',
+                  style: rubikRegular.copyWith(fontSize: Dimensions.FONT_SIZE_LARGE),
+                ),
+              ),
+            ),
           const SizedBox(
             height: 10,
           ),

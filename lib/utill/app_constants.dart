@@ -15,7 +15,6 @@ class AppConstants {
 
   static const String LATEST_PRODUCT_URI = '/api/v1/products/latest';
   static String LOYALTY_POINTS_PRODUCTS = '/api/v1/products/loyalty-rewards?restaurant_id=${F.restaurantId}';
-  static const String POPULAR_PRODUCT_URI = '/api/v1/products/popular';
   static String ALL_POPULAR_PRODUCT_URI = '/api/v1/products/allpopular?restaurant_id=${F.restaurantId}';
   static const String NEW_WEB_URL = '/api/v1/customer/order/place-by-web-app';
   static const String SUB_CATEGORY_URI = '/api/v1/categories/childes/';
@@ -23,8 +22,6 @@ class AppConstants {
   static const String CATEGORY_PRODUCT_URI = '/api/v1/categories/products/';
   static String CONFIG_URI = '/api/v1/config?restaurant_id=${F.restaurantId}';
   static String TRACK_URI = '/api/v1/customer/order/track?restaurant_id=${F.restaurantId}&order_id=';
-  static const String MESSAGE_URI = '/api/v1/customer/message/get';
-  static const String SEND_MESSAGE_URI = '/api/v1/customer/message/send';
   static const String FORGET_PASSWORD_URI = '/api/v1/auth/forgot-password';
   static const String VERIFY_TOKEN_URI = '/api/v1/auth/verify-token';
   static const String RESET_PASSWORD_URI = '/api/v1/auth/reset-password';
@@ -37,7 +34,6 @@ class AppConstants {
   static const String SEND_OTP_URI = '/api/v1/auth/send-otp';
   static const String VERIFY_OTP_URI = '/api/v1/auth/verify-login-by-web-app';
   static const String TOKEN_URI = '/api/v1/customer/cm-firebase-token';
-  static const String PLACE_ORDER_URI = '/api/v1/customer/order/place';
   static const String ADDRESS_LIST_URI = '/api/v1/customer/address/list';
   static const String REMOVE_ADDRESS_URI = '/api/v1/customer/address/delete?address_id=';
   static const String ADD_ADDRESS_URI = '/api/v1/customer/address/add';
@@ -55,7 +51,6 @@ class AppConstants {
   static const String ADD_WISH_LIST_URI = '/api/v1/customer/wish-list/add';
   static const String REMOVE_WISH_LIST_URI = '/api/v1/customer/wish-list/remove';
   static String NOTIFICATION_URI = '/api/v1/notifications?restaurant_id=${F.restaurantId}';
-  static const String PUSH_NOTIFICATION_URI = 'https://fcm.googleapis.com/fcm/send';
   static const String UPDATE_PROFILE_URI = '/api/v1/customer/update-profile';
   static String SEARCH_URI = '/api/v1/products/search?restaurant_id=${F.restaurantId}&name=';
   static const String REVIEW_URI = '/api/v1/products/reviews/submit';

@@ -9,6 +9,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 
 import 'package:provider/provider.dart';
 
@@ -152,14 +153,12 @@ class _SpecialOfferProductCardState extends State<SpecialOfferProductCard> {
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(10),
                   ),
-                  child: FadeInImage.assetNetwork(
+                  child: ImageWidget(
+                    '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/$image',
                     placeholder: Images.placeholder_rectangle,
                     fit: BoxFit.cover,
                     height: 90,
                     width: 150,
-                    image: '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/$image',
-                    imageErrorBuilder: (c, o, s) =>
-                        Image.asset(Images.placeholder_rectangle, fit: BoxFit.cover, height: 90, width: 150),
                   ),
                 ),
                 Expanded(

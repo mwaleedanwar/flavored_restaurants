@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 
 class ImageDialog extends StatelessWidget {
   final String imageUrl;
@@ -27,16 +28,12 @@ class ImageDialog extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10), color: Theme.of(context).primaryColor.withOpacity(0.20)),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: FadeInImage.assetNetwork(
+                child: ImageWidget(
+                  imageUrl,
                   placeholder: Images.placeholder_image,
-                  image: imageUrl,
+                  height: MediaQuery.of(context).size.width - 130,
+                  width: MediaQuery.of(context).size.width,
                   fit: BoxFit.contain,
-                  imageErrorBuilder: (c, o, s) => Image.asset(
-                    Images.placeholder_image,
-                    height: MediaQuery.of(context).size.width - 130,
-                    width: MediaQuery.of(context).size.width,
-                    fit: BoxFit.cover,
-                  ),
                 ),
               ),
             ),

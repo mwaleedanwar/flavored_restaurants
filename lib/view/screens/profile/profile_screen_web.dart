@@ -14,6 +14,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_text_field.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/footer_view.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/on_hover.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -354,15 +355,13 @@ class _ProfileScreenWebState extends State<ProfileScreenWeb> {
                                 ]),
                             child: ClipOval(
                               child: widget.file == null
-                                  ? FadeInImage.assetNetwork(
+                                  ? ImageWidget(
+                                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/'
+                                      '${profileProvider.userInfoModel != null ? profileProvider.userInfoModel!.image : ''}',
                                       placeholder: Images.placeholder_user,
                                       height: 170,
                                       width: 170,
                                       fit: BoxFit.cover,
-                                      image:
-                                          '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/'
-                                          '${profileProvider.userInfoModel != null ? profileProvider.userInfoModel!.image : ''}',
-                                      //imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_user, height: 170, width: 170, fit: BoxFit.cover),
                                     )
                                   : Image.network(widget.file!.path, height: 170.0, width: 170.0, fit: BoxFit.cover),
                             ),

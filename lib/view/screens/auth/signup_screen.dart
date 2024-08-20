@@ -13,6 +13,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/footer_view.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
@@ -77,14 +78,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   padding: const EdgeInsets.all(15.0),
                                   child: ResponsiveHelper.isWeb()
                                       ? Consumer<SplashProvider>(
-                                          builder: (context, splash, child) => FadeInImage.assetNetwork(
+                                          builder: (context, splash, child) => ImageWidget(
+                                            '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
                                             placeholder: Images.placeholder_rectangle,
                                             height: MediaQuery.of(context).size.height / 4.5,
-                                            image: splash.baseUrls != null
-                                                ? '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}'
-                                                : '',
-                                            imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_rectangle,
-                                                height: MediaQuery.of(context).size.height / 4.5),
+                                            width: null,
                                           ),
                                         )
                                       : Image.asset(

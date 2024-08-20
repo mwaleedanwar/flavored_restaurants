@@ -1,8 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:developer';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/response_model.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/userinfo_model.dart';
@@ -19,6 +16,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_app_bar.dart'
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_text_field.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/not_logged_in_screen.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
@@ -146,23 +144,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                               height: 80,
                                                               fit: BoxFit.cover,
                                                             )
-                                                          : FadeInImage.assetNetwork(
+                                                          : ImageWidget(
+                                                              '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/${profileProvider.userInfoModel!.image}',
                                                               placeholder: Images.placeholder_user,
                                                               width: 80,
                                                               height: 80,
                                                               fit: BoxFit.cover,
-                                                              image:
-                                                                  '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/${profileProvider.userInfoModel!.image}',
-                                                              imageErrorBuilder: (c, o, s) {
-                                                                log('Link => ${Provider.of<SplashProvider>(context, listen: false).baseUrls!.customerImageUrl}/${profileProvider.userInfoModel!.image}');
-                                                                log(o.toString());
-                                                                return Image.asset(
-                                                                  Images.placeholder_user,
-                                                                  width: 80,
-                                                                  height: 80,
-                                                                  fit: BoxFit.cover,
-                                                                );
-                                                              },
                                                             ),
                                                 ),
                                                 Positioned(

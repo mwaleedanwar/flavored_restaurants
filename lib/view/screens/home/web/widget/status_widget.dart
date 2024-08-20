@@ -34,7 +34,7 @@ class StatusWidget extends StatelessWidget {
                             )),
                             const CircleAvatar(
                               radius: 13,
-                              backgroundColor: ColorResources.COLOR_WHITE,
+                              backgroundColor: Colors.white,
                             )
                           ],
                         ),
@@ -50,7 +50,7 @@ class StatusWidget extends StatelessWidget {
                           children: [
                             const CircleAvatar(
                               radius: 13,
-                              backgroundColor: ColorResources.COLOR_WHITE,
+                              backgroundColor: Colors.white,
                             ),
                             Expanded(
                               child: Text(

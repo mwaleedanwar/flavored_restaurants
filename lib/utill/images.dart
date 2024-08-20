@@ -72,6 +72,5 @@ class Images {
   static const String evening = 'assets/icon/night.png';
 
   static String getImageUrl(imageName) => 'assets/image/$imageName.png';
-  static String getPaymentImage(String name) => 'assets/payment/$name.png';
   static String getShareIcon(String name) => 'assets/icon/$name.png';
 }

@@ -12,6 +12,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/cart_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
@@ -96,7 +97,7 @@ class _CartProductWidgetState extends State<CartProductWidget> {
             bottom: 0,
             right: 0,
             left: 0,
-            child: Icon(Icons.delete, color: ColorResources.COLOR_WHITE, size: 50),
+            child: Icon(Icons.delete, color: Colors.white, size: 50),
           ),
           Dismissible(
             key: UniqueKey(),
@@ -323,7 +324,7 @@ class CartOfferWidget extends StatelessWidget {
           bottom: 0,
           right: 0,
           left: 0,
-          child: Icon(Icons.delete, color: ColorResources.COLOR_WHITE, size: 50),
+          child: Icon(Icons.delete, color: Colors.white, size: 50),
         ),
         Dismissible(
           key: UniqueKey(),
@@ -352,15 +353,12 @@ class CartOfferWidget extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: FadeInImage.assetNetwork(
+                        child: ImageWidget(
+                          '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${cateringCartModel.catering!.offerProduct!.image}',
                           placeholder: Images.placeholder_image,
                           height: 70,
                           width: 85,
                           fit: BoxFit.cover,
-                          image:
-                              '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${cateringCartModel.catering!.offerProduct!.image}',
-                          imageErrorBuilder: (c, o, s) =>
-                              Image.asset(Images.placeholder_image, height: 70, width: 85, fit: BoxFit.cover),
                         ),
                       ),
                     ],
@@ -472,7 +470,7 @@ class CartHappyHourWidget extends StatelessWidget {
           bottom: 0,
           right: 0,
           left: 0,
-          child: Icon(Icons.delete, color: ColorResources.COLOR_WHITE, size: 50),
+          child: Icon(Icons.delete, color: Colors.white, size: 50),
         ),
         Dismissible(
           key: UniqueKey(),
@@ -497,22 +495,15 @@ class CartHappyHourWidget extends StatelessWidget {
             child: Column(
               children: [
                 Row(children: [
-                  Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: FadeInImage.assetNetwork(
-                          placeholder: Images.placeholder_image,
-                          height: 70,
-                          width: 85,
-                          fit: BoxFit.cover,
-                          image:
-                              '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${happyHoursCartModel.happyHours!.image}',
-                          imageErrorBuilder: (c, o, s) =>
-                              Image.asset(Images.placeholder_image, height: 70, width: 85, fit: BoxFit.cover),
-                        ),
-                      ),
-                    ],
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: ImageWidget(
+                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${happyHoursCartModel.happyHours!.image}',
+                      placeholder: Images.placeholder_image,
+                      height: 70,
+                      width: 85,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                   const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                   Expanded(

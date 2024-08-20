@@ -7,6 +7,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:provider/provider.dart';
 
 class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -39,14 +40,11 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                         onTap: () => Navigator.pushNamed(context, Routes.getMainRoute()),
                         child: splashProvider.baseUrls != null
                             ? Consumer<SplashProvider>(
-                                builder: (context, splash, child) => FadeInImage.assetNetwork(
+                                builder: (context, splash, child) => ImageWidget(
+                                      '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
                                       placeholder: Images.placeholder_rectangle,
-                                      image:
-                                          '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
                                       width: 120,
                                       height: 80,
-                                      imageErrorBuilder: (c, o, s) =>
-                                          Image.asset(Images.placeholder_rectangle, width: 120, height: 80),
                                     ))
                             : const SizedBox(),
                       ),
@@ -81,16 +79,13 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                           radius: Dimensions.PADDING_SIZE_DEFAULT,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(50.0),
-                            child: FadeInImage.assetNetwork(
+                            child: ImageWidget(
+                              '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.deliveryManImageUrl}/${orderModel!.deliveryMan?.image ?? ''}',
                               placeholder: Images.placeholder_user,
                               fit: BoxFit.cover,
                               height: 40.0,
                               width: 40.0,
-                              image:
-                                  '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.deliveryManImageUrl}/${orderModel!.deliveryMan?.image ?? ''}',
-                              imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_user, fit: BoxFit.cover),
                             ),
-                            // child: Image.asset(Images.placeholder_user), borderRadius: BorderRadius.circular(50.0),
                           ),
                         ),
                       ),

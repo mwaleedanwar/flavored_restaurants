@@ -8,6 +8,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_app_bar.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/no_data_screen.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/footer_view.dart';
@@ -95,22 +96,12 @@ class NotificationScreen extends StatelessWidget {
                                                 const SizedBox(height: Dimensions.PADDING_SIZE_DEFAULT),
                                                 Row(
                                                   children: [
-                                                    SizedBox(
-                                                      height: 50,
-                                                      width: 50,
-                                                      child: FadeInImage.assetNetwork(
-                                                        placeholder: Images.placeholder_image,
-                                                        image:
-                                                            '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.notificationImageUrl}/${notificationProvider.notificationList![index].image}',
-                                                        height: 60,
-                                                        width: 60,
-                                                        fit: BoxFit.cover,
-                                                        imageErrorBuilder: (c, b, v) => Image.asset(
-                                                            Images.placeholder_image,
-                                                            height: 60,
-                                                            width: 60,
-                                                            fit: BoxFit.cover),
-                                                      ),
+                                                    ImageWidget(
+                                                      '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.notificationImageUrl}/${notificationProvider.notificationList![index].image}',
+                                                      placeholder: Images.placeholder_image,
+                                                      height: 60,
+                                                      width: 60,
+                                                      fit: BoxFit.cover,
                                                     ),
                                                     const SizedBox(width: 24.0),
                                                     Expanded(

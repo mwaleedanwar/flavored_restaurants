@@ -8,6 +8,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart'
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/provider_barrel.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/tip_controller.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/cart/widget/cart_list_deal_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/product_view.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/product_type.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
@@ -27,7 +28,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart' hide Value;
 import 'package:provider/provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/address_model.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/title_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/address/widget/permission_dialog.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/tip_view/tip_view.dart';
@@ -188,12 +188,7 @@ class _CartScreenState extends State<CartScreen> {
                                                       addOns: addOnsList,
                                                       availableList: availableList,
                                                     ),
-                                                    CartListWidget(
-                                                      cart: cart,
-                                                      isDeal: true,
-                                                      addOns: addOnsList,
-                                                      availableList: availableList,
-                                                    ),
+                                                    CartListDealWidget(cart: cart),
                                                   ],
                                                 ),
                                               ),
@@ -218,12 +213,12 @@ class _CartScreenState extends State<CartScreen> {
                                                   ? const EdgeInsets.symmetric(
                                                       horizontal: Dimensions.PADDING_SIZE_SMALL,
                                                       vertical: Dimensions.PADDING_SIZE_LARGE)
-                                                  : const EdgeInsets.all(0),
+                                                  : EdgeInsets.zero,
                                               padding: ResponsiveHelper.isDesktop(context)
                                                   ? const EdgeInsets.symmetric(
                                                       horizontal: Dimensions.PADDING_SIZE_LARGE,
                                                       vertical: Dimensions.PADDING_SIZE_LARGE)
-                                                  : const EdgeInsets.all(0),
+                                                  : EdgeInsets.zero,
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
@@ -245,11 +240,8 @@ class _CartScreenState extends State<CartScreen> {
                                                       addOns: addOnsList,
                                                       availableList: availableList,
                                                     ),
-                                                    CartListWidget(
+                                                    CartListDealWidget(
                                                       cart: cart,
-                                                      isDeal: true,
-                                                      addOns: addOnsList,
-                                                      availableList: availableList,
                                                     ),
                                                   ],
                                                   const SizedBox(
@@ -722,7 +714,6 @@ class CartListWidget extends StatelessWidget {
   final List<bool> availableList;
   final bool isFromCatering;
   final bool isFromHappyHour;
-  final bool isDeal;
 
   const CartListWidget({
     super.key,
@@ -731,222 +722,35 @@ class CartListWidget extends StatelessWidget {
     required this.availableList,
     this.isFromCatering = false,
     this.isFromHappyHour = false,
-    this.isDeal = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return isDeal
-        ? ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: cart.dealsList.length,
-            itemBuilder: (context, index) {
-              return Container(
-                padding: const EdgeInsets.symmetric(
-                  vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL,
-                ),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color:
-                          Provider.of<ThemeProvider>(context).darkTheme ? Colors.grey.shade700 : Colors.grey.shade300,
-                      blurRadius: 5,
-                      spreadRadius: 1,
-                    )
-                  ],
-                ),
-                child: ExpansionTile(
-                  textColor: Theme.of(context).primaryColor,
-                  iconColor: Theme.of(context).primaryColor,
-                  childrenPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  leading: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: FadeInImage.assetNetwork(
-                      placeholder: Images.placeholder_image,
-                      height: 70,
-                      width: 85,
-                      fit: BoxFit.cover,
-                      image:
-                          '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.offerUrl}/${cart.dealsList[index].dealsDataModel!.image}',
-                      imageErrorBuilder: (c, o, s) =>
-                          Image.asset(Images.placeholder_image, height: 70, width: 85, fit: BoxFit.cover),
-                    ),
-                  ),
-                  title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(cart.dealsList[index].dealsDataModel!.name,
-                            style: rubikMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
-                        const SizedBox(height: 7),
-                        Flexible(
-                          child: Text(
-                            PriceConverter.convertPrice(
-                              context,
-                              cart.dealsList[index].price,
-                            ),
-                            style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
-                          ),
-                        ),
-                      ]),
-                  trailing: Container(
-                    width: 100,
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.onSurface, borderRadius: BorderRadius.circular(5)),
-                    child: Row(children: [
-                      InkWell(
-                        onTap: () {
-                          Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
-                          if (cart.dealsList[index].quantity > 1) {
-                            Provider.of<CartProvider>(context, listen: false).setQuantity(
-                              isIncrement: false,
-                              isCart: false,
-                              isHappyHours: false,
-                              isDeal: true,
-                              dealCartModel: cart.dealsList[index],
-                            );
-                          } else {
-                            Provider.of<CartProvider>(context, listen: false).removeFromCart(index,
-                                isCatering: false, isCart: false, isDeal: true, isHappyHours: false);
-                          }
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                          child: Icon(Icons.remove, size: 20),
-                        ),
-                      ),
-                      Text(cart.dealsList[index].quantity.toString(),
-                          style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
-                      InkWell(
-                        onTap: () {
-                          Provider.of<CouponProvider>(context, listen: false).removeCouponData(true);
-                          Provider.of<CartProvider>(context, listen: false).setQuantity(
-                            isIncrement: true,
-                            isCart: false,
-                            isHappyHours: false,
-                            isDeal: true,
-                            dealCartModel: cart.dealsList[index],
-                          );
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: Dimensions.PADDING_SIZE_SMALL, vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                          child: Icon(Icons.add, size: 20),
-                        ),
-                      ),
-                    ]),
-                  ),
-                  children: [
-                    for (var deal in (cart.dealsList[index].dealsDataModel?.dealItems ?? []))
-                      Container(
-                        margin: const EdgeInsets.only(bottom: Dimensions.PADDING_SIZE_DEFAULT),
-                        decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(10)),
-                        child: Stack(children: [
-                          const Positioned(
-                            top: 0,
-                            bottom: 0,
-                            right: 0,
-                            left: 0,
-                            child: Icon(Icons.delete, color: ColorResources.COLOR_WHITE, size: 50),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL,
-                                horizontal: Dimensions.PADDING_SIZE_SMALL),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).cardColor,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Provider.of<ThemeProvider>(context).darkTheme
-                                      ? Colors.grey.shade700
-                                      : Colors.grey.shade300,
-                                  blurRadius: 5,
-                                  spreadRadius: 1,
-                                )
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                Row(children: [
-                                  Stack(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: FadeInImage.assetNetwork(
-                                          placeholder: Images.placeholder_image,
-                                          height: 50,
-                                          width: 65,
-                                          fit: BoxFit.cover,
-                                          image:
-                                              '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${deal.image}',
-                                          imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_image,
-                                              height: 50, width: 65, fit: BoxFit.cover),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
-                                  Expanded(
-                                    child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(deal.name,
-                                              style: rubikMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
-                                          const SizedBox(height: 7),
-                                          Row(
-                                            children: [
-                                              Flexible(
-                                                child: Text(
-                                                  'Quantity : ${deal.itemQuantity}',
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 5),
-                                        ]),
-                                  ),
-                                ]),
-                              ],
-                            ),
-                          ),
-                        ]),
-                      )
-                  ],
-                ),
-              );
-            },
-          )
-        : ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: isFromCatering
-                ? cart.cateringList.length
-                : isFromHappyHour
-                    ? cart.happyHoursList.length
-                    : cart.cartList.length,
-            itemBuilder: (context, index) {
-              return isFromCatering
-                  ? CartOfferWidget(
-                      cartIndex: index,
-                      cateringCartModel: cart.cateringList[index],
-                    )
-                  : isFromHappyHour
-                      ? CartHappyHourWidget(
-                          cartIndex: index,
-                          happyHoursCartModel: cart.happyHoursList[index],
-                        )
-                      : CartProductWidget(
-                          cart: isFromCatering ? null : cart.cartList[index],
-                          cartIndex: index,
-                          addOns: isFromCatering ? null : addOns[index],
-                          isAvailable: availableList[index]);
-            },
-          );
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: isFromCatering
+          ? cart.cateringList.length
+          : isFromHappyHour
+              ? cart.happyHoursList.length
+              : cart.cartList.length,
+      itemBuilder: (context, index) {
+        return isFromCatering
+            ? CartOfferWidget(
+                cartIndex: index,
+                cateringCartModel: cart.cateringList[index],
+              )
+            : isFromHappyHour
+                ? CartHappyHourWidget(
+                    cartIndex: index,
+                    happyHoursCartModel: cart.happyHoursList[index],
+                  )
+                : CartProductWidget(
+                    cart: isFromCatering ? null : cart.cartList[index],
+                    cartIndex: index,
+                    addOns: isFromCatering ? null : addOns[index],
+                    isAvailable: availableList[index]);
+      },
+    );
   }
 }

@@ -11,14 +11,14 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/on_hover.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/wish_button.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/cart_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:intl/intl.dart';
-
-import '../../../../../utill/routes.dart';
 
 class ProductWidgetWeb extends StatelessWidget {
   final bool fromPopularItem;
@@ -240,14 +240,12 @@ class ProductWidgetWeb extends StatelessWidget {
                         children: [
                           ClipRRect(
                             borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-                            child: FadeInImage.assetNetwork(
+                            child: ImageWidget(
+                              productImage,
                               placeholder: Images.placeholder_rectangle,
                               fit: BoxFit.cover,
                               height: isFromCart ? 80 : 105,
                               width: isFromCart ? 100 : 195,
-                              image: productImage,
-                              imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_rectangle,
-                                  fit: BoxFit.cover, height: isFromCart ? 80 : 105, width: isFromCart ? 100 : 195),
                             ),
                           ),
                           isAvailable

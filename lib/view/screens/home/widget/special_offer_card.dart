@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/data/model/response/offer_model.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/specialoffer_bottom_sheet.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/theme_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:provider/provider.dart';
 
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
@@ -40,19 +40,17 @@ class _SpecialOfferCardState extends State<SpecialOfferCard> {
               spreadRadius: Provider.of<ThemeProvider>(context).darkTheme ? 0 : 1,
             )
           ],
-          color: ColorResources.COLOR_WHITE,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(10),
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
-          child: FadeInImage.assetNetwork(
+          child: ImageWidget(
+            imageUrl,
             placeholder: Images.placeholder_banner,
             height: 105,
             width: 195,
             fit: BoxFit.cover,
-            image: imageUrl,
-            imageErrorBuilder: (c, o, s) =>
-                Image.asset(Images.placeholder_banner, height: 105, width: 195, fit: BoxFit.cover),
           ),
         ),
       ),

@@ -7,6 +7,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/title_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
@@ -53,17 +54,13 @@ class CategoryPopUp extends StatelessWidget {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         ClipOval(
-                                          child: FadeInImage.assetNetwork(
+                                          child: ImageWidget(
+                                            '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.categoryImageUrl}'
+                                            '/${category.categoryList[index].image}',
                                             placeholder: Images.placeholder_image,
                                             width: 65,
                                             height: 65,
                                             fit: BoxFit.cover,
-                                            image:
-                                                '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.categoryImageUrl}'
-                                                '/${category.categoryList[index].image}',
-                                            imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_image,
-                                                width: 65, height: 65, fit: BoxFit.cover),
-                                            // width: 100, height: 100, fit: BoxFit.cover,
                                           ),
                                         ),
                                         Text(

@@ -14,10 +14,10 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart'
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_constants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/on_hover.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/web/widget/cetegory_hover_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/web/widget/language_hover_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/web/widget/status_widget.dart';
@@ -37,7 +37,7 @@ class WebAppBar extends StatefulWidget implements PreferredSizeWidget {
   State<WebAppBar> createState() => _WebAppBarState();
 
   @override
-  Size get preferredSize => throw UnimplementedError();
+  Size get preferredSize => const Size(double.maxFinite, 50);
 }
 
 class _WebAppBarState extends State<WebAppBar> {
@@ -106,8 +106,7 @@ class _WebAppBarState extends State<WebAppBar> {
                                 children: [
                                   Text('${getGreetingMessage()}, ${profile.userInfoModel?.fName ?? ''}',
                                       style: poppinsRegular.copyWith(
-                                          fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
-                                          color: ColorResources.COLOR_WHITE)),
+                                          fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL, color: Colors.white)),
                                   const SizedBox(
                                     width: 10,
                                   ),
@@ -142,13 +141,13 @@ class _WebAppBarState extends State<WebAppBar> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            const BranchButtonView(),
+                            const BranchButtonView(branchName: ''),
                             const SizedBox(width: Dimensions.PADDING_SIZE_DEFAULT),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: Dimensions.PADDING_SIZE_SMALL),
                               child: Text(getTranslated('dark_theme', context),
                                   style: poppinsRegular.copyWith(
-                                      color: ColorResources.COLOR_WHITE, fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL)),
+                                      color: Colors.white, fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL)),
                             ),
                             const StatusWidget(),
                             const SizedBox(width: Dimensions.PADDING_SIZE_EXTRA_LARGE),
@@ -168,12 +167,11 @@ class _WebAppBarState extends State<WebAppBar> {
                                 return Row(
                                   children: [
                                     const Icon(Icons.lock_outlined,
-                                        color: ColorResources.COLOR_WHITE, size: Dimensions.PADDING_SIZE_DEFAULT),
+                                        color: Colors.white, size: Dimensions.PADDING_SIZE_DEFAULT),
                                     const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                                     Text(getTranslated(isLoggedIn ? 'logout' : 'login', context),
                                         style: poppinsRegular.copyWith(
-                                            fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL,
-                                            color: ColorResources.COLOR_WHITE))
+                                            fontSize: Dimensions.FONT_SIZE_EXTRA_SMALL, color: Colors.white))
                                   ],
                                 );
                               }),
@@ -199,23 +197,16 @@ class _WebAppBarState extends State<WebAppBar> {
                           Provider.of<ProductProvider>(context, listen: false).latestOffset = 1;
                           Navigator.pushNamed(context, Routes.getMainRoute());
                         },
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Provider.of<SplashProvider>(context).baseUrls != null
-                                  ? Consumer<SplashProvider>(
-                                      builder: (context, splash, child) => FadeInImage.assetNetwork(
-                                            placeholder: Images.placeholder_rectangle,
-                                            image:
-                                                '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
-                                            width: 120,
-                                            height: 80,
-                                            imageErrorBuilder: (c, o, s) => Image.asset(F.logo, width: 120, height: 80),
-                                          ))
-                                  : const SizedBox(),
-                            ),
-                          ],
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Provider.of<SplashProvider>(context).baseUrls != null
+                              ? Consumer<SplashProvider>(
+                                  builder: (context, splash, child) => ImageWidget(
+                                      '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
+                                      width: 120,
+                                      height: 80),
+                                )
+                              : const SizedBox(),
                         ),
                       ),
                       OnHover(builder: (isHover) {
@@ -356,7 +347,7 @@ class _WebAppBarState extends State<WebAppBar> {
                                                 Provider.of<CartProvider>(context).happyHoursList.length +
                                                 Provider.of<CartProvider>(context).dealsList.length)
                                             .toString(),
-                                        style: rubikMedium.copyWith(color: ColorResources.COLOR_WHITE, fontSize: 8),
+                                        style: rubikMedium.copyWith(color: Colors.white, fontSize: 8),
                                       ),
                                     ),
                                   ),
@@ -384,8 +375,4 @@ class _WebAppBarState extends State<WebAppBar> {
       ),
     );
   }
-
-  @override
-  // ignore: override_on_non_overriding_member
-  Size get preferredSize => const Size(double.maxFinite, 50);
 }

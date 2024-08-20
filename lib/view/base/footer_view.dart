@@ -70,7 +70,7 @@ class _FooterViewState extends State<FooterView> {
                                 borderRadius: BorderRadius.circular(8.0),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: ColorResources.COLOR_BLACK.withOpacity(0.05),
+                                    color: Colors.black.withOpacity(0.05),
                                     blurRadius: 2,
                                   )
                                 ]),
@@ -80,7 +80,7 @@ class _FooterViewState extends State<FooterView> {
                                 Expanded(
                                     child: TextField(
                                   controller: _newsLetterController,
-                                  style: rubikMedium.copyWith(color: ColorResources.COLOR_BLACK),
+                                  style: rubikMedium.copyWith(color: Colors.black),
                                   decoration: InputDecoration(
                                     hintText: getTranslated('your_email_address', context),
                                     hintStyle: rubikRegular.copyWith(

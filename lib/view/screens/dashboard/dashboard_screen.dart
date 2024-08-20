@@ -170,7 +170,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                               Provider.of<CartProvider>(context).happyHoursList.length +
                               Provider.of<CartProvider>(context).dealsList.length)
                           .toString(),
-                      style: rubikMedium.copyWith(color: ColorResources.COLOR_WHITE, fontSize: 8),
+                      style: rubikMedium.copyWith(color: Colors.white, fontSize: 8),
                     ),
                   ),
                 )

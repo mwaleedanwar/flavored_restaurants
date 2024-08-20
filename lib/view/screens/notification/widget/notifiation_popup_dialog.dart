@@ -8,6 +8,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/order/order_details_screen.dart';
 
 class NotificationPopUpDialog extends StatefulWidget {
@@ -63,19 +64,15 @@ class _NewRequestDialogState extends State<NotificationPopUpDialog> {
                     height: Dimensions.PADDING_SIZE_EXTRA_SMALL,
                   ),
                 if (widget.payloadModel.image != 'null')
-                  Builder(builder: (context) {
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: FadeInImage.assetNetwork(
-                        image: widget.payloadModel.image!,
-                        height: 100,
-                        width: 500,
-                        placeholder: Images.placeholder_image,
-                        imageErrorBuilder: (c, o, s) =>
-                            Image.asset(Images.placeholder_image, height: 70, width: 80, fit: BoxFit.cover),
-                      ),
-                    );
-                  }),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: ImageWidget(
+                      widget.payloadModel.image!,
+                      height: 100,
+                      width: 500,
+                      placeholder: Images.placeholder_image,
+                    ),
+                  ),
               ],
             ),
           ),

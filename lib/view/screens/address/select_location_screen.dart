@@ -7,7 +7,6 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/helper/responsive_helper.dart'
 import 'package:noapl_dos_maa_kitchen_flavor_test/localization/language_constrants.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/location_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/utill/color_resources.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
@@ -170,7 +169,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                   margin: const EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL),
-                                    color: ColorResources.COLOR_WHITE,
+                                    color: Colors.white,
                                   ),
                                   child: Icon(
                                     Icons.my_location,

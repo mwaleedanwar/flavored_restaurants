@@ -5,11 +5,10 @@ class TipController extends GetxController {
   List tipsAmountList = ['1', '2', '3', 'Other'].obs;
   List tipPercentList = ['10', '15', '20', 'Other'].obs;
   List selectedTip = [].obs;
-  final TextEditingController controller = TextEditingController();
-  var tip = 0.0.obs;
-  var isNotTip = false.obs;
+  RxDouble tip = 0.0.obs;
+  RxBool isNotTip = false.obs;
 
-  void initialData(isFromCart, {required double orderAmount}) {
+  void initializeData(bool isFromCart, {required double orderAmount}) {
     selectedTip.clear();
     tip.value = 0.0;
     if (isFromCart) {

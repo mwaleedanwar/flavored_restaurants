@@ -19,8 +19,7 @@ class WelcomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ResponsiveHelper.isDesktop(context)
-          ? const PreferredSize(
-              preferredSize: Size.fromHeight(100), child: WebAppBar())
+          ? const PreferredSize(preferredSize: Size.fromHeight(100), child: WebAppBar())
           : null,
       body: Scrollbar(
         child: SingleChildScrollView(
@@ -36,16 +35,13 @@ class WelcomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(30),
                     child: ResponsiveHelper.isWeb()
                         ? Consumer<SplashProvider>(
-                            builder: (context, splash, child) =>
-                                FadeInImage.assetNetwork(
+                            builder: (context, splash, child) => FadeInImage.assetNetwork(
                               placeholder: Images.placeholder_rectangle,
                               image: splash.baseUrls != null
                                   ? '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}'
                                   : '',
                               height: 200,
-                              imageErrorBuilder: (c, o, s) => Image.asset(
-                                  Images.placeholder_rectangle,
-                                  height: 200),
+                              imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_rectangle, height: 200),
                             ),
                           )
                         : Image.asset(F.logo, height: 200),
@@ -54,32 +50,29 @@ class WelcomeScreen extends StatelessWidget {
                   Text(
                     getTranslated('welcome', context),
                     textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        color: Theme.of(context).textTheme.bodyLarge?.color,
-                        fontSize: 32),
+                    style: Theme.of(context)
+                        .textTheme
+                        .displaySmall
+                        ?.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color, fontSize: 32),
                   ),
                   Padding(
-                    padding:
-                        const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
+                    padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
                     child: Text(
                       getTranslated('welcome_to_efood', context),
                       textAlign: TextAlign.center,
                       style: Theme.of(context)
                           .textTheme
                           .displayMedium
-                          ?.copyWith(
-                              color: ColorResources.getGreyColor(context)),
+                          ?.copyWith(color: ColorResources.getGreyColor(context)),
                     ),
                   ),
                   const SizedBox(height: 50),
                   Padding(
-                    padding:
-                        const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
+                    padding: const EdgeInsets.all(Dimensions.PADDING_SIZE_DEFAULT),
                     child: CustomButton(
                       btnTxt: getTranslated('login', context),
                       onTap: () {
-                        Navigator.pushReplacementNamed(
-                            context, Routes.getLoginRoute());
+                        Navigator.pushReplacementNamed(context, Routes.getLoginRoute());
                       },
                     ),
                   ),
@@ -92,8 +85,7 @@ class WelcomeScreen extends StatelessWidget {
                     child: CustomButton(
                       btnTxt: getTranslated('signup', context),
                       onTap: () {
-                        Navigator.pushReplacementNamed(
-                            context, Routes.getCreateAccountRoute());
+                        Navigator.pushReplacementNamed(context, Routes.getCreateAccountRoute());
                       },
                       backgroundColor: Colors.black,
                     ),
@@ -103,22 +95,16 @@ class WelcomeScreen extends StatelessWidget {
                       minimumSize: const Size(1, 40),
                     ),
                     onPressed: () {
-                      Navigator.pushReplacementNamed(
-                          context, Routes.getMainRoute());
+                      Navigator.pushReplacementNamed(context, Routes.getMainRoute());
                     },
                     child: RichText(
                         text: TextSpan(children: [
                       TextSpan(
                           text: '${getTranslated('login_as_a', context)} ',
-                          style: rubikRegular.copyWith(
-                              color: ColorResources.getGreyColor(context))),
+                          style: rubikRegular.copyWith(color: ColorResources.getGreyColor(context))),
                       TextSpan(
                           text: getTranslated('guest', context),
-                          style: rubikMedium.copyWith(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.color)),
+                          style: rubikMedium.copyWith(color: Theme.of(context).textTheme.bodyLarge?.color)),
                     ])),
                   ),
                 ],

@@ -16,6 +16,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_snackbar.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_text_field.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/footer_view.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../thanks_feedback_screen.dart';
@@ -67,39 +68,37 @@ class _ProductReviewWidgetState extends State<ProductReviewWidget> {
                               color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL),
                             ),
+                            // Product details
                             child: Column(
                               children: [
-                                // Product details
                                 Row(
                                   children: [
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
-                                      child: FadeInImage.assetNetwork(
+                                      child: ImageWidget(
+                                        '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${widget.orderDetailsList[index].productDetails!.image}',
                                         placeholder: Images.placeholder_image,
                                         height: 70,
                                         width: 85,
                                         fit: BoxFit.cover,
-                                        image:
-                                            '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${widget.orderDetailsList[index].productDetails!.image}',
-                                        imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_image,
-                                            height: 70, width: 85, fit: BoxFit.cover),
                                       ),
                                     ),
                                     const SizedBox(width: Dimensions.PADDING_SIZE_SMALL),
                                     Expanded(
-                                        child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(widget.orderDetailsList[index].productDetails!.name,
-                                            style: rubikMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
-                                        const SizedBox(height: 10),
-                                        Text(
-                                            PriceConverter.convertPrice(
-                                                context, widget.orderDetailsList[index].productDetails!.price),
-                                            style: rubikBold),
-                                      ],
-                                    )),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(widget.orderDetailsList[index].productDetails!.name,
+                                              style: rubikMedium, maxLines: 2, overflow: TextOverflow.ellipsis),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                              PriceConverter.convertPrice(
+                                                  context, widget.orderDetailsList[index].productDetails!.price),
+                                              style: rubikBold),
+                                        ],
+                                      ),
+                                    ),
                                     Row(children: [
                                       Text(
                                         '${getTranslated('quantity', context)}: ',

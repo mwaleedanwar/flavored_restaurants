@@ -10,6 +10,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/provider/splash_provider.dart'
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/branch_provider.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -93,14 +94,14 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               ResponsiveHelper.isWeb()
-                  ? FadeInImage.assetNetwork(
-                      placeholder: Images.placeholder_rectangle,
-                      height: 165,
-                      image: splash.baseUrls != null
-                          ? '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}'
-                          : '',
-                      imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_rectangle, height: 165),
-                    )
+                  ? splash.baseUrls != null
+                      ? ImageWidget(
+                          '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
+                          placeholder: Images.placeholder_rectangle,
+                          height: 165,
+                          width: MediaQuery.of(context).size.width,
+                        )
+                      : Image.asset(Images.placeholder_rectangle, height: 165)
                   : Image.asset(F.logo, height: 150),
               const SizedBox(height: 30),
             ],

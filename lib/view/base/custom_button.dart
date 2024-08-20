@@ -35,7 +35,7 @@ class CustomButton extends StatelessWidget {
         btnTxt,
         style: textStyle ??
             Theme.of(context).textTheme.displaySmall?.copyWith(
-                  color: ColorResources.COLOR_WHITE,
+                  color: Colors.white,
                   fontSize: Dimensions.FONT_SIZE_LARGE,
                 ),
       ),

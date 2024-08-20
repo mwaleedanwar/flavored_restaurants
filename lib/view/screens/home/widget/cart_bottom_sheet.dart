@@ -13,6 +13,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/dimensions.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/read_more_text.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/home/widget/product_view.dart';
 import 'package:intl/intl.dart';
@@ -23,7 +24,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_text_field.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/title_widget.dart';
 
-import '../../../../utill/app_toast.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/utill/app_toast.dart';
 
 class CartBottomSheet extends StatefulWidget {
   final Product product;
@@ -516,10 +517,9 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
     return Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
       ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: FadeInImage.assetNetwork(
+        child: ImageWidget(
+          '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${widget.product.image}',
           placeholder: Images.placeholder_rectangle,
-          image:
-              '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${widget.product.image}',
           width: ResponsiveHelper.isMobile(context)
               ? 100
               : ResponsiveHelper.isTab(context)
@@ -535,24 +535,6 @@ class _CartBottomSheetState extends State<CartBottomSheet> {
                       ? 140
                       : null,
           fit: BoxFit.cover,
-          imageErrorBuilder: (c, o, s) => Image.asset(
-            Images.placeholder_rectangle,
-            width: ResponsiveHelper.isMobile(context)
-                ? 100
-                : ResponsiveHelper.isTab(context)
-                    ? 140
-                    : ResponsiveHelper.isDesktop(context)
-                        ? 140
-                        : null,
-            height: ResponsiveHelper.isMobile(context)
-                ? 100
-                : ResponsiveHelper.isTab(context)
-                    ? 140
-                    : ResponsiveHelper.isDesktop(context)
-                        ? 140
-                        : null,
-            fit: BoxFit.cover,
-          ),
         ),
       ),
       const SizedBox(

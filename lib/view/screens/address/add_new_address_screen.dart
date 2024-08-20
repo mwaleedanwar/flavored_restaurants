@@ -419,7 +419,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                           margin: const EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL),
-                            color: ColorResources.COLOR_WHITE,
+                            color: Colors.white,
                           ),
                           child: Icon(
                             Icons.my_location,
@@ -441,7 +441,7 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                           margin: const EdgeInsets.only(right: Dimensions.PADDING_SIZE_LARGE),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(Dimensions.PADDING_SIZE_SMALL),
-                            color: ColorResources.COLOR_WHITE,
+                            color: Colors.white,
                           ),
                           child: Icon(
                             Icons.fullscreen,
@@ -517,10 +517,10 @@ class _AddNewAddressScreenState extends State<AddNewAddressScreen> {
                             : ColorResources.SEARCH_BG),
                     child: Text(
                       getTranslated(locationProvider.getAllAddressType[index].toLowerCase(), context),
-                      style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                          color: locationProvider.selectAddressIndex == index
-                              ? ColorResources.COLOR_WHITE
-                              : ColorResources.COLOR_BLACK),
+                      style: Theme.of(context)
+                          .textTheme
+                          .displayMedium
+                          ?.copyWith(color: locationProvider.selectAddressIndex == index ? Colors.white : Colors.black),
                     ),
                   ),
                 ),
