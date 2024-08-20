@@ -11,7 +11,6 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/flavors.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/main.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/provider/chat_provider.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
-import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/notification/widget/notifiation_popup_dialog.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/screens/order/order_details_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -141,14 +140,6 @@ class NotificationHelper {
     };
 
     PayloadModel payload = PayloadModel.fromJson(payloadData);
-
-    if (kIsWeb) {
-      showDialog(
-          context: Get.context,
-          builder: (context) => Center(
-                child: NotificationPopUpDialog(payload),
-              ));
-    }
 
     if (image != null && image.isNotEmpty) {
       try {
