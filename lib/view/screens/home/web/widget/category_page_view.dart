@@ -9,7 +9,6 @@ import '../../../../../utill/dimensions.dart';
 import '../../../../../utill/images.dart';
 import '../../../../../utill/styles.dart';
 import '../../../../base/on_hover.dart';
-import '../../new_home.dart';
 
 class CategoryPageView extends StatelessWidget {
   final CategoryProvider categoryProvider;
@@ -52,7 +51,6 @@ class CategoryPageView extends StatelessWidget {
                     hoverColor: Colors.transparent,
                     onTap: () {
                       debugPrint('==cat tap');
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const MyHomePage()));
                     },
                     child: Column(children: [
                       if (Provider.of<SplashProvider>(context, listen: false).baseUrls != null)

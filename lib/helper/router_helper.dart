@@ -70,10 +70,6 @@ class RouterHelper {
     return _routeHandler(context, const ModifiedHomePage());
   });
 
-  static final Handler _categoryHandler = Handler(handlerFunc: (context, Map<String, dynamic> params) {
-    return _routeHandler(context, const MyHomePage());
-  });
-
   static final Handler _notificationHandler = Handler(
     handlerFunc: (context, Map<String, dynamic> params) => _routeHandler(context, const NotificationScreen()),
   );
@@ -244,7 +240,9 @@ class RouterHelper {
   static final Handler _branchListHandler = Handler(
       handlerFunc: (context, Map<String, dynamic> params) => _routeHandler(
             context,
-             BranchListScreen(isFromMain: params['isFromMain'][0]=='true',),
+            BranchListScreen(
+              isFromMain: params['isFromMain'][0] == 'true',
+            ),
           ));
   static Handler dashScreenBoardHandler = Handler(handlerFunc: (context, Map<String, dynamic> params) {
     return _routeHandler(context, const DashboardScreen(pageIndex: 0));
@@ -265,7 +263,6 @@ class RouterHelper {
     router.define(Routes.NEW_HOME,
         handler: __newHomeScreenHandler, transitionType: TransitionType.fadeIn); // ?page=home
     router.define(Routes.DASHBOARD, handler: dashScreenBoardHandler, transitionType: TransitionType.fadeIn);
-    router.define(Routes.CATEGORY_SCREEN, handler: _categoryHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.NOTIFICATION_SCREEN, handler: _notificationHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.CHECKOUT_SCREEN, handler: _checkoutHandler, transitionType: TransitionType.fadeIn);
     router.define(Routes.PAYMENT_SCREEN, handler: _paymentHandler, transitionType: TransitionType.fadeIn);

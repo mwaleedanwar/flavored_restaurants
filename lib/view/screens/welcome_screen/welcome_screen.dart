@@ -9,6 +9,7 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/images.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
+import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/image_widget.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/web_app_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -35,14 +36,14 @@ class WelcomeScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(30),
                     child: ResponsiveHelper.isWeb()
                         ? Consumer<SplashProvider>(
-                            builder: (context, splash, child) => FadeInImage.assetNetwork(
-                              placeholder: Images.placeholder_rectangle,
-                              image: splash.baseUrls != null
-                                  ? '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}'
-                                  : '',
-                              height: 200,
-                              imageErrorBuilder: (c, o, s) => Image.asset(Images.placeholder_rectangle, height: 200),
-                            ),
+                            builder: (context, splash, child) => splash.baseUrls == null
+                                ? Image.asset(Images.placeholder_rectangle, height: 200)
+                                : ImageWidget(
+                                    '${splash.baseUrls!.restaurantImageUrl}/${splash.configModel!.restaurantLogo}',
+                                    placeholder: Images.placeholder_rectangle,
+                                    width: null,
+                                    height: 200,
+                                  ),
                           )
                         : Image.asset(F.logo, height: 200),
                   ),

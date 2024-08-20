@@ -18,21 +18,16 @@ import 'package:noapl_dos_maa_kitchen_flavor_test/utill/routes.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/utill/styles.dart';
 import 'package:noapl_dos_maa_kitchen_flavor_test/view/base/custom_button.dart';
 
-class DealsBottomSheet extends StatefulWidget {
+class DealsBottomSheet extends StatelessWidget {
   final DealsDataModel dealsDataModel;
 
   const DealsBottomSheet({super.key, required this.dealsDataModel});
 
   @override
-  State<DealsBottomSheet> createState() => _DealsBottomSheetState();
-}
-
-class _DealsBottomSheetState extends State<DealsBottomSheet> {
-  @override
   Widget build(BuildContext context) {
     return Consumer<CartProvider>(builder: (context, cartProvider, child) {
       cartProvider.setCartUpdate(false);
-      int cartIndex = cartProvider.getCarDealIndex(widget.dealsDataModel) ?? -1;
+      int cartIndex = cartProvider.getCarDealIndex(dealsDataModel) ?? -1;
       return Stack(
         children: [
           Container(
@@ -63,8 +58,7 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                             ),
                           )
                         : const SizedBox(),
-                    Text(widget.dealsDataModel.name,
-                        style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
+                    Text(dealsDataModel.name, style: rubikMedium.copyWith(fontSize: Dimensions.FONT_SIZE_EXTRA_LARGE)),
                     const SizedBox(
                       height: 8,
                     ),
@@ -79,7 +73,7 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                         ),
                         const Spacer(),
                         Text(
-                          DateConverter.estimatedDate(widget.dealsDataModel.expireDate),
+                          DateConverter.estimatedDate(dealsDataModel.expireDate),
                           style:
                               rubikMedium.copyWith(fontWeight: FontWeight.w400, fontSize: Dimensions.FONT_SIZE_SMALL),
                           maxLines: 2,
@@ -101,7 +95,7 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                         ),
                         const Spacer(),
                         Text(
-                          '${widget.dealsDataModel.discountPercentage}%',
+                          '${dealsDataModel.discountPercentage}%',
                           style:
                               rubikMedium.copyWith(fontWeight: FontWeight.w400, fontSize: Dimensions.FONT_SIZE_SMALL),
                           maxLines: 2,
@@ -123,7 +117,7 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                         ),
                         const Spacer(),
                         Text(
-                          widget.dealsDataModel.totalDiscountAmount,
+                          dealsDataModel.totalDiscountAmount,
                           style:
                               rubikMedium.copyWith(fontWeight: FontWeight.w400, fontSize: Dimensions.FONT_SIZE_SMALL),
                           maxLines: 2,
@@ -138,7 +132,7 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                     SizedBox(
                       height: 185,
                       child: ListView.builder(
-                          itemCount: widget.dealsDataModel.dealItems.length,
+                          itemCount: dealsDataModel.dealItems.length,
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
@@ -164,7 +158,7 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                                     ClipRRect(
                                       borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
                                       child: ImageWidget(
-                                        '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${widget.dealsDataModel.dealItems[index].image}',
+                                        '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.productImageUrl}/${dealsDataModel.dealItems[index].image}',
                                         placeholder: Images.placeholder_rectangle,
                                         fit: BoxFit.cover,
                                         height: 90,
@@ -182,7 +176,7 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
                                               Text(
-                                                widget.dealsDataModel.dealItems[index].name,
+                                                dealsDataModel.dealItems[index].name,
                                                 style: rubikBold.copyWith(fontSize: Dimensions.FONT_SIZE_SMALL),
                                                 maxLines: 2,
                                               ),
@@ -190,7 +184,7 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                                                 height: 5,
                                               ),
                                               Text(
-                                                'Quantity : ${widget.dealsDataModel.dealItems[index].itemQuantity}',
+                                                'Quantity : ${dealsDataModel.dealItems[index].itemQuantity}',
                                                 style: rubikBold.copyWith(
                                                     fontSize: Dimensions.FONT_SIZE_SMALL, fontWeight: FontWeight.w500),
                                               ),
@@ -213,15 +207,13 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                         onTap: () {
                           if (Provider.of<AuthProvider>(context, listen: false).isLoggedIn()) {
                             DealCartModel dealModle = DealCartModel(
-                                price: double.parse(widget.dealsDataModel.totalDiscountAmount),
+                                price: double.parse(dealsDataModel.totalDiscountAmount),
                                 discountedPrice: 0.0,
                                 discountAmount: 0.0,
                                 quantity: 1,
-                                dealsDataModel: widget.dealsDataModel);
+                                dealsDataModel: dealsDataModel);
 
-                            if (!cartProvider.dealsList
-                                .map((e) => e.dealsDataModel!.id)
-                                .contains(widget.dealsDataModel.id)) {
+                            if (!cartProvider.dealsList.map((e) => e.dealsDataModel!.id).contains(dealsDataModel.id)) {
                               cartProvider.addDealToCart(dealModle, cartIndex);
                               Navigator.pop(context);
 
@@ -233,14 +225,14 @@ class _DealsBottomSheetState extends State<DealsBottomSheet> {
                                 isCart: false,
                                 isDeal: true,
                                 dealCartModel: cartProvider.dealsList
-                                    .where((element) => element.dealsDataModel?.id == widget.dealsDataModel.id)
+                                    .where((element) => element.dealsDataModel?.id == dealsDataModel.id)
                                     .toList()[0],
                               );
                               Navigator.pop(context);
 
                               appToast(
                                   text:
-                                      'Deal added ${cartProvider.dealsList.where((element) => element.dealsDataModel?.id == widget.dealsDataModel.id).toList().first.quantity} times',
+                                      'Deal added ${cartProvider.dealsList.where((element) => element.dealsDataModel?.id == dealsDataModel.id).toList().first.quantity} times',
                                   toastColor: Colors.green);
                             }
                           } else {

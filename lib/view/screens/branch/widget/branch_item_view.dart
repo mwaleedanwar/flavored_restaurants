@@ -15,9 +15,8 @@ class BranchItemView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Consumer<BranchProvider>(builder: (context, branchProvider, _) {
-      return GestureDetector(
+      return InkWell(
         onTap: () => branchProvider.updateBranchId(branchesValue.branches.id),
         child: Container(
           margin: const EdgeInsets.symmetric(vertical: Dimensions.PADDING_SIZE_EXTRA_SMALL),
@@ -114,8 +113,8 @@ class BranchItemView extends StatelessWidget {
                     child: ImageWidget(
                       '${Provider.of<SplashProvider>(context, listen: false).baseUrls!.branchImageUrl}/${branchesValue.branches.image}',
                       placeholder: Images.placeholder_image,
-                      height: size.width < 400 ? 38 : 50,
-                      width: size.width < 400 ? 38 : 50,
+                      height: MediaQuery.of(context).size.width < 400 ? 38 : 50,
+                      width: MediaQuery.of(context).size.width < 400 ? 38 : 50,
                       fit: BoxFit.cover,
                     ),
                   ),
